@@ -1,0 +1,1 @@
+This is a Native Extension based in the one exposed by Daniel Koestler that fixes some issues and adds some other capabilities to the iOS side like the ability to schedule local notifications in the future and the ability to update the application badge number at will.
