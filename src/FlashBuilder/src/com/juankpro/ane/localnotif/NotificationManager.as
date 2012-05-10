@@ -14,15 +14,15 @@
 	 */
 	public class NotificationManager extends EventDispatcher
 	{
-		CONFIG::iphone private static var _extensionContext:ExtensionContext = null;
-		CONFIG::iphone private static var _refCount:int = 0;
+		CONFIG::device private static var _extensionContext:ExtensionContext = null;
+		CONFIG::device private static var _refCount:int = 0;
 		
-		CONFIG::iphone private static const _contextType:String = "LocalNotificationsContext";
+		CONFIG::device private static const _contextType:String = "LocalNotificationsContext";
 		
-		CONFIG::iphone private static const STATUS:String = "status";
-		CONFIG::iphone private static const NOTIFICATION_SELECTED:String = "notificationSelected";
+		CONFIG::device private static const STATUS:String = "status";
+		CONFIG::device private static const NOTIFICATION_SELECTED:String = "notificationSelected";
 				
-		CONFIG::iphone private var _disposed:Boolean;
+		CONFIG::device private var _disposed:Boolean;
 		
 		/**
 		 * Determine whether notifications are available for this platform or not.
@@ -30,7 +30,7 @@
 		 */
 		public static function get isSupported():Boolean
 		{
-			CONFIG::iphone
+			CONFIG::device
 			{
 				return true;
 			}
@@ -43,7 +43,7 @@
 		 */
 		public function NotificationManager()
 		{
-			CONFIG::iphone
+			CONFIG::device
 			{
 				if(_extensionContext == null)
 				{
@@ -61,7 +61,7 @@
 		{
 			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
 			
-			CONFIG::iphone
+			CONFIG::device
 			{
 				if(_disposed) return;
 				
@@ -77,7 +77,7 @@
 		 */
 		public function cancel(code:String):void
 		{
-			CONFIG::iphone
+			CONFIG::device
 			{
 				if(_disposed) return;
 				
@@ -91,7 +91,7 @@
 		 */
 		public function cancelAll():void
 		{
-			CONFIG::iphone
+			CONFIG::device
 			{
 				if(_disposed) return;
 				
@@ -112,7 +112,7 @@
 		 */
 		public function notifyUser(code:String, notification:Notification):void
 		{
-			CONFIG::iphone
+			CONFIG::device
 			{
 				if(_disposed) return;
 				
@@ -129,7 +129,7 @@
 		/**
 		 * @private
 		 */
-		CONFIG::iphone private function onStatusEventReceived(event:StatusEvent):void
+		CONFIG::device private function onStatusEventReceived(event:StatusEvent):void
 		{
 			if (event.code == NOTIFICATION_SELECTED)
 			{
@@ -160,9 +160,12 @@
 		 */
 		public function get applicationBadgeNumber():int
 		{
-			CONFIG::iphone
+			CONFIG::device
 			{
-				return _extensionContext.call("getApplicationBadgeNumber") as int;
+				CONFIG::iphone
+				{
+					return _extensionContext.call("getApplicationBadgeNumber") as int;
+				}
 			}
 			return 0;
 		}
@@ -172,9 +175,12 @@
 		 */
 		public function set applicationBadgeNumber(value:int):void
 		{
-			CONFIG::iphone
+			CONFIG::device
 			{
-				_extensionContext.call("setApplicationBadgeNumber", value);
+				CONFIG::iphone
+				{
+					_extensionContext.call("setApplicationBadgeNumber", value);
+				}
 			}
 		}
 		
@@ -185,7 +191,7 @@
 		 */
 		public function dispose():void
 		{
-			CONFIG::iphone
+			CONFIG::device
 			{
 				if(!_disposed)
 				{
