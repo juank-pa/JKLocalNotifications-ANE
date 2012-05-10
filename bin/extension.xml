@@ -2,6 +2,13 @@
     <id>com.juankpro.ane.LocalNotification</id>
     <versionNumber>0.0.2</versionNumber>
     <platforms>
+        <platform name="Android-ARM">
+            <applicationDeployment>
+                <nativeLibrary>ADEPMobileAndroidNE.jar</nativeLibrary>
+                <initializer>com.adobe.ep.extension.Extension</initializer>
+                <finalizer>com.adobe.ep.extension.Extension</finalizer>
+            </applicationDeployment>
+        </platform>
         <platform name="iPhone-ARM">
             <applicationDeployment>
                 <nativeLibrary>libLocalNotificationLib.a</nativeLibrary>
