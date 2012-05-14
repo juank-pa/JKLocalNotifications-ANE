@@ -1,6 +1,5 @@
 ﻿package com.juankpro.ane.localnotif
 {
-	import flash.desktop.NativeApplication;
 	import flash.events.*;
 	import flash.external.*;
 	import flash.utils.*;
