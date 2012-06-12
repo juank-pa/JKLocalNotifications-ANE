@@ -4,3 +4,10 @@
 /src/XCode/LocalNotificationLib/Release/libLocalNotificationLib.a
 # Documentation project file
 /src/DocProj.docproj
+# sample binaries
+/samples/flash/iphone_dev.p12
+/samples/flash/package.bat
+/samples/flash/sample.ipa
+/samples/flash/sample.swf
+/samples/flash/temp_xml_plist_file.xml
+/samples/flash/TESTDEVIPOD.mobileprovision
