@@ -1,5 +1,1 @@
-"/Applications/Adobe Flash Builder 4.6/sdks/4.6.0/bin/adt" -package -target ane LocalNotificationLib.ane extension.xml -swc LocalNotificationLib.swc -platform Android-ARM -C android . -platform iPhone-ARM -C iphone . -platformoptions options.xml -platform default -C default library.swf
-
-Without options
-
 "/Applications/Adobe Flash Builder 4.6/sdks/4.6.0/bin/adt" -package -target ane LocalNotificationLib.ane extension.xml -swc LocalNotificationLib.swc -platform Android-ARM -C android . -platform iPhone-ARM -C iphone . -platform default -C default library.swf
