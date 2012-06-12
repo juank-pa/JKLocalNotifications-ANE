@@ -16,6 +16,9 @@
 		7D765A5314CD38A5001B2405 /* LocalNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D765A4914CD38A5001B2405 /* LocalNotificationManager.m */; };
 		7D765A5414CD38A5001B2405 /* LocalNotificationsContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 7D765A4A14CD38A5001B2405 /* LocalNotificationsContext.h */; };
 		7D765A5514CD38A5001B2405 /* LocalNotificationsContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D765A4B14CD38A5001B2405 /* LocalNotificationsContext.m */; };
+		7DB6C33B1576B9A200EB395C /* ExtensionUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 7DB6C3381576B9A200EB395C /* ExtensionUtils.h */; };
+		7DB6C33C1576B9A200EB395C /* ExtensionUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB6C3391576B9A200EB395C /* ExtensionUtils.m */; };
+		7DB6C33D1576B9A200EB395C /* FlashRuntimeExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7DB6C33A1576B9A200EB395C /* FlashRuntimeExtensions.h */; };
 		7DF0E91B151CAECB0050D94B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DF0E91A151CAECB0050D94B /* UIKit.framework */; };
 		7DF0E91C151CAECB0050D94B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D7659D914CC8741001B2405 /* Foundation.framework */; };
 		7DF0E91E151CAECB0050D94B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DF0E91D151CAECB0050D94B /* CoreGraphics.framework */; };
@@ -30,16 +33,6 @@
 		7DF0E940151CB4060050D94B /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF0E93F151CB4060050D94B /* Tests.m */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		7DADDB57154AE84F00C0062E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7DC6AD6B153D124B00E78690 /* AdobeANE.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7DC6AD22153D0E3A00E78690;
-			remoteInfo = AdobeANE;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		7D2C346D151B5CD800809144 /* LocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalNotification.h; sourceTree = "<group>"; };
 		7D7659D614CC8741001B2405 /* libLocalNotificationLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLocalNotificationLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,7 +45,9 @@
 		7D765A4914CD38A5001B2405 /* LocalNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalNotificationManager.m; sourceTree = "<group>"; };
 		7D765A4A14CD38A5001B2405 /* LocalNotificationsContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalNotificationsContext.h; sourceTree = "<group>"; };
 		7D765A4B14CD38A5001B2405 /* LocalNotificationsContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalNotificationsContext.m; sourceTree = "<group>"; };
-		7DC6AD6B153D124B00E78690 /* AdobeANE.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AdobeANE.xcodeproj; sourceTree = ADOBE_ANE; };
+		7DB6C3381576B9A200EB395C /* ExtensionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtensionUtils.h; sourceTree = "<group>"; };
+		7DB6C3391576B9A200EB395C /* ExtensionUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExtensionUtils.m; sourceTree = "<group>"; };
+		7DB6C33A1576B9A200EB395C /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashRuntimeExtensions.h; sourceTree = "<group>"; };
 		7DF0E918151CAECB0050D94B /* LocalNotificationTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalNotificationTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DF0E91A151CAECB0050D94B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7DF0E91D151CAECB0050D94B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -94,7 +89,6 @@
 		7D7659CB14CC8741001B2405 = {
 			isa = PBXGroup;
 			children = (
-				7DC6AD6B153D124B00E78690 /* AdobeANE.xcodeproj */,
 				7D7659DB14CC8741001B2405 /* LocalNotificationLib */,
 				7DF0E91F151CAECB0050D94B /* LocalNotificationTest */,
 				7D7659D814CC8741001B2405 /* Frameworks */,
@@ -124,6 +118,9 @@
 		7D7659DB14CC8741001B2405 /* LocalNotificationLib */ = {
 			isa = PBXGroup;
 			children = (
+				7DB6C3381576B9A200EB395C /* ExtensionUtils.h */,
+				7DB6C3391576B9A200EB395C /* ExtensionUtils.m */,
+				7DB6C33A1576B9A200EB395C /* FlashRuntimeExtensions.h */,
 				7D765A4514CD38A5001B2405 /* FlashRuntimeExtensions+Private.h */,
 				7D2C346D151B5CD800809144 /* LocalNotification.h */,
 				7D765A4714CD38A5001B2405 /* LocalNotification.m */,
@@ -143,14 +140,6 @@
 				7D7659DD14CC8741001B2405 /* LocalNotificationLib-Prefix.pch */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		7DADDB54154AE84F00C0062E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				7DADDB58154AE84F00C0062E /* libAdobeANE.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		7DF0E91F151CAECB0050D94B /* LocalNotificationTest */ = {
@@ -190,6 +179,8 @@
 				7D765A5214CD38A5001B2405 /* LocalNotificationManager.h in Headers */,
 				7D765A5414CD38A5001B2405 /* LocalNotificationsContext.h in Headers */,
 				7D2C346E151B5CD800809144 /* LocalNotification.h in Headers */,
+				7DB6C33B1576B9A200EB395C /* ExtensionUtils.h in Headers */,
+				7DB6C33D1576B9A200EB395C /* FlashRuntimeExtensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,12 +239,6 @@
 			mainGroup = 7D7659CB14CC8741001B2405;
 			productRefGroup = 7D7659D714CC8741001B2405 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 7DADDB54154AE84F00C0062E /* Products */;
-					ProjectRef = 7DC6AD6B153D124B00E78690 /* AdobeANE.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				7D7659D514CC8741001B2405 /* LocalNotificationLib */,
@@ -261,16 +246,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		7DADDB58154AE84F00C0062E /* libAdobeANE.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libAdobeANE.a;
-			remoteRef = 7DADDB57154AE84F00C0062E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7DF0E916151CAECB0050D94B /* Resources */ = {
@@ -293,6 +268,7 @@
 				7D765A5114CD38A5001B2405 /* LocalNotification.m in Sources */,
 				7D765A5314CD38A5001B2405 /* LocalNotificationManager.m in Sources */,
 				7D765A5514CD38A5001B2405 /* LocalNotificationsContext.m in Sources */,
+				7DB6C33C1576B9A200EB395C /* ExtensionUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,7 +361,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "${ADOBE_ANE}/**";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -405,7 +381,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "${ADOBE_ANE}/**";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
 		};
