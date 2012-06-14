@@ -255,6 +255,17 @@ FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
         }
     }
     
+    // Sound name.
+    freReturnCode = FREGetObjectProperty(argv[1], (const uint8_t*)"soundName", &propertyValue, nil);
+    if (freReturnCode == FRE_OK && propertyValue)
+    {
+        NSString *soundName = [ExtensionUtils getStringFromFREObject:propertyValue];
+        if (soundName)
+        {
+            localNotification.soundName = soundName;
+        }
+    }
+    
     // Action Data.
     freReturnCode = FREGetObjectProperty(argv[1], (const uint8_t*)"actionData", &propertyValue, nil);
     

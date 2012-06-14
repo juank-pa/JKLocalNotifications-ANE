@@ -1,0 +1,9 @@
+<platform xmlns="http://ns.adobe.com/air/extension/3.1"> 
+    <copyright>Juan Carlos Pazmino 2012</copyright> 
+    <sdkVersion>5.1.0</sdkVersion> 
+    <linkerOptions> 
+        <option>-ios_version_min 4.3</option> 
+        <!--<option>-framework iAd</option>-->
+        <option>-liconv</option> 
+    </linkerOptions> 
+</platform>

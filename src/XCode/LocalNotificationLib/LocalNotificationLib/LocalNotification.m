@@ -23,7 +23,7 @@
 @implementation LocalNotification
 
 
-@synthesize notificationCode, actionLabel, body, hasAction, numberAnnotation, playSound, actionData, repeatInterval, fireDate;
+@synthesize notificationCode, actionLabel, body, hasAction, numberAnnotation, playSound, actionData, repeatInterval, fireDate, soundName;
 
 
 - (id) init
@@ -40,6 +40,7 @@
         actionData = nil;
         repeatInterval = 0;
         fireDate = nil;
+        soundName = @"";
     }
     
     return self;
@@ -66,6 +67,7 @@
     [body release];
     [actionData release];
     [fireDate release];
+    [soundName release];
     	
 	[super dealloc];
 }

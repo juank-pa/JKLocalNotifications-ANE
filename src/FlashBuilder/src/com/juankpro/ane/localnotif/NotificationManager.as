@@ -14,7 +14,7 @@
 	public class NotificationManager extends EventDispatcher
 	{
 		CONFIG::device private static var _extensionContext:ExtensionContext = null;
-		CONFIG::device private static var _refCount:int = 0;
+		CONFIG::device private static var _refCount:int = 0; 
 		
 		CONFIG::device private static const _contextType:String = "LocalNotificationsContext";
 		

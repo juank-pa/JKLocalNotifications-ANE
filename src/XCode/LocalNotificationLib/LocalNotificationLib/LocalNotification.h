@@ -34,6 +34,7 @@
 @property(nonatomic) BOOL playSound;
 @property(nonatomic, copy) NSData *actionData;
 @property(nonatomic, copy) NSDate *fireDate;
+@property(nonatomic, copy) NSString *soundName;
 @property(nonatomic) NSCalendarUnit repeatInterval;
 
 

@@ -82,11 +82,18 @@
 		
 		/**
 		 * Specifies if a sound will be played when the notification arrives. 
-		 * The sound and the volume that it's played at are defined by the user settings on the OS.
+		 * The volume that it's played at are defined by the user settings on the OS.
 		 * <p>Supported OS: Android, iOS</p>
 		 * @default true
 		 */
-        public var playSound:Boolean = true;
+		public var playSound:Boolean = true;
+		
+		/**
+		 * Specifies a sound by name that will be played when the notification arrives. 
+		 * <p>Supported OS: Android, iOS</p>
+		 * @default true
+		 */
+		public var soundName:String = null;
 		
 		/**
 		 * The alert (sound and vibration) of a notification will be repeated until it is canceled or the notifications list is opened.

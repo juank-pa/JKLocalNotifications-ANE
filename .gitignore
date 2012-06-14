@@ -10,4 +10,9 @@
 /samples/flash/sample.ipa
 /samples/flash/sample.swf
 /samples/flash/temp_xml_plist_file.xml
+/samples/flash/TESTDEVIPOD.mobileprovisionsamples/flash/sample.app.dSYM
+samples/flash/sample.app.dSYM
 /samples/flash/TESTDEVIPOD.mobileprovision
+/samples/flash/sample.app.dSYM
+/src/FlashBuilder/.settings/
+/src/FlashBuilder/bin/

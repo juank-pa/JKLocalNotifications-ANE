@@ -64,7 +64,7 @@
     // Default is nil: no sound.
     if (notification.playSound)
     {
-        localNotification.soundName = UILocalNotificationDefaultSoundName;
+        localNotification.soundName = (notification.soundName && notification.soundName.length? notification.soundName : UILocalNotificationDefaultSoundName);
     }
     
     // Set the badge number on the app icon. 
