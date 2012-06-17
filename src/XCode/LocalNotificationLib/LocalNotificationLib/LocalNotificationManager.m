@@ -84,15 +84,13 @@
     
     localNotification.userInfo = infoDict;
         
-    // Fire the notification. 
+    // Archive the notification using its code so we can get it back to cancel.
     // NOTE: The system keeps only the soonest firing 64 notifications and discards the rest.
+    [self archiveNotification:localNotification withCode:notification.notificationCode];
+    
+    // Fire the notification. 
     if (isScheduled)
     {
-        // Archive the notification using its code so we can get it back to cancel.
-        NSString *archiveName = [NSString stringWithFormat:@"Notification_%@.archive", notification.notificationCode];
-        NSString *archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent:archiveName];
-        [NSKeyedArchiver archiveRootObject:localNotification toFile:archivePath];
-        
         [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
     }
     else
@@ -101,20 +99,50 @@
     }
 }
 
-- (void) cancel:(NSString*)notificationCode
+-(NSArray *) getNotificationList:(NSString*)notificationCode
 {
-    // Unarchive the notification using the supplied code and cancel it if successfull.
-    UILocalNotification *decodedLocalNotification = nil;
-    
     NSString *archiveName = [NSString stringWithFormat:@"Notification_%@.archive", notificationCode];
     NSString *archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent:archiveName];
     
-    decodedLocalNotification = [NSKeyedUnarchiver unarchiveObjectWithFile:archivePath];
-    
-    if (decodedLocalNotification)
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:archivePath];
+
+    return (fileExists? [NSKeyedUnarchiver unarchiveObjectWithFile:archivePath] : nil);
+}
+
+- (void) cancel:(NSString*)notificationCode
+{
+    // Unarchive the notification using the supplied code and cancel it if successfull.
+    NSArray *notificationList = [self getNotificationList:notificationCode];
+    for (UILocalNotification *notification in notificationList)
     {
-        [[UIApplication sharedApplication] cancelLocalNotification:decodedLocalNotification];
+        [[UIApplication sharedApplication] cancelLocalNotification:notification];
     }
+    
+    [self archiveNotification:nil withCode:notificationCode];
+}
+
+-(void) archiveNotification:(UILocalNotification *)notification withCode:(NSString *)notificationCode
+{
+    NSMutableArray *notificationList = nil;
+    
+    if(notification)
+    {
+        notificationList = [[self getNotificationList:notificationCode] mutableCopy];
+        if(!notificationList)
+        {
+            notificationList = [NSMutableArray array];
+        }
+        
+        [notificationList addObject:notification];
+    }
+    else 
+    {
+        notificationList = [NSArray array];
+    }
+    
+    NSString *archiveName = [NSString stringWithFormat:@"Notification_%@.archive", notificationCode];
+    NSString *archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent:archiveName];
+    [NSKeyedArchiver archiveRootObject:notificationList toFile:archivePath];
 }
 
 - (void) cancelAll

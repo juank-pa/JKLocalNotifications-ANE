@@ -16,3 +16,4 @@ samples/flash/sample.app.dSYM
 /samples/flash/sample.app.dSYM
 /src/FlashBuilder/.settings/
 /src/FlashBuilder/bin/
+/src/XCode/LocalNotificationLib/LocalNotificationLib.xcodeproj/xcuserdata/juancarlos.xcuserdatad/xcdebugger/Breakpoints.xcbkptlist

@@ -28,6 +28,9 @@
     [_debugText release];
     [super dealloc];
 }
+- (IBAction)cancelByCode:(id)sender {
+    [self.context cancel:@"JKCode"];
+}
 - (IBAction)cancelAll:(id)sender {
     [self.context cancelAll];
 }
