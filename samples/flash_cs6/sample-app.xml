@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<application xmlns="http://ns.adobe.com/air/application/3.1">
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<application xmlns="http://ns.adobe.com/air/application/3.3">
     <id>com.juank.Sample</id>
     <versionNumber>1.0</versionNumber>
     <filename>sample</filename>
-    <description></description>
-    <!-- To localize the description, use the following format for the description element.
+    <description/>
+<!-- To localize the description, use the following format for the description element.
 	<description>
 		<text xml:lang="en">English App description goes here</text>
 		<text xml:lang="fr">French App description goes here</text>
@@ -12,14 +12,14 @@
 	</description>
 	-->
     <name>sample</name>
-    <!-- To localize the name, use the following format for the name element.
+<!-- To localize the name, use the following format for the name element.
 	<name>
 		<text xml:lang="en">English App name goes here</text>
 		<text xml:lang="fr">French App name goes here</text>
 		<text xml:lang="ja">Japanese App name goes here</text>
 	</name>
 	-->
-    <copyright></copyright>
+    <copyright/>
     <initialWindow>
         <content>sample.swf</content>
         <systemChrome>standard</systemChrome>
@@ -32,12 +32,14 @@
     </initialWindow>
     <customUpdateUI>false</customUpdateUI>
     <allowBrowserInvocation>false</allowBrowserInvocation>
-    <icon></icon>
+    <icon/>
     <iPhone>
         <requestedDisplayResolution>standard</requestedDisplayResolution>
-        <InfoAdditions><![CDATA[<key>UIDeviceFamily</key><array><string>1</string></array>]]></InfoAdditions>
+        <InfoAdditions>
+      <![CDATA[<key>UIDeviceFamily</key><array><string>1</string></array>]]>
+    </InfoAdditions>
     </iPhone>
-    <extensions>
-        <extensionID>com.juankpro.ane.LocalNotification</extensionID>
-    </extensions>
+  <extensions>
+    <extensionID>com.juankpro.ane.LocalNotification</extensionID>
+  </extensions>
 </application>

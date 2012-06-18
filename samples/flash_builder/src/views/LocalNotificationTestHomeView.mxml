@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="HomeView" creationComplete="view1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.juankpro.ane.localnotif.Notification;
+			import com.juankpro.ane.localnotif.NotificationEvent;
+			import com.juankpro.ane.localnotif.NotificationManager;
+			
+			import mx.events.FlexEvent;
+			
+			private static const NOTIFICATION_CODE:String = "NOTIFICATION_CODE_001";
+			
+			private var notificationManager:NotificationManager;
+			
+			protected function view1_creationCompleteHandler(event:FlexEvent):void
+			{
+				if(NotificationManager.isSupported)
+				{
+					notificationManager = new NotificationManager();
+					
+					notificationManager.addEventListener(NotificationEvent.NOTIFICATION_ACTION, notificationActionHandler);
+				}
+			}
+			
+			protected function button_clickHandler(event:MouseEvent):void
+			{
+				if(!notificationManager) return;
+				
+				switch(event.target)
+				{
+					case button1:
+						var notification:Notification = new Notification();
+						notification.actionLabel = "OK";
+						notification.body = "Body sample";
+						notification.title = "Title";
+						notification.soundName = "fx05.caf";
+						notification.fireDate = new Date((new Date()).time + (15 * 1000));
+						notification.numberAnnotation = 1;
+						notification.actionData = {sampleData:"Hello World!"}
+						
+						notificationManager.notifyUser(NOTIFICATION_CODE, notification);
+						break;
+					case button2:
+						notificationManager.cancel(NOTIFICATION_CODE);
+						break;
+					case button3:
+						notificationManager.applicationBadgeNumber = 0;
+						notificationTF.text = "";
+						break;
+				}
+			}
+			
+			private function notificationActionHandler(event:NotificationEvent):void
+			{
+				notificationTF.text = "Notification Code: " + event.notificationCode +
+					"\nSample Data: {" + event.actionData.sampleData + "}\n\n";
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Button id="button1" x="55" y="10" width="211" label="Send" click="button_clickHandler(event)"/>
+	<s:Button id="button2" x="55" y="61" width="211" label="Clear" click="button_clickHandler(event)"/>
+	<s:Button id="button3" x="55" y="112" width="211" label="Reset" click="button_clickHandler(event)"/>
+	<s:TextArea id="notificationTF" x="10" y="163" height="242"/>
+</s:View>

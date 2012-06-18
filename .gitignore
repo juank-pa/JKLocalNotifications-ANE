@@ -1,19 +1,35 @@
+/src/FlashBuilder/bin/
+/src/FlashBuilder/.settings/
 /src/FlashBuilder/.settings/org.eclipse.core.resources.prefs
 /src/XCode/LocalNotificationLib/LocalNotificationLib.xcodeproj/project.xcworkspace/xcuserdata/juancarlos.xcuserdatad/UserInterfaceState.xcuserstate
+
 # You can re-generate this file in XCode
 /src/XCode/LocalNotificationLib/Release/libLocalNotificationLib.a
+
 # Documentation project file
 /src/DocProj.docproj
-# sample binaries
-/samples/flash/iphone_dev.p12
-/samples/flash/package.bat
-/samples/flash/sample.ipa
-/samples/flash/sample.swf
-/samples/flash/temp_xml_plist_file.xml
-/samples/flash/TESTDEVIPOD.mobileprovisionsamples/flash/sample.app.dSYM
-samples/flash/sample.app.dSYM
-/samples/flash/TESTDEVIPOD.mobileprovision
-/samples/flash/sample.app.dSYM
-/src/FlashBuilder/.settings/
-/src/FlashBuilder/bin/
-/src/XCode/LocalNotificationLib/LocalNotificationLib.xcodeproj/xcuserdata/juancarlos.xcuserdatad/xcdebugger/Breakpoints.xcbkptlist
+
+# flash CS5.5 sample binaries
+/samples/flash_cs5_5/iphone_dev.p12
+/samples/flash_cs5_5/TESTDEVIPOD.mobileprovision
+/samples/flash_cs5_5/sample.ipa
+/samples/flash_cs5_5/sample.swf
+/samples/flash_cs5_5/temp_xml_plist_file.xml
+/samples/flash_cs5_5/sample.app.dSYM
+
+# flash CS6 sample binaries
+/samples/flash_cs6/iphone_dev.p12
+/samples/flash_cs6/TESTDEVIPOD.mobileprovision
+/samples/flash_cs6/sample.ipa
+/samples/flash_cs6/sample.swf
+
+# flash builder sample binaries
+/samples/flash_builder/.settings/
+/samples/flash_builder/iphone_dev.p12
+/samples/flash_builder/TESTDEVIPOD.mobileprovision
+/samples/flash_builder/bin-debug/fx05.caf
+/samples/flash_builder/bin-debug/LocalNotificationTest.swf
+/samples/flash_builder/bin-debug/LocalNotificationTest-app.xml
+/samples/flash_builder/bin-release-temp/
+/samples/flash_builder/LocalNotificationTest.ipa
+/samples/flash_builder/sample.app.dSYM
