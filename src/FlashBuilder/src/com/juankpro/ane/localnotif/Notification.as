@@ -1,4 +1,4 @@
-﻿package com.juankpro.ane.localnotif
+package com.juankpro.ane.localnotif
 {
 
 	/**
@@ -125,7 +125,7 @@
 		
 		/**
 		 * The date and time when the system should deliver the notification.
-		 * <p>Supported OS: iOS</p>
+		 * <p>Supported OS: iOS, Android</p>
 		 * @default null
 		 */
 		public var fireDate:Date;
