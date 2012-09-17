@@ -20,18 +20,13 @@
 package com.juankpro.ane.localnotif;
 
 
-import java.util.List;
-
-import android.app.ActivityManager;
 import android.app.Notification;
-import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -145,11 +140,11 @@ public class AlarmIntentService extends BroadcastReceiver
 	{
 		final Bundle bundle = intent.getExtras();
 		boolean playSound = bundle.getBoolean(PLAY_SOUND);
-		String soundName = bundle.getString(SOUND_NAME);
+		//String soundName = bundle.getString(SOUND_NAME);
 		
 		if (playSound)
 		{
-			if(soundName != null && soundName.length() > 0)
+			/*if(soundName != null && soundName.length() > 0)
 			{
 				int pointIndex = soundName.indexOf('.');
 				if(pointIndex != -1)
@@ -160,9 +155,10 @@ public class AlarmIntentService extends BroadcastReceiver
 				notification.sound = path;
 			}
 			else
-			{
-				notification.sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-			}
+			{*/
+				notification.defaults = Notification.DEFAULT_SOUND;
+				//notification.sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+			//}
 		}
 		else
 		{

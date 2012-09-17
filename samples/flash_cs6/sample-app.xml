@@ -33,6 +33,18 @@
     <customUpdateUI>false</customUpdateUI>
     <allowBrowserInvocation>false</allowBrowserInvocation>
     <icon/>
+    <android>
+        <colorDepth>16bit</colorDepth>
+        <manifestAdditions><![CDATA[
+            <manifest android:installLocation="auto">
+                <uses-permission android:name="android.permission.VIBRATE"/>
+                <application>
+                    <service android:name="com.juankpro.ane.localnotif.LocalNotificationIntentService"/>
+                    <receiver android:name="com.juankpro.ane.localnotif.AlarmIntentService" />
+                </application>
+			</manifest>
+		]]></manifestAdditions>
+    </android>
     <iPhone>
         <requestedDisplayResolution>standard</requestedDisplayResolution>
         <InfoAdditions>
