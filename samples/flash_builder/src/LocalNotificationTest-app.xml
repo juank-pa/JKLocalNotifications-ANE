@@ -265,6 +265,11 @@
 			    <application>
 			    	<service android:name="com.juankpro.ane.localnotif.LocalNotificationIntentService"/>
 			    	<receiver android:name="com.juankpro.ane.localnotif.AlarmIntentService" />
+					<receiver android:name="com.juankpro.ane.localnotif.AlarmRestoreOnBoot" >
+    					<intent-filter>
+        					<action android:name="android.intent.action.BOOT_COMPLETED" />
+    					</intent-filter>
+					</receiver>
 			    </application>
 			</manifest>
 			

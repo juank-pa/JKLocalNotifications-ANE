@@ -14,7 +14,7 @@ public class AlarmRestoreOnBoot extends BroadcastReceiver {
 	@Override
     public void onReceive(Context context, Intent intent) 
 	{
-		final String pluginName = LocalNotificationManager.ANE_NAME;
+		final String pluginName = "JK_ANE_LocalNotification";
 	
 		// Obtain alarm details form Shared Preferences
 		final SharedPreferences alarmSettings = context.getSharedPreferences(pluginName, Context.MODE_PRIVATE);
@@ -35,7 +35,7 @@ public class AlarmRestoreOnBoot extends BroadcastReceiver {
 		    	
 		    	Log.d("AlarmRestoreOnBoot:", "Class name:" + context.getClass().getName());
 		    	
-		    	notification.deserialize(alarmSettings, alarmId);
+				notification.deserialize(alarmSettings, alarmId);
 		    	
 		    	manager.notify(notification);	
 		    } 

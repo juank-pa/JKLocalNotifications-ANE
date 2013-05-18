@@ -2,10 +2,10 @@
 export AIR_ANDROID_SDK_HOME="/Users/juancarlos/android-sdk-macosx"
 
 # path to the ADT tool in Flash Builder sdks
-ACOMPC="/Applications/Adobe Flash Builder 4.6/sdks/4.6.0/bin/acompc"
+ACOMPC="/Applications/Adobe Flash Builder 4.7/sdks/4.6.0/bin/acompc"
 
 # path to the ADT tool in Flash Builder sdks
-ADT="/Applications/Adobe Flash Builder 4.6/sdks/4.6.0/bin/adt"
+ADT="/Applications/Adobe Flash CS6/AIR3.2/bin/adt"
 
 # native Android project folder
 NATIVE_XCODE_FOLDER=../src/XCode/LocalNotificationLib

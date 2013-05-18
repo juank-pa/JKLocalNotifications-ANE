@@ -118,7 +118,7 @@ public class LocalNotification
 	}
 
 	
-	public void deserialize(SharedPreferences prefs)
+	public void deserialize (SharedPreferences prefs, String code)
 	{
 		String jsonString = prefs.getString(code, "");
 		JSONObject jsonObject = null;
@@ -135,7 +135,7 @@ public class LocalNotification
 		if(jsonObject != null)
 		{
 			// Note: using the current value as the default value in each case.
-			code = jsonObject.optString("code", code);
+			this.code = jsonObject.optString("code", code);
 			tickerText = jsonObject.optString("tickerText", tickerText);
 			title = jsonObject.optString("title", title);
 			body = jsonObject.optString("body", body);

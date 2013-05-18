@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<application xmlns="http://ns.adobe.com/air/application/3.1">
+<application xmlns="http://ns.adobe.com/air/application/3.2">
     <id>com.juank.Sample</id>
     <versionNumber>1.0</versionNumber>
     <filename>sample</filename>
@@ -41,6 +41,11 @@
                 <application>
                     <service android:name="com.juankpro.ane.localnotif.LocalNotificationIntentService"/>
                     <receiver android:name="com.juankpro.ane.localnotif.AlarmIntentService" />
+                    <receiver android:name="com.juankpro.ane.localnotif.AlarmRestoreOnBoot" >
+                        <intent-filter>
+                            <action android:name="android.intent.action.BOOT_COMPLETED" />
+                        </intent-filter>
+                    </receiver>
                 </application>
 			</manifest>
 		]]></manifestAdditions>
@@ -49,7 +54,4 @@
         <requestedDisplayResolution>standard</requestedDisplayResolution>
         <InfoAdditions><![CDATA[<key>UIDeviceFamily</key><array><string>1</string></array>]]></InfoAdditions>
     </iPhone>
-    <extensions>
-        <extensionID>com.juankpro.ane.LocalNotification</extensionID>
-    </extensions>
 </application>
