@@ -262,6 +262,7 @@
 			    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
 
 			    <uses-permission android:name="android.permission.VIBRATE"/>
+<uses-permission android:name="android.permission.RECEIVED_BOOT_COMPLETED"/>
 			    <application>
 			    	<service android:name="com.juankpro.ane.localnotif.LocalNotificationIntentService"/>
 			    	<receiver android:name="com.juankpro.ane.localnotif.AlarmIntentService" />
