@@ -96,7 +96,7 @@ public class LocalNotification
 			jsonObject.putOpt("alertPolicy", alertPolicy);
 			jsonObject.putOpt("hasAction", hasAction);
 			jsonObject.putOpt("soundName", soundName);
-			jsonObject.putOpt("fireDate", fireDate);
+			jsonObject.putOpt("fireDate", fireDate.getTime());
 			jsonObject.putOpt("repeatInterval", repeatInterval);
 			jsonObject.putOpt("activityClassName", activityClassName);
 			
