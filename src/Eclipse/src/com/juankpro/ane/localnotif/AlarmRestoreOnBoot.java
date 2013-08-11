@@ -2,6 +2,7 @@ package com.juankpro.ane.localnotif;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.Date;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,6 +23,7 @@ public class AlarmRestoreOnBoot extends BroadcastReceiver {
 		final Set<String> alarmIds = allAlarms.keySet();
 	
     	final LocalNotificationManager manager = new LocalNotificationManager(context);
+    	Date curDate = new Date();
     	
 		/*
 		 * For each alarm, parse its alarm options and register is again with
@@ -37,7 +39,14 @@ public class AlarmRestoreOnBoot extends BroadcastReceiver {
 		    	
 				notification.deserialize(alarmSettings, alarmId);
 		    	
-		    	manager.notify(notification);	
+				if(notification.fireDate.getTime() >= curDate.getTime())
+				{
+					manager.notify(notification);
+				}
+				else
+				{
+					manager.cancel(notification.code);
+				}
 		    } 
 		    catch (Exception e) 
 		    {
