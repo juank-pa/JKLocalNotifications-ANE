@@ -33,3 +33,7 @@
 /samples/flash_builder/bin-release-temp/
 /samples/flash_builder/LocalNotificationTest.ipa
 /samples/flash_builder/sample.app.dSYM
+
+xcuserdata/
+build/
+DerivedData/
