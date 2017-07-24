@@ -1,0 +1,66 @@
+#!/bin/zsh
+
+set -e
+
+SDK="${HOME}/Developer/AIR_SDK"
+AMXML="${SDK}/bin/amxmlc"
+ADT="${SDK}/bin/adt"
+IPHONE_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator10.2.sdk"
+
+NATIVE_XCODE_FOLDER=../src/XCode/LocalNotificationLib
+
+# AS lib folder
+LIB_FOLDER=../src/FlashBuilder
+
+# name of APP file
+APP_NAME=sample
+
+# Certificate password
+CERT_PASS=1234
+
+echo "***** IOS SIMULATOR APP ******"
+echo "***** compiling SWF file *****"
+"$AMXML" -swf-version 26 \
+  -debug=true \
+  -define+=CONFIG::device,true \
+  -define+=CONFIG::iphone,true \
+  -define+=CONFIG::android,false \
+  -external-library-path+=./../../bin/ext/LocalNotificationLib.ane \
+  -output ./sample.swf \
+  -- ./Sample.as
+
+echo "***** packaging SWF file into IPA *****"
+
+"$ADT" -package \
+  -target ipa-test-interpreter-simulator \
+  -storetype pkcs12 -keystore test.p12 \
+  -storepass ${CERT_PASS} \
+  ${APP_NAME}.ipa \
+  ${APP_NAME}-app.xml \
+  ${APP_NAME}.swf \
+  -extdir ./../../bin/ext \
+  -platformsdk "${IPHONE_SDK}"
+
+# For this steps emulator must be running
+# Create and configure an emulator then run it
+# To run use: emulator ave Test_Device_Name
+# To list devices: adb devices
+# debugger: platform-tools/adb log cat
+
+echo "**** Installing IPA in iOS simulator ******"
+
+export AIR_IOS_SIMULATOR_DEVICE="iPhone 4s"
+
+"$ADT" -installApp \
+  -platform ios \
+  -platformsdk "${IPHONE_SDK}" \
+  -device ios-simulator \
+  -package ./${APP_NAME}.ipa
+
+echo "**** Lanching iOS simulator ******"
+
+"$ADT" -launchApp \
+  -platform ios \
+  -platformsdk "${IPHONE_SDK}" \
+  -device ios-simulator \
+  -appid com.juankpro.Sample

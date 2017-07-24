@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<application xmlns="http://ns.adobe.com/air/application/26.0" minimumPatchLevel="0">
+  <id>com.juank.localnotif.Test</id>
+  <name>LocalNotificationTest</name>
+  <versionNumber>1.0.0</versionNumber>
+  <versionLabel>v1</versionLabel>
+  <filename>LocalNotificationTest</filename>
+  <initialWindow>
+    <content>tests.swf</content>
+    <title>Test</title>
+    <visible>false</visible>
+    <width>600</width>
+    <height>600</height>
+    <autoOrients>true</autoOrients>
+    <fullScreen>false</fullScreen>
+    <softKeyboardBehavior>none</softKeyboardBehavior>
+  </initialWindow>
+</application>

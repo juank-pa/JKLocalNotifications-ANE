@@ -1,0 +1,53 @@
+#!/bin/zsh
+
+set -e
+
+# Paths
+SDK="${HOME}/Developer/AIR_SDK"
+AMXML="${SDK}/bin/amxmlc"
+ADL="${SDK}/bin/adl"
+
+echo "Compiling iOS version"
+"$AMXML" -swf-version 26 \
+  -debug=true \
+  -define+=CONFIG::device,true \
+  -define+=CONFIG::iphone,true \
+  -define+=CONFIG::android,false \
+  -library-path=./tests/lib/mock4as.swc \
+  -source-path+=./tests/src/ \
+  -source-path+=./src/ \
+  -output ./tests/tests.swf \
+  -- ./tests/src/Main.as
+
+echo "\nRunning tests for iOS"
+"$ADL" ./tests/TestApp.xml ./tests
+
+echo "Compiling Android version"
+"$AMXML" -swf-version 26 \
+  -debug=true \
+  -define+=CONFIG::device,true \
+  -define+=CONFIG::iphone,false \
+  -define+=CONFIG::android,true \
+  -library-path=./tests/lib/mock4as.swc \
+  -source-path+=./tests/src/ \
+  -source-path+=./src/ \
+  -output ./tests/tests.swf \
+  -- ./tests/src/Main.as
+
+echo "\nRunning tests for Android"
+"$ADL" ./tests/TestApp.xml ./tests
+
+echo "Compiling Default version"
+"$AMXML" -swf-version 26 \
+  -debug=true \
+  -define+=CONFIG::device,false \
+  -define+=CONFIG::iphone,true \
+  -define+=CONFIG::android,true \
+  -library-path=./tests/lib/mock4as.swc \
+  -source-path+=./tests/src/ \
+  -source-path+=./src/ \
+  -output ./tests/tests.swf \
+  -- ./tests/src/Main.as
+
+echo "\nRunning tests for Default"
+"$ADL" ./tests/TestApp.xml ./tests

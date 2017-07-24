@@ -23,21 +23,14 @@
 
 @class LocalNotification;
 
-
 static const NSString *NOTIFICATION_CODE_KEY = @"notificationCodeKey";
 static const NSString *NOTIFICATION_DATA_KEY = @"notificationDataKey";
 
-
-@interface LocalNotificationManager : NSObject 
-{    
-    UILocalNotification *localNotification;
-}
-
-
-- (void) notify :(LocalNotification*)notification;
-- (void) cancel :(NSString*)notificationCode;
-- (void) cancelAll;
-
-
+@interface LocalNotificationManager : NSObject
++ (instancetype)notificationManager;
+- (void)notify:(LocalNotification*)notification;
+- (void)cancel:(NSString*)notificationCode;
+- (void)cancelAll;
+- (void)registerSettingTypes:(UIUserNotificationType)types;
 @end
 

@@ -1,0 +1,64 @@
+#!/bin/zsh
+
+# path to YOUR Android SDK
+export SDK="${HOME}/Developer/AIR_SDK"
+
+# path to the ADT tool in Flash Builder sdks
+ACOMPC="${SDK}/bin/acompc"
+
+# path to the ADT tool in Flash Builder sdks
+ADT="${SDK}/bin/adt"
+
+# native XCode project folder
+NATIVE_XCODE_FOLDER=../src/XCode/LocalNotificationLib
+
+# AS lib folder
+LIB_FOLDER=../src/AS
+
+# name of ANE file
+ANE_NAME=LocalNotificationLib
+
+#===================================================================
+
+echo "****** IOS VERSION *******"
+echo "****** preparing ANE iOS package sources *******"
+
+set -e
+
+#rm ${ANE_NAME}.*
+rm -rf ./iphone
+mkdir -p ./iphone
+
+# copy A file
+cp ./${NATIVE_XCODE_FOLDER}/Debug/libLocalNotificationLib.a ./iphone/
+
+# compile iOS SWC version
+"$ACOMPC" -locale en_US \
+  -swf-version 26 \
+	-define+=CONFIG::device,true \
+	-define+=CONFIG::iphone,true \
+	-define+=CONFIG::android,false \
+	-source-path ./${LIB_FOLDER}/src/ \
+	-output ./${ANE_NAME}.swc \
+	-include-sources ./${LIB_FOLDER}/src/
+
+# grab SWC library
+unzip ./${ANE_NAME}.swc -d .
+mv ./library.swf ./iphone
+rm ./catalog.xml
+
+
+echo "****** creating ANE package *******"
+
+"$ADT" -package \
+		-target ane \
+		./${ANE_NAME}.ane \
+		./extension_simulator.xml \
+		-swc ./${ANE_NAME}.swc \
+		-platform iPhone-x86 \
+		-C ./iphone/ . \
+    -platformoptions ./options.xml
+
+echo "****** ANE package created *******"
+echo "****** END IOS VERSION *******"
+echo ""

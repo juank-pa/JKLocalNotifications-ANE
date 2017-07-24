@@ -25,112 +25,114 @@
 #import "LocalNotificationsContext.h"
 #import "LocalNotificationManager.h"
 #import "LocalNotification.h"
-
-
-static const char* const STATUS = "status";
-static const char* const NOTIFICATION_SELECTED = "notificationSelected";
+#import "LocalNotificationAppDelegate.h"
 
 @interface LocalNotificationsContext()
 
-    - (void) createManager;
-    - (void) notify :(LocalNotification*)localNotification;
-    - (void) cancel :(NSString*)notificationCode;
-    - (void) cancelAll;
+- (void)createManager;
+- (void)notify:(LocalNotification*)localNotification;
+- (void)cancel:(NSString*)notificationCode;
+- (void)cancelAll;
 
-    @property (nonatomic, copy) NSString *selectedNotificationCode;
-    @property (nonatomic, copy) NSData *selectedNotificationData;
+@property (nonatomic, copy) NSString *selectedNotificationCode;
+@property (nonatomic, copy) NSData *selectedNotificationData;
+@property (nonatomic, retain) UIUserNotificationSettings *selectedSettings;
+@property (nonatomic, retain) LocalNotificationManager *notificationManager;
+@property (nonatomic, assign) FREContext extensionContext;
+@property (nonatomic, retain) LocalNotificationAppDelegate *sourceDelegate;
 
 @end
 
 
 @implementation LocalNotificationsContext
 
-#ifdef TEST
++ (instancetype)notificationsContextWithContext:(FREContext)ctx {
+    return [[[LocalNotificationsContext alloc] initWithContext:ctx] autorelease];
+}
 
-@synthesize delegate;
-#endif
+- (id)initWithContext:(FREContext)ctx {
+    if (self = [super init]) {
+        _extensionContext = ctx;
 
-@synthesize selectedNotificationCode, selectedNotificationData;
-
-- (id) initWithContext :(FREContext)ctx 
-{
-    self = [super init];
-    if (self) 
-    {
-        extensionContext = ctx;
+        // Use proxy delegate
+        id<UIApplicationDelegate> targetDelegate = [UIApplication sharedApplication].delegate;
+        _sourceDelegate = [[LocalNotificationAppDelegate alloc] initWithTargetDelegate:targetDelegate];
+        [UIApplication sharedApplication].delegate = _sourceDelegate;
     }
-    
     return self;
 }
 
 
-- (void) dealloc 
-{
-    extensionContext = nil;
-    [notificationManager release];
-    [selectedNotificationCode release];
-    [selectedNotificationData release];
-    
+- (void)dealloc {
+    _extensionContext = NULL;
+    [self.notificationManager release];
+    [self.selectedNotificationCode release];
+    [self.selectedNotificationData release];
+    [self.selectedSettings release];
+
+    [UIApplication sharedApplication].delegate = self.sourceDelegate.target;
+    [self.sourceDelegate release];
+
     [[NSNotificationCenter defaultCenter] removeObserver:self name:(NSString *)FRPE_ApplicationDidReceiveLocalNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:(NSString *)FRPE_ApplicationDidRegisterUserNotificationSettings object:nil];
+
     [super dealloc];
 }
 
 
-- (void) createManager
-{
-    notificationManager = [[LocalNotificationManager alloc] init];
+- (void)createManager {
+    self.notificationManager = [LocalNotificationManager notificationManager];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                          selector:@selector(ADEPDidReceiveLocalNotification:) 
-                                          name:(NSString *)FRPE_ApplicationDidReceiveLocalNotification 
-                                          object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveLocalNotification:)
+                                                 name:(NSString *)FRPE_ApplicationDidReceiveLocalNotification
+                                               object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didRegisterUserNotificationSettings:)
+                                                 name:(NSString *)FRPE_ApplicationDidRegisterUserNotificationSettings
+                                               object:nil];
 }
 
-- (void) notify :(LocalNotification*)localNotification
-{
-    [notificationManager notify :localNotification];
+- (void)notify:(LocalNotification*)localNotification {
+    [self.notificationManager notify:localNotification];
 }
 
 
-- (void) cancel :(NSString*)notificationCode
-{
-    [notificationManager cancel :notificationCode];
+- (void)cancel:(NSString*)notificationCode {
+    [self.notificationManager cancel:notificationCode];
 }
 
 
-- (void) cancelAll
-{
-    [notificationManager cancelAll];
+- (void)cancelAll {
+    [self.notificationManager cancelAll];
 }
 
--(void)checkForNotificationAction
-{
-    NSDictionary *launchOptions = FRPE_getApplicationLaunchOptions();
-    
-    if (launchOptions)
-    {
-        UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-        if (localNotification)
-        {
-            NSDictionary *notificationUserInfo = [localNotification userInfo];
-            if (notificationUserInfo) 
-            {
-                [self setSelectedNotificationCode :[notificationUserInfo objectForKey:NOTIFICATION_CODE_KEY]];
-                [self setSelectedNotificationData :[notificationUserInfo objectForKey:NOTIFICATION_DATA_KEY]];
-#ifdef TEST
-                [self.delegate localNotificationContext:self didReceiveLocalNotification:localNotification];
-#else     
-                // Dispatch event to AS side of ExtensionContext.
-                FREDispatchStatusEventAsync(extensionContext, (const uint8_t*)NOTIFICATION_SELECTED, (const uint8_t*)STATUS);
+- (void)registerSettingTypes:(UIUserNotificationType)types {
+    [self.notificationManager registerSettingTypes:types];
+}
+
+- (void)checkForNotificationAction {
+    UILocalNotification *localNotification = [self localNotificationFromLaunchOptions];
+    NSDictionary *notificationUserInfo = [localNotification userInfo];
+    if (!notificationUserInfo) return;
+
+    self.selectedNotificationCode = [notificationUserInfo objectForKey:NOTIFICATION_CODE_KEY];
+    self.selectedNotificationData = [notificationUserInfo objectForKey:NOTIFICATION_DATA_KEY];
+#ifdef SAMPLE
+    [self.delegate localNotificationContext:self didReceiveLocalNotification:localNotification];
+#else
+    // Dispatch event to AS side of ExtensionContext.
+    FREDispatchStatusEventAsync(self.extensionContext, (const uint8_t*)NOTIFICATION_SELECTED, (const uint8_t*)STATUS);
 #endif
-            }
-        }
-    }
 }
 
-- (void) ADEPDidReceiveLocalNotification :(NSNotification*)notification
-{
+- (UILocalNotification *)localNotificationFromLaunchOptions {
+    NSDictionary *launchOptions = FRPE_getApplicationLaunchOptions();
+    return [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+}
+
+- (void)didReceiveLocalNotification:(NSNotification*)notification {
     // Extract local notification.
     UILocalNotification *localNotification = [[notification userInfo] valueForKey:(NSString*)FRPE_ApplicationDidReceiveLocalNotificationKey];
     
@@ -139,232 +141,177 @@ static const char* const NOTIFICATION_SELECTED = "notificationSelected";
     self.selectedNotificationCode = [notificationUserInfo objectForKey:NOTIFICATION_CODE_KEY];
     self.selectedNotificationData = [notificationUserInfo objectForKey:NOTIFICATION_DATA_KEY];
     
-#ifndef TEST
+#ifndef SAMPLE
     // Dispatch event to AS side of ExtensionContext.
-    FREResult result = FREDispatchStatusEventAsync(extensionContext, (const uint8_t*)NOTIFICATION_SELECTED, (const uint8_t*)STATUS);
+    FREResult result = FREDispatchStatusEventAsync(self.extensionContext, (const uint8_t*)NOTIFICATION_SELECTED, (const uint8_t*)STATUS);
     assert(result == FRE_OK);
 #else
     [self.delegate localNotificationContext:self didReceiveLocalNotification:localNotification];
 #endif
 }
 
-#ifndef TEST
+- (void)didRegisterUserNotificationSettings:(NSNotification *)notification {
+    // Extract notification settings.
+    self.selectedSettings = [[notification userInfo] valueForKey:(NSString*)FRPE_ApplicationDidRegisterUserNotificationSettingsKey];
 
-FREObject ADEPCreateManager(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{    
+#ifndef SAMPLE
+    // Dispatch event to AS side of ExtensionContext.
+    FREResult result = FREDispatchStatusEventAsync(self.extensionContext, (const uint8_t*)SETTINGS_SUBSCRIBED, (const uint8_t*)STATUS);
+    assert(result == FRE_OK);
+#else
+    [self.delegate localNotificationContext:self didRegisterSettings:self.selectedSettings];
+#endif
+}
+
+#ifndef SAMPLE
+
+FREObject ADEPCreateManager(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
     [localContextID createManager];
 
     return NULL;
 }
 
-FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{    
-    LocalNotification *localNotification = [[[LocalNotification alloc] init] autorelease];
-    
-    FREObject propertyValue = NULL;
-    FREResult freReturnCode;
+FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    LocalNotification *localNotification = [LocalNotification localNotification];
     
     // Notification Code.
     NSString *notificationCode = [ExtensionUtils getStringFromFREObject:argv[0]];
-    if (notificationCode)
-    {
-        localNotification.notificationCode = notificationCode;
+    if (notificationCode) {
+        [localNotification setNotificationCode:notificationCode];
     }
+
+    FREObject notification = argv[1];
     
     // Fire Date.
-    freReturnCode = FREGetObjectProperty(argv[1], (const uint8_t*)"fireDate", &propertyValue, nil);
-    if (freReturnCode == FRE_OK && propertyValue)
-    {
-        FREObject timeProperty = NULL;
-        FREGetObjectProperty(propertyValue, (const uint8_t *)"time", &timeProperty, NULL);
-        
-        uint32_t time = [ExtensionUtils getDoubleFromFREObject:timeProperty] / 1000.0;
-        if (time)
-        {
+    FREObject freFireDate = [ExtensionUtils getProperty:@"fireDate" fromObject:notification];
+    if (freFireDate) {
+        FREObject timeProperty = [ExtensionUtils getProperty:@"time" fromObject:freFireDate];
+
+        double time = ([ExtensionUtils getDoubleFromFREObject:timeProperty] / 1000.0);
+        if ((uint32_t)time > 0) {
             localNotification.fireDate = [NSDate dateWithTimeIntervalSince1970:time];
         }
     }
     
     // Repeat Interval.
-    freReturnCode = FREGetObjectProperty(argv[1], (const uint8_t*)"repeatInterval", &propertyValue, nil);
-    if (freReturnCode == FRE_OK && propertyValue)
-    {
-        uint32_t repeatInterval = [ExtensionUtils getUIntFromFREObject:propertyValue];
-        if (repeatInterval)
-        {
-            localNotification.repeatInterval = repeatInterval;
-        }
+    FREObject freRepeatInterval = [ExtensionUtils getProperty:@"repeatInterval" fromObject:notification];
+    if (freRepeatInterval) {
+        localNotification.repeatInterval = [ExtensionUtils getUIntFromFREObject:freRepeatInterval];
     }
     
     // Action Label.
-    freReturnCode = FREGetObjectProperty(argv[1], (const uint8_t*)"actionLabel", &propertyValue, nil);
-    if (freReturnCode == FRE_OK && propertyValue)
-    {
-        NSString *actionLabel = [ExtensionUtils getStringFromFREObject:propertyValue];
-        if (actionLabel)
-        {
-            localNotification.actionLabel = actionLabel;
-        }
+    FREObject freActionLabel = [ExtensionUtils getProperty:@"actionLabel" fromObject:notification];
+    if (freActionLabel) {
+        localNotification.actionLabel = [ExtensionUtils getStringFromFREObject:freActionLabel];
     }
     
     // Body.
-    freReturnCode = FREGetObjectProperty(argv[1], (const uint8_t*)"body", &propertyValue, nil);
-    if (freReturnCode == FRE_OK && propertyValue)
-    {
-        NSString *body = [ExtensionUtils getStringFromFREObject:propertyValue];
-        if (body)
-        {
-            localNotification.body = body;
-        }
+    FREObject freBody = [ExtensionUtils getProperty:@"body" fromObject:notification];
+    if (freBody) {
+        localNotification.body = [ExtensionUtils getStringFromFREObject:freBody];
     }
     
     // Has Action.
-    freReturnCode = FREGetObjectProperty(argv[1], (const uint8_t*)"hasAction", &propertyValue, nil);
-    if (freReturnCode == FRE_OK && propertyValue)
-    {
-        uint32_t hasAction;
-        freReturnCode = FREGetObjectAsBool(propertyValue, &hasAction);
-        if (freReturnCode == FRE_OK)
-        {
-            localNotification.hasAction = hasAction;
-        }
+    FREObject freHasAction = [ExtensionUtils getProperty:@"hasAction" fromObject:notification];
+    if (freHasAction) {
+        localNotification.hasAction = [ExtensionUtils getBoolFromFREObject:freHasAction];
     }
     
     // Number Annotation.
-    freReturnCode = FREGetObjectProperty(argv[1], (const uint8_t*)"numberAnnotation", &propertyValue, nil);
-    if (freReturnCode == FRE_OK && propertyValue)
-    {
-        int32_t numberAnnotation;
-        freReturnCode = FREGetObjectAsInt32(propertyValue, &numberAnnotation);
-        if (freReturnCode == FRE_OK)
-        {
-            localNotification.numberAnnotation = numberAnnotation;
-        }
+    FREObject freNumberAnnotation = [ExtensionUtils getProperty:@"numberAnnotation" fromObject:notification];
+    if (freNumberAnnotation) {
+        localNotification.numberAnnotation = [ExtensionUtils getUIntFromFREObject:freNumberAnnotation];
     }
     
     // Play Sound.
-    freReturnCode = FREGetObjectProperty(argv[1], (const uint8_t*)"playSound", &propertyValue, nil);
-    if (freReturnCode == FRE_OK && propertyValue)
-    {
-        uint32_t playSound;
-        freReturnCode = FREGetObjectAsBool(propertyValue, &playSound);
-        if (freReturnCode == FRE_OK)
-        {
-            localNotification.playSound = playSound;
-        }
+    FREObject frePlaySound = [ExtensionUtils getProperty:@"playSound" fromObject:notification];
+    if (frePlaySound) {
+        localNotification.playSound = [ExtensionUtils getBoolFromFREObject:frePlaySound];
     }
     
     // Sound name.
-    freReturnCode = FREGetObjectProperty(argv[1], (const uint8_t*)"soundName", &propertyValue, nil);
-    if (freReturnCode == FRE_OK && propertyValue)
-    {
-        NSString *soundName = [ExtensionUtils getStringFromFREObject:propertyValue];
-        if (soundName)
-        {
-            localNotification.soundName = soundName;
-        }
+    FREObject freSoundName = [ExtensionUtils getProperty:@"soundName" fromObject:notification];
+    if (freSoundName) {
+        localNotification.soundName = [ExtensionUtils getStringFromFREObject:freSoundName];
     }
     
     // Action Data.
-    freReturnCode = FREGetObjectProperty(argv[1], (const uint8_t*)"actionData", &propertyValue, nil);
-    
-    FREByteArray byteArray;
-    localNotification.actionData = [NSData data];
-    
-    if (freReturnCode == FRE_OK && propertyValue)
-    {
-        freReturnCode = FREAcquireByteArray(propertyValue, &byteArray);
-        if (freReturnCode == FRE_OK)
-        {
-            localNotification.actionData = [NSData dataWithBytes :byteArray.bytes length:byteArray.length];
-            FREReleaseByteArray(propertyValue);
-        }
+    FREObject freActionData = [ExtensionUtils getProperty:@"actionData" fromObject:notification];
+
+    if (freActionData) {
+         localNotification.actionData = [ExtensionUtils getDataFromFREObject:freActionData];
     }
     
     // Notify.
     LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    [localContextID notify :localNotification];
+    [localContextID notify:localNotification];
     
     return NULL;
 }
 
 
-FREObject ADEPCancel(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{    
+FREObject ADEPCancel(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     NSString *notificationCode = [ExtensionUtils getStringFromFREObject:argv[0]];
     LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    [localContextID cancel :notificationCode];    
+    [localContextID cancel:notificationCode];
     return NULL;
 }
 
 
-FREObject ADEPCancelAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{    
+FREObject ADEPCancelAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
     [localContextID cancelAll];
     return NULL;
 }
 
 
-FREObject ADEPCheckForNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{    
+FREObject ADEPRegisterSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    uint32_t types = [ExtensionUtils getUIntFromFREObject:argv[0]];
     LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    [localContextID checkForNotificationAction];
-    
+    [localContextID registerSettingTypes:(UIUserNotificationType)types];
     return NULL;
 }
 
-FREObject ADEPGetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{
-    int32_t appBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber;
+
+FREObject ADEPCheckForNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
+    [localContextID checkForNotificationAction];
+    return NULL;
+}
+
+FREObject ADEPGetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    int32_t appBadgeNumber = (int32_t)[UIApplication sharedApplication].applicationIconBadgeNumber;
     FREObject numberObject = [ExtensionUtils getFREObjectFromInt:appBadgeNumber];
     return numberObject;
 }
 
-FREObject ADEPSetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{
+FREObject ADEPSetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     int32_t appBadgeNumber = [ExtensionUtils getIntFromFREObject:argv[0]];
     [UIApplication sharedApplication].applicationIconBadgeNumber = appBadgeNumber;
     return NULL;
 }
 
-FREObject ADEPGetSelectedNotificationCode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{    
+FREObject ADEPGetSelectedSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    NSString* notificationCode = [localContextID selectedNotificationCode];
+    UIUserNotificationSettings* settings = localContextID.selectedSettings;
+    FREObject numberObject = [ExtensionUtils getFREObjectFromUInt:(uint32_t)settings.types];
+    return numberObject;
+}
+
+FREObject ADEPGetSelectedNotificationCode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
+    NSString* notificationCode = localContextID.selectedNotificationCode;
     return [ExtensionUtils getFREObjectFromString:notificationCode];
 }
 
-FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{    
+FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    NSData* notificationData = [localContextID selectedNotificationData];
+    NSData *notificationData = localContextID.selectedNotificationData;
     
     if(!notificationData) return NULL;
-    
-    FREResult result;
-    
-    FREObject byteArray;
-    const uint8_t* className = (uint8_t*)"flash.utils.ByteArray";
-    result = FRENewObject(className, 0, nil, &byteArray, nil);
-    assert(result == FRE_OK);
-    
-    const unsigned char *data = [notificationData bytes];
-    int dataLength = [notificationData length];
-    
-    // Construct an ActionScript ByteArray object containing the action data of the selected notification.
-    for (int i = 0; i < dataLength; i++)
-    {
-        FREObject arguments[] = {nil};
-        arguments[0] = [ExtensionUtils getFREObjectFromInt:data[i]];
-        
-        const uint8_t* methodName = (uint8_t*)"writeByte";
-        FREObject methodResult;
-        FREResult result = FRECallObjectMethod(byteArray, methodName, 1, arguments, &methodResult, nil);
-        assert(result == FRE_OK);
-    }
-    return byteArray;
+
+    return [ExtensionUtils getFREObjectFromData:notificationData];
 }
 
 #endif
@@ -372,11 +319,10 @@ FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32
 #pragma mark -
 #pragma mark ADEPExtensionProtocol methods
 
-#ifndef TEST
+#ifndef SAMPLE
 
-- (uint32_t) initExtensionFunctions:(const FRENamedFunction**) namedFunctions
-{
-    uint32_t numFunctions = 9;
+- (uint32_t)initExtensionFunctions:(const FRENamedFunction**)namedFunctions {
+    uint32_t numFunctions = 11;
     
     FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction)*numFunctions);  // TODO: Free this. 
     
@@ -416,6 +362,14 @@ FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32
     func[8].functionData = NULL;
     func[8].function = &ADEPGetApplicationBadgeNumber;
     
+    func[9].name = (const uint8_t*)"registerSettings";
+    func[9].functionData = NULL;
+    func[9].function = &ADEPRegisterSettings;
+
+    func[10].name = (const uint8_t*)"getSelectedSettings";
+    func[10].functionData = NULL;
+    func[10].function = &ADEPGetSelectedSettings;
+
     *namedFunctions = func;
     
     return numFunctions;

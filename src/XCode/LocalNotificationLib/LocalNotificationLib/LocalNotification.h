@@ -21,22 +21,18 @@
 
 
 @interface LocalNotification : NSObject 
-{
-    
-}
-
++ (instancetype) localNotification;
 
 @property(nonatomic, copy) NSString *notificationCode;
 @property(nonatomic, copy) NSString *actionLabel;
 @property(nonatomic, copy) NSString *body;
-@property(nonatomic) BOOL hasAction;
-@property(nonatomic) int numberAnnotation;
-@property(nonatomic) BOOL playSound;
+@property(nonatomic, assign) BOOL hasAction;
+@property(nonatomic, assign) int numberAnnotation;
+@property(nonatomic, assign) BOOL playSound;
 @property(nonatomic, copy) NSData *actionData;
 @property(nonatomic, copy) NSDate *fireDate;
 @property(nonatomic, copy) NSString *soundName;
-@property(nonatomic) NSCalendarUnit repeatInterval;
-
+@property(nonatomic, assign) NSCalendarUnit repeatInterval;
 
 @end
 

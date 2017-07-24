@@ -20,33 +20,39 @@
 #import "LocalNotificationManager.h"
 #import "LocalNotification.h"
 
+@interface UILocalNotification (LocalNotificationManager)
++ (instancetype)localNotification;
+@end
+
+@implementation UILocalNotification (LocalNotificationManager)
++ (instancetype)localNotification {
+    return [[UILocalNotification new] autorelease];
+}
+@end
 
 @implementation LocalNotificationManager
 
-
-- (void) dealloc
-{
-	[localNotification release];
-	[super dealloc];
++ (instancetype)notificationManager {
+    return [[LocalNotificationManager new] autorelease];
 }
 
+- (void)dealloc {
+    [super dealloc];
+}
 
-- (void) notify :(LocalNotification*)notification
-{    
-    if (localNotification)
-    {
-        [localNotification release];
-    }
-    
-    localNotification = [[UILocalNotification alloc] init];
-    
-    BOOL isScheduled = NO;
-        
+- (void)registerSettingTypes:(UIUserNotificationType)types {
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+}
+
+- (void)notify:(LocalNotification*)notification {
+    UILocalNotification *localNotification = [UILocalNotification localNotification];
+
     localNotification.fireDate = notification.fireDate;
     localNotification.timeZone = [NSTimeZone defaultTimeZone];
     localNotification.repeatInterval = notification.repeatInterval;
     
-    if(notification.fireDate) isScheduled = YES;
+    BOOL isScheduled = notification.fireDate != nil;
     
     // Set the text of the alert body and action button. 
     // IMPORTANT: The alert will only appear if the app is running in the background when it receives the notification.
@@ -62,9 +68,8 @@
     // Set the notification sound. 
     // IMPORTANT: The sound is only played if the app is running in the background when it receives the notification.
     // Default is nil: no sound.
-    if (notification.playSound)
-    {
-        localNotification.soundName = (notification.soundName && notification.soundName.length? notification.soundName : UILocalNotificationDefaultSoundName);
+    if (notification.playSound) {
+        localNotification.soundName = (notification.soundName.length? notification.soundName : UILocalNotificationDefaultSoundName);
     }
     
     // Set the badge number on the app icon. 
@@ -75,11 +80,10 @@
     
     // Set the user data associated with the notification.
     NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithCapacity:2];
-    [infoDict setObject :notification.notificationCode forKey:NOTIFICATION_CODE_KEY];
+    infoDict[NOTIFICATION_CODE_KEY] = notification.notificationCode;
     
-    if(notification.actionData)
-    {
-        [infoDict setObject :notification.actionData forKey:NOTIFICATION_DATA_KEY];
+    if(notification.actionData) {
+        infoDict[NOTIFICATION_DATA_KEY] = notification.actionData;
     }
     
     localNotification.userInfo = infoDict;
@@ -89,54 +93,42 @@
     [self archiveNotification:localNotification withCode:notification.notificationCode];
     
     // Fire the notification. 
-    if (isScheduled)
-    {
+    if (isScheduled) {
         [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
     }
-    else
-    {
+    else {
         [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
     }
 }
 
--(NSArray *) getNotificationList:(NSString*)notificationCode
-{
+- (NSArray *)getNotificationList:(NSString*)notificationCode {
     NSString *archiveName = [NSString stringWithFormat:@"Notification_%@.archive", notificationCode];
     NSString *archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent:archiveName];
     
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:archivePath];
 
-    return (fileExists? [NSKeyedUnarchiver unarchiveObjectWithFile:archivePath] : nil);
+    return (fileExists? [NSKeyedUnarchiver unarchiveObjectWithFile:archivePath] : [NSArray array]);
 }
 
-- (void) cancel:(NSString*)notificationCode
-{
+- (void)cancel:(NSString*)notificationCode {
     // Unarchive the notification using the supplied code and cancel it if successfull.
     NSArray *notificationList = [self getNotificationList:notificationCode];
-    for (UILocalNotification *notification in notificationList)
-    {
+    for (UILocalNotification *notification in notificationList) {
         [[UIApplication sharedApplication] cancelLocalNotification:notification];
     }
     
-    [self archiveNotification:nil withCode:notificationCode];
+    if(notificationList.count > 0) {
+        [self archiveNotification:nil withCode:notificationCode];
+    }
 }
 
--(void) archiveNotification:(UILocalNotification *)notification withCode:(NSString *)notificationCode
-{
-    NSMutableArray *notificationList = nil;
+-(void)archiveNotification:(UILocalNotification *)notification withCode:(NSString *)notificationCode {
+    NSArray *notificationList = nil;
     
-    if(notification)
-    {
-        notificationList = [[self getNotificationList:notificationCode] mutableCopy];
-        if(!notificationList)
-        {
-            notificationList = [NSMutableArray array];
-        }
-        
-        [notificationList addObject:notification];
+    if(notification) {
+        notificationList = [[self getNotificationList:notificationCode] arrayByAddingObject:notification];
     }
-    else 
-    {
+    else {
         notificationList = [NSArray array];
     }
     
@@ -145,11 +137,9 @@
     [NSKeyedArchiver archiveRootObject:notificationList toFile:archivePath];
 }
 
-- (void) cancelAll
-{
+- (void)cancelAll {
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
-
 
 @end
 

@@ -19,42 +19,36 @@
 #import <UIKit/UIKit.h>
 #import "FlashRuntimeExtensions.h"
 #import "LocalNotificationsContext.h"
+#import "ExtensionUtils.h"
 
 // A native context instance is created
 void ComJkLocalNotificationContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, 
-                            uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) 
-{
-     // Initialize the native context.
-     LocalNotificationsContext *nativeContextID = [[LocalNotificationsContext alloc] initWithContext:ctx];
-     *numFunctionsToTest = [nativeContextID initExtensionFunctions:functionsToSet];
-     
-     // Attach a reference to our native context object so we can clean it up in ADEPContextFinalizer
-     FRESetContextNativeData(ctx, nativeContextID);
+                            uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) {
+    // Initialize the native context.
+    LocalNotificationsContext *nativeContextID = [[LocalNotificationsContext notificationsContextWithContext:ctx] retain];
+
+    *numFunctionsToTest = [nativeContextID initExtensionFunctions:functionsToSet];
+
+    // Attach a reference to our native context object so we can clean it up in ADEPContextFinalizer
+    [ExtensionUtils setContextID:nativeContextID forFREContext:ctx];
 }
 
 // A native context instance is disposed
-void ComJkLocalNotificationContextFinalizer(FREContext ctx) 
-{
+void ComJkLocalNotificationContextFinalizer(FREContext ctx) {
     // Free pushContext instance attached to ctx here.
-    LocalNotificationsContext *contextID =  nil;
-    FREResult freReturnCode = FREGetContextNativeData(ctx, (void **)&contextID);
-    if (freReturnCode == FRE_OK)
-    {
-        [contextID release];
-    }
+    LocalNotificationsContext *contextID = [ExtensionUtils getContextID:ctx];
+    [contextID release];
 }
 
 // Initialization function of each extension
 void ComJkLocalNotificationExtInitializer(void** extDataToSet, FREContextInitializer* ctxInitializerToSet, 
-                        FREContextFinalizer* ctxFinalizerToSet) 
-{
+                        FREContextFinalizer* ctxFinalizerToSet) {
 	*extDataToSet = NULL;
 	*ctxInitializerToSet = &ComJkLocalNotificationContextInitializer;
 	*ctxFinalizerToSet = &ComJkLocalNotificationContextFinalizer;
 }
 
 // Called when extension is unloaded
-void ComJkLocalNotificationExtFinalizer(void* extData) 
-{
+void ComJkLocalNotificationExtFinalizer(void* extData) {
 	return;
 }

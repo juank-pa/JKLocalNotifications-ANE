@@ -22,56 +22,49 @@
 
 @implementation LocalNotification
 
++ (instancetype)localNotification {
+    return [[[LocalNotification alloc] init] autorelease];
+}
 
-@synthesize notificationCode, actionLabel, body, hasAction, numberAnnotation, playSound, actionData, repeatInterval, fireDate, soundName;
-
-
-- (id) init
-{
-    self = [super init];
-    if (self) 
-    {
-        notificationCode = @"";
-        actionLabel = @"";
-        body = @"";
-        hasAction = YES;
-        numberAnnotation = 0;
-        playSound = YES;
-        actionData = nil;
-        repeatInterval = 0;
-        fireDate = nil;
-        soundName = @"";
+- (instancetype) init {
+    if (self = [super init]) {
+        _notificationCode = @"";
+        _actionLabel = @"";
+        _body = @"";
+        _hasAction = YES;
+        _numberAnnotation = 0;
+        _playSound = YES;
+        _actionData = nil;
+        _repeatInterval = 0;
+        _fireDate = nil;
+        _soundName = @"";
     }
-    
     return self;
 }
 
-#ifdef TEST
+- (void)dealloc {
+    [self.notificationCode release];
+    [self.actionLabel release];
+    [self.body release];
+    [self.actionData release];
+    [self.fireDate release];
+    [self.soundName release];
 
--(NSString *)description
-{
-    return [NSString stringWithFormat:@"notificationCode:%@ actionLabel:%@ body:%@ fireDate:%@ repeatInterval:%d hasAction:%d playSound:%d numberAnnotation:%@", notificationCode, actionLabel, body, fireDate, repeatInterval, hasAction, playSound, numberAnnotation];
+    [super dealloc];
 }
 
--(NSString *)debugDescription
-{
+
+#ifdef SAMPLE
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"notificationCode:%@ actionLabel:%@ body:%@ fireDate:%@ repeatInterval:%lu hasAction:%d playSound:%d numberAnnotation:%d", self.notificationCode, self.actionLabel, self.body, self.fireDate, (unsigned long)self.repeatInterval, self.hasAction, self.playSound, self.numberAnnotation];
+}
+
+- (NSString *)debugDescription{
     return [self description];
 }
 
 #endif
-
-- (void) dealloc
-{
-	[notificationCode release];
-	[actionLabel release];
-    [body release];
-    [actionData release];
-    [fireDate release];
-    [soundName release];
-    	
-	[super dealloc];
-}
-
 
 @end
 

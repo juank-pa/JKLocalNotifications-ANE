@@ -1,1 +1,0 @@
-adt -package -target ipa-ad-hoc -storetype pkcs12 -keystore iphone_dev.p12 -provisioning-profile TESTDEVIPOD.mobileprovision sample.ipa sample-app.xml sample.swf fx05.caf -extdir ../../bin

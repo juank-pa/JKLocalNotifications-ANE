@@ -22,22 +22,26 @@
 
 @interface ExtensionUtils : NSObject 
 
-#ifndef TEST
+#ifndef SAMPLE
 
-+ (id)getContextID :(FREContext)ctx;
-+ (FREObject) getFREObjectFromString:(NSString *)objcString;
-+ (FREObject) getFREObjectFromInt:(int32_t)objcInt;
-+ (FREObject) getFREObjectFromUInt :(uint32_t)objcUInt;
-+ (FREObject) getFREObjectFromDouble:(double)objcDouble;
-+ (FREObject) getFREObjectFromBool:(BOOL)objcBool;
++ (void)setContextID:(id)contextID forFREContext:(FREContext)freContext;
++ (id)getContextID:(FREContext)ctx;
++ (FREObject)getProperty:(NSString *)name fromObject:(FREObject)freObject;
 
-+ (NSString *) getStringFromFREObject:(FREObject)freObject;
++ (FREObject)getFREObjectFromString:(NSString *)objcString;
++ (FREObject)getFREObjectFromInt:(int32_t)objcInt;
++ (FREObject)getFREObjectFromUInt:(uint32_t)objcUInt;
++ (FREObject)getFREObjectFromDouble:(double)objcDouble;
++ (FREObject)getFREObjectFromBool:(BOOL)objcBool;
++ (FREObject)getFREObjectFromData:(NSData *)data;
+
++ (NSString *)getStringFromFREObject:(FREObject)freObject;
 + (int32_t) getIntFromFREObject:(FREObject)freObject;
-+ (uint32_t) getUIntFromFREObject:(FREObject)freObject;
-+ (double) getDoubleFromFREObject:(FREObject)freObject;
-+ (BOOL) getBoolFromFREObject:(FREObject)freObject;
-+ (UIColor *) getColorFromFREObject :(FREObject)freObject;
-
++ (uint32_t)getUIntFromFREObject:(FREObject)freObject;
++ (double)getDoubleFromFREObject:(FREObject)freObject;
++ (BOOL)getBoolFromFREObject:(FREObject)freObject;
++ (UIColor *)getColorFromFREObject:(FREObject)freObject;
++ (NSData *)getDataFromFREObject:(FREObject)freObject;
 #endif
 
 @end

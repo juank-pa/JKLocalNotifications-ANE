@@ -20,13 +20,18 @@
 #import <Foundation/Foundation.h>
 #import "FlashRuntimeExtensions.h"
 
-#ifdef TEST
+static const char* const STATUS = "status";
+static const char* const NOTIFICATION_SELECTED = "notificationSelected";
+static const char* const SETTINGS_SUBSCRIBED = "settingsSubscribed";
+
+#ifdef SAMPLE
 
 @class LocalNotificationsContext;
 
 @protocol LocalNotificationDelegate <NSObject>
 
--(void)localNotificationContext:(LocalNotificationsContext *)context didReceiveLocalNotification:(UILocalNotification *)notification;
+- (void)localNotificationContext:(LocalNotificationsContext *)context didReceiveLocalNotification:(UILocalNotification *)notification;
+- (void)localNotificationContext:(LocalNotificationsContext *)context didRegisterSettings:(UIUserNotificationSettings *)settings;
 
 @end
 
@@ -36,25 +41,17 @@
 @class LocalNotification;
 
 @interface LocalNotificationsContext : NSObject
-{    
-    @private
-        
-        FREContext extensionContext;
-        LocalNotificationManager *notificationManager;
-        NSString *selectedNotificationCode;
-        NSData *selectedNotificationData;
++ (instancetype)notificationsContextWithContext:(FREContext)ctx;
 
-}
+- (id)initWithContext:(FREContext)ctx;
 
-- (id) initWithContext :(FREContext)ctx;
-
-#ifdef TEST
-- (void) createManager;
-- (void) notify :(LocalNotification*)localNotification;
-- (void) cancel :(NSString*)notificationCode;
-- (void) cancelAll;
-- (void) checkForNotificationAction;
--(void)checkForNotificationAction;
+#ifdef SAMPLE
+- (void)createManager;
+- (void)notify:(LocalNotification*)localNotification;
+- (void)cancel:(NSString*)notificationCode;
+- (void)cancelAll;
+- (void)registerSettingTypes:(UIUserNotificationType)types;
+- (void)checkForNotificationAction;
 
 @property (nonatomic, assign) id<LocalNotificationDelegate> delegate;
 #else
