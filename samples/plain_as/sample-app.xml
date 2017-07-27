@@ -39,7 +39,7 @@
       </manifestAdditions>
   </android>
   <iPhone>
-    <requestedDisplayResolution>standard</requestedDisplayResolution>
+    <requestedDisplayResolution>high</requestedDisplayResolution>
     <InfoAdditions><![CDATA[<key>UIDeviceFamily</key><array><string>1</string></array>]]></InfoAdditions>
   </iPhone>
   <extensions>

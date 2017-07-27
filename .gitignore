@@ -38,7 +38,3 @@ xcuserdata/
 build/
 DerivedData/
 .DS_Store
-
-/bin/iphone/*
-/bin/android/*
-!.keep

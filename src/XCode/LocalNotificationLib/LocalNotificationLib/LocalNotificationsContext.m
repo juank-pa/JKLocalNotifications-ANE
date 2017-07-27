@@ -211,7 +211,13 @@ FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
     if (freBody) {
         localNotification.body = [ExtensionUtils getStringFromFREObject:freBody];
     }
-    
+
+    // Title.
+    FREObject freTitle = [ExtensionUtils getProperty:@"title" fromObject:notification];
+    if (freTitle) {
+        localNotification.title = [ExtensionUtils getStringFromFREObject:freTitle];
+    }
+
     // Has Action.
     FREObject freHasAction = [ExtensionUtils getProperty:@"hasAction" fromObject:notification];
     if (freHasAction) {

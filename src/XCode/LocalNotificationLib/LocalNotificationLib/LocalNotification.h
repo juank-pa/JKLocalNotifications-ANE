@@ -25,6 +25,7 @@
 
 @property(nonatomic, copy) NSString *notificationCode;
 @property(nonatomic, copy) NSString *actionLabel;
+@property(nonatomic, copy) NSString *title;
 @property(nonatomic, copy) NSString *body;
 @property(nonatomic, assign) BOOL hasAction;
 @property(nonatomic, assign) int numberAnnotation;

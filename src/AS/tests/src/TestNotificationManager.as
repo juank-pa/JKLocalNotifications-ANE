@@ -110,10 +110,7 @@ package {
       manager.notifyUser("MyCode", notification);
 
       CONFIG::device {
-        var data:ByteArray = notification.actionData as ByteArray;
-        data.position = 0;
-        var compareObj:Array = data.readObject() as Array;
-        assertEqualsArrays(obj, compareObj);
+        assertEqualsArrays(notification.actionData, obj);
         assertTrue(mockContext.errorMessage(), mockContext.success());
         return;
       }
@@ -287,6 +284,7 @@ import flash.events.EventDispatcher;
 import flash.events.Event;
 import com.juankpro.ane.localnotif.IContext;
 import com.juankpro.ane.localnotif.IContextBuilder;
+import com.juankpro.ane.localnotif.Notification;
 import org.mock4as.Mock;
 
 class MockContextBuilder extends Mock implements IContextBuilder {

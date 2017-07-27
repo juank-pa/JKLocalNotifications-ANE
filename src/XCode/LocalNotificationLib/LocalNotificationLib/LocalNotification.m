@@ -29,15 +29,16 @@
 - (instancetype) init {
     if (self = [super init]) {
         _notificationCode = @"";
-        _actionLabel = @"";
-        _body = @"";
+        _actionLabel = nil;
+        _title = nil;
+        _body = nil;
         _hasAction = YES;
         _numberAnnotation = 0;
         _playSound = YES;
         _actionData = nil;
         _repeatInterval = 0;
         _fireDate = nil;
-        _soundName = @"";
+        _soundName = nil;
     }
     return self;
 }
@@ -45,6 +46,7 @@
 - (void)dealloc {
     [self.notificationCode release];
     [self.actionLabel release];
+    [self.title release];
     [self.body release];
     [self.actionData release];
     [self.fireDate release];

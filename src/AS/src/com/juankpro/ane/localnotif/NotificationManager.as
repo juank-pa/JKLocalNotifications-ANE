@@ -122,12 +122,14 @@
       CONFIG::device {
         if(_disposed) return;
 
+        var originalData:* = notification.actionData;
         if (notification.actionData != null) {
           var data:ByteArray = new ByteArray();
           data.writeObject(notification.actionData);
           notification.actionData = data;
         }
         _extensionContext.call("notify", code, notification);
+        notification.actionData = originalData;
       }
     }
 

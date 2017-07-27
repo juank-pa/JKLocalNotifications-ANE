@@ -69,7 +69,7 @@ FREObject args[] = {&context, &context};
 
     int fireDateContext, timeContext, repeatIntervalContext, actionLabelContext;
     int bodyContext, hasActionContext, numberAnnotationContext, playSoundContext;
-    int soundNameContext, actionDataContext;
+    int soundNameContext, actionDataContext, titleContext;
 
     OCMStub([self.utilsMock getStringFromFREObject:&codeContext]).andReturn(code);
 
@@ -79,6 +79,7 @@ FREObject args[] = {&context, &context};
     OCMStub([self.utilsMock getProperty:@"repeatInterval" fromObject:&notificationContext]).andReturn((void *)&repeatIntervalContext);
     OCMStub([self.utilsMock getProperty:@"actionLabel" fromObject:&notificationContext]).andReturn((void *)&actionLabelContext);
     OCMStub([self.utilsMock getProperty:@"body" fromObject:&notificationContext]).andReturn((void *)&bodyContext);
+    OCMStub([self.utilsMock getProperty:@"title" fromObject:&notificationContext]).andReturn((void *)&titleContext);
     OCMStub([self.utilsMock getProperty:@"hasAction" fromObject:&notificationContext]).andReturn((void *)&hasActionContext);
     OCMStub([self.utilsMock getProperty:@"numberAnnotation" fromObject:&notificationContext]).andReturn((void *)&numberAnnotationContext);
     OCMStub([self.utilsMock getProperty:@"playSound" fromObject:&notificationContext]).andReturn((void *)&playSoundContext);
@@ -91,6 +92,7 @@ FREObject args[] = {&context, &context};
     OCMStub([self.utilsMock getUIntFromFREObject:&repeatIntervalContext]).andReturn(NSCalendarUnitWeekday);
     OCMStub([self.utilsMock getStringFromFREObject:&actionLabelContext]).andReturn(@"actionLabel");
     OCMStub([self.utilsMock getStringFromFREObject:&bodyContext]).andReturn(@"body");
+    OCMStub([self.utilsMock getStringFromFREObject:&titleContext]).andReturn(@"title");
     OCMStub([self.utilsMock getBoolFromFREObject:&hasActionContext]).andReturn(YES);
     OCMStub([self.utilsMock getUIntFromFREObject:&numberAnnotationContext]).andReturn(15);
     OCMStub([self.utilsMock getBoolFromFREObject:&playSoundContext]).andReturn(YES);
@@ -107,6 +109,7 @@ FREObject args[] = {&context, &context};
     OCMExpect([notificationMock setRepeatInterval:NSCalendarUnitWeekday]);
     OCMExpect([notificationMock setActionLabel:@"actionLabel"]);
     OCMExpect([notificationMock setBody:@"body"]);
+    OCMExpect([notificationMock setTitle:@"title"]);
     OCMExpect([notificationMock setHasAction:YES]);
     OCMExpect([notificationMock setNumberAnnotation:15]);
     OCMExpect([notificationMock setPlaySound:YES]);

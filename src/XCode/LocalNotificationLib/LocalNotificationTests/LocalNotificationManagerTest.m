@@ -61,6 +61,7 @@
     self.notification = [LocalNotification new];
     self.notification.repeatInterval = NSCalendarUnitMonth;
     self.notification.body = @"body";
+    self.notification.title = @"title";
     self.notification.actionLabel = @"actionLabel";
     self.notification.hasAction = YES;
     self.notification.numberAnnotation = 10;
@@ -70,6 +71,7 @@
     OCMStub([self.notificationMock localNotification]).andReturn(self.notificationMock);
     OCMExpect([self.notificationMock setTimeZone:[NSTimeZone defaultTimeZone]]);
     OCMExpect([self.notificationMock setRepeatInterval:NSCalendarUnitMonth]);
+    OCMExpect([self.notificationMock setAlertTitle:@"title"]);
     OCMExpect([self.notificationMock setAlertBody:@"body"]);
     OCMExpect([self.notificationMock setAlertAction:@"actionLabel"]);
     OCMExpect([self.notificationMock setHasAction:YES]);

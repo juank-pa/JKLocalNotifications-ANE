@@ -60,16 +60,19 @@
     localNotification.alertAction = notification.actionLabel;
     
     // This defaults to YES. 
-    // If it's NO, then the alert will not have an action button with the specified alertAction text and 
+    // If it's NO, then the alert will not have an action button with the specified alertAction text and
     // a Close button. It will only have one OK button. Also, if the device is locked, the slider text will not change from 
     // "slide to unlock" to "slide to alert...".
     localNotification.hasAction = notification.hasAction;
-    
-    // Set the notification sound. 
+
+    // This title will only be seen inside the notification center.
+    localNotification.alertTitle = notification.title;
+
+    // Set the notification sound.
     // IMPORTANT: The sound is only played if the app is running in the background when it receives the notification.
     // Default is nil: no sound.
     if (notification.playSound) {
-        localNotification.soundName = (notification.soundName.length? notification.soundName : UILocalNotificationDefaultSoundName);
+        localNotification.soundName = (notification.soundName.length > 0? notification.soundName : UILocalNotificationDefaultSoundName);
     }
     
     // Set the badge number on the app icon. 

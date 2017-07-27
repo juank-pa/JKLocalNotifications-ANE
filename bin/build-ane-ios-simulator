@@ -1,64 +1,61 @@
 #!/bin/zsh
 
-# path to YOUR Android SDK
-export SDK="${HOME}/Developer/AIR_SDK"
+source ./config.sh
 
-# path to the ADT tool in Flash Builder sdks
-ACOMPC="${SDK}/bin/acompc"
-
-# path to the ADT tool in Flash Builder sdks
-ADT="${SDK}/bin/adt"
-
-# native XCode project folder
-NATIVE_XCODE_FOLDER=../src/XCode/LocalNotificationLib
-
-# AS lib folder
-LIB_FOLDER=../src/AS
-
-# name of ANE file
-ANE_NAME=LocalNotificationLib
-
-#===================================================================
-
-echo "****** IOS VERSION *******"
-echo "****** preparing ANE iOS package sources *******"
+PLATFORM="platform=iOS Simulator,name=iPhone 4s,OS=8.4"
+CONFIGURATION=Debug
 
 set -e
 
-#rm ${ANE_NAME}.*
-rm -rf ./iphone
-mkdir -p ./iphone
+rm -rf $TEMP_PATH
 
-# copy A file
-cp ./${NATIVE_XCODE_FOLDER}/Debug/libLocalNotificationLib.a ./iphone/
+echo "****** IOS SIMULATOR VERSION *******"
+
+mkdir -p $TEMP_PATH/iphone
+
+echo "****** Compiling iOS native library *******"
+
+# TODO: Try to automatize XCode compilation
+#xcodebuild \
+#  -project $NATIVE_XCODE_FOLDER/$IOS_LIB_NAME.xcodeproj \
+#  -scheme $IOS_LIB_NAME \
+#  -destination="$PLATFORM" \
+#  -configuration $CONFIGURATION \
+#  -quiet \
+#  build
+
+cp $NATIVE_XCODE_FOLDER/$CONFIGURATION/lib$IOS_LIB_NAME.a $TEMP_PATH/iphone/
+
+echo "****** Compiling AS3 library *******"
 
 # compile iOS SWC version
-"$ACOMPC" -locale en_US \
+"$ACOMPC" \
   -swf-version 26 \
 	-define+=CONFIG::device,true \
 	-define+=CONFIG::iphone,true \
 	-define+=CONFIG::android,false \
-	-source-path ./${LIB_FOLDER}/src/ \
-	-output ./${ANE_NAME}.swc \
-	-include-sources ./${LIB_FOLDER}/src/
+	-source-path $LIB_FOLDER/src/ \
+	-output $TEMP_PATH/$ANE_NAME.swc \
+	-include-sources $LIB_FOLDER/src/
+
+echo "****** Extracting compiled data *******"
 
 # grab SWC library
-unzip ./${ANE_NAME}.swc -d .
-mv ./library.swf ./iphone
-rm ./catalog.xml
+unzip $TEMP_PATH/$ANE_NAME.swc -d $TEMP_PATH
+mv $TEMP_PATH/library.swf $TEMP_PATH/iphone
+rm $TEMP_PATH/catalog.xml
 
-
-echo "****** creating ANE package *******"
+echo "****** Creating ANE package *******"
 
 "$ADT" -package \
 		-target ane \
-		./${ANE_NAME}.ane \
-		./extension_simulator.xml \
-		-swc ./${ANE_NAME}.swc \
+		$RESULT_PATH/$ANE_NAME.ane \
+		$CONFIG_PATH/extension_simulator.xml \
+		-swc $TEMP_PATH/$ANE_NAME.swc \
 		-platform iPhone-x86 \
-		-C ./iphone/ . \
-    -platformoptions ./options.xml
+		-C $TEMP_PATH/iphone/ . \
+    -platformoptions $CONFIG_PATH/options.xml
 
 echo "****** ANE package created *******"
-echo "****** END IOS VERSION *******"
+echo "****** END IOS SIMULATOR VERSION *******"
 echo ""
