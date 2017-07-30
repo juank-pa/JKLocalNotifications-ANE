@@ -101,6 +101,7 @@
       cancelButton.addEventListener(MouseEvent.CLICK, buttonClickHandler);
       codeButton.addEventListener(MouseEvent.CLICK, buttonClickHandler);
       badgeButton.addEventListener(MouseEvent.CLICK, buttonClickHandler);
+      clearButton.addEventListener(MouseEvent.CLICK, buttonClickHandler);
     }
 
     private function buttonClickHandler(event:MouseEvent):void {
