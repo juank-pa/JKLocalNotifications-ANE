@@ -6,10 +6,11 @@ set -e
 SDK="${HOME}/Developer/AIR_SDK"
 AMXML="${SDK}/bin/amxmlc"
 ADL="${SDK}/bin/adl"
+DEBUG=true
 
 echo "Compiling iOS version"
 "$AMXML" -swf-version 26 \
-  -debug=true \
+  -debug=$DEBUG \
   -define+=CONFIG::device,true \
   -define+=CONFIG::iphone,true \
   -define+=CONFIG::android,false \
@@ -24,7 +25,7 @@ echo "\nRunning tests for iOS"
 
 echo "Compiling Android version"
 "$AMXML" -swf-version 26 \
-  -debug=true \
+  -debug=$DEBUG \
   -define+=CONFIG::device,true \
   -define+=CONFIG::iphone,false \
   -define+=CONFIG::android,true \
@@ -39,7 +40,7 @@ echo "\nRunning tests for Android"
 
 echo "Compiling Default version"
 "$AMXML" -swf-version 26 \
-  -debug=true \
+  -debug=$DEBUG \
   -define+=CONFIG::device,false \
   -define+=CONFIG::iphone,true \
   -define+=CONFIG::android,true \

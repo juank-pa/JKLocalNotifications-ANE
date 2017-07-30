@@ -20,13 +20,16 @@ package
 import asunit.framework.*;
 import asunit.errors.*;
 import asunit.textui.*;
+import flash.utils.*;
 import flash.desktop.NativeApplication;
 
 class Listener implements TestListener {
+  private var count:int = 0;
   public function addError(test:Test, t:Error):void {}
   public function addFailure(test:Test, t:AssertionFailedError):void {}
   public function endTest(test:Test):void {
-    NativeApplication.nativeApplication.exit();
+    count++;
+    if(count == AllTests.tests.length) NativeApplication.nativeApplication.exit();
   }
   public function endTestMethod(test:Test, methodName:String):void {}
   public function run(test:Test):void {}

@@ -26,7 +26,7 @@ echo "***** packaging SWF file *****"
 
 "$ADT" -package -target apk-emulator -storetype pkcs12 -keystore test.p12 -storepass ${CERT_PASS} -keypass ${CERT_PASS} ${APP_NAME}.apk ${APP_NAME}-app.xml -extdir ../../bin ${APP_NAME}.swf
 
-# For this steps emulator must be running
+# For these steps emulator must be running
 # Create and configure an emulator then run it
 # To run use: emulator ave Test_Device_Name
 # To list devices: adb devices
