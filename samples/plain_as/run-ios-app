@@ -10,7 +10,7 @@ ADT="${SDK}/bin/adt"
 APP_NAME=sample
 
 # Certificate
-CERT_FILE=test.p12
+CERT_FILE=jk.p12
 CERT_PASS=1234
 PROVISIONING_PROFILE=test.mobileprovision
 
@@ -44,7 +44,7 @@ echo "**** Installing IPA in iOS simulator ******"
 "$ADT" -installApp \
   -platform ios \
   -device 1 \
-  -package APP_NAME.ipa
+  -package $APP_NAME.ipa
 
 echo "**** Lanching iOS simulator ******"
 
