@@ -3,6 +3,8 @@
 source ./config.sh
 
 PLATFORM="platform=iOS Simulator,name=iPhone 4s,OS=8.4"
+# Match the configuration used to compile the .a library
+# Debug or Release
 CONFIGURATION=Debug
 
 set -e

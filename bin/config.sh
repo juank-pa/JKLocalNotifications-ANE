@@ -26,6 +26,8 @@ IOS_LIB_NAME=LocalNotificationLib
 # your device needs to be connected in order to compile the library.
 # if you are compiling for iOS simulator these variables are ignored.
 PLATFORM="platform=iOS,name=iPad"
+# update this to match the configuration used to compile the .a library
+# it can be Release or Debug
 CONFIGURATION=Release
 
 # name of ANE file

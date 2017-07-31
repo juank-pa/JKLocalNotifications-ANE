@@ -16,7 +16,7 @@ We'll explain all of these components one by one but first let's go over the req
 # Requirements
 * The project requires the AIR SDK 26 or greater which ca be downloaded
 [here](http://www.adobe.com/devnet/air/air-sdk-download.html). Even though you can place
-the SDK anywhere in your computer, all the shell script expect to find it at
+the SDK anywhere in your computer, all the shell scripts expect to find it at
 `$HOME/Developer/AIR_SDK` so it will be a good idea to place it there. If you still
 decide to place the SDK somewhere else please update the corresponding shell files.
 * XCode 8.2.1 or greater with support for iOS 8.4 or greater.
@@ -62,7 +62,7 @@ I personally have very little knowledge about Java so this source code is one of
 least maintained ones. Having a collaborating team for this source code will be welcome.
 
 You need to compile the project to generate the expected files to build the ANE.
-Aditionally the project contains icons in the resource folder `res` which are copied
+Additionally the project contains icons in the resource folder `res` which are copied
 to the final ANE to allow the Java version to set an icon for the notification.
 Edit the icons in this project if you want to customize them.
 
@@ -100,8 +100,8 @@ To run tests, cd to the `src/AS` folder and execute:
 The only requirement is to have the AIR SDK installed in the expected folder.
 See [Requirements](#requirements).
 
-# The ANE compilation script shells
-These are a bunch of shell scripts with code to automatize the ANE compilation process.
+# The ANE compilation shell scripts
+There are a bunch of shell scripts with code to automatize the ANE compilation process.
 The scripts are placed at the `bin` folder.
 
 To compile the ANE:
@@ -122,8 +122,9 @@ You have many different shell scripts depending on what you need:
   ./build-ane
   ```
 * If you want to just test you Android or iOS implementation without needing to compile
-other targets then use the `build-ane-ios` or `build-ane-android`. These scripts will compile
-only the specific target assets and will be useful for testing but not for production:
+other targets then use the `build-ane-ios` or `build-ane-android` scripts. These scripts
+will compile only the specific target assets and will be suitable for testing
+but not for production:
   ```bash
   ./build-ane-ios
   # or
@@ -141,12 +142,12 @@ ANE will be placed at `bin/ext`, you can then use this ANE file to compile the
 repository provided samples or for your own projects.
 
 ## Samples
-Originally I placed a sample for FlashBuilders as well as for Flash Professional
+Originally I placed a sample for FlashBuilder as well as for Flash Professional
 (now Animate). Because I am now a huge fan of command-line workflows I no longer
 support these editors. I left the samples in there but further support for them
 will definitively will depend on the collaborators.
 
-The only supported sample right now it the one at `samples/plain_as`. This is a
+The only supported sample right now is the one at `samples/plain_as`. This is a
 command-line based simple project. The sample contains a single `Sample.as` file
 a custom sound `fx05.caf` a test cetificate and some shell scripts.
 
@@ -163,8 +164,8 @@ Use the different scripts to compile your desired application:
   to match your own certicate and provisioning profile information.
 
   Installation of the final application is not working at the time so once the IPA
-  is packaged you might want to install it via XCode Devices panel or iTunes.
-* To build and install an iOS simulator file:
+  is packaged you might want to install it manually via XCode Devices panel or iTunes.
+* To build and install an iOS simulator IPA file:
   ```bash
   ./run-ios-simulator-app
   ```
@@ -179,7 +180,22 @@ Use the different scripts to compile your desired application:
   ```bash
   xcrun --sdk iphonesimulator --show-sdk-path
   ```
-* To build and install an Android emulator version use:
+* To build and install an Android emulator APK file:
   ```bash
   ./run-android-emulator-app
   ```
+
+# ANE distribution
+If what you want is simply get the latest version of the ANE and use it in your own
+project you will find the latest compiled version of the IPA at `bin/dist`. Just grab
+it and use it. Use the samples provided to learn a bit more.
+
+# Documentation
+The AS3 classes are well documented by using comments. But if you need a user friendly
+documentation you can run the following command while in the root path:
+```bash
+./build-doc
+```
+This will create a doc folder at the root path on this repo with an HTML version of the
+documentation. Open the `index.html` file to read it.
+This command needs the AIR SDK installed in the expected folder. See [Requirements](#requirements).

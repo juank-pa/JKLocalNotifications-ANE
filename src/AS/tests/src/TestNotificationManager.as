@@ -54,11 +54,11 @@ package {
     public function testNeedsSubscription():void {
       CONFIG::device {
         CONFIG::iphone {
-          assertTrue("Is supported on device", NotificationManager.needsSubsciption);
+          assertTrue("Is supported on device", NotificationManager.needsSubscription);
           return;
         }
       }
-      assertFalse("Is supported on device", NotificationManager.needsSubsciption);
+      assertFalse("Is supported on device", NotificationManager.needsSubscription);
     }
 
     public function testInstantiation():void {

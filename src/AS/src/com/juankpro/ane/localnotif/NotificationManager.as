@@ -6,13 +6,19 @@
 
   /**
    * A class to notify the user of events that happen through notifications; it is used in conjunction
-   * with the Notification class. If you want to receive a NotificationEvent when a user has selected a
-   * notification, you must call addEventListener on your NotificationManager object when your
-   * app is launched (like in creationComplete for example).
+   * with the <code>Notification</code> class. If you want to listen to system notifications,
+   * you must register to the <code>NotificationEvent.NOTIFICATION_ACTION</code> event.
+   * <p>iOS devices need to register for notifications prior to sending them so you need to read the
+   * <code>needsSubscription</code> to determine this condition.</p>
+   * <p>If subscription is needed then use the <code>subscribe</code> method to perform the subscription.</p>
    * <p>Supported OS: Android, iOS</p>
+   * @see com.juankpro.ane.localnotif.Notification
+   * @see com.juankpro.ane.localnotif.NotificationEvent
+   * @see #needsSubscription
+   * @see #subscribe()
    */
   public class NotificationManager extends EventDispatcher {
-    CONFIG::device private static var _extensionContext:* = null;
+    CONFIG::device private static var _extensionContext:IContext = null;
     CONFIG::device private static var _refCount:int = 0;
 
     CONFIG::device private static const _contextType:String = "LocalNotificationsContext";
@@ -33,6 +39,12 @@
       return false;
     }
 
+    /**
+     * A list of supported notification styles. Even though this property can be accessed
+     * on any device it applies to iOS devices only.
+     * <p>Supported OS: All</p>
+     * @see #subscribe()
+     */
     public static const supportedNotificationStyles:Vector.<String> =
       Vector.<String>([
           NotificationStyle.BADGE,
@@ -41,10 +53,11 @@
 
     /**
      * Determines whether you need to subscribe to the notifications prior to using them.
-     * This property returns true only for iOS devices.
+     * This property returns true only on iOS devices.
      * <p>Supported OS: All</p>
+     * @see #subscribe()
      */
-    public static function get needsSubsciption():Boolean {
+    public static function get needsSubscription():Boolean {
       CONFIG::device {
         CONFIG::iphone {
           return true;
@@ -56,13 +69,15 @@
     /**
      * Initializes the notification manager.
      * <p>Supported OS: Android, iOS</p>
+     * @param contextBuilder An optionally injectable ANE context builder. If the <code>contextBuilder</code>
+     * is not set then the <code>flash.external.ExtensionContext</code> class will be used.
      */
     public function NotificationManager(contextBuilder:IContextBuilder = null) {
       CONFIG::device {
         if(_extensionContext == null) {
           var builder:* = contextBuilder || ExtensionContext;
           _extensionContext = builder.createExtensionContext("com.juankpro.ane.LocalNotification",
-                                                             _contextType);
+                                                             _contextType) as IContext;
           _extensionContext.call("createManager");
         }
         _refCount++;
@@ -87,6 +102,7 @@
      * Cancels the notification specified by the notification code.
      * <p>Supported OS: Android, iOS</p>
      * @param code The code of the notification to cancel
+     * @see #cancelAll()
      */
     public function cancel(code:String):void {
       CONFIG::device {
@@ -98,6 +114,7 @@
     /**
      * Cancels all notifications.
      * <p>Supported OS: Android, iOS</p>
+     * @see #cancel()
      */
     public function cancelAll():void {
       CONFIG::device {
@@ -108,15 +125,16 @@
     }
 
     /**
-     * Fires the specified notification. On Android this will place the notification in the notification area,
-     * accessible by sliding down the drawer. iOS handles notifications slightly differently: if the application
-     * is running when the notification is dispatched, you won’t receive a pop-up; if the application is running
-     * in the background (multitasking by using a background API), you’ll receive the pop-up dialog box when the
-     * notification is dispatched.
+     * Fires the specified notification. On Android this will place the notification
+     * in the notification area, accessible by sliding down the drawer. iOS handles notifications
+     * slightly differently: the notification banner will only be displayed while the application is
+     * not in the foreground. When in the foreground only the <code>NotificationEvent.NOTIFICATION_ACTION</code>
+     * event will trigger.
      * <p>Supported OS: Android, iOS</p>
      * @param code An identifier for this notification that is unique to the application.
      * The code can later be used to cancel the notification using the cancel method.
-     * @param notification A Notification object describing how to notify the user. Must not be null.
+     * @param notification A <code>Notification</code> object describing how to notify the user. Must not be null.
+     * @see com.juankpro.ane.localnotif.Notification
      */
     public function notifyUser(code:String, notification:Notification):void {
       CONFIG::device {
@@ -151,8 +169,8 @@
 
     /**
      * The application badge number. You can read and write this property.
-     * This property allows reseting the application badge to zero or
-     * any other value anytime.
+     * This property allows resetting the application badge to zero or
+     * any other value anytime. Setting it to zero removes the badge.
      * <p>Supported OS: iOS</p>
      */
     public function get applicationBadgeNumber():int {
@@ -184,11 +202,12 @@
      * notifications otherwise the application will raise exceptions.
      * Once you call this method you can register to the
      * <code>NotificationEvent.SETTINGS_SUBSCRIBED</code> event that will
-     * aknowledge your subscription and will also report the notification
+     * acknowledge your subscription and will also report the notification
      * types the user has accepted to receive.</p>
      * <p>Supported OS: iOS</p>
      * @param options A <code>LocalNotifierSubscribeOptions</code> instance specifying the
      * subscription options.
+     * @see #needsSubscription
      */
     public function subscribe(options:LocalNotifierSubscribeOptions):void {
       CONFIG::device {
