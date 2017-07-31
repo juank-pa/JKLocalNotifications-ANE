@@ -14,13 +14,13 @@
 
 - (instancetype)initWithTargetDelegate:(id<UIApplicationDelegate>)target {
     if (self = [super init]) {
-        self.target = target;
+        _target = [target retain];
     }
     return self;
 }
 
 - (void)dealloc {
-    [self.target release];
+    [_target release];
     [super dealloc];
 }
 
