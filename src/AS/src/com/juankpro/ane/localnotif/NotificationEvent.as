@@ -2,7 +2,8 @@
   import flash.events.*;
 
   /**
-   * NotificationEvent is an Event that is fired when a Notification is selected.
+   * NotificationEvent is an Event that is fired when a Notification is received
+   * or when it has been subscribed (iOS only).
    * <p>Supported OS: Android, iOS</p>
    */
   public class NotificationEvent extends Event {
@@ -21,8 +22,8 @@
     public var notificationCode:String = null;
 
     /**
-     * The settings returned after subsription
-     * <p>Supported OS: Android, iOS</p>
+     * The settings accepted by the user after subsription request.
+     * <p>Supported OS: iOS</p>
      * @default null
      */
     public var subscribeOptions:LocalNotifierSubscribeOptions = null;
@@ -34,20 +35,19 @@
     public static const NOTIFICATION_ACTION:String = "notificationAction";
 
     /**
-     * A string constant representing the settings registration.
-     * <p>Supported OS: Android, iOS</p>
+     * A string constant representing the settings subscription.
+     * <p>Supported OS: iOS</p>
      */
     public static const SETTINGS_SUBSCRIBED:String = "settingsSubscribed";
 
     /**
-     * Constructs a new NotificationEvent object with the specified parameters.
+     * Constructs a new <code>NotificationEvent</code> object with the specified parameters.
      * <p>Supported OS: Android, iOS</p>
      */
     public function NotificationEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false, code:String = null, data:Object = null) {
       super(type, bubbles, cancelable);
       this.notificationCode = code;
       this.actionData = data;
-      return;
     }
 
     /**

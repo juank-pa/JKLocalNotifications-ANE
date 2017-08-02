@@ -5,13 +5,14 @@ set -e
 SDK="${HOME}/Developer/AIR_SDK"
 AMXML="${SDK}/bin/amxmlc"
 ADT="${SDK}/bin/adt"
-IPHONE_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator10.2.sdk"
 
 # name of ipa file
 APP_NAME=sample
 
-# Certificate password
+# Certificate
+CERT_FILE=jk.p12
 CERT_PASS=1234
+PROVISIONING_PROFILE=test.mobileprovision
 
 echo "***** IOS SIMULATOR APP ******"
 echo "***** compiling SWF file *****"
@@ -21,36 +22,33 @@ echo "***** compiling SWF file *****"
   -define+=CONFIG::iphone,true \
   -define+=CONFIG::android,false \
   -external-library-path+=./../../bin/ext/LocalNotificationLib.ane \
-  -output ./sample.swf \
+  -output ./$APP_NAME.swf \
   -- ./Sample.as
 
 echo "***** packaging SWF file into IPA *****"
 
+# other targets: ipa-test, ipa-debug, ipa-debug-interpreter, ipa-app-store, ipa-app-store, ipa-ad-hoc
 "$ADT" -package \
-  -target ipa-test-interpreter-simulator \
-  -storetype pkcs12 -keystore test.p12 \
+  -target ipa-test-interpreter \
+  -storetype pkcs12 -keystore $CERT_FILE \
   -storepass $CERT_PASS \
+  -provisioning-profile $PROVISIONING_PROFILE\
   $APP_NAME.ipa \
   ${APP_NAME}-app.xml \
   $APP_NAME.swf \
   fx05.caf \
-  -extdir ./../../bin/ext \
-  -platformsdk "$IPHONE_SDK"
+  -extdir ./../../bin/ext
 
 echo "**** Installing IPA in iOS simulator ******"
 
-export AIR_IOS_SIMULATOR_DEVICE="iPhone 4s"
-
 "$ADT" -installApp \
   -platform ios \
-  -platformsdk "$IPHONE_SDK" \
-  -device ios-simulator \
-  -package ./$APP_NAME.ipa
+  -device 1 \
+  -package $APP_NAME.ipa
 
 echo "**** Lanching iOS simulator ******"
 
 "$ADT" -launchApp \
   -platform ios \
-  -platformsdk "$IPHONE_SDK" \
-  -device ios-simulator \
+  -device 1 \
   -appid com.juankpro.Sample

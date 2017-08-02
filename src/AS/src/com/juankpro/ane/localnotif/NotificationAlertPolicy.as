@@ -1,6 +1,7 @@
 ﻿package com.juankpro.ane.localnotif {
   /**
-   * A class of constants representing when a notification will alert the user. It is available to use with the alertPolicy property of the Notification class.
+   * A class of constants representing when a notification will alert the user. It is available
+   * to use with the alertPolicy property of the Notification class.
    * <p>Supported OS: Android</p>
    */
   final public class NotificationAlertPolicy extends Object {

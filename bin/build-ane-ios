@@ -2,20 +2,15 @@
 
 source ./config.sh
 
-PLATFORM="platform=iOS Simulator,name=iPhone 4s,OS=8.4"
-# Match the configuration used to compile the .a library
-# Debug or Release
-CONFIGURATION=Debug
-
 set -e
 
 rm -rf $TEMP_PATH
 
-echo "****** IOS SIMULATOR VERSION *******"
+echo "****** IOS VERSION *******"
 
 mkdir -p $TEMP_PATH/iphone
 
-echo "****** Compiling iOS native library *******"
+echo "****** Compiling native library *******"
 
 # TODO: Try to automatize XCode compilation
 #xcodebuild \
@@ -32,7 +27,7 @@ echo "****** Compiling AS3 library *******"
 
 # compile iOS SWC version
 "$ACOMPC" \
-  -swf-version 26 \
+  -swf-version $AIR_VERSION \
 	-define+=CONFIG::device,true \
 	-define+=CONFIG::iphone,true \
 	-define+=CONFIG::android,false \
@@ -47,17 +42,19 @@ unzip $TEMP_PATH/$ANE_NAME.swc -d $TEMP_PATH
 mv $TEMP_PATH/library.swf $TEMP_PATH/iphone
 rm $TEMP_PATH/catalog.xml
 
+echo "****** END IOS VERSION *******"
+echo ""
+
 echo "****** Creating ANE package *******"
 
 "$ADT" -package \
 		-target ane \
 		$RESULT_PATH/$ANE_NAME.ane \
-		$CONFIG_PATH/extension_simulator.xml \
+		$CONFIG_PATH/extension_ios.xml \
 		-swc $TEMP_PATH/$ANE_NAME.swc \
-		-platform iPhone-x86 \
+		-platform iPhone-ARM \
 		-C $TEMP_PATH/iphone/ . \
-    -platformoptions $CONFIG_PATH/options.xml
+		-platformoptions $CONFIG_PATH/options.xml
 
 echo "****** ANE package created *******"
-echo "****** END IOS SIMULATOR VERSION *******"
 echo ""

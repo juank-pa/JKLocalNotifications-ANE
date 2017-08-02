@@ -78,7 +78,7 @@
 		7DB6C3381576B9A200EB395C /* ExtensionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtensionUtils.h; sourceTree = "<group>"; };
 		7DB6C3391576B9A200EB395C /* ExtensionUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExtensionUtils.m; sourceTree = "<group>"; };
 		7DB6C33A1576B9A200EB395C /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashRuntimeExtensions.h; sourceTree = "<group>"; };
-		7DF0E918151CAECB0050D94B /* LocalNotificationSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalNotificationSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7DF0E918151CAECB0050D94B /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DF0E91A151CAECB0050D94B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7DF0E91D151CAECB0050D94B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		7DF0E921151CAECB0050D94B /* LocalNotificationSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LocalNotificationSample-Info.plist"; sourceTree = "<group>"; };
@@ -154,7 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				7D7659D614CC8741001B2405 /* libLocalNotificationLib.a */,
-				7DF0E918151CAECB0050D94B /* LocalNotificationSample.app */,
+				7DF0E918151CAECB0050D94B /* Sample.app */,
 				ADF7BB4F1F223BD500045B97 /* LocalNotificationTests.xctest */,
 			);
 			name = Products;
@@ -296,7 +296,7 @@
 			);
 			name = LocalNotificationSample;
 			productName = LocalNotificationTest;
-			productReference = 7DF0E918151CAECB0050D94B /* LocalNotificationSample.app */;
+			productReference = 7DF0E918151CAECB0050D94B /* Sample.app */;
 			productType = "com.apple.product-type.application";
 		};
 		ADF7BB4E1F223BD500045B97 /* LocalNotificationTests */ = {
@@ -324,6 +324,9 @@
 			attributes = {
 				LastUpgradeCheck = 0820;
 				TargetAttributes = {
+					7DF0E917151CAECB0050D94B = {
+						DevelopmentTeam = 3L674D6842;
+					};
 					ADF7BB4E1F223BD500045B97 = {
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
@@ -556,6 +559,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 3L674D6842;
 				ENABLE_TESTABILITY = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocalNotificationSample/LocalNotificationSample-Prefix.pch";
@@ -568,8 +572,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "LocalNotificationSample/LocalNotificationSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.juank.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.juankpro.Sample;
+				PRODUCT_NAME = Sample;
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${ADOBE_ANE}/**";
 				WRAPPER_EXTENSION = app;
 			};
@@ -580,6 +585,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 3L674D6842;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocalNotificationSample/LocalNotificationSample-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "SAMPLE=1";
@@ -588,8 +594,9 @@
 				INFOPLIST_FILE = "LocalNotificationSample/LocalNotificationSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.juank.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.juankpro.Sample;
+				PRODUCT_NAME = Sample;
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${ADOBE_ANE}/**";
 				WRAPPER_EXTENSION = app;
 			};

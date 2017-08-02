@@ -66,7 +66,9 @@
     localNotification.hasAction = notification.hasAction;
 
     // This title will only be seen inside the notification center.
-    localNotification.alertTitle = notification.title;
+    if ([localNotification respondsToSelector:@selector(setAlertTitle:)]) {
+        localNotification.alertTitle = notification.title;
+    }
 
     // Set the notification sound.
     // IMPORTANT: The sound is only played if the app is running in the background when it receives the notification.

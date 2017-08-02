@@ -1,12 +1,11 @@
-package com.juankpro.ane.localnotif
-{
+package com.juankpro.ane.localnotif {
 	/**
-	 * A class of constants representing the different repeat inetrvals available to use with the repeatInterval property of the Notification class.
-	 * <p>Supported OS: iOS</p>
+	 * A class of constants representing the different repeat inetrvals available to use with the
+   * repeatInterval property of the Notification class.
+	 * <p>Supported OS: iOS, Android</p>
 	 * @see com.juankpro.ane.localnotif.Notification#repeatInterval
 	 */
-	public class NotificationTimeInterval
-	{
+	public class NotificationTimeInterval {
 		/**
 		 * Represents an era repeat interval
 		 * <p>Supported OS: iOS</p>
@@ -69,8 +68,7 @@ package com.juankpro.ane.localnotif
 		/**
 		 * @private
 		 */
-		public function NotificationTimeInterval()
-		{
+		public function NotificationTimeInterval() {
 			throw new Error("Cannot create an instance of this class");
 		}
 	}

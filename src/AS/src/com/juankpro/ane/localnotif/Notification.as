@@ -1,30 +1,38 @@
 ﻿package com.juankpro.ane.localnotif {
 
   /**
-   * A class that represents how a persistent local notification is to be presented to the user using the NotificationManager class.
+   * A class that represents how a persistent local notification is to be presented to the
+   * user using the NotificationManager class.
    * <p>Supported OS: Android, iOS</p>
    */
   public class Notification extends Object {
     /**
-     * The data associated with the notification. It can be retrieved from a NotificationEvent object.
+     * The data associated with the notification. It can be retrieved from a
+     * <code>NotificationEvent</code> object.
      * <p>Supported OS: Android, iOS</p>
      * @default null
+     * @see com.juankpro.ane.localnotif.NotificationEvent
      */
     public var actionData:Object = null;
 
     /**
      * The text associated with the notification action - it appears in two places.
-     * The first is on the action button of the notification dialog that appears when a notification is fired.
-     * The second is on the unlock slider when the device is locked. If left as null, the iOS default string will be used.
+     * The first is on the action button of the notification dialog that appears when a notification
+     * is fired (only if alert syle is "Alerts").
+     * The second is on the unlock slider when the device is locked. If left as null,
+     * the iOS default string "View" will be used.
      * <p>Supported OS: iOS </p>
      * @default null
+     * @see #hasAction
      */
     public var actionLabel:String = null;
 
     /**
-     * Specifies when a notification will alert the user.
+     * Specifies when a notification will alert the user. Use the constants defined
+     * in <code>NotificationAlertPolicy</code>.
      * <p>Supported OS: Android</p>
      * @default NotificationAlertPolicy.EACH_NOTIFICATION
+     * @see com.juankpro.ane.localnotif.NotificationAlertPolicy
      */
     public var alertPolicy:String;
 
@@ -36,7 +44,8 @@
     public var body:String = null;
 
     /**
-     * Specifies if the notification is cleared from the notifications list and status bar after it is selected.
+     * Specifies if the notification is cleared from the notifications list and status bar after
+     * it is selected.
      * <p>Supported OS: Android</p>
      * @default true
      */
@@ -46,25 +55,28 @@
      * Specifies if the notification has an action or not. On both OSs, if a notification's action is performed,
      * at the very least, the app will be brought to the foreground if it was in the background or
      * launched if it had been shutdown. On iOS, the way to perform the action of a notification manifests itself
-     * as a button on the notification dialog that appears when a notification is fired and different text on
+     * as a button on the notification dialog (only if alert style is "Alerts") and in
      * the unlock slider when the device is locked. On Android, the way to perform an action is not visible,
      * it is performed by selecting the notification from the notification list (window shade).
      * <p>Supported OS: Android, iOS</p>
      * @default true
+     * @see #actionLabel
      */
     public var hasAction:Boolean = true;
 
     /**
-     * Specifies the type of icon to display with the notification, specified by the NotificationIconType class.
+     * Specifies the type of icon to display with the notification, specified by the
+     * <code>NotificationIconType</code> class.
      * <p>Supported OS: Android</p>
      * @default NotificationIconType.ALERT
+     * @see com.juankpro.ane.localnotif.NotificationIconType
      */
     public var iconType:String;
 
     /**
      * On Android this will display the specified number on the notification icon that appears
      * in the status bar. On iOS this will display as a number on the application icon's badge.
-     * Numbers 0 and below will result in no badge displayed.
+     * A value of zero or below will result in no badge displayed.
      * <p>Supported OS: Android, iOS</p>
      * @default 0
      */
@@ -83,18 +95,23 @@
      * The volume that it's played at are defined by the user settings on the OS.
      * <p>Supported OS: Android, iOS</p>
      * @default true
+     * @see #soundName
      */
     public var playSound:Boolean = true;
 
     /**
      * Specifies a sound by name that will be played when the notification arrives.
+     * If <code>playSound</code> is true but <code>soundName</code> is not defined
+     * then the operating system default sound is used.
      * <p>Supported OS: iOS</p>
      * @default true
+     * @see #playSound
      */
     public var soundName:String = null;
 
     /**
-     * The alert (sound and vibration) of a notification will be repeated until it is canceled or the notifications list is opened.
+     * The alert (sound and vibration) of a notification will be repeated until it is canceled
+     * or the notifications list is opened.
      * <p>Supported OS: Android</p>
      * @default false
      */
@@ -108,8 +125,8 @@
     public var tickerText:String = null;
 
     /**
-     * The title of the notification. On iOS devices the title will only be visible inside
-     * the notification center.
+     * The title of the notification. On iOS devices the title will only be visible at
+     * the notification center entry.
      * <p>Supported OS: iOS, Android</p>
      * @default null
      */
@@ -131,7 +148,7 @@
 
     /**
      * The calendar interval at which to reschedule the notification.
-     * If you assign an calendar unit the system reschedules the notification for
+     * If you assign a calendar unit the system reschedules the notification for
      * delivery at the specified interval.
      * <p>Use the constants defined on <code>NotificationTimeInterval</code> or
      * zero if you want the notification to trigger only once.</p>

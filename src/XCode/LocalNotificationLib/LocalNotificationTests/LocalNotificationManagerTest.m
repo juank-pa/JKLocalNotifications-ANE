@@ -71,7 +71,10 @@
     OCMStub([self.notificationMock localNotification]).andReturn(self.notificationMock);
     OCMExpect([self.notificationMock setTimeZone:[NSTimeZone defaultTimeZone]]);
     OCMExpect([self.notificationMock setRepeatInterval:NSCalendarUnitMonth]);
-    OCMExpect([self.notificationMock setAlertTitle:@"title"]);
+
+    if ([self.notificationMock respondsToSelector:@selector(setAlertTitle:)]) {
+        OCMExpect([self.notificationMock setAlertTitle:@"title"]);
+    }
     OCMExpect([self.notificationMock setAlertBody:@"body"]);
     OCMExpect([self.notificationMock setAlertAction:@"actionLabel"]);
     OCMExpect([self.notificationMock setHasAction:YES]);

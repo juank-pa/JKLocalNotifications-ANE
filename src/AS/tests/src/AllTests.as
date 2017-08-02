@@ -1,14 +1,16 @@
-package
-{
+package {
   import asunit.framework.TestSuite;
 
-  public class AllTests extends TestSuite
-  {
-    public function AllTests()
-    {
+  public class AllTests extends TestSuite {
+    public static var tests:Array = [
+      TestLocalNotifierSubscriberOptions,
+      TestNotificationManager
+    ];
+    public function AllTests() {
       super();
-      //addTest(new TestLocalNotifierSubscriberOptions());
-      addTest(new TestNotificationManager());
+      for each(var cls:Class in tests) {
+        addTest(new cls());
+      }
     }
   }
 }

@@ -15,6 +15,7 @@
     private var cancelButton:SimpleButton;
     private var codeButton:SimpleButton;
     private var badgeButton:SimpleButton;
+    private var clearButton:SimpleButton;
     private var notificationTF:TextField;
     private var contentsScaleFactor:int = 2;
 
@@ -71,11 +72,13 @@
       cancelButton = createButton("Cancel", stage.stageWidth - 100 * contentsScaleFactor, top1);
       codeButton = createButton("By Code", 0, top2);
       badgeButton = createButton("Clear Badge", stage.stageWidth - 100 * contentsScaleFactor, top2);
+      clearButton = createButton("Clear", 0, int(stage.stageHeight / 2) - 30 * contentsScaleFactor);
 
       addChild(postButton);
       addChild(cancelButton);
       addChild(codeButton);
       addChild(badgeButton);
+      addChild(clearButton);
 
       notificationTF = createTextField(0, int(stage.stageHeight / 2),
          stage.stageWidth - 1, int(stage.stageHeight / 2) - 1);
@@ -88,12 +91,17 @@
       notificationTF.scrollV = notificationTF.maxScrollV;
     }
 
+    private function clearMessages():void {
+      notificationTF.text = "";
+    }
+
     private function registerEvents():void {
       notificationManager.addEventListener(NotificationEvent.NOTIFICATION_ACTION, notificationActionHandler);
       postButton.addEventListener(MouseEvent.CLICK, buttonClickHandler);
       cancelButton.addEventListener(MouseEvent.CLICK, buttonClickHandler);
       codeButton.addEventListener(MouseEvent.CLICK, buttonClickHandler);
       badgeButton.addEventListener(MouseEvent.CLICK, buttonClickHandler);
+      clearButton.addEventListener(MouseEvent.CLICK, buttonClickHandler);
     }
 
     private function buttonClickHandler(event:MouseEvent):void {
@@ -122,6 +130,9 @@
         case badgeButton:
           notificationManager.applicationBadgeNumber = 0;
           printMessage("Reset badge number to zero");
+          break;
+        case clearButton:
+          clearMessages();
           break;
       }
     }

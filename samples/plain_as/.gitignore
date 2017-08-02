@@ -2,3 +2,6 @@
 *.ipa
 *.swf
 *.dSYM
+*.provisioningprofile
+*.mobileprovision
+*.p12

@@ -65,13 +65,13 @@
 
 - (void)dealloc {
     _extensionContext = NULL;
-    [self.notificationManager release];
-    [self.selectedNotificationCode release];
-    [self.selectedNotificationData release];
-    [self.selectedSettings release];
+    [_notificationManager release];
+    [_selectedNotificationCode release];
+    [_selectedNotificationData release];
+    [_selectedSettings release];
 
     [UIApplication sharedApplication].delegate = self.sourceDelegate.target;
-    [self.sourceDelegate release];
+    [_sourceDelegate release];
 
     [[NSNotificationCenter defaultCenter] removeObserver:self name:(NSString *)FRPE_ApplicationDidReceiveLocalNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:(NSString *)FRPE_ApplicationDidRegisterUserNotificationSettings object:nil];

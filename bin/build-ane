@@ -33,6 +33,8 @@ echo "****** Compiling AS3 library *******"
     -output $TEMP_PATH/$ANE_NAME.swc \
     -include-sources $LIB_FOLDER/src/
 
+echo "****** Extracting compiled data *******"
+
 # grab SWC library
 unzip $TEMP_PATH/$ANE_NAME.swc -d $TEMP_PATH
 mv $TEMP_PATH/library.swf $TEMP_PATH/android

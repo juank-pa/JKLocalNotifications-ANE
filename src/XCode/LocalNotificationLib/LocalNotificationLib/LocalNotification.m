@@ -44,13 +44,13 @@
 }
 
 - (void)dealloc {
-    [self.notificationCode release];
-    [self.actionLabel release];
-    [self.title release];
-    [self.body release];
-    [self.actionData release];
-    [self.fireDate release];
-    [self.soundName release];
+    [_notificationCode release];
+    [_actionLabel release];
+    [_title release];
+    [_body release];
+    [_actionData release];
+    [_fireDate release];
+    [_soundName release];
 
     [super dealloc];
 }
