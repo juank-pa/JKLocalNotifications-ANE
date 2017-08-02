@@ -1,8 +1,15 @@
 language: objective-c
 os: osx
-osx_image: xcode8.2
 xcode_project: src/XCode/LocalNotificationLib/LocalNotificationLib.xcodeproj
 xcode_scheme: LocalNotificationTests
-script:
-  - cd $TRAVIS_BUILD_DIR/src/XCode/LocalNotificationLib
-  - xcodebuild test -project LocalNotificationLib.xcodeproj -scheme LocalNotificationTests -destination 'platform=iOS Simulator,OS=8.1,name=iPhone 4s'
+script: script/build
+matrix:
+  include:
+      - osx_image: xcode8.3
+        env: XCODE_DESTINATION="platform=iOS Simulator,OS=10.3.1,name=iPhone 5"
+      - osx_image: xcode8.2
+        env: XCODE_DESTINATION="platform=iOS Simulator,OS=9.3,name=iPhone 4s"
+      - osx_image: xcode8.2
+        env: XCODE_DESTINATION="platform=iOS Simulator,OS=8.4,name=iPhone 4s"
+      - osx_image: xcode8.2
+        env: XCODE_DESTINATION="platform=iOS Simulator,OS=8.1,name=iPhone 4s"

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cd $TRAVIS_BUILD_DIR/src/XCode/LocalNotificationLib
+
+xcodebuild test \
+  -project LocalNotificationLib.xcodeproj \
+  -scheme LocalNotificationTests \
+  -destination "$XCODE_DESTINATION"

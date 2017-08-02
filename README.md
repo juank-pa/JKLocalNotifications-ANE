@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/juank-pa/JKLocalNotifications-ANE.svg?branch=master)](https://travis-ci.org/juank-pa/JKLocalNotifications-ANE)
+
 This is a Native Extension based in the one exposed by
 [Daniel Koestler](http://blogs.adobe.com/koestler/) that fixes some issues
 and adds some other capabilities to the iOS side like the ability to schedule
