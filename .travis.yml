@@ -5,6 +5,8 @@ xcode_scheme: LocalNotificationTests
 script: script/build
 matrix:
   include:
+      - osx_image: xcode9
+        env: XCODE_DESTINATION="platform=iOS Simulator,OS=11,name=iPhone 5s"
       - osx_image: xcode8.3
         env: XCODE_DESTINATION="platform=iOS Simulator,OS=10.3.1,name=iPhone 5"
       - osx_image: xcode8.2

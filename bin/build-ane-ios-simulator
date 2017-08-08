@@ -1,6 +1,7 @@
 #!/bin/zsh
 
-source ./config.sh
+SCRIPT_PATH="$(dirname "$0")"
+source $SCRIPT_PATH/config/config.sh
 
 PLATFORM="platform=iOS Simulator,name=iPhone 4s,OS=8.4"
 # Match the configuration used to compile the .a library
@@ -52,7 +53,7 @@ echo "****** Creating ANE package *******"
 "$ADT" -package \
 		-target ane \
 		$RESULT_PATH/$ANE_NAME.ane \
-		$CONFIG_PATH/extension_simulator.xml \
+		$CONFIG_PATH/extension_ios_simulator.xml \
 		-swc $TEMP_PATH/$ANE_NAME.swc \
 		-platform iPhone-x86 \
 		-C $TEMP_PATH/iphone/ . \
