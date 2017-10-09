@@ -1,32 +1,20 @@
-/*************************************************************************
- *
- * ADOBE CONFIDENTIAL
- * ___________________
- *
- *  Copyright 2011 Adobe Systems Incorporated
- *  All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Adobe Systems Incorporated and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Adobe Systems Incorporated and its
- * suppliers and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Adobe Systems Incorporated.
- **************************************************************************/
+//
+//  JKLocalNotification.m
+//  LocalNotificationLib
+//
+//  Created by Juan Carlos Pazmino on 10/1/17.
+//
+//
 
+#import "JKLocalNotification.h"
 
-#import "LocalNotification.h"
-
-
-@implementation LocalNotification
+@implementation JKLocalNotification
 
 + (instancetype)localNotification {
-    return [[[LocalNotification alloc] init] autorelease];
+    return [[self new] autorelease];
 }
 
-- (instancetype) init {
+- (instancetype)init {
     if (self = [super init]) {
         _notificationCode = @"";
         _actionLabel = nil;

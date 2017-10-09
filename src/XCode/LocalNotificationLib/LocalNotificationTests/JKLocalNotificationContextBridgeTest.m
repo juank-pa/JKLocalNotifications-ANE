@@ -10,54 +10,45 @@
 #import <OCMock/OCMock.h>
 #import "Stubs.h"
 #import "FlashRuntimeExtensions+Private.h"
-#import "LocalNotificationsContext.h"
-#import "LocalNotification.h"
+#import "JKLocalNotificationsContext.h"
+#import "JKLocalNotification.h"
+#import "JKLocalNotificationSettings.h"
+#import "JKNotificationListener.h"
+#import "JKAuthorizer.h"
 #import "ExtensionUtils.h"
 
-@interface LocalNotificationsContext (Tests)
-- (void)createManager;
-- (void)notify:(LocalNotification*)localNotification;
+@interface JKLocalNotificationsContext (Tests)
+- (void)notify:(JKLocalNotification*)localNotification;
 - (void)cancel:(NSString*)notificationCode;
 - (void)cancelAll;
-- (void)registerSettingTypes:(UIUserNotificationType)types;
+- (void)authorizeWithSettings:(JKLocalNotificationSettings *)settings;
 - (void)checkForNotificationAction;
-@property (nonatomic, copy) NSString *selectedNotificationCode;
-@property (nonatomic, copy) NSData *selectedNotificationData;
-@property (nonatomic, retain) UIUserNotificationSettings *selectedSettings;
+@property (nonatomic, readonly) id<JKAuthorizer> authorizer;
+@property (nonatomic, retain) JKNotificationListener *listener;
 @end
 
-@interface LocalNotificationContextBridgeTest : XCTestCase
+@interface JKLocalNotificationContextBridgeTest : XCTestCase
 @property (nonatomic, retain) id contextMock;
 @property (nonatomic, retain) id utilsMock;
-@end
-
-@interface LocalNotification ()
--(NSString *)notificationCode;
--(void)setNotificationCode:(NSString *)code;
 @end
 
 int context;
 FREObject args[] = {&context, &context};
 
-@implementation LocalNotificationContextBridgeTest
+@implementation JKLocalNotificationContextBridgeTest
 
 - (void)setUp {
     [super setUp];
 
-    self.contextMock = OCMClassMock([LocalNotificationsContext class]);
+    self.contextMock = OCMClassMock([JKLocalNotificationsContext class]);
 
     self.utilsMock = OCMClassMock([ExtensionUtils class]);
     OCMStub([self.utilsMock getContextID:&context]).andReturn(self.contextMock);
 }
 
 - (void)tearDown {
+    [_contextMock release];
     [super tearDown];
-}
-
-- (void)testCreateManager {
-    OCMExpect([self.contextMock createManager]);
-    ADEPCreateManager(&context, NULL, 0, args);
-    OCMVerifyAll(self.contextMock);
 }
 
 - (void)testNotify {
@@ -100,7 +91,7 @@ FREObject args[] = {&context, &context};
     OCMStub([self.utilsMock getDataFromFREObject:&actionDataContext]).andReturn(data);
 
 
-    id notificationMock = OCMStrictClassMock([LocalNotification class]);
+    id notificationMock = OCMStrictClassMock([JKLocalNotification class]);
     OCMStub([notificationMock localNotification]).andReturn(notificationMock);
     OCMExpect([notificationMock setNotificationCode:@"code"]);
     OCMExpect([notificationMock setFireDate:[OCMArg checkWithBlock:^BOOL(NSDate *value) {
@@ -136,12 +127,18 @@ FREObject args[] = {&context, &context};
     OCMVerifyAll(self.contextMock);
 }
 
-- (void)testRegisterSettings {
-    UIUserNotificationType types = UIUserNotificationTypeSound | UIUserNotificationTypeBadge;
+- (void)testAuthorizeWithSettings {
+    JKLocalNotificationType types = JKLocalNotificationTypeSound | JKLocalNotificationTypeBadge;
     OCMStub([self.utilsMock getUIntFromFREObject:&context]).andReturn(types);
-    OCMExpect([self.contextMock registerSettingTypes:types]);
+
+    id settingsMock = [OCMClassMock([JKLocalNotificationSettings class]) autorelease];
+    OCMStub([settingsMock settingsWithLocalNotificationTypes:types]).andReturn(settingsMock);
+
+
+    OCMExpect([self.contextMock authorizeWithSettings:settingsMock]);
     ADEPRegisterSettings(&context, NULL, 0, args);
     OCMVerifyAll(self.contextMock);
+    [settingsMock release];
 }
 
 - (void)testCheckForNotificationAction {
@@ -181,10 +178,10 @@ FREObject args[] = {&context, &context};
 }
 
 - (void)testGetSelectedSettings {
-    UIUserNotificationType types = UIUserNotificationTypeSound | UIUserNotificationTypeBadge;
-    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+    JKLocalNotificationType types = JKLocalNotificationTypeSound | JKLocalNotificationTypeBadge;
+    JKLocalNotificationSettings *settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes:types];
 
-    OCMExpect([self.contextMock selectedSettings]).andReturn(settings);
+    OCMExpect([self.contextMock settings]).andReturn(settings);
     OCMStub([self.utilsMock getFREObjectFromUInt:types]).andReturn((FREObject)&types);
 
     FREObject ret = ADEPGetSelectedSettings(&context, NULL, 0, args);
@@ -196,7 +193,7 @@ FREObject args[] = {&context, &context};
 - (void)testGetSelectedNotificationCode {
     NSString *code = @"Code";
 
-    OCMExpect([self.contextMock selectedNotificationCode]).andReturn(code);
+    OCMExpect([self.contextMock notificationCode]).andReturn(code);
     OCMStub([self.utilsMock getFREObjectFromString:code]).andReturn((FREObject)code);
 
     FREObject ret = ADEPGetSelectedNotificationCode(&context, NULL, 0, args);
@@ -208,7 +205,7 @@ FREObject args[] = {&context, &context};
     const char rawData[] = "hi";
     NSData *data = [NSData dataWithBytes:rawData length:3];
 
-    OCMExpect([self.contextMock selectedNotificationData]).andReturn(data);
+    OCMExpect([self.contextMock notificationData]).andReturn(data);
     OCMStub([self.utilsMock getFREObjectFromData:data]).andReturn((FREObject)rawData);
 
     FREObject ret = ADEPGetSelectedNotificationData(&context, NULL, 0, args);

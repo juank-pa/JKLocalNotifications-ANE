@@ -14,6 +14,6 @@
 
 @property (retain, nonatomic) UIWindow *window;
 @property (retain, nonatomic) ViewController *viewController;
-+ (NSDictionary *)getLaunchOptions;
+@property (retain, nonatomic) NSDictionary *options;
 
 @end

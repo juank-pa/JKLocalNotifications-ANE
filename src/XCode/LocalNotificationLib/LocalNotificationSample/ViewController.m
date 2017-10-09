@@ -7,14 +7,15 @@
 //
 
 #import "ViewController.h"
-#import "LocalNotificationsContext.h"
-#import "LocalNotification.h"
-#import "LocalNotificationManager.h"
+#import "JKLocalNotificationsContext.h"
+#import "JKLocalNotification.h"
+#import "JKNotificationFactory.h"
+#import "JKLocalNotificationSettings.h"
 #import "FlashRuntimeExtensions+Private.h"
 
 @interface ViewController ()
 @property (nonatomic, assign) IBOutlet UITextView *debugText;
-@property (nonatomic, retain) LocalNotificationsContext *context;
+@property (nonatomic, retain) JKLocalNotificationsContext *context;
 @end
 
 @implementation ViewController
@@ -41,7 +42,7 @@
 }
 
 - (IBAction)postNotification:(id)sender {
-    LocalNotification *notification = [[[LocalNotification alloc] init] autorelease];
+    JKLocalNotification *notification = [[JKLocalNotification new] autorelease];
     
     notification.notificationCode = @"JKCode";
     notification.playSound = YES;
@@ -61,18 +62,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.context = [[[LocalNotificationsContext alloc] initWithContext:NULL] autorelease];
-    [self.context createManager];
-    
+
+    JKNotificationFactory *factory = [JKNotificationFactory factory];
+    self.context = [JKLocalNotificationsContext notificationsContextWithContext:NULL factory:factory];
+
     [self printMessage:@"Before Delegate"];
-    
     self.context.delegate = self;
-
-    [self.context registerSettingTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert)];
-    [self.context checkForNotificationAction];
-
     [self printMessage:@"After Delegate"];
+
+    JKLocalNotificationSettings *settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes: UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert];
+    [self.context authorizeWithSettings:settings];
+    [self.context checkForNotificationAction];
 }
 
 - (void)printMessage:(NSString*)message {
@@ -84,13 +84,12 @@
     self.debugText.text = [NSString stringWithFormat:@"%@-----\n%@%@\n", self.debugText.text, newTitle, message];
 }
 
-- (void)localNotificationContext:(LocalNotificationsContext *)context didReceiveLocalNotification:(UILocalNotification *)notification {
-    [self printMessage:notification.description title:@"Local Notification"];
-    //[self.context cancel:[notification.userInfo objectForKey:NOTIFICATION_CODE_KEY]];
+- (void)localNotificationContext:(JKLocalNotificationsContext *)context didReceiveNotificationFromListener:(JKNotificationListener *)listener {
+    [self printMessage:listener.notificationCode title:@"Local Notification"];
 }
 
-- (void)localNotificationContext:(LocalNotificationsContext *)context didRegisterSettings:(UIUserNotificationSettings *)settings {
-    [self printMessage:settings.description title:@"Register settings"];
+- (void)localNotificationContext:(JKLocalNotificationsContext *)context didRegisterSettings:(JKLocalNotificationSettings *)settings {
+    [self printMessage:@(settings.types).description title:@"Register settings"];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

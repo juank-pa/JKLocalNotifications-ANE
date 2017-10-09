@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <string.h>
 #import "Stubs.h"
-#import "LocalNotificationManager.h"
+#import "Constants.h"
 
 #ifdef __cplusplus
 "C" {
@@ -612,8 +612,8 @@
     NSDictionary* FRPE_getApplicationLaunchOptions() {
         UILocalNotification *localNotification = [[[UILocalNotification alloc] init] autorelease];
         localNotification.userInfo = @{
-                                       NOTIFICATION_CODE_KEY: @"NotificationCodeKey",
-                                       NOTIFICATION_DATA_KEY: @"NotificationDataKey"
+                                       JK_NOTIFICATION_CODE_KEY: @"NotificationCodeKey",
+                                       JK_NOTIFICATION_DATA_KEY: @"NotificationDataKey"
                                        };
         return @{UIApplicationLaunchOptionsLocalNotificationKey: localNotification};
     }

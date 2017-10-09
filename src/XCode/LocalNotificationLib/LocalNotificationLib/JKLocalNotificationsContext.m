@@ -1,179 +1,137 @@
-/*************************************************************************
- *
- * ADOBE CONFIDENTIAL
- * ___________________
- *
- *  Copyright 2011 Adobe Systems Incorporated
- *  All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Adobe Systems Incorporated and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Adobe Systems Incorporated and its
- * suppliers and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Adobe Systems Incorporated.
- **************************************************************************/
-
+//
+//  JKLocalNotificationsContext.h
+//  LocalNotificationLib
+//
+//  Created by Juan Carlos Pazmino on 10/1/17.
+//
+//
 
 #import <UIKit/UIKit.h>
+#import <UserNotifications/UserNotifications.h>
 #import "FlashRuntimeExtensions.h"
 #import "FlashRuntimeExtensions+Private.h"
+#import "Constants.h"
 #import "ExtensionUtils.h"
 
-#import "LocalNotificationsContext.h"
-#import "LocalNotificationManager.h"
-#import "LocalNotification.h"
-#import "LocalNotificationAppDelegate.h"
+#import "JKLocalNotificationsContext.h"
+#import "JKLocalNotification.h"
+#import "JKLocalNotificationManager.h"
+#import "JKNotificationListener.h"
+#import "JKAuthorizer.h"
+#import "JKNotificationFactory.h"
+#import "JKLocalNotificationSettings.h"
 
-@interface LocalNotificationsContext()
+@interface JKLocalNotificationsContext()<JKAuthorizerDelegate, JKNotificationListenerDelegate>
 
-- (void)createManager;
-- (void)notify:(LocalNotification*)localNotification;
+- (void)notify:(JKLocalNotification*)localNotification;
 - (void)cancel:(NSString*)notificationCode;
 - (void)cancelAll;
 
-@property (nonatomic, copy) NSString *selectedNotificationCode;
-@property (nonatomic, copy) NSData *selectedNotificationData;
-@property (nonatomic, retain) UIUserNotificationSettings *selectedSettings;
-@property (nonatomic, retain) LocalNotificationManager *notificationManager;
+@property (nonatomic, retain) JKNotificationFactory *factory;
+@property (nonatomic, readonly) JKLocalNotificationManager *manager;
+@property (nonatomic, readonly) id<JKAuthorizer> authorizer;
+@property (nonatomic, readonly) JKNotificationListener *listener;
 @property (nonatomic, assign) FREContext extensionContext;
-@property (nonatomic, retain) LocalNotificationAppDelegate *sourceDelegate;
 
 @end
 
 
-@implementation LocalNotificationsContext
+@implementation JKLocalNotificationsContext
 
-+ (instancetype)notificationsContextWithContext:(FREContext)ctx {
-    return [[[LocalNotificationsContext alloc] initWithContext:ctx] autorelease];
++ (instancetype)notificationsContextWithContext:(FREContext)ctx factory:(JKNotificationFactory *)factory {
+    return [[[JKLocalNotificationsContext alloc] initWithContext:ctx factory:factory] autorelease];
 }
 
-- (id)initWithContext:(FREContext)ctx {
+- (id)initWithContext:(FREContext)ctx factory:(JKNotificationFactory *)factory {
     if (self = [super init]) {
         _extensionContext = ctx;
+        _factory = [factory retain];
 
-        // Use proxy delegate
-        id<UIApplicationDelegate> targetDelegate = [UIApplication sharedApplication].delegate;
-        _sourceDelegate = [[LocalNotificationAppDelegate alloc] initWithTargetDelegate:targetDelegate];
-        [UIApplication sharedApplication].delegate = _sourceDelegate;
+        _listener = [[_factory createListener] retain];
+        _listener.delegate = self;
+
+        _manager = [[_factory createManager] retain];
+
+        _authorizer = [[_factory createAuthorizer] retain];
+        _authorizer.delegate = self;
     }
     return self;
 }
 
-
 - (void)dealloc {
+    _listener.delegate = nil;
+    _authorizer.delegate = nil;
+
     _extensionContext = NULL;
-    [_notificationManager release];
-    [_selectedNotificationCode release];
-    [_selectedNotificationData release];
-    [_selectedSettings release];
-
-    [UIApplication sharedApplication].delegate = self.sourceDelegate.target;
-    [_sourceDelegate release];
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:(NSString *)FRPE_ApplicationDidReceiveLocalNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:(NSString *)FRPE_ApplicationDidRegisterUserNotificationSettings object:nil];
+    [_factory release];
+    [_manager release];
+    [_listener release];
+    [_authorizer release];
 
     [super dealloc];
 }
 
-
-- (void)createManager {
-    self.notificationManager = [LocalNotificationManager notificationManager];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveLocalNotification:)
-                                                 name:(NSString *)FRPE_ApplicationDidReceiveLocalNotification
-                                               object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didRegisterUserNotificationSettings:)
-                                                 name:(NSString *)FRPE_ApplicationDidRegisterUserNotificationSettings
-                                               object:nil];
-}
-
-- (void)notify:(LocalNotification*)localNotification {
-    [self.notificationManager notify:localNotification];
+- (void)notify:(JKLocalNotification*)localNotification {
+    [self.manager notify:localNotification];
 }
 
 
 - (void)cancel:(NSString*)notificationCode {
-    [self.notificationManager cancel:notificationCode];
+    [self.manager cancel:notificationCode];
 }
-
 
 - (void)cancelAll {
-    [self.notificationManager cancelAll];
+    [self.manager cancelAll];
 }
 
-- (void)registerSettingTypes:(UIUserNotificationType)types {
-    [self.notificationManager registerSettingTypes:types];
+- (void)authorizeWithSettings:(JKLocalNotificationSettings *)settings {
+    [self.authorizer requestAuthorizationWithSettings:settings];
 }
 
 - (void)checkForNotificationAction {
-    UILocalNotification *localNotification = [self localNotificationFromLaunchOptions];
-    NSDictionary *notificationUserInfo = [localNotification userInfo];
-    if (!notificationUserInfo) return;
+    [self.listener checkForNotificationAction];
+}
 
-    self.selectedNotificationCode = [notificationUserInfo objectForKey:NOTIFICATION_CODE_KEY];
-    self.selectedNotificationData = [notificationUserInfo objectForKey:NOTIFICATION_DATA_KEY];
+- (NSString *)notificationCode {
+    return self.listener.notificationCode;
+}
+
+- (NSData *)notificationData {
+    return self.listener.notificationData;
+}
+
+- (JKLocalNotificationSettings *)settings {
+    return self.authorizer.settings;
+}
+
+- (void)didReceiveNotificationDataForNotificationListener:(JKNotificationListener *)listener {
 #ifdef SAMPLE
-    [self.delegate localNotificationContext:self didReceiveLocalNotification:localNotification];
+    [self.delegate localNotificationContext:self didReceiveNotificationFromListener:listener];
 #else
     // Dispatch event to AS side of ExtensionContext.
-    FREDispatchStatusEventAsync(self.extensionContext, (const uint8_t*)NOTIFICATION_SELECTED, (const uint8_t*)STATUS);
+    FREResult result = FREDispatchStatusEventAsync(self.extensionContext, (const uint8_t*)JK_NOTIFICATION_SELECTED_EVENT, (const uint8_t*)JK_NOTIFICATION_STATUS_KEY);
+    assert(result == FRE_OK);
 #endif
 }
 
-- (UILocalNotification *)localNotificationFromLaunchOptions {
-    NSDictionary *launchOptions = FRPE_getApplicationLaunchOptions();
-    return [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-}
-
-- (void)didReceiveLocalNotification:(NSNotification*)notification {
-    // Extract local notification.
-    UILocalNotification *localNotification = [[notification userInfo] valueForKey:(NSString*)FRPE_ApplicationDidReceiveLocalNotificationKey];
-    
-    NSDictionary *notificationUserInfo = [localNotification userInfo]; 
-    
-    self.selectedNotificationCode = [notificationUserInfo objectForKey:NOTIFICATION_CODE_KEY];
-    self.selectedNotificationData = [notificationUserInfo objectForKey:NOTIFICATION_DATA_KEY];
-    
+- (void)notificationAuthorizer:(JKLocalNotificationManager *)notificationManager didAuthorizeWithSettings:(JKLocalNotificationSettings *)settings {
 #ifndef SAMPLE
     // Dispatch event to AS side of ExtensionContext.
-    FREResult result = FREDispatchStatusEventAsync(self.extensionContext, (const uint8_t*)NOTIFICATION_SELECTED, (const uint8_t*)STATUS);
+    FREResult result = FREDispatchStatusEventAsync(self.extensionContext, (const uint8_t*)JK_SETTINGS_SUBSCRIBED_EVENT, (const uint8_t*)JK_NOTIFICATION_STATUS_KEY);
     assert(result == FRE_OK);
 #else
-    [self.delegate localNotificationContext:self didReceiveLocalNotification:localNotification];
-#endif
-}
-
-- (void)didRegisterUserNotificationSettings:(NSNotification *)notification {
-    // Extract notification settings.
-    self.selectedSettings = [[notification userInfo] valueForKey:(NSString*)FRPE_ApplicationDidRegisterUserNotificationSettingsKey];
-
-#ifndef SAMPLE
-    // Dispatch event to AS side of ExtensionContext.
-    FREResult result = FREDispatchStatusEventAsync(self.extensionContext, (const uint8_t*)SETTINGS_SUBSCRIBED, (const uint8_t*)STATUS);
-    assert(result == FRE_OK);
-#else
-    [self.delegate localNotificationContext:self didRegisterSettings:self.selectedSettings];
+    [self.delegate localNotificationContext:self didRegisterSettings:settings];
 #endif
 }
 
 #ifndef SAMPLE
 
 FREObject ADEPCreateManager(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    [localContextID createManager];
-
     return NULL;
 }
 
 FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    LocalNotification *localNotification = [LocalNotification localNotification];
+    JKLocalNotification *localNotification = [JKLocalNotification localNotification];
     
     // Notification Code.
     NSString *notificationCode = [ExtensionUtils getStringFromFREObject:argv[0]];
@@ -250,7 +208,7 @@ FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
     }
     
     // Notify.
-    LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
+    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
     [localContextID notify:localNotification];
     
     return NULL;
@@ -259,14 +217,14 @@ FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
 
 FREObject ADEPCancel(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     NSString *notificationCode = [ExtensionUtils getStringFromFREObject:argv[0]];
-    LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
+    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
     [localContextID cancel:notificationCode];
     return NULL;
 }
 
 
 FREObject ADEPCancelAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
+    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
     [localContextID cancelAll];
     return NULL;
 }
@@ -274,14 +232,15 @@ FREObject ADEPCancelAll(FREContext ctx, void* funcData, uint32_t argc, FREObject
 
 FREObject ADEPRegisterSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     uint32_t types = [ExtensionUtils getUIntFromFREObject:argv[0]];
-    LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    [localContextID registerSettingTypes:(UIUserNotificationType)types];
+    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
+    JKLocalNotificationSettings *settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes:(JKLocalNotificationType)types];
+    [localContextID authorizeWithSettings:settings];
     return NULL;
 }
 
 
 FREObject ADEPCheckForNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
+    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
     [localContextID checkForNotificationAction];
     return NULL;
 }
@@ -299,21 +258,21 @@ FREObject ADEPSetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t
 }
 
 FREObject ADEPGetSelectedSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    UIUserNotificationSettings* settings = localContextID.selectedSettings;
+    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
+    JKLocalNotificationSettings* settings = localContextID.settings;
     FREObject numberObject = [ExtensionUtils getFREObjectFromUInt:(uint32_t)settings.types];
     return numberObject;
 }
 
 FREObject ADEPGetSelectedNotificationCode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    NSString* notificationCode = localContextID.selectedNotificationCode;
+    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
+    NSString* notificationCode = localContextID.notificationCode;
     return [ExtensionUtils getFREObjectFromString:notificationCode];
 }
 
 FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    LocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    NSData *notificationData = localContextID.selectedNotificationData;
+    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
+    NSData *notificationData = localContextID.notificationData;
     
     if(!notificationData) return NULL;
 
@@ -384,4 +343,3 @@ FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32
 #endif
 
 @end
-

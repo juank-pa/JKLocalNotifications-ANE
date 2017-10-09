@@ -10,7 +10,8 @@
 #import <OCMock/OCMock.h>
 #include <string.h>
 #import "Stubs.h"
-#import "LocalNotificationsContext.h"
+#import "JKLocalNotificationsContext.h"
+#import "JKNotificationFactory.h"
 #import "ExtensionUtils.h"
 #import "DeallocVerify.h"
 
@@ -20,7 +21,7 @@ void ComJkLocalNotificationContextFinalizer(FREContext ctx);
 void ComJkLocalNotificationExtInitializer(void** extDataToSet, FREContextInitializer* ctxInitializerToSet,
                                           FREContextFinalizer* ctxFinalizerToSet);
 
-@interface LocalNotificationsContext ()
+@interface JKLocalNotificationsContext ()
 @property (nonatomic, assign) FREContext extensionContext;
 @end
 
@@ -57,8 +58,11 @@ void ComJkLocalNotificationExtInitializer(void** extDataToSet, FREContextInitial
     uint32_t functionsToSet = 0;
     const FRENamedFunction *functions = NULL;
 
-    id notificationContextMock = OCMClassMock([LocalNotificationsContext class]);
-    OCMStub([notificationContextMock notificationsContextWithContext:&context]).andReturn(notificationContextMock);
+    id factoryMock = [OCMClassMock([JKNotificationFactory class]) autorelease];
+    OCMStub([factoryMock factory]).andReturn(factoryMock);
+
+    id notificationContextMock = [OCMClassMock([JKLocalNotificationsContext class]) autorelease];
+    OCMStub([notificationContextMock notificationsContextWithContext:&context factory:factoryMock]).andReturn(notificationContextMock);
     OCMExpect([notificationContextMock initExtensionFunctions:&functions]).andReturn(3);
 
     id utilMock = OCMClassMock([ExtensionUtils class]);
@@ -71,6 +75,7 @@ void ComJkLocalNotificationExtInitializer(void** extDataToSet, FREContextInitial
     OCMVerifyAll(utilMock);
 
     [(id)nativeContext release];
+    [(id)factoryMock release];
 }
 
 - (void)testContextFinalizer {

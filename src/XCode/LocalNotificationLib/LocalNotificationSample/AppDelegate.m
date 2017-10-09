@@ -13,19 +13,13 @@
 
 NSDictionary *FRPE_getApplicationLaunchOptions()
 {
-    return [AppDelegate getLaunchOptions];
+    return [[UIApplication sharedApplication].delegate options];
 }
 
 @implementation AppDelegate
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
-
-static NSDictionary *options;
-
-+ (NSDictionary *)getLaunchOptions {
-    return options;
-}
 
 - (void)dealloc {
     [self.window release];
@@ -34,7 +28,7 @@ static NSDictionary *options;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    options = [launchOptions retain];
+    self.options = launchOptions;
 
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {

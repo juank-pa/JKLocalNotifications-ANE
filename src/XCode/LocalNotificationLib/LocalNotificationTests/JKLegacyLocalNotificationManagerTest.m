@@ -6,21 +6,22 @@
 //
 //
 
-#import <XCTest/XCTest.h>
 #import <UIKit/UIKit.h>
 #import <OCMock/OCMock.h>
 #import "Stubs.h"
 #import "FlashRuntimeExtensions+Private.h"
-#import "LocalNotificationManager.h"
-#import "LocalNotification.h"
+#import "JKLegacyTestCase.h"
+#import "JKLegacyLocalNotificationManager.h"
+#import "JKLocalNotification.h"
+#import "Constants.h"
 
 @interface UILocalNotification (NotificationManager)
 + (instancetype)localNotification;
 @end
 
-@interface LocalNotificationManagerTest : XCTestCase
-@property (nonatomic, retain) LocalNotificationManager *subject;
-@property (nonatomic, retain) LocalNotification *notification;
+@interface JKLegacyLocalNotificationManagerTest : JKLegacyTestCase
+@property (nonatomic, retain) JKLegacyLocalNotificationManager *subject;
+@property (nonatomic, retain) JKLocalNotification *notification;
 
 @property (nonatomic, retain) id appMock;
 @property (nonatomic, retain) id notificationMock;
@@ -29,7 +30,7 @@
 @property (nonatomic, readonly) NSString *archivePath;
 @end
 
-@implementation LocalNotificationManagerTest
+@implementation JKLegacyLocalNotificationManagerTest
 
 - (NSString *)archivePath {
     return [NSTemporaryDirectory() stringByAppendingPathComponent:@"Notification_code123.archive"];
@@ -37,7 +38,7 @@
 
 - (void)setUp {
     [super setUp];
-    self.subject = [[LocalNotificationManager new] autorelease];
+    self.subject = [[JKLegacyLocalNotificationManager new] autorelease];
     self.appMock = OCMClassMock([UIApplication class]);
     OCMStub([self.appMock sharedApplication]).andReturn(self.appMock);
 }
@@ -47,18 +48,8 @@
     [super tearDown];
 }
 
-- (void)testRegisterSettingTypes {
-    UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeSound;
-    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
-
-    OCMExpect([self.appMock registerUserNotificationSettings:settings]);
-
-    [self.subject registerSettingTypes:types];
-    OCMVerifyAll(self.appMock);
-}
-
 - (void)setUpNotify {
-    self.notification = [LocalNotification new];
+    self.notification = [JKLocalNotification new];
     self.notification.repeatInterval = NSCalendarUnitMonth;
     self.notification.body = @"body";
     self.notification.title = @"title";
@@ -102,6 +93,7 @@
 }
 
 - (void)testNotifyAtFutureDate {
+
     [self setUpNotify];
 
     NSDate *date = [NSDate date];
@@ -114,11 +106,11 @@
     [self tearDownNotify];
 }
 
-- (void)testWithoutSound {
+- (void)testNotifyWithoutSound {
     [self setUpNotify];
 
     self.notification.playSound = NO;
-    OCMReject([self.notificationMock setSoundName:[OCMArg any]]);
+    OCMExpect([self.notificationMock setSoundName:nil]);
 
     [self.subject notify:self.notification];
 
@@ -153,8 +145,8 @@
     [self setUpNotify];
 
     NSData *data = [NSData dataWithBytes:"hi" length:3];
-    NSDictionary *userInfo = @{NOTIFICATION_CODE_KEY: @"code123",
-                               NOTIFICATION_DATA_KEY: data};
+    NSDictionary *userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code123",
+                               JK_NOTIFICATION_DATA_KEY: data};
 
     self.notification.actionData = data;
     OCMExpect([self.notificationMock setUserInfo:userInfo]);
@@ -167,7 +159,7 @@
 - (void)testNotifyWithoutData {
     [self setUpNotify];
 
-    NSDictionary *userInfo = @{NOTIFICATION_CODE_KEY: @"code123"};
+    NSDictionary *userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code123"};
     OCMExpect([self.notificationMock setUserInfo:userInfo]);
     [self.subject notify:self.notification];
 
