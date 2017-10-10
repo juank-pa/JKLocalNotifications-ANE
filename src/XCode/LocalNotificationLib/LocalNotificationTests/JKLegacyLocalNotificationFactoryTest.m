@@ -13,18 +13,17 @@
 #import "JKLegacyNotificationListener.h"
 
 @interface JKLegacyLocalNotificationFactoryTest : JKLegacyTestCase
-@property (nonatomic, retain) JKLegacyLocalNotificationFactory *subject;
+@property (nonatomic, strong) JKLegacyLocalNotificationFactory *subject;
 @end
 
 @implementation JKLegacyLocalNotificationFactoryTest
 
 - (void)setUp {
     [super setUp];
-    self.subject = [[JKLegacyLocalNotificationFactory new] autorelease];
+    self.subject = [JKLegacyLocalNotificationFactory new];
 }
 
 - (void)tearDown {
-    [_subject release];
     [super tearDown];
 }
 

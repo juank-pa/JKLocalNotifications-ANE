@@ -9,21 +9,16 @@
 #import "JKDelegateProxy.h"
 
 @interface JKDelegateProxy ()
-@property (nonatomic, retain) id savedDelegate;
+@property (nonatomic, strong) id savedDelegate;
 @end
 
 @implementation JKDelegateProxy
 
 - (instancetype)initWithTarget:(id)target {
     if (self = [super init]) {
-        _savedDelegate = [target retain];
+        _savedDelegate = target;
     }
     return self;
-}
-
-- (void)dealloc {
-    [_savedDelegate release];
-    [super dealloc];
 }
 
 - (BOOL)respondsToSelector:(SEL)aSelector {

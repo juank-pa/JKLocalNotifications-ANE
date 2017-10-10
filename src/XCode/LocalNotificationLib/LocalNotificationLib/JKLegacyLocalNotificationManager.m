@@ -15,7 +15,7 @@
 
 @implementation UILocalNotification (LocalNotificationManager)
 + (instancetype)localNotification {
-    return [[self new] autorelease];
+    return [self new];
 }
 @end
 

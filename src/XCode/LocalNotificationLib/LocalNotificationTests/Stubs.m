@@ -610,7 +610,7 @@
     }
 
     NSDictionary* FRPE_getApplicationLaunchOptions() {
-        UILocalNotification *localNotification = [[[UILocalNotification alloc] init] autorelease];
+        UILocalNotification *localNotification = [UILocalNotification new];
         localNotification.userInfo = @{
                                        JK_NOTIFICATION_CODE_KEY: @"NotificationCodeKey",
                                        JK_NOTIFICATION_DATA_KEY: @"NotificationDataKey"

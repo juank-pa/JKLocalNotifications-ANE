@@ -9,6 +9,10 @@
 #ifndef constants_h
 #define constants_h
 
+#import "JKLocalNotificationsContext.h"
+
+extern JKLocalNotificationsContext * __strong jkNotificationsContext;
+
 static const NSString *JK_NOTIFICATION_CODE_KEY = @"notificationCodeKey";
 static const NSString *JK_NOTIFICATION_DATA_KEY = @"notificationDataKey";
 

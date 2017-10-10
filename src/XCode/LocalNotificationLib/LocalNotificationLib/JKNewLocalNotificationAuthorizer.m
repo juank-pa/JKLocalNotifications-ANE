@@ -17,11 +17,6 @@
 @synthesize settings = _settings;
 @synthesize delegate = _delegate;
 
-- (void)dealloc {
-    [_settings release];
-    [super dealloc];
-}
-
 - (void)requestAuthorizationWithSettings:(JKLocalNotificationSettings *)settings {
     UNAuthorizationOptions options = settings.authorizationOptions;
     [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error) {

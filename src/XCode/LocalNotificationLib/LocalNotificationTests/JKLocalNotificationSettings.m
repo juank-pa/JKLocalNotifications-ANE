@@ -73,7 +73,7 @@
         XCTAssertEqual(settings.types, types[i]);
         XCTAssertEqual(settings.authorizationOptions, options[i]);
 
-        settings = [[[JKLocalNotificationSettings alloc] initWithAuthorizationOptions:options[i]] autorelease];
+        settings = [[JKLocalNotificationSettings alloc] initWithAuthorizationOptions:options[i]];
         XCTAssertEqual(settings.types, types[i]);
         XCTAssertEqual(settings.authorizationOptions, options[i]);
     }
@@ -111,7 +111,7 @@
         XCTAssertEqual(settings.types, type);
         XCTAssertEqual(settings.notificationTypes, userType);
 
-        settings = [[[JKLocalNotificationSettings alloc] initWithUserNotificationTypes:userType] autorelease];
+        settings = [[JKLocalNotificationSettings alloc] initWithUserNotificationTypes:userType];
         XCTAssertEqual(settings.types, type);
         XCTAssertEqual(settings.notificationTypes, userType);
     }

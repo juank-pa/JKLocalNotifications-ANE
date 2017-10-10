@@ -14,15 +14,15 @@
 @implementation JKNewLocalNotificationFactory
 
 - (id<JKAuthorizer>)createAuthorizer {
-    return [[JKNewLocalNotificationAuthorizer new] autorelease];
+    return [JKNewLocalNotificationAuthorizer new];
 }
 
 - (JKNotificationListener *)createListener {
-    return [[JKNewNotificationListener new] autorelease];
+    return [JKNewNotificationListener new];
 }
 
 - (JKLocalNotificationManager *)createManager {
-    return [[JKLocalNotificationManager new] autorelease];
+    return [JKLocalNotificationManager new];
 }
 
 @end

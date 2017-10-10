@@ -38,13 +38,12 @@
 
 - (void)setUp {
     [super setUp];
-    self.subject = [[JKLegacyLocalNotificationManager new] autorelease];
+    self.subject = [JKLegacyLocalNotificationManager new];
     self.appMock = OCMClassMock([UIApplication class]);
     OCMStub([self.appMock sharedApplication]).andReturn(self.appMock);
 }
 
 - (void)tearDown {
-    [self.subject release];
     [super tearDown];
 }
 
@@ -186,7 +185,7 @@
     OCMStub([fileManagerMock defaultManager]).andReturn(fileManagerMock);
     OCMStub([fileManagerMock fileExistsAtPath:self.archivePath]).andReturn(YES);
 
-    UILocalNotification *prevNotification = [[UILocalNotification new] autorelease];
+    UILocalNotification *prevNotification = [UILocalNotification new];
     id unarchiverMock = OCMClassMock([NSKeyedUnarchiver class]);
     OCMStub([unarchiverMock unarchiveObjectWithFile:self.archivePath]).andReturn(@[prevNotification]);
 
@@ -208,7 +207,7 @@
 }
 
 - (void)testCancelExistingNotification {
-    UILocalNotification *notification = [[UILocalNotification new] autorelease];
+    UILocalNotification *notification = [UILocalNotification new];
 
     id fileManagerMock = OCMClassMock([NSFileManager class]);
     OCMStub([fileManagerMock defaultManager]).andReturn(fileManagerMock);

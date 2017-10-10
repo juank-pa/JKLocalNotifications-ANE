@@ -14,15 +14,14 @@
 @implementation JKNotificationFactory
 
 + (BOOL)isNewAPI {
-    return NO;
-    //return !![UNUserNotificationCenter class];
+    return !![UNUserNotificationCenter class];
 }
 
 + (instancetype)factory {
     if ([self isNewAPI]) {
-        return [[JKNewLocalNotificationFactory new] autorelease];
+        return [JKNewLocalNotificationFactory new];
     }
-    return [[JKLegacyLocalNotificationFactory new] autorelease];
+    return [JKLegacyLocalNotificationFactory new];
 }
 
 - (id<JKAuthorizer>)createAuthorizer {

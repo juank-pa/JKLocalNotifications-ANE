@@ -11,7 +11,7 @@
 #import "Constants.h"
 
 @interface JKNotificationListener ()<UNUserNotificationCenterDelegate>
-@property (nonatomic, retain) id savedDelegate;
+@property (nonatomic, strong) id savedDelegate;
 - (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo;
 @end
 
@@ -28,7 +28,6 @@
 
 - (void)dealloc {
     [UNUserNotificationCenter currentNotificationCenter].delegate = self.savedDelegate;
-    [super dealloc];
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {

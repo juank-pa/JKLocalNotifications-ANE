@@ -31,8 +31,6 @@
 
 - (id)initWithContext:(FREContext)ctx factory:(JKNotificationFactory *)factory;
 
-@property (nonatomic, readonly) NSString *notificationCode;
-@property (nonatomic, readonly) NSData *notificationData;
 @property (nonatomic, readonly) JKLocalNotificationSettings *settings;
 
 #ifdef SAMPLE
@@ -42,7 +40,7 @@
 - (void)authorizeWithSettings:(JKLocalNotificationSettings *)settings;
 - (void)checkForNotificationAction;
 
-@property (nonatomic, assign) id<LocalNotificationDelegate> delegate;
+@property (nonatomic, weak) id<LocalNotificationDelegate> delegate;
 #else
 - (uint32_t) initExtensionFunctions:(const FRENamedFunction**) namedFunctions;
 #endif

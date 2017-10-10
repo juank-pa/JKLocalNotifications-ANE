@@ -27,32 +27,31 @@
 - (void)cancel:(NSString*)notificationCode;
 - (void)cancelAll;
 
-@property (nonatomic, retain) JKNotificationFactory *factory;
-@property (nonatomic, readonly) JKLocalNotificationManager *manager;
-@property (nonatomic, readonly) id<JKAuthorizer> authorizer;
-@property (nonatomic, readonly) JKNotificationListener *listener;
+@property (nonatomic, strong) JKNotificationFactory *factory;
+@property (nonatomic, readonly, strong) JKLocalNotificationManager *manager;
+@property (nonatomic, readonly, strong) id<JKAuthorizer> authorizer;
+@property (nonatomic, readonly, strong) JKNotificationListener *listener;
 @property (nonatomic, assign) FREContext extensionContext;
 
 @end
 
-
 @implementation JKLocalNotificationsContext
 
 + (instancetype)notificationsContextWithContext:(FREContext)ctx factory:(JKNotificationFactory *)factory {
-    return [[[JKLocalNotificationsContext alloc] initWithContext:ctx factory:factory] autorelease];
+    return [[JKLocalNotificationsContext alloc] initWithContext:ctx factory:factory];
 }
 
 - (id)initWithContext:(FREContext)ctx factory:(JKNotificationFactory *)factory {
     if (self = [super init]) {
         _extensionContext = ctx;
-        _factory = [factory retain];
+        _factory = factory;
 
-        _listener = [[_factory createListener] retain];
+        _listener = [_factory createListener];
         _listener.delegate = self;
 
-        _manager = [[_factory createManager] retain];
-
-        _authorizer = [[_factory createAuthorizer] retain];
+        _manager = [_factory createManager];
+        
+        _authorizer = [_factory createAuthorizer];
         _authorizer.delegate = self;
     }
     return self;
@@ -63,12 +62,6 @@
     _authorizer.delegate = nil;
 
     _extensionContext = NULL;
-    [_factory release];
-    [_manager release];
-    [_listener release];
-    [_authorizer release];
-
-    [super dealloc];
 }
 
 - (void)notify:(JKLocalNotification*)localNotification {
@@ -131,152 +124,162 @@ FREObject ADEPCreateManager(FREContext ctx, void* funcData, uint32_t argc, FREOb
 }
 
 FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    JKLocalNotification *localNotification = [JKLocalNotification localNotification];
-    
-    // Notification Code.
-    NSString *notificationCode = [ExtensionUtils getStringFromFREObject:argv[0]];
-    if (notificationCode) {
-        [localNotification setNotificationCode:notificationCode];
-    }
-
-    FREObject notification = argv[1];
-    
-    // Fire Date.
-    FREObject freFireDate = [ExtensionUtils getProperty:@"fireDate" fromObject:notification];
-    if (freFireDate) {
-        FREObject timeProperty = [ExtensionUtils getProperty:@"time" fromObject:freFireDate];
-
-        double time = ([ExtensionUtils getDoubleFromFREObject:timeProperty] / 1000.0);
-        if ((uint32_t)time > 0) {
-            localNotification.fireDate = [NSDate dateWithTimeIntervalSince1970:time];
+    @autoreleasepool {
+        JKLocalNotification *localNotification = [JKLocalNotification localNotification];
+        
+        // Notification Code.
+        NSString *notificationCode = [ExtensionUtils getStringFromFREObject:argv[0]];
+        if (notificationCode) {
+            [localNotification setNotificationCode:notificationCode];
         }
-    }
-    
-    // Repeat Interval.
-    FREObject freRepeatInterval = [ExtensionUtils getProperty:@"repeatInterval" fromObject:notification];
-    if (freRepeatInterval) {
-        localNotification.repeatInterval = [ExtensionUtils getUIntFromFREObject:freRepeatInterval];
-    }
-    
-    // Action Label.
-    FREObject freActionLabel = [ExtensionUtils getProperty:@"actionLabel" fromObject:notification];
-    if (freActionLabel) {
-        localNotification.actionLabel = [ExtensionUtils getStringFromFREObject:freActionLabel];
-    }
-    
-    // Body.
-    FREObject freBody = [ExtensionUtils getProperty:@"body" fromObject:notification];
-    if (freBody) {
-        localNotification.body = [ExtensionUtils getStringFromFREObject:freBody];
-    }
 
-    // Title.
-    FREObject freTitle = [ExtensionUtils getProperty:@"title" fromObject:notification];
-    if (freTitle) {
-        localNotification.title = [ExtensionUtils getStringFromFREObject:freTitle];
-    }
+        FREObject notification = argv[1];
+        
+        // Fire Date.
+        FREObject freFireDate = [ExtensionUtils getProperty:@"fireDate" fromObject:notification];
+        if (freFireDate) {
+            FREObject timeProperty = [ExtensionUtils getProperty:@"time" fromObject:freFireDate];
 
-    // Has Action.
-    FREObject freHasAction = [ExtensionUtils getProperty:@"hasAction" fromObject:notification];
-    if (freHasAction) {
-        localNotification.hasAction = [ExtensionUtils getBoolFromFREObject:freHasAction];
-    }
-    
-    // Number Annotation.
-    FREObject freNumberAnnotation = [ExtensionUtils getProperty:@"numberAnnotation" fromObject:notification];
-    if (freNumberAnnotation) {
-        localNotification.numberAnnotation = [ExtensionUtils getUIntFromFREObject:freNumberAnnotation];
-    }
-    
-    // Play Sound.
-    FREObject frePlaySound = [ExtensionUtils getProperty:@"playSound" fromObject:notification];
-    if (frePlaySound) {
-        localNotification.playSound = [ExtensionUtils getBoolFromFREObject:frePlaySound];
-    }
-    
-    // Sound name.
-    FREObject freSoundName = [ExtensionUtils getProperty:@"soundName" fromObject:notification];
-    if (freSoundName) {
-        localNotification.soundName = [ExtensionUtils getStringFromFREObject:freSoundName];
-    }
-    
-    // Action Data.
-    FREObject freActionData = [ExtensionUtils getProperty:@"actionData" fromObject:notification];
+            double time = ([ExtensionUtils getDoubleFromFREObject:timeProperty] / 1000.0);
+            if ((uint32_t)time > 0) {
+                localNotification.fireDate = [NSDate dateWithTimeIntervalSince1970:time];
+            }
+        }
+        
+        // Repeat Interval.
+        FREObject freRepeatInterval = [ExtensionUtils getProperty:@"repeatInterval" fromObject:notification];
+        if (freRepeatInterval) {
+            localNotification.repeatInterval = [ExtensionUtils getUIntFromFREObject:freRepeatInterval];
+        }
+        
+        // Action Label.
+        FREObject freActionLabel = [ExtensionUtils getProperty:@"actionLabel" fromObject:notification];
+        if (freActionLabel) {
+            localNotification.actionLabel = [ExtensionUtils getStringFromFREObject:freActionLabel];
+        }
+        
+        // Body.
+        FREObject freBody = [ExtensionUtils getProperty:@"body" fromObject:notification];
+        if (freBody) {
+            localNotification.body = [ExtensionUtils getStringFromFREObject:freBody];
+        }
 
-    if (freActionData) {
-         localNotification.actionData = [ExtensionUtils getDataFromFREObject:freActionData];
+        // Title.
+        FREObject freTitle = [ExtensionUtils getProperty:@"title" fromObject:notification];
+        if (freTitle) {
+            localNotification.title = [ExtensionUtils getStringFromFREObject:freTitle];
+        }
+
+        // Has Action.
+        FREObject freHasAction = [ExtensionUtils getProperty:@"hasAction" fromObject:notification];
+        if (freHasAction) {
+            localNotification.hasAction = [ExtensionUtils getBoolFromFREObject:freHasAction];
+        }
+        
+        // Number Annotation.
+        FREObject freNumberAnnotation = [ExtensionUtils getProperty:@"numberAnnotation" fromObject:notification];
+        if (freNumberAnnotation) {
+            localNotification.numberAnnotation = [ExtensionUtils getUIntFromFREObject:freNumberAnnotation];
+        }
+        
+        // Play Sound.
+        FREObject frePlaySound = [ExtensionUtils getProperty:@"playSound" fromObject:notification];
+        if (frePlaySound) {
+            localNotification.playSound = [ExtensionUtils getBoolFromFREObject:frePlaySound];
+        }
+        
+        // Sound name.
+        FREObject freSoundName = [ExtensionUtils getProperty:@"soundName" fromObject:notification];
+        if (freSoundName) {
+            localNotification.soundName = [ExtensionUtils getStringFromFREObject:freSoundName];
+        }
+        
+        // Action Data.
+        FREObject freActionData = [ExtensionUtils getProperty:@"actionData" fromObject:notification];
+
+        if (freActionData) {
+             localNotification.actionData = [ExtensionUtils getDataFromFREObject:freActionData];
+        }
+        
+        // Notify.
+        [jkNotificationsContext notify:localNotification];
     }
-    
-    // Notify.
-    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    [localContextID notify:localNotification];
-    
     return NULL;
 }
 
 
 FREObject ADEPCancel(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    NSString *notificationCode = [ExtensionUtils getStringFromFREObject:argv[0]];
-    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    [localContextID cancel:notificationCode];
-    return NULL;
+    @autoreleasepool {
+        NSString *notificationCode = [ExtensionUtils getStringFromFREObject:argv[0]];
+        [jkNotificationsContext cancel:notificationCode];
+        return NULL;
+    }
 }
 
 
 FREObject ADEPCancelAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    [localContextID cancelAll];
-    return NULL;
+    @autoreleasepool {
+        [jkNotificationsContext cancelAll];
+        return NULL;
+    }
 }
 
 
 FREObject ADEPRegisterSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    uint32_t types = [ExtensionUtils getUIntFromFREObject:argv[0]];
-    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    JKLocalNotificationSettings *settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes:(JKLocalNotificationType)types];
-    [localContextID authorizeWithSettings:settings];
-    return NULL;
+    @autoreleasepool {
+        uint32_t types = [ExtensionUtils getUIntFromFREObject:argv[0]];
+        JKLocalNotificationSettings *settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes:(JKLocalNotificationType)types];
+        [jkNotificationsContext authorizeWithSettings:settings];
+        return NULL;
+    }
 }
 
 
 FREObject ADEPCheckForNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    [localContextID checkForNotificationAction];
-    return NULL;
+    @autoreleasepool {
+        [jkNotificationsContext checkForNotificationAction];
+        return NULL;
+    }
 }
 
 FREObject ADEPGetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    int32_t appBadgeNumber = (int32_t)[UIApplication sharedApplication].applicationIconBadgeNumber;
-    FREObject numberObject = [ExtensionUtils getFREObjectFromInt:appBadgeNumber];
-    return numberObject;
+    @autoreleasepool {
+        int32_t appBadgeNumber = (int32_t)[UIApplication sharedApplication].applicationIconBadgeNumber;
+        FREObject numberObject = [ExtensionUtils getFREObjectFromInt:appBadgeNumber];
+        return numberObject;
+    }
 }
 
 FREObject ADEPSetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    int32_t appBadgeNumber = [ExtensionUtils getIntFromFREObject:argv[0]];
-    [UIApplication sharedApplication].applicationIconBadgeNumber = appBadgeNumber;
-    return NULL;
+    @autoreleasepool {
+        int32_t appBadgeNumber = [ExtensionUtils getIntFromFREObject:argv[0]];
+        [UIApplication sharedApplication].applicationIconBadgeNumber = appBadgeNumber;
+        return NULL;
+    }
 }
 
 FREObject ADEPGetSelectedSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    JKLocalNotificationSettings* settings = localContextID.settings;
-    FREObject numberObject = [ExtensionUtils getFREObjectFromUInt:(uint32_t)settings.types];
-    return numberObject;
+    @autoreleasepool {
+        JKLocalNotificationSettings* settings = jkNotificationsContext.settings;
+        FREObject numberObject = [ExtensionUtils getFREObjectFromUInt:(uint32_t)settings.types];
+        return numberObject;
+    }
 }
 
 FREObject ADEPGetSelectedNotificationCode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    NSString* notificationCode = localContextID.notificationCode;
-    return [ExtensionUtils getFREObjectFromString:notificationCode];
+    @autoreleasepool {
+        NSString* notificationCode = jkNotificationsContext.notificationCode;
+        return [ExtensionUtils getFREObjectFromString:notificationCode];
+    }
 }
 
 FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    JKLocalNotificationsContext *localContextID = [ExtensionUtils getContextID:ctx];
-    NSData *notificationData = localContextID.notificationData;
-    
-    if(!notificationData) return NULL;
+    @autoreleasepool {
+        NSData *notificationData = jkNotificationsContext.notificationData;
 
-    return [ExtensionUtils getFREObjectFromData:notificationData];
+        if(!notificationData) return NULL;
+        return [ExtensionUtils getFREObjectFromData:notificationData];
+    }
 }
 
 #endif

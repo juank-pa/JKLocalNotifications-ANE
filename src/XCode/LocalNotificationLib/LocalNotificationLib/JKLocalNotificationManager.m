@@ -11,7 +11,7 @@
 
 @implementation JKLocalNotificationManager
 + (instancetype)notificationManager {
-    return [[self new] autorelease];
+    return [self new];
 }
 
 - (void)notify:(JKLocalNotification*)notification { }

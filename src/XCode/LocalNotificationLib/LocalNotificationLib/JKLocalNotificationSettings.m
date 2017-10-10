@@ -14,15 +14,15 @@
 }
 
 + (instancetype)settingsWithUserNotificationTypes:(UIUserNotificationType)types {
-    return [[[self alloc] initWithUserNotificationTypes:types] autorelease];
+    return [[self alloc] initWithUserNotificationTypes:types];
 }
 
 + (instancetype)settingswithAuthorizationOptions:(UNAuthorizationOptions)options {
-    return [[[self alloc] initWithAuthorizationOptions:options] autorelease];
+    return [[self alloc] initWithAuthorizationOptions:options];
 }
 
 + (instancetype)settingsWithLocalNotificationTypes:(JKLocalNotificationType)options; {
-    return [[[self alloc] initWithLocalNotificationTypes:options] autorelease];
+    return [[self alloc] initWithLocalNotificationTypes:options];
 }
 
 - (instancetype)initWithAuthorizationOptions:(UNAuthorizationOptions)options {

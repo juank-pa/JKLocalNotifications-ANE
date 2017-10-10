@@ -13,7 +13,7 @@
 @implementation JKNewLocalNotificationManager
 
 - (void)notify:(JKLocalNotification*)notification {
-    UNMutableNotificationContent *content = [[UNMutableNotificationContent new] autorelease];
+    UNMutableNotificationContent *content = [UNMutableNotificationContent new];
 
     content.body = notification.body;
     content.title = notification.title;

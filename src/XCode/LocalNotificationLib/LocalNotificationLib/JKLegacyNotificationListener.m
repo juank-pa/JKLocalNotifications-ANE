@@ -12,7 +12,7 @@
 #import "Constants.h"
 
 @interface JKNotificationListener ()<UIApplicationDelegate>
-@property (nonatomic, retain) id savedDelegate;
+@property (nonatomic, strong) id savedDelegate;
 - (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo;
 @end
 
@@ -29,7 +29,6 @@
 
 - (void)dealloc {
     [UIApplication sharedApplication].delegate = self.savedDelegate;
-    [super dealloc];
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {

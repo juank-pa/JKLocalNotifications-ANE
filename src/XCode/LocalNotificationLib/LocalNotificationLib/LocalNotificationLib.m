@@ -21,25 +21,28 @@
 #import "JKLocalNotificationsContext.h"
 #import "JKNotificationFactory.h"
 #import "ExtensionUtils.h"
+#import "Constants.h"
+
+JKLocalNotificationsContext * __strong jkNotificationsContext;
 
 // A native context instance is created
 void ComJkLocalNotificationContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, 
                             uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) {
     // Initialize the native context.
-    JKNotificationFactory *factory = [JKNotificationFactory factory];
-    JKLocalNotificationsContext *nativeContextID = [[JKLocalNotificationsContext notificationsContextWithContext:ctx factory:factory] retain];
+    @autoreleasepool {
+        JKNotificationFactory *factory = [JKNotificationFactory factory];
+        jkNotificationsContext = [JKLocalNotificationsContext notificationsContextWithContext:ctx factory:factory];
 
-    *numFunctionsToTest = [nativeContextID initExtensionFunctions:functionsToSet];
-
-    // Attach a reference to our native context object so we can clean it up in ADEPContextFinalizer
-    [ExtensionUtils setContextID:nativeContextID forFREContext:ctx];
+        *numFunctionsToTest = [jkNotificationsContext initExtensionFunctions:functionsToSet];
+    }
 }
 
 // A native context instance is disposed
 void ComJkLocalNotificationContextFinalizer(FREContext ctx) {
     // Free pushContext instance attached to ctx here.
-    JKLocalNotificationsContext *contextID = [ExtensionUtils getContextID:ctx];
-    [contextID release];
+    @autoreleasepool {
+        jkNotificationsContext = nil;
+    }
 }
 
 // Initialization function of each extension

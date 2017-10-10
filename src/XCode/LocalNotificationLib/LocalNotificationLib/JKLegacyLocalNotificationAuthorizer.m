@@ -11,7 +11,7 @@
 #import "JKLocalNotificationSettings.h"
 
 @interface JKLegacyLocalNotificationAuthorizer ()<UIApplicationDelegate>
-@property (nonatomic, retain) id savedDelegate;
+@property (nonatomic, strong) id savedDelegate;
 @end
 
 @implementation JKLegacyLocalNotificationAuthorizer
@@ -29,8 +29,6 @@
 
 - (void)dealloc {
     [UIApplication sharedApplication].delegate = self.savedDelegate;
-    [_settings release];
-    [super dealloc];
 }
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(nonnull UIUserNotificationSettings *)notificationSettings {

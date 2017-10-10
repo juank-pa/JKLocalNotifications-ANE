@@ -15,12 +15,6 @@
 
 @synthesize delegate = _delegate;
 
-- (void)dealloc {
-    [_notificationCode release];
-    [_notificationData release];
-    [super dealloc];
-}
-
 - (void)checkForNotificationAction {
     UILocalNotification *localNotification = [self localNotificationFromLaunchOptions];
     [self dispatchDidReceiveNotificationWithUserInfo:localNotification.userInfo];

@@ -14,15 +14,15 @@
 @implementation JKLegacyLocalNotificationFactory
 
 - (id<JKAuthorizer>)createAuthorizer {
-    return [[JKLegacyLocalNotificationAuthorizer new] autorelease];
+    return [JKLegacyLocalNotificationAuthorizer new];
 }
 
 - (JKNotificationListener *)createListener {
-    return [[JKLegacyNotificationListener new] autorelease];
+    return [JKLegacyNotificationListener new];
 }
 
 - (JKLocalNotificationManager *)createManager {
-    return [[JKLegacyLocalNotificationManager new] autorelease];
+    return [JKLegacyLocalNotificationManager new];
 }
 
 @end

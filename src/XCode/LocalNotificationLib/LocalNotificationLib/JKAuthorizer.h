@@ -17,6 +17,6 @@
 
 @protocol JKAuthorizer <NSObject>
 - (void)requestAuthorizationWithSettings:(JKLocalNotificationSettings *)settings;
-@property (nonatomic, readonly) JKLocalNotificationSettings *settings;
-@property (nonatomic, assign) id<JKAuthorizerDelegate>delegate;
+@property (nonatomic, readonly, strong) JKLocalNotificationSettings *settings;
+@property (nonatomic, weak) id<JKAuthorizerDelegate>delegate;
 @end

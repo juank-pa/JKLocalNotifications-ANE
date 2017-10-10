@@ -19,6 +19,6 @@
 @interface JKNotificationListener : JKDelegateProxy
 @property (nonatomic, readonly) NSString *notificationCode;
 @property (nonatomic, readonly) NSData *notificationData;
-@property (nonatomic, assign) id<JKNotificationListenerDelegate> delegate;
+@property (nonatomic, weak) id<JKNotificationListenerDelegate> delegate;
 - (void)checkForNotificationAction;
 @end

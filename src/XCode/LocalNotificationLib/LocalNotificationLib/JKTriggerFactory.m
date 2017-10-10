@@ -12,7 +12,7 @@
 @implementation JKTriggerFactory
 
 + (instancetype)factory {
-    return [[self new] autorelease];
+    return [self new];
 }
 
 - (UNNotificationTrigger *)createFromDate:(NSDate *)date repeatInterval:(JKCalendarUnit)repeatInterval {

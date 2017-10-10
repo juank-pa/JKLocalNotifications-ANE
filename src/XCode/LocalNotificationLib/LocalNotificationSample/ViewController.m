@@ -14,8 +14,8 @@
 #import "FlashRuntimeExtensions+Private.h"
 
 @interface ViewController ()
-@property (nonatomic, assign) IBOutlet UITextView *debugText;
-@property (nonatomic, retain) JKLocalNotificationsContext *context;
+@property (nonatomic, weak) IBOutlet UITextView *debugText;
+@property (nonatomic, strong) JKLocalNotificationsContext *context;
 @end
 
 @implementation ViewController
@@ -25,8 +25,6 @@
 
 - (void)dealloc {
     self.context.delegate = nil;
-    [self.context release];
-    [super dealloc];
 }
 
 - (IBAction)cancelByCode:(id)sender {
@@ -42,7 +40,7 @@
 }
 
 - (IBAction)postNotification:(id)sender {
-    JKLocalNotification *notification = [[JKLocalNotification new] autorelease];
+    JKLocalNotification *notification = [JKLocalNotification new];
     
     notification.notificationCode = @"JKCode";
     notification.playSound = YES;

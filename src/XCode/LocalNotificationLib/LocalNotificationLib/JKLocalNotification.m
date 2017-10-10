@@ -11,7 +11,7 @@
 @implementation JKLocalNotification
 
 + (instancetype)localNotification {
-    return [[self new] autorelease];
+    return [self new];
 }
 
 - (instancetype)init {
@@ -30,19 +30,6 @@
     }
     return self;
 }
-
-- (void)dealloc {
-    [_notificationCode release];
-    [_actionLabel release];
-    [_title release];
-    [_body release];
-    [_actionData release];
-    [_fireDate release];
-    [_soundName release];
-
-    [super dealloc];
-}
-
 
 #ifdef SAMPLE
 
