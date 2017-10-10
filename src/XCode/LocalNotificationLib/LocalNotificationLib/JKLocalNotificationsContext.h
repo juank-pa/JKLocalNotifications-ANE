@@ -31,6 +31,8 @@
 
 - (id)initWithContext:(FREContext)ctx factory:(JKNotificationFactory *)factory;
 
+@property (nonatomic, readonly) NSString *notificationCode;
+@property (nonatomic, readonly) NSData *notificationData;
 @property (nonatomic, readonly) JKLocalNotificationSettings *settings;
 
 #ifdef SAMPLE

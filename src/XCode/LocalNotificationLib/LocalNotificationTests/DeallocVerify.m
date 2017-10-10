@@ -23,9 +23,8 @@ NSInteger deallocationCount = 0;
     return deallocationCount;
 }
 
-/*- (oneway void)release {
+- (void)dealloc {
     deallocationCount++;
-    [super release];
-}*/
+}
 
 @end

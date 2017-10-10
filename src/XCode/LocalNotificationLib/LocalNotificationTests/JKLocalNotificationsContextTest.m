@@ -40,6 +40,9 @@
 @end
 
 @implementation JKLocalNotificationsContextTest
+{
+    NSInteger _context;
+}
 
 - (void)setUp {
     [super setUp];
@@ -54,7 +57,8 @@
     self.notificationManagerMock = OCMClassMock([JKLocalNotificationManager class]);
     OCMStub([self.factoryMock createManager]).andReturn(self.notificationManagerMock);
 
-    self.subject = [[JKLocalNotificationsContext alloc] initWithContext:(void *)self factory:self.factoryMock];
+    _context = 10;
+    self.subject = [[JKLocalNotificationsContext alloc] initWithContext:(void *)&_context factory:self.factoryMock];
 }
 
 - (void)tearDown {
@@ -75,7 +79,7 @@
     XCTAssertEqual(context.factory, self.factoryMock);
     XCTAssertEqual(context.listener, self.listenerMock);
     XCTAssertEqual(context.manager, self.notificationManagerMock);
-    //XCTAssertEqual((id)context.authorizer, self.authorizerMock);
+    XCTAssertEqual(context.authorizer, self.authorizerMock);
 }
 
 - (void)testInitialization {
@@ -91,13 +95,13 @@
     XCTAssertEqual(context.factory, self.factoryMock);
     XCTAssertEqual(context.listener, self.listenerMock);
     XCTAssertEqual(context.manager, self.notificationManagerMock);
-    //XCTAssertEqual(context.authorizer, self.authorizerMock);
+    XCTAssertEqual(context.authorizer, self.authorizerMock);
     OCMVerifyAll(self.listenerMock);
     OCMVerifyAll(self.authorizerMock);
 }
 
 - (void)testListener {
-    XCTAssertEqual((id)self.subject.listener, self.listenerMock);
+    XCTAssertEqual(self.subject.listener, self.listenerMock);
 }
 
 - (void)testManager {
@@ -105,7 +109,7 @@
 }
 
 - (void)testAuthorizer {
-    //XCTAssertEqual((id)self.subject.authorizer, self.authorizerMock);
+    XCTAssertEqual(self.subject.authorizer, self.authorizerMock);
 }
 
 - (void)testNotify {
@@ -137,13 +141,13 @@
 - (void)testNotificationCode {
     NSString *code = @"MyCode";
     OCMStub([self.listenerMock notificationCode]).andReturn(code);
-    //XCTAssertEqual(self.subject.notificationCode, code);
+    XCTAssertEqual(self.subject.notificationCode, code);
 }
 
 - (void)testNotificationData {
     NSData *data = [NSData data];
     OCMStub([self.listenerMock notificationData]).andReturn(data);
-    //XCTAssertEqual(self.subject.notificationData, data);
+    XCTAssertEqual(self.subject.notificationData, data);
 }
 
 - (void)testSettings {
@@ -171,7 +175,7 @@
 - (void)testNotificationSent {
     [self.subject didReceiveNotificationDataForNotificationListener:self.listenerMock];
 
-    //XCTAssertEqual(sentFreContext, self);
+    XCTAssertEqual(sentFreContext, &_context);
     XCTAssertEqual((char *)sentEventCode, JK_NOTIFICATION_SELECTED_EVENT);
     XCTAssertEqual((char *)sentEventLevel, JK_NOTIFICATION_STATUS_KEY);
 }
@@ -179,7 +183,7 @@
 - (void)testSettingsConfirmed {
     [self.subject notificationAuthorizer:self.authorizerMock didAuthorizeWithSettings:[JKLocalNotificationSettings new]];
 
-    //XCTAssertEqual(sentFreContext, self);
+    XCTAssertEqual(sentFreContext, &_context);
     XCTAssertEqual((char *)sentEventCode, JK_SETTINGS_SUBSCRIBED_EVENT);
     XCTAssertEqual((char *)sentEventLevel, JK_NOTIFICATION_STATUS_KEY);
 }

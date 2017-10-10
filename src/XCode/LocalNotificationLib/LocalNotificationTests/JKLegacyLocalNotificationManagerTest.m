@@ -44,6 +44,7 @@
 }
 
 - (void)tearDown {
+    [self.appMock stopMocking];
     [super tearDown];
 }
 
@@ -77,6 +78,9 @@
     OCMVerifyAll(self.appMock);
     OCMVerifyAll(self.notificationMock);
     OCMVerifyAll(self.archiverMock);
+
+    [self.notificationMock stopMocking];
+    [self.archiverMock stopMocking];
 }
 
 - (void)testNotifyImmediately {
@@ -204,6 +208,8 @@
     [self.subject cancel:code];
     OCMVerifyAll(self.appMock);
     OCMVerifyAll(self.archiverMock);
+
+    [archiverMock stopMocking];
 }
 
 - (void)testCancelExistingNotification {
@@ -223,7 +229,11 @@
     OCMExpect([self.appMock cancelLocalNotification:notification]);
     [self.subject cancel:code];
     OCMVerifyAll(self.appMock);
-    OCMVerifyAll(self.archiverMock);
+    OCMVerifyAll(archiverMock);
+
+    [archiverMock stopMocking];
+    [unarchiverMock stopMocking];
+    [fileManagerMock stopMocking];
 }
 
 - (void)testCancelAll {

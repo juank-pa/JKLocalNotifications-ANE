@@ -33,6 +33,7 @@
 }
 
 - (void)tearDown {
+    [self.appMock stopMocking];
     [super tearDown];
 }
 
@@ -47,8 +48,10 @@
 }
 
 - (void)testDeallocation {
-    /*JKLegacyNotificationListener *subject = [JKLegacyNotificationListener new];
-    OCMExpect([self.appMock setDelegate:self.appDelegateMock]);
+    /*OCMExpect([self.appMock setDelegate:self.appDelegateMock]);
+    @autoreleasepool {
+        [JKLegacyNotificationListener new];
+    }
     OCMVerifyAll(self.appMock);*/
 }
 

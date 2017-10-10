@@ -38,6 +38,7 @@ void ComJkLocalNotificationExtInitializer(void** extDataToSet, FREContextInitial
 }
 
 - (void)tearDown {
+    jkNotificationsContext = nil;
     [super tearDown];
 }
 
@@ -68,19 +69,23 @@ void ComJkLocalNotificationExtInitializer(void** extDataToSet, FREContextInitial
     ComJkLocalNotificationContextInitializer(NULL, NULL, &context, &functionsToSet, &functions);
 
     XCTAssertEqual(functionsToSet, 3);
+    XCTAssertEqual(jkNotificationsContext, notificationContextMock);
     OCMVerifyAll(notificationContextMock);
+
+    [factoryMock stopMocking];
+    [notificationContextMock stopMocking];
 }
 
 - (void)testContextFinalizer {
     [DeallocVerify reset];
-    int context = 1002;
-    DeallocVerify *verify = [DeallocVerify instance];
 
-    id utilMock = OCMClassMock([ExtensionUtils class]);
-    OCMExpect([utilMock getContextID:&context]).andReturn(verify);
+    @autoreleasepool {
+        jkNotificationsContext = (id)[DeallocVerify instance];
+        ComJkLocalNotificationContextFinalizer(NULL);
+    }
 
-    ComJkLocalNotificationContextFinalizer(&context);
-    //XCTAssertEqual(DeallocVerify.deallocationCount, 1);
+    XCTAssertNil(jkNotificationsContext);
+    XCTAssertEqual(DeallocVerify.deallocationCount, 1);
 }
 
 @end

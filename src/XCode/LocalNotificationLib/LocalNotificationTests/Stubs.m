@@ -197,7 +197,7 @@
                                  const uint8_t** value
                                  ) {
         freObjectArgument = object;
-        *length = strlen((char *)resultString);
+        *length = (uint32_t) strlen((char *)resultString);
         *value = resultString;
         return result(object);
     }

@@ -158,6 +158,7 @@
 
     FREObject ret = [ExtensionUtils getFREObjectFromData: data];
     XCTAssertEqual(strcmp(rawData, ret), 0);
+    [utilsMock stopMocking];
 }
 
 @end

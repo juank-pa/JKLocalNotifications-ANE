@@ -9,6 +9,9 @@
 #ifndef Stubs_h
 #define Stubs_h
 #import "FlashRuntimeExtensions.h"
+#import "JKLocalNotificationsContext.h"
+
+extern JKLocalNotificationsContext *jkNotificationsContext;
 
 extern void *nativeContext;
 extern void *sentFreContext;

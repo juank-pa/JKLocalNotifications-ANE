@@ -38,6 +38,7 @@
 }
 
 - (void)tearDown {
+    [self.appMock stopMocking];
     [super tearDown];
 }
 
@@ -52,8 +53,10 @@
 }
 
 - (void)testDeallocation {
-    /*JKLegacyLocalNotificationAuthorizer *subject = [JKLegacyLocalNotificationAuthorizer new];
-    OCMExpect([self.appMock setDelegate:self.appDelegateMock]);
+    /*OCMExpect([self.appMock setDelegate:self.appDelegateMock]);
+    @autoreleasepool {
+        [JKLegacyLocalNotificationAuthorizer new];
+    }
     OCMVerifyAll(self.appMock);*/
 }
 
@@ -85,6 +88,7 @@
     [self.subject requestAuthorizationWithSettings:self.settings];
 
     OCMVerifyAll(self.appMock);
+    [settingsMock stopMocking];
 }
 
 - (void)testApplicationDidRegisterUserNotificationSettings {
@@ -101,8 +105,10 @@
     UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
     [self.subject application:self.appMock didRegisterUserNotificationSettings:settings];
 
-    //XCTAssertEqual(self.subject.settings, settingsMock);
-    //OCMVerifyAll(delegateMock);
+    XCTAssertEqual(self.subject.settings, settingsMock);
+    OCMVerifyAll(delegateMock);
+
+    [settingsMock stopMocking];
 }
 
 @end
