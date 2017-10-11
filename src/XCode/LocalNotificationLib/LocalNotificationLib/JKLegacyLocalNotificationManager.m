@@ -75,10 +75,10 @@
 
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:archivePath];
 
-    return (fileExists? [NSKeyedUnarchiver unarchiveObjectWithFile:archivePath] : [NSArray array]);
+    return (fileExists? [NSKeyedUnarchiver unarchiveObjectWithFile:archivePath] : @[]);
 }
 
--(void)archiveNotification:(UILocalNotification *)notification withCode:(NSString *)notificationCode {
+- (void)archiveNotification:(UILocalNotification *)notification withCode:(NSString *)notificationCode {
     NSArray *notificationList =
       notification ? [[self getNotificationList:notificationCode] arrayByAddingObject:notification] : [NSArray array];
 

@@ -1,5 +1,5 @@
 //
-//  LocalNotificationContextBridgeTest.m
+//  JKLocalNotificationContextBridgeTest.m
 //  LocalNotificationLib
 //
 //  Created by Juan Carlos Pazmino on 7/21/17.

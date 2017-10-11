@@ -22,7 +22,7 @@
     content.userInfo = [self fetchUserInfo:notification];
 
     UNNotificationTrigger *trigger = [[JKTriggerFactory factory] createFromDate:notification.fireDate
-                                                                 repeatInterval:(JKCalendarUnit)notification.repeatInterval];
+                                                                 repeatInterval:notification.repeatInterval];
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:notification.notificationCode
                                                                           content:content
                                                                           trigger:trigger];

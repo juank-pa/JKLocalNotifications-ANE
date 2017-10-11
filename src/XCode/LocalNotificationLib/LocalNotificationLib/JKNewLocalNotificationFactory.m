@@ -22,7 +22,7 @@
 }
 
 - (JKLocalNotificationManager *)createManager {
-    return [JKLocalNotificationManager new];
+    return [JKNewLocalNotificationManager new];
 }
 
 @end

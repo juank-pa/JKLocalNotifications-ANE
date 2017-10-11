@@ -1,5 +1,5 @@
 //
-//  LocalNotificationManagerTest.m
+//  JKLegacyLocalNotificationManagerTest.m
 //  LocalNotificationLib
 //
 //  Created by Juan Carlos Pazmino on 7/23/17.

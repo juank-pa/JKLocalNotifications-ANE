@@ -6,6 +6,7 @@
 //
 //
 
+#import <OCMock/OCMock.h>
 #import "JKLegacyTestCase.h"
 #import "JKLegacyLocalNotificationFactory.h"
 #import "JKLegacyLocalNotificationAuthorizer.h"
@@ -40,6 +41,18 @@
 - (void)testCreateListener {
     JKNotificationListener *listener = [self.subject createListener];
     XCTAssertEqual([listener class], [JKLegacyNotificationListener class]);
+}
+
+- (void)testApplication {
+    id appMock = OCMClassMock([UIApplication class]);
+    OCMStub([appMock sharedApplication]).andReturn(appMock);
+    XCTAssertEqual(self.subject.application, appMock);
+    [appMock stopMocking];
+}
+
+- (void)testCreateSettingsForTypes {
+    UIUserNotificationSettings *settings = [self.subject createSettingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeAlert];
+    XCTAssertEqual(settings.types, UIUserNotificationTypeBadge | UIUserNotificationTypeAlert);
 }
 
 @end

@@ -10,6 +10,7 @@
 #import "Constants.h"
 #import "JKLegacyTestCase.h"
 #import "JKLegacyNotificationListener.h"
+#import "JKLegacyLocalNotificationFactory.h"
 
 @interface JKLegacyNotificationListener ()<UIApplicationDelegate>
 @property (nonatomic, strong) id savedDelegate;
@@ -17,6 +18,7 @@
 
 @interface JKLegacyNotificationListenerTest : JKLegacyTestCase
 @property (nonatomic, strong) JKLegacyNotificationListener *subject;
+@property (nonatomic, strong) id factoryMock;
 @property (nonatomic, strong) id appMock;
 @property (nonatomic, strong) id appDelegateMock;
 @end
@@ -27,13 +29,15 @@
     [super setUp];
     self.appDelegateMock = OCMProtocolMock(@protocol(UIApplicationDelegate));
     self.appMock = OCMClassMock([UIApplication class]);
-    OCMStub([self.appMock sharedApplication]).andReturn(self.appMock);
     OCMStub([self.appMock delegate]).andReturn(self.appDelegateMock);
-    self.subject = [JKLegacyNotificationListener new];
+
+    self.factoryMock = OCMClassMock([JKLegacyLocalNotificationFactory class]);
+    OCMStub([self.factoryMock application]).andReturn(self.appMock);
+
+    self.subject = [[JKLegacyNotificationListener alloc] initWithFactory:self.factoryMock];
 }
 
 - (void)tearDown {
-    [self.appMock stopMocking];
     [super tearDown];
 }
 
@@ -41,7 +45,7 @@
     JKLegacyNotificationListener *subject = [JKLegacyNotificationListener alloc];
     XCTAssertNil(subject.savedDelegate);
     OCMExpect([self.appMock setDelegate:subject]);
-    [subject init];
+    [subject initWithFactory:self.factoryMock];
 
     XCTAssertEqual(subject.savedDelegate, self.appDelegateMock);
     OCMVerifyAll(self.appMock);
@@ -69,9 +73,8 @@
 }
 
 - (void)testResponsToSelector {
-    JKLegacyNotificationListener *subject = [JKLegacyNotificationListener new];
-    XCTAssertFalse([subject respondsToSelector:@selector(tableView:canEditRowAtIndexPath:)]);
-    XCTAssertTrue([subject respondsToSelector:@selector(applicationWillTerminate:)]);
+    XCTAssertFalse([self.subject respondsToSelector:@selector(tableView:canEditRowAtIndexPath:)]);
+    XCTAssertTrue([self.subject respondsToSelector:@selector(applicationWillTerminate:)]);
 }
 
 - (void)testDidReceiveLocalNotificationForwardsInvocation {
@@ -85,7 +88,7 @@
     OCMVerifyAll(self.appDelegateMock);
 }
 
-- (void)testDidReceiveLocalNotificationForwardsCallsDelegate {
+- (void)testDidReceiveLocalNotificationCallsDelegate {
     UILocalNotification *notification = [UILocalNotification new];
     NSData *data = [NSData data];
     notification.userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code", JK_NOTIFICATION_DATA_KEY: data};

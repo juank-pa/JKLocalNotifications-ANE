@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "JKLegacyNotificationListener.h"
+#import "JKLegacyLocalNotificationFactory.h"
 #import "FlashRuntimeExtensions+Private.h"
 #import "Constants.h"
 
@@ -16,19 +17,24 @@
 - (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo;
 @end
 
+@interface JKLegacyNotificationListener ()
+@property (nonatomic, weak) JKLegacyLocalNotificationFactory *factory;
+@end
+
 @implementation JKLegacyNotificationListener
 
 @dynamic savedDelegate;
 
-- (instancetype)init {
-    if (self = [super initWithTarget:[UIApplication sharedApplication].delegate]) {
-        [UIApplication sharedApplication].delegate = self;
+- (instancetype)initWithFactory:(JKLegacyLocalNotificationFactory *)factory {
+    if (self = [super initWithTarget:factory.application.delegate]) {
+        _factory = factory;
+        _factory.application.delegate = self;
     }
     return self;
 }
 
 - (void)dealloc {
-    [UIApplication sharedApplication].delegate = self.savedDelegate;
+    self.factory.application.delegate = self.savedDelegate;
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {

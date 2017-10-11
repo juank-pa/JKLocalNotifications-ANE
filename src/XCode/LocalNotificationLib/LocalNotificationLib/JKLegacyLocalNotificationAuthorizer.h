@@ -9,6 +9,11 @@
 #import "JKAuthorizer.h"
 #import "JKDelegateProxy.h"
 
-@interface JKLegacyLocalNotificationAuthorizer : JKDelegateProxy<JKAuthorizer>
+@class JKLegacyLocalNotificationFactory;
 
+@interface JKLegacyLocalNotificationAuthorizer : JKDelegateProxy<JKAuthorizer>
++ (instancetype) __unavailable new;
+- (instancetype) __unavailable init;
+
+- (instancetype)initWithFactory:(JKLegacyLocalNotificationFactory *)factory NS_DESIGNATED_INITIALIZER;
 @end

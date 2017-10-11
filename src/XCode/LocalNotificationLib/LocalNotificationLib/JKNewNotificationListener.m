@@ -33,11 +33,18 @@
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
     if ([self.savedDelegate respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:)]) {
         [self.savedDelegate userNotificationCenter:center didReceiveNotificationResponse:response withCompletionHandler:^{
-            NSDictionary *userInfo = response.notification.request.content.userInfo;
-            [self dispatchDidReceiveNotificationWithUserInfo:userInfo];
-            completionHandler();
+            [self handleResponse:response withCompletionHandler:completionHandler];
         }];
+        return;
     }
+
+    [self handleResponse:response withCompletionHandler:completionHandler];
+}
+
+- (void)handleResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+    NSDictionary *userInfo = response.notification.request.content.userInfo;
+    [self dispatchDidReceiveNotificationWithUserInfo:userInfo];
+    completionHandler();
 }
 
 @end

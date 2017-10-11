@@ -9,16 +9,19 @@
 #import "JKLegacyLocalNotificationAuthorizer.h"
 #import "Constants.h"
 #import "JKLocalNotificationSettings.h"
+#import "JKLegacyLocalNotificationFactory.h"
 
 @interface JKLegacyLocalNotificationAuthorizer ()<UIApplicationDelegate>
 @property (nonatomic, strong) id savedDelegate;
+@property (nonatomic, weak) JKLegacyLocalNotificationFactory *factory;
 @end
 
 @implementation JKLegacyLocalNotificationAuthorizer
 
-- (instancetype)init {
-    if (self = [super initWithTarget:[UIApplication sharedApplication].delegate]) {
-        [UIApplication sharedApplication].delegate = self;
+- (instancetype)initWithFactory:(JKLegacyLocalNotificationFactory *)factory {
+    if (self = [super initWithTarget:factory.application.delegate]) {
+        _factory = factory;
+        _factory.application.delegate = self;
     }
     return self;
 }
@@ -28,7 +31,7 @@
 @synthesize delegate = _delegate;
 
 - (void)dealloc {
-    [UIApplication sharedApplication].delegate = self.savedDelegate;
+    self.factory.application.delegate = self.savedDelegate;
 }
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(nonnull UIUserNotificationSettings *)notificationSettings {
@@ -37,9 +40,7 @@
 }
 
 - (void)requestAuthorizationWithSettings:(JKLocalNotificationSettings *)settings {
-    UIUserNotificationType types = settings.notificationTypes;
-    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
+    [self.factory.application registerUserNotificationSettings:[self.factory createSettingsForTypes:settings.notificationTypes]];
 }
 
 @end

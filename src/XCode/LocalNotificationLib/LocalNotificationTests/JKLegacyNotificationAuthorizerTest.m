@@ -10,6 +10,7 @@
 #import <OCMock/OCMock.h>
 #import "JKLegacyTestCase.h"
 #import "JKLegacyLocalNotificationAuthorizer.h"
+#import "JKLegacyLocalNotificationFactory.h"
 #import "JKLocalNotificationSettings.h"
 #import "Constants.h"
 
@@ -20,6 +21,7 @@
 @interface JKLegacyNotificationAuthorizerTest : JKLegacyTestCase
 @property (nonatomic, retain) JKLegacyLocalNotificationAuthorizer *subject;
 @property (nonatomic, retain) JKLocalNotificationSettings *settings;
+@property (nonatomic, retain) id factoryMock;
 @property (nonatomic, retain) id appMock;
 @property (nonatomic, retain) id appDelegateMock;
 @end
@@ -29,16 +31,19 @@
 - (void)setUp {
     [super setUp];
 
-    self.appDelegateMock = OCMProtocolMock(@protocol(UIApplicationDelegate));
     self.settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes:JKLocalNotificationTypeAlert | JKLocalNotificationTypeBadge];
+
+    self.appDelegateMock = OCMProtocolMock(@protocol(UIApplicationDelegate));
     self.appMock = OCMClassMock([UIApplication class]);
-    OCMStub([self.appMock sharedApplication]).andReturn(self.appMock);
     OCMStub([self.appMock delegate]).andReturn(self.appDelegateMock);
-    self.subject = [JKLegacyLocalNotificationAuthorizer new];
+
+    self.factoryMock = OCMClassMock([JKLegacyLocalNotificationFactory class]);
+    OCMStub([self.factoryMock application]).andReturn(self.appMock);
+
+    self.subject = [[JKLegacyLocalNotificationAuthorizer alloc] initWithFactory:self.factoryMock];
 }
 
 - (void)tearDown {
-    [self.appMock stopMocking];
     [super tearDown];
 }
 
@@ -46,7 +51,7 @@
     JKLegacyLocalNotificationAuthorizer *subject = [JKLegacyLocalNotificationAuthorizer alloc];
     XCTAssertNil(subject.savedDelegate);
     OCMExpect([self.appMock setDelegate:subject]);
-    [subject init];
+    [subject initWithFactory:self.factoryMock];
 
     XCTAssertEqual(subject.savedDelegate, self.appDelegateMock);
     OCMVerifyAll(self.appMock);
@@ -74,21 +79,19 @@
 }
 
 - (void)testResponsToSelector {
-    JKLegacyLocalNotificationAuthorizer *subject = [JKLegacyLocalNotificationAuthorizer new];
-    XCTAssertFalse([subject respondsToSelector:@selector(tableView:canEditRowAtIndexPath:)]);
-    XCTAssertTrue([subject respondsToSelector:@selector(applicationWillTerminate:)]);
+    XCTAssertFalse([self.subject respondsToSelector:@selector(tableView:canEditRowAtIndexPath:)]);
+    XCTAssertTrue([self.subject respondsToSelector:@selector(applicationWillTerminate:)]);
 }
 
 - (void)testRequestAuthorizationWithSettings {
     id settingsMock = OCMClassMock([UIUserNotificationSettings class]);
-    OCMStub([settingsMock settingsForTypes:self.settings.notificationTypes categories:nil]).andReturn(settingsMock);
+    OCMStub([self.factoryMock createSettingsForTypes:self.settings.notificationTypes]).andReturn(settingsMock);
 
     OCMExpect([self.appMock registerUserNotificationSettings:settingsMock]);
 
     [self.subject requestAuthorizationWithSettings:self.settings];
 
     OCMVerifyAll(self.appMock);
-    [settingsMock stopMocking];
 }
 
 - (void)testApplicationDidRegisterUserNotificationSettings {

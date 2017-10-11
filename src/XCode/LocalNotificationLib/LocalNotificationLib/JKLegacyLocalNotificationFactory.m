@@ -14,15 +14,23 @@
 @implementation JKLegacyLocalNotificationFactory
 
 - (id<JKAuthorizer>)createAuthorizer {
-    return [JKLegacyLocalNotificationAuthorizer new];
+    return [[JKLegacyLocalNotificationAuthorizer alloc] initWithFactory:self];;
 }
 
 - (JKNotificationListener *)createListener {
-    return [JKLegacyNotificationListener new];
+    return [[JKLegacyNotificationListener alloc] initWithFactory:self];
 }
 
 - (JKLocalNotificationManager *)createManager {
     return [JKLegacyLocalNotificationManager new];
+}
+
+- (UIApplication *)application {
+    return [UIApplication sharedApplication];
+}
+
+- (UIUserNotificationSettings *)createSettingsForTypes:(UIUserNotificationType)types {
+    return [UIUserNotificationSettings settingsForTypes:types categories:nil];
 }
 
 @end

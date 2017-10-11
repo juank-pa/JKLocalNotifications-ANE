@@ -6,8 +6,10 @@
 //
 //
 
+#import <UIKit/UIKit.h>
 #import "JKNotificationFactory.h"
 
 @interface JKLegacyLocalNotificationFactory : JKNotificationFactory
-
+@property (nonatomic, readonly) UIApplication *application;
+- (UIUserNotificationSettings *)createSettingsForTypes:(UIUserNotificationType)types;
 @end

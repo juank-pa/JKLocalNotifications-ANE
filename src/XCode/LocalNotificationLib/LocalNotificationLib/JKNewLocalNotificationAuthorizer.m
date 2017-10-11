@@ -20,7 +20,7 @@
 - (void)requestAuthorizationWithSettings:(JKLocalNotificationSettings *)settings {
     UNAuthorizationOptions options = settings.authorizationOptions;
     [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        _settings = [JKLocalNotificationSettings settingswithAuthorizationOptions:options];
+        _settings = settings;
         [self.delegate notificationAuthorizer:self didAuthorizeWithSettings:self.settings];
     }];
 }
