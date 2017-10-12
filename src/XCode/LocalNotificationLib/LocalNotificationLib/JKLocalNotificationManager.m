@@ -18,13 +18,4 @@
 - (void)cancel:(NSString*)notificationCode { }
 - (void)cancelAll { }
 
-- (NSDictionary *)fetchUserInfo:(JKLocalNotification *)notification {
-    NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithCapacity:2];
-    infoDict[JK_NOTIFICATION_CODE_KEY] = notification.notificationCode;
-
-    if(notification.actionData) {
-        infoDict[JK_NOTIFICATION_DATA_KEY] = notification.actionData;
-    }
-    return infoDict;
-}
 @end

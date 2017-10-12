@@ -14,15 +14,23 @@
 @implementation JKNewLocalNotificationFactory
 
 - (id<JKAuthorizer>)createAuthorizer {
-    return [JKNewLocalNotificationAuthorizer new];
+    return [[JKNewLocalNotificationAuthorizer alloc] initWithFactory:self];
 }
 
 - (JKNotificationListener *)createListener {
-    return [JKNewNotificationListener new];
+    return [[JKNewNotificationListener alloc] initWithFactory:self];
 }
 
 - (JKLocalNotificationManager *)createManager {
-    return [JKNewLocalNotificationManager new];
+    return [[JKNewLocalNotificationManager alloc] initWithFactory:self];
+}
+
+- (UNUserNotificationCenter *)notificationCenter {
+    return [UNUserNotificationCenter currentNotificationCenter];
+}
+
+- (JKNotificationRequestBuilder *)createRequestBuilder {
+    return [JKNotificationRequestBuilder new];
 }
 
 @end

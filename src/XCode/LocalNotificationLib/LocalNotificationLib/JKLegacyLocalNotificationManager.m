@@ -8,51 +8,40 @@
 
 #import <UIKit/UIKit.h>
 #import "JKLegacyLocalNotificationManager.h"
+#import "JKLegacyLocalNotificationFactory.h"
+#import "JKNotificationBuilder.h"
 
-@interface UILocalNotification (LocalNotificationManager)
-+ (instancetype)localNotification;
-@end
-
-@implementation UILocalNotification (LocalNotificationManager)
-+ (instancetype)localNotification {
-    return [self new];
-}
+@interface JKLegacyLocalNotificationManager ()
+@property (nonatomic, strong) JKLegacyLocalNotificationFactory *factory;
 @end
 
 @implementation JKLegacyLocalNotificationManager
 
-- (void)notify:(JKLocalNotification*)notification {
-    UILocalNotification *localNotification = [UILocalNotification localNotification];
-
-    localNotification.fireDate = notification.fireDate;
-    localNotification.timeZone = [NSTimeZone defaultTimeZone];
-    localNotification.repeatInterval = (NSCalendarUnit)notification.repeatInterval;
-    
-    localNotification.alertBody = notification.body;
-    localNotification.alertAction = notification.actionLabel;
-    localNotification.hasAction = notification.hasAction;
-    localNotification.soundName = [self soundNameForNotification:notification];
-    localNotification.applicationIconBadgeNumber = notification.numberAnnotation;
-    localNotification.userInfo = [self fetchUserInfo:notification];
-
-    if ([localNotification respondsToSelector:@selector(setAlertTitle:)]) {
-        localNotification.alertTitle = notification.title;
+- (instancetype)initWithFactory:(JKLegacyLocalNotificationFactory *)factory {
+    if (self = [super init]) {
+        _factory = factory;
     }
+    return self;
+}
+
+- (void)notify:(JKLocalNotification*)notification {
+    JKNotificationBuilder *notificationBuilder = [self.factory createNotificationBuilder];
+    UILocalNotification *localNotification = [notificationBuilder buildFromNotification:notification];
 
     [self archiveNotification:localNotification withCode:notification.notificationCode];
 
     if (notification.fireDate != nil) {
-        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+        [self.factory.application scheduleLocalNotification:localNotification];
     }
     else {
-        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+        [self.factory.application presentLocalNotificationNow:localNotification];
     }
 }
 
 - (void)cancel:(NSString*)notificationCode {
     NSArray *notificationList = [self getNotificationList:notificationCode];
     for (UILocalNotification *notification in notificationList) {
-        [[UIApplication sharedApplication] cancelLocalNotification:notification];
+        [self.factory.application cancelLocalNotification:notification];
     }
 
     if(notificationList.count > 0) {
@@ -61,12 +50,7 @@
 }
 
 - (void)cancelAll {
-    [[UIApplication sharedApplication] cancelAllLocalNotifications];
-}
-
-- (NSString *)soundNameForNotification:(JKLocalNotification *)notification {
-    if(!notification.playSound) { return nil; }
-    return (notification.soundName.length > 0? notification.soundName : UILocalNotificationDefaultSoundName);
+    [self.factory.application cancelAllLocalNotifications];
 }
 
 - (NSArray *)getNotificationList:(NSString*)notificationCode {

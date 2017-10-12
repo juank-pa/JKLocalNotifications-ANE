@@ -8,5 +8,11 @@
 
 #import "JKNotificationListener.h"
 
+@class JKNewLocalNotificationFactory;
+
 @interface JKNewNotificationListener : JKNotificationListener
++ (instancetype) __unavailable new;
+- (instancetype) __unavailable init;
+
+- (instancetype)initWithFactory:(JKNewLocalNotificationFactory *)factory NS_DESIGNATED_INITIALIZER;
 @end

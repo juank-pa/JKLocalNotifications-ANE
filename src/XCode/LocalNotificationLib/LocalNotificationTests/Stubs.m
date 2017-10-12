@@ -676,3 +676,48 @@ const NSString *const FRPE_ApplicationDidRegisterForRemoteNotificationsWithDevic
 // UserInfo dictionary of FRPE_ApplicationDidFailToRegisterForRemoteNotificationsWithError
 //
 const NSString *const FRPE_ApplicationDidFailToRegisterForRemoteNotificationsWithErrorKey = @"FRPE_ApplicationDidFailToRegisterForRemoteNotificationsWithErrorKey";
+
+@implementation StubNewFactory
+
+@synthesize notificationCenter = _notificationCenter;
+
+- (UNUserNotificationCenter *)notificationCenter {
+    if (!_notificationCenter) {
+        _notificationCenter = [StubNotificationCenter new];
+    }
+    return _notificationCenter;
+}
+
+@end
+
+@implementation StubLegacyFactory
+
+@synthesize application = _application;
+
+- (UIApplication *)application {
+    if (!_application) {
+        _application = [[StubApplication alloc] init];
+    }
+    return _application;
+}
+
+@end
+
+@implementation StubApplication
+
+- (instancetype)init {
+    return self;
+}
+
+@end
+
+@implementation StubNotificationCenter
+
+- (instancetype)init {
+    return self;
+}
+
+@end
+
+@implementation StubCenterDelegate
+@end

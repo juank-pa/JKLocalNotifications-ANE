@@ -12,6 +12,19 @@
 #import "JKLegacyLocalNotificationAuthorizer.h"
 #import "JKLegacyLocalNotificationManager.h"
 #import "JKLegacyNotificationListener.h"
+#import "JKNotificationBuilder.h"
+
+@interface JKLegacyLocalNotificationAuthorizer (Test)
+@property (nonatomic, strong) JKLegacyLocalNotificationFactory *factory;
+@end
+
+@interface JKLegacyLocalNotificationManager (Test)
+@property (nonatomic, strong) JKLegacyLocalNotificationFactory *factory;
+@end
+
+@interface JKNotificationListener (Test)
+@property (nonatomic, strong) JKLegacyLocalNotificationFactory *factory;
+@end
 
 @interface JKLegacyLocalNotificationFactoryTest : JKLegacyTestCase
 @property (nonatomic, strong) JKLegacyLocalNotificationFactory *subject;
@@ -31,16 +44,19 @@
 - (void)testCreateAuthorizer {
     id<JKAuthorizer> authorizer = [self.subject createAuthorizer];
     XCTAssertEqual([authorizer class], [JKLegacyLocalNotificationAuthorizer class]);
+    XCTAssertEqual(((JKLegacyLocalNotificationAuthorizer *)authorizer).factory, self.subject);
 }
 
 - (void)testCreateManager {
     JKLocalNotificationManager *manager = [self.subject createManager];
     XCTAssertEqual([manager class], [JKLegacyLocalNotificationManager class]);
+    XCTAssertEqual(((JKLegacyLocalNotificationManager *)manager).factory, self.subject);
 }
 
 - (void)testCreateListener {
     JKNotificationListener *listener = [self.subject createListener];
     XCTAssertEqual([listener class], [JKLegacyNotificationListener class]);
+    XCTAssertEqual(((JKLegacyNotificationListener *)listener).factory, self.subject);
 }
 
 - (void)testApplication {
@@ -53,6 +69,11 @@
 - (void)testCreateSettingsForTypes {
     UIUserNotificationSettings *settings = [self.subject createSettingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeAlert];
     XCTAssertEqual(settings.types, UIUserNotificationTypeBadge | UIUserNotificationTypeAlert);
+}
+
+- (void)testCreateLocalNotificationFromNotification {
+    JKNotificationBuilder *builder = [self.subject createNotificationBuilder];
+    XCTAssertEqual([builder class], [JKNotificationBuilder class]);
 }
 
 @end

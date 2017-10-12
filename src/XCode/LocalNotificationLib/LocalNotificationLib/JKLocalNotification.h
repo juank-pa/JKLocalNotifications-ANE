@@ -23,6 +23,7 @@
 @property(nonatomic, copy) NSDate *fireDate;
 @property(nonatomic, copy) NSString *soundName;
 @property(nonatomic, assign) JKCalendarUnit repeatInterval;
+@property(nonatomic, readonly) NSDictionary *userInfo;
 
 @end
 

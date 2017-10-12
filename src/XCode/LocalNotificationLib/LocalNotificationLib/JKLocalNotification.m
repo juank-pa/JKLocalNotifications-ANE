@@ -7,6 +7,7 @@
 //
 
 #import "JKLocalNotification.h"
+#import "Constants.h"
 
 @implementation JKLocalNotification
 
@@ -29,6 +30,16 @@
         _soundName = nil;
     }
     return self;
+}
+
+- (NSDictionary *)userInfo {
+    NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithCapacity:2];
+    infoDict[JK_NOTIFICATION_CODE_KEY] = self.notificationCode;
+
+    if(self.actionData) {
+        infoDict[JK_NOTIFICATION_DATA_KEY] = self.actionData;
+    }
+    return [infoDict copy];
 }
 
 #ifdef SAMPLE

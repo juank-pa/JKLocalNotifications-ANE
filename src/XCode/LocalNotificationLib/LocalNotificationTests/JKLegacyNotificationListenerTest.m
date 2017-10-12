@@ -8,6 +8,7 @@
 
 #import <OCMock/OCMock.h>
 #import "Constants.h"
+#import "Stubs.h"
 #import "JKLegacyTestCase.h"
 #import "JKLegacyNotificationListener.h"
 #import "JKLegacyLocalNotificationFactory.h"
@@ -52,11 +53,12 @@
 }
 
 - (void)testDeallocation {
-    /*OCMExpect([self.appMock setDelegate:self.appDelegateMock]);
+    StubLegacyFactory *factory = [StubLegacyFactory new];
+    factory.application.delegate = self.appDelegateMock;
     @autoreleasepool {
-        [JKLegacyNotificationListener new];
+        [[JKLegacyNotificationListener alloc] initWithFactory:factory];
     }
-    OCMVerifyAll(self.appMock);*/
+    XCTAssertEqual(factory.application.delegate, self.appDelegateMock);
 }
 
 - (void)testForwardingTargetForSelector {

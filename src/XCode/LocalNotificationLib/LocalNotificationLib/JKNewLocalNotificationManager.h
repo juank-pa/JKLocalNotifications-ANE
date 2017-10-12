@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "JKLocalNotificationManager.h"
+@class JKNewLocalNotificationFactory;
 
 @interface JKNewLocalNotificationManager : JKLocalNotificationManager
-
++ (instancetype) __unavailable new;
+- (instancetype) __unavailable init;
+- (instancetype)initWithFactory:(JKNewLocalNotificationFactory *)factory NS_DESIGNATED_INITIALIZER;
 @end
 

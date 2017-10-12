@@ -43,9 +43,28 @@
     XCTAssertEqual([manager class], [JKNewLocalNotificationManager class]);
 }
 
+- (void)testNotificationCenter {
+    id notificationCenterMock = OCMClassMock([UNUserNotificationCenter class]);
+    OCMStub([notificationCenterMock currentNotificationCenter]).andReturn(notificationCenterMock);
+    XCTAssertEqual(self.subject.notificationCenter, notificationCenterMock);
+    [notificationCenterMock stopMocking];
+}
+
 - (void)testCreateListener {
     JKNotificationListener *listener = [self.subject createListener];
     XCTAssertEqual([listener class], [JKNewNotificationListener class]);
+}
+
+- (void)testApplication {
+    id appMock = OCMClassMock([UIApplication class]);
+    OCMStub([appMock sharedApplication]).andReturn(appMock);
+    XCTAssertEqual(self.subject.application, appMock);
+    [appMock stopMocking];
+}
+
+- (void)testCreateRequestBuilder {
+    JKNotificationRequestBuilder *listener = [self.subject createRequestBuilder];
+    XCTAssertEqual([listener class], [JKNotificationRequestBuilder class]);
 }
 
 @end

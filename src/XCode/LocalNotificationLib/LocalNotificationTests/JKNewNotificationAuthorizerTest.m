@@ -11,6 +11,7 @@
 #import "JKNewTestCase.h"
 #import "JKNewLocalNotificationAuthorizer.h"
 #import "JKLocalNotificationSettings.h"
+#import "JKNewLocalNotificationFactory.h"
 #import "Constants.h"
 
 @interface JKNewLocalNotificationAuthorizer (Test)<UNUserNotificationCenterDelegate>
@@ -22,6 +23,7 @@
 @property (nonatomic, retain) JKLocalNotificationSettings *settings;
 @property (nonatomic, retain) id notificationCenterMock;
 @property (nonatomic, retain) id notificationCenterDelegateMock;
+@property (nonatomic, retain) id factoryMock;
 @end
 
 @implementation JKNewNotificationAuthorizerTest
@@ -31,14 +33,17 @@
 
     self.notificationCenterDelegateMock = OCMProtocolMock(@protocol(UNUserNotificationCenterDelegate));
     self.settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes:JKLocalNotificationTypeAlert | JKLocalNotificationTypeBadge];
+
     self.notificationCenterMock = OCMClassMock([UNUserNotificationCenter class]);
-    OCMStub([self.notificationCenterMock currentNotificationCenter]).andReturn(self.notificationCenterMock);
     OCMStub([self.notificationCenterMock delegate]).andReturn(self.notificationCenterDelegateMock);
-    self.subject = [JKNewLocalNotificationAuthorizer new];
+
+    self.factoryMock = OCMClassMock([JKNewLocalNotificationFactory class]);
+    OCMStub([self.factoryMock notificationCenter]).andReturn(self.notificationCenterMock);
+
+    self.subject = [[JKNewLocalNotificationAuthorizer alloc] initWithFactory:self.factoryMock];
 }
 
 - (void)tearDown {
-    [self.notificationCenterMock stopMocking];
     [super tearDown];
 }
 

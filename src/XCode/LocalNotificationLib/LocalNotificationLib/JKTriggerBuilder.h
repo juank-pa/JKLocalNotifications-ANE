@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "JKCalendarUnit.h"
 
-@interface JKTriggerFactory : NSObject
-+ (instancetype)factory;
-- (UNNotificationTrigger *)createFromDate:(NSDate *)date repeatInterval:(JKCalendarUnit)repeatInterval;
+@interface JKTriggerBuilder : NSObject
++ (instancetype)builder;
+- (UNNotificationTrigger *)buildFromDate:(NSDate *)date repeatInterval:(JKCalendarUnit)repeatInterval;
 @end

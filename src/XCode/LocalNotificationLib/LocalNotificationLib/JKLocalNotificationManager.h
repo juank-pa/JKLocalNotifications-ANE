@@ -13,5 +13,4 @@
 - (void)notify:(JKLocalNotification*)notification;
 - (void)cancel:(NSString*)notificationCode;
 - (void)cancelAll;
-- (NSDictionary *)fetchUserInfo:(JKLocalNotification *)notification;
 @end

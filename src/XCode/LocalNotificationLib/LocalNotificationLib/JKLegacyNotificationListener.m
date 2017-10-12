@@ -18,7 +18,7 @@
 @end
 
 @interface JKLegacyNotificationListener ()
-@property (nonatomic, weak) JKLegacyLocalNotificationFactory *factory;
+@property (nonatomic, strong) JKLegacyLocalNotificationFactory *factory;
 @end
 
 @implementation JKLegacyNotificationListener

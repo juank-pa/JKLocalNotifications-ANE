@@ -13,6 +13,7 @@
 #import "JKLegacyLocalNotificationFactory.h"
 #import "JKLocalNotificationSettings.h"
 #import "Constants.h"
+#import "Stubs.h"
 
 @interface JKLegacyLocalNotificationAuthorizer (Test)<UIApplicationDelegate>
 @property (nonatomic, retain) id savedDelegate;
@@ -58,11 +59,12 @@
 }
 
 - (void)testDeallocation {
-    /*OCMExpect([self.appMock setDelegate:self.appDelegateMock]);
-    @autoreleasepool {
-        [JKLegacyLocalNotificationAuthorizer new];
+    StubLegacyFactory *factory = [StubLegacyFactory new];
+    factory.application.delegate = self.appDelegateMock;
+    /*@autoreleasepool {
+        [[JKLegacyLocalNotificationAuthorizer alloc] initWithFactory:factory];
     }
-    OCMVerifyAll(self.appMock);*/
+    XCTAssertEqual(factory.application.delegate, self.appDelegateMock);*/
 }
 
 - (void)testForwardingTargetForSelector {

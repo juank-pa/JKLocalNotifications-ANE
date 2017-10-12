@@ -7,15 +7,15 @@
 //
 
 #import <UserNotifications/UserNotifications.h>
-#import "JKTriggerFactory.h"
+#import "JKTriggerBuilder.h"
 
-@implementation JKTriggerFactory
+@implementation JKTriggerBuilder
 
-+ (instancetype)factory {
++ (instancetype)builder {
     return [self new];
 }
 
-- (UNNotificationTrigger *)createFromDate:(NSDate *)date repeatInterval:(JKCalendarUnit)repeatInterval {
+- (UNNotificationTrigger *)buildFromDate:(NSDate *)date repeatInterval:(JKCalendarUnit)repeatInterval {
     if(!date) { return nil; }
 
     BOOL repeats = repeatInterval != JKCalendarUnitNone;

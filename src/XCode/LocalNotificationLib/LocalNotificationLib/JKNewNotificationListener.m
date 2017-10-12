@@ -8,6 +8,7 @@
 
 #import <UserNotifications/UserNotifications.h>
 #import "JKNewNotificationListener.h"
+#import "JKNewLocalNotificationFactory.h"
 #import "Constants.h"
 
 @interface JKNotificationListener ()<UNUserNotificationCenterDelegate>
@@ -15,19 +16,24 @@
 - (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo;
 @end
 
+@interface JKNewNotificationListener ()
+@property (nonatomic, strong) JKNewLocalNotificationFactory *factory;
+@end
+
 @implementation JKNewNotificationListener
 
 @dynamic savedDelegate;
 
-- (instancetype)init {
-    if (self = [super initWithTarget:[UNUserNotificationCenter currentNotificationCenter].delegate]) {
-        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+- (instancetype)initWithFactory:(JKNewLocalNotificationFactory *)factory {
+    if (self = [super initWithTarget:factory.notificationCenter.delegate]) {
+        _factory = factory;
+        _factory.notificationCenter.delegate = self;
     }
     return self;
 }
 
 - (void)dealloc {
-    [UNUserNotificationCenter currentNotificationCenter].delegate = self.savedDelegate;
+    self.factory.notificationCenter.delegate = self.savedDelegate;
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {

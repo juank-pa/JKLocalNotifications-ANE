@@ -7,7 +7,11 @@
 //
 
 #import "JKAuthorizer.h"
+@class JKNewLocalNotificationFactory;
 
 @interface JKNewLocalNotificationAuthorizer : NSObject<JKAuthorizer>
++ (instancetype) __unavailable new;
+- (instancetype) __unavailable init;
 
+- (instancetype)initWithFactory:(JKNewLocalNotificationFactory *)factory NS_DESIGNATED_INITIALIZER;
 @end

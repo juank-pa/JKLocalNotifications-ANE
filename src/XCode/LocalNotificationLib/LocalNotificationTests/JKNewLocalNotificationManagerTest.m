@@ -13,7 +13,8 @@
 #import "JKNewTestCase.h"
 #import "JKNewLocalNotificationManager.h"
 #import "JKLocalNotification.h"
-#import "JKTriggerFactory.h"
+#import "JKTriggerBuilder.h"
+#import "JKNewLocalNotificationFactory.h"
 #import "Constants.h"
 
 @interface UILocalNotification (NotificationManager)
@@ -25,7 +26,9 @@
 @property (nonatomic, retain) JKLocalNotification *notification;
 
 @property (nonatomic, retain) id notificationCenterMock;
-@property (nonatomic, retain) id notificationMock;
+@property (nonatomic, retain) id notificationRequestMock;
+@property (nonatomic, retain) id factoryMock;
+@property (nonatomic, retain) id notificationRequestBuilder;
 
 @end
 
@@ -33,13 +36,19 @@
 
 - (void)setUp {
     [super setUp];
-    self.subject = [JKNewLocalNotificationManager new];
+
     self.notificationCenterMock = OCMClassMock([UNUserNotificationCenter class]);
-    OCMStub([self.notificationCenterMock currentNotificationCenter]).andReturn(self.notificationCenterMock);
+
+    self.notificationRequestBuilder = OCMClassMock([JKNotificationRequestBuilder class]);
+
+    self.factoryMock = OCMClassMock([JKNewLocalNotificationFactory class]);
+    OCMStub([self.factoryMock notificationCenter]).andReturn(self.notificationCenterMock);
+    OCMStub([self.factoryMock createRequestBuilder]).andReturn(self.notificationRequestBuilder);
+
+    self.subject = [[JKNewLocalNotificationManager alloc] initWithFactory:self.factoryMock];
 }
 
 - (void)tearDown {
-    [self.notificationCenterMock stopMocking];
     [super tearDown];
 }
 
@@ -53,115 +62,21 @@
     self.notification.numberAnnotation = 10;
     self.notification.notificationCode = @"code123";
 
-    self.notificationMock = OCMClassMock([UNMutableNotificationContent class]);
-    OCMStub([self.notificationMock new]).andReturn(self.notificationMock);
-
-    OCMExpect([self.notificationMock setTitle:@"title"]);
-    OCMExpect([self.notificationMock setBody:@"body"]);
-    OCMExpect([self.notificationMock setBadge:@10]);
+    self.notificationRequestMock = OCMClassMock([UNNotificationRequest class]);
+    OCMStub([self.notificationRequestBuilder buildFromNotification:self.notification]).andReturn(self.notificationRequestMock);
 }
 
 - (void)tearDownNotify {
     OCMVerifyAll(self.notificationCenterMock);
-    OCMVerifyAll(self.notificationMock);
-
-    [self.notificationMock stopMocking];
 }
 
-- (void)testNotifyImmediately {
+- (void)testNotify {
     [self setUpNotify];
 
     self.notification.fireDate = nil;
 
-    id requestMock = OCMClassMock([UNNotificationRequest class]);
-    OCMStub([requestMock requestWithIdentifier:self.notification.notificationCode content:self.notificationMock trigger:nil]).andReturn(requestMock);
+    OCMExpect([self.notificationCenterMock addNotificationRequest:self.notificationRequestMock withCompletionHandler:NULL]);
 
-    OCMExpect([self.notificationCenterMock addNotificationRequest:requestMock withCompletionHandler:NULL]);
-
-    [self.subject notify:self.notification];
-
-    [requestMock stopMocking];
-    [self tearDownNotify];
-}
-
-- (void)testNotifyAtFutureDate {
-    [self setUpNotify];
-
-    NSDate *date = [NSDate date];
-    self.notification.fireDate = date;
-
-    id triggerMock = OCMClassMock([UNNotificationTrigger class]);
-    id triggerFactoryMock = OCMClassMock([JKTriggerFactory class]);
-    OCMStub([triggerFactoryMock factory]).andReturn(triggerFactoryMock);
-    OCMStub([triggerFactoryMock createFromDate:date repeatInterval:JKCalendarUnitMonth]).andReturn(triggerMock);
-
-    id requestMock = OCMClassMock([UNNotificationRequest class]);
-    OCMStub([requestMock requestWithIdentifier:self.notification.notificationCode content:self.notificationMock trigger:triggerMock]).andReturn(requestMock);
-
-    OCMExpect([self.notificationCenterMock addNotificationRequest:requestMock withCompletionHandler:NULL]);
-
-    [self.subject notify:self.notification];
-
-    [requestMock stopMocking];
-    [self tearDownNotify];
-}
-
-- (void)testNotifyWithoutSound {
-    [self setUpNotify];
-
-    self.notification.playSound = NO;
-    OCMExpect([self.notificationMock setSound:nil]);
-
-    [self.subject notify:self.notification];
-
-    [self tearDownNotify];
-}
-
-
-- (void)testNotifyWithNamedSound {
-    [self setUpNotify];
-
-    self.notification.playSound = YES;
-    self.notification.soundName = @"soundName";
-    OCMExpect([self.notificationMock setSound:[UNNotificationSound soundNamed:@"soundName"]]);
-
-    [self.subject notify:self.notification];
-
-    [self tearDownNotify];
-}
-
-- (void)testNotifyWithUnamedSound {
-    [self setUpNotify];
-
-    self.notification.playSound = YES;
-    OCMExpect([self.notificationMock setSound:[UNNotificationSound defaultSound]]);
-
-    [self.subject notify:self.notification];
-
-    [self tearDownNotify];
-}
-
-- (void)testNotifyWithData {
-    [self setUpNotify];
-
-    NSData *data = [NSData dataWithBytes:"hi" length:3];
-    NSDictionary *userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code123",
-                               JK_NOTIFICATION_DATA_KEY: data};
-
-    self.notification.actionData = data;
-    OCMExpect([self.notificationMock setUserInfo:userInfo]);
-
-    [self.subject notify:self.notification];
-
-    [self tearDownNotify];
-}
-
-- (void)testNotifyWithoutData {
-    [self setUpNotify];
-
-    NSDictionary *userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code123"};
-
-    OCMExpect([self.notificationMock setUserInfo:userInfo]);
     [self.subject notify:self.notification];
 
     [self tearDownNotify];

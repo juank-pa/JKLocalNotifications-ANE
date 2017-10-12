@@ -6,6 +6,7 @@
 //
 //
 
+#import <UIKit/UIKit.h>
 #import "JKAuthorizer.h"
 #import "JKNotificationListener.h"
 #import "JKLocalNotificationManager.h"
@@ -16,4 +17,7 @@
 - (id<JKAuthorizer>)createAuthorizer;
 - (JKNotificationListener *)createListener;
 - (JKLocalNotificationManager *)createManager;
+- (NSDictionary *)fetchUserInfo:(JKLocalNotification *)notification;
+
+@property (nonatomic, readonly) UIApplication *application;
 @end

@@ -8,41 +8,34 @@
 
 #import <UserNotifications/UserNotifications.h>
 #import "JKNewLocalNotificationManager.h"
-#import "JKTriggerFactory.h"
+#import "JKTriggerBuilder.h"
+#import "JKNewLocalNotificationFactory.h"
+#import "JKNotificationRequestBuilder.h"
+
+@interface JKNewLocalNotificationManager ()
+@property (nonatomic, strong) JKNewLocalNotificationFactory *factory;
+@end
 
 @implementation JKNewLocalNotificationManager
 
+- (instancetype)initWithFactory:(JKNewLocalNotificationFactory *)factory {
+    if (self = [super init]) {
+        _factory = factory;
+    }
+    return self;
+}
+
 - (void)notify:(JKLocalNotification*)notification {
-    UNMutableNotificationContent *content = [UNMutableNotificationContent new];
-
-    content.body = notification.body;
-    content.title = notification.title;
-    content.badge = @(notification.numberAnnotation);
-    content.sound = [self soundForNotification:notification];
-    content.userInfo = [self fetchUserInfo:notification];
-
-    UNNotificationTrigger *trigger = [[JKTriggerFactory factory] createFromDate:notification.fireDate
-                                                                 repeatInterval:notification.repeatInterval];
-    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:notification.notificationCode
-                                                                          content:content
-                                                                          trigger:trigger];
-
-    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:NULL];
+    UNNotificationRequest *request = [[self.factory createRequestBuilder] buildFromNotification:notification];
+    [self.factory.notificationCenter addNotificationRequest:request withCompletionHandler:NULL];
 }
 
 - (void)cancel:(NSString*)notificationCode {
-    [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[notificationCode]];
+    [self.factory.notificationCenter removePendingNotificationRequestsWithIdentifiers:@[notificationCode]];
 }
 
 - (void)cancelAll {
-    [[UNUserNotificationCenter currentNotificationCenter] removeAllPendingNotificationRequests];
-}
-
-- (UNNotificationSound *)soundForNotification:(JKLocalNotification *)notification {
-    if(!notification.playSound) { return nil; }
-    return (notification.soundName.length > 0?
-            [UNNotificationSound soundNamed:notification.soundName] :
-            [UNNotificationSound defaultSound]);
+    [self.factory.notificationCenter removeAllPendingNotificationRequests];
 }
 
 @end

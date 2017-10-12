@@ -10,6 +10,7 @@
 #import "JKLegacyLocalNotificationAuthorizer.h"
 #import "JKLegacyNotificationListener.h"
 #import "JKLegacyLocalNotificationManager.h"
+#import "JKNotificationBuilder.h"
 
 @implementation JKLegacyLocalNotificationFactory
 
@@ -22,15 +23,15 @@
 }
 
 - (JKLocalNotificationManager *)createManager {
-    return [JKLegacyLocalNotificationManager new];
-}
-
-- (UIApplication *)application {
-    return [UIApplication sharedApplication];
+    return [[JKLegacyLocalNotificationManager alloc] initWithFactory:self];
 }
 
 - (UIUserNotificationSettings *)createSettingsForTypes:(UIUserNotificationType)types {
     return [UIUserNotificationSettings settingsForTypes:types categories:nil];
+}
+
+- (JKNotificationBuilder *)createNotificationBuilder {
+    return [JKNotificationBuilder new];
 }
 
 @end
