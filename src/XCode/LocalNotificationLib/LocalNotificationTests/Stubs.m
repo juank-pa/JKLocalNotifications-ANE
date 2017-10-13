@@ -696,7 +696,7 @@ const NSString *const FRPE_ApplicationDidFailToRegisterForRemoteNotificationsWit
 
 - (UIApplication *)application {
     if (!_application) {
-        _application = [[StubApplication alloc] init];
+        _application = (id)[[StubApplication alloc] init];
     }
     return _application;
 }
@@ -704,11 +704,6 @@ const NSString *const FRPE_ApplicationDidFailToRegisterForRemoteNotificationsWit
 @end
 
 @implementation StubApplication
-
-- (instancetype)init {
-    return self;
-}
-
 @end
 
 @implementation StubNotificationCenter

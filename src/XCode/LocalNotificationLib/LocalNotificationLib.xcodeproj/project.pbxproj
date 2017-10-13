@@ -59,6 +59,7 @@
 		AD9BCBE71F8F7B660099503C /* JKNotificationRequestBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = AD9BCBE31F8F7AAB0099503C /* JKNotificationRequestBuilder.m */; };
 		AD9BCBE91F8F82000099503C /* JKLocalNotificationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AD9BCBE81F8F82000099503C /* JKLocalNotificationTest.m */; };
 		AD9BCBEB1F8F885C0099503C /* JKNewLocalNotificationFactoryTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AD9BCBEA1F8F885C0099503C /* JKNewLocalNotificationFactoryTest.m */; };
+		AD9BCBF51F90560D0099503C /* JKNotificationRequestBuilderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AD9BCBF41F90560D0099503C /* JKNotificationRequestBuilderTest.m */; };
 		ADEE69191F80638600CD7FE7 /* JKNewNotificationListener.h in Headers */ = {isa = PBXBuildFile; fileRef = ADEE69171F80638600CD7FE7 /* JKNewNotificationListener.h */; };
 		ADEE691A1F80638600CD7FE7 /* JKNewNotificationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = ADEE69181F80638600CD7FE7 /* JKNewNotificationListener.m */; };
 		ADEE691D1F8078EA00CD7FE7 /* JKNewLocalNotificationAuthorizer.h in Headers */ = {isa = PBXBuildFile; fileRef = ADEE691B1F8078EA00CD7FE7 /* JKNewLocalNotificationAuthorizer.h */; };
@@ -191,6 +192,7 @@
 		AD9BCBE31F8F7AAB0099503C /* JKNotificationRequestBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKNotificationRequestBuilder.m; sourceTree = "<group>"; };
 		AD9BCBE81F8F82000099503C /* JKLocalNotificationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKLocalNotificationTest.m; sourceTree = "<group>"; };
 		AD9BCBEA1F8F885C0099503C /* JKNewLocalNotificationFactoryTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKNewLocalNotificationFactoryTest.m; sourceTree = "<group>"; };
+		AD9BCBF41F90560D0099503C /* JKNotificationRequestBuilderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKNotificationRequestBuilderTest.m; sourceTree = "<group>"; };
 		ADEE69171F80638600CD7FE7 /* JKNewNotificationListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKNewNotificationListener.h; sourceTree = "<group>"; };
 		ADEE69181F80638600CD7FE7 /* JKNewNotificationListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKNewNotificationListener.m; sourceTree = "<group>"; };
 		ADEE691B1F8078EA00CD7FE7 /* JKNewLocalNotificationAuthorizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKNewLocalNotificationAuthorizer.h; sourceTree = "<group>"; };
@@ -423,6 +425,7 @@
 			isa = PBXGroup;
 			children = (
 				AD9BCBDE1F8F08EA0099503C /* JKNotificationBuilderTest.m */,
+				AD9BCBF41F90560D0099503C /* JKNotificationRequestBuilderTest.m */,
 			);
 			name = builders;
 			sourceTree = "<group>";
@@ -749,6 +752,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADEE69681F825B1800CD7FE7 /* JKLocalNotificationSettings.m in Sources */,
+				AD9BCBF51F90560D0099503C /* JKNotificationRequestBuilderTest.m in Sources */,
 				ADEE69261F8079EE00CD7FE7 /* JKLocalNotificationSettings.m in Sources */,
 				ADEE69491F80A0DE00CD7FE7 /* JKNotificationListener.m in Sources */,
 				ADF7BB5F1F223F3200045B97 /* JKNewLocalNotificationManager.m in Sources */,

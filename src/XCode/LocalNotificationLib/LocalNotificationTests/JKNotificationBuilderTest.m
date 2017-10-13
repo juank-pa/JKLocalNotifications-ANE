@@ -39,7 +39,6 @@
 
 - (void)verifyNotification {
     XCTAssertEqual(self.notification.repeatInterval, (JKCalendarUnit)self.localNotification.repeatInterval);
-    XCTAssertEqual(self.notification.title, self.localNotification.alertTitle);
     XCTAssertEqual(self.notification.body, self.localNotification.alertBody);
     XCTAssertEqual(self.notification.actionLabel, self.localNotification.alertAction);
     XCTAssertEqual(self.notification.hasAction, self.localNotification.hasAction);
@@ -48,7 +47,7 @@
     XCTAssertEqual(self.notification.fireDate, self.localNotification.fireDate);
     XCTAssertEqual(self.localNotification.timeZone, [NSTimeZone defaultTimeZone]);
 
-    if ([self.localNotification respondsToSelector:@selector(setAlertTitle:)]) {
+    if ([self.localNotification respondsToSelector:@selector(alertTitle)]) {
         XCTAssertEqual(self.localNotification.alertTitle, self.notification.title);
     }
 }
@@ -58,7 +57,7 @@
     [self verifyNotification];
 }
 
-- (void)testNotifyWithoutSound {
+- (void)testBuildNotificationWithoutSound {
     self.notification.playSound = NO;
     self.localNotification = [self.subject buildFromNotification:self.notification];
 
@@ -66,7 +65,7 @@
     [self verifyNotification];
 }
 
-- (void)testNotifyWithNamedSound {
+- (void)testBuildNotificationWithNamedSound {
     self.notification.playSound = YES;
     self.notification.soundName = @"soundName";
     self.localNotification = [self.subject buildFromNotification:self.notification];
@@ -75,7 +74,7 @@
     [self verifyNotification];
 }
 
-- (void)testNotifyWithUnamedSound {
+- (void)testBuildNotificationWithUnamedSound {
     self.notification.playSound = YES;
     self.localNotification = [self.subject buildFromNotification:self.notification];
 

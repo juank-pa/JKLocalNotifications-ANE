@@ -55,7 +55,8 @@ void resetEvent();
 @interface StubCenterDelegate: NSObject<UNUserNotificationCenterDelegate>
 @end
 
-@interface StubApplication: UIApplication
+@interface StubApplication: NSObject
+@property (nonatomic, weak) id<UIApplicationDelegate> delegate;
 @end
 
 @interface StubNotificationCenter: UNUserNotificationCenter

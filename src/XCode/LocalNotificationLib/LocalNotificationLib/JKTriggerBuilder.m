@@ -46,20 +46,8 @@
         case JKCalendarUnitMinute:
             return [self minuteIntervalFromDate:date];
             break;
-        case JKCalendarUnitSecond:
-            return [self secondIntervalFromDate:date];
-            break;
         case JKCalendarUnitWeekday:
-            return [self weeklyIntervalFromDate:date];
-            break;
-        case JKCalendarUnitWeekdayOrdinal:
-            return [self ordinalWeeklyIntervalFromDate:date];
-            break;
-        case JKCalendarUnitQuarter:
-            return nil;
-            break;
-        case JKCalendarUnitWeekOfMonth:
-            return [self weekOfMonthIntervalFromDate:date];
+            return [self dailyIntervalFromDate:date];
             break;
         case JKCalendarUnitWeekOfYear:
             return [self weekOfYearIntervalFromDate:date];
@@ -75,10 +63,6 @@
     return [self components: NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:date];
 }
 
-- (NSDateComponents *)secondIntervalFromDate:(NSDate *)date {
-    return [self components:NSCalendarUnitNanosecond fromDate:date];
-}
-
 - (NSDateComponents *)minuteIntervalFromDate:(NSDate *)date {
     return [self components:NSCalendarUnitSecond fromDate:date];
 }
@@ -91,20 +75,8 @@
     return [self components:NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:date];
 }
 
-- (NSDateComponents *)weeklyIntervalFromDate:(NSDate *)date {
-    return [self components: NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:date];
-}
-
-- (NSDateComponents *)ordinalWeeklyIntervalFromDate:(NSDate *)date {
-    return [self components: NSCalendarUnitWeekdayOrdinal | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:date];
-}
-
 - (NSDateComponents *)monthlyIntervalFromDate:(NSDate *)date {
     return [self components: NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:date];
-}
-
-- (NSDateComponents *)weekOfMonthIntervalFromDate:(NSDate *)date {
-    return [self components: NSCalendarUnitWeekOfMonth | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:date];
 }
 
 - (NSDateComponents *)weekOfYearIntervalFromDate:(NSDate *)date {

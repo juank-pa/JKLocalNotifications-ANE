@@ -61,10 +61,10 @@
 - (void)testDeallocation {
     StubLegacyFactory *factory = [StubLegacyFactory new];
     factory.application.delegate = self.appDelegateMock;
-    /*@autoreleasepool {
+    @autoreleasepool {
         [[JKLegacyLocalNotificationAuthorizer alloc] initWithFactory:factory];
     }
-    XCTAssertEqual(factory.application.delegate, self.appDelegateMock);*/
+    XCTAssertEqual(factory.application.delegate, self.appDelegateMock);
 }
 
 - (void)testForwardingTargetForSelector {
