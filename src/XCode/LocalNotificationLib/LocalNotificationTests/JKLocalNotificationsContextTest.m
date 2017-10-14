@@ -192,14 +192,9 @@
     const FRENamedFunction *functions = NULL;
     uint32_t functionsToSet = [self.subject initExtensionFunctions:&functions];
 
-    XCTAssertEqual(functionsToSet, 11);
+    XCTAssertEqual(functionsToSet, 10);
 
     FRENamedFunction expectedFunctions[] = {
-        {
-            (const uint8_t*)"createManager",
-            NULL,
-            &ADEPCreateManager
-        },
         {
             (const uint8_t*)"notify",
             NULL,
@@ -252,7 +247,7 @@
         }
     };
 
-    for(int i = 0; i < 11; i++) {
+    for(int i = 0; i < 10; i++) {
         XCTAssertEqual(strcmp((char *)functions[i].name, (char *)expectedFunctions[i].name), 0);
         XCTAssertEqual(functions[i].functionData, expectedFunctions[i].functionData);
         XCTAssertEqual(functions[i].function, expectedFunctions[i].function);

@@ -30,6 +30,7 @@
 		7DF0E939151CB2C20050D94B /* JKNewLocalNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D765A4914CD38A5001B2405 /* JKNewLocalNotificationManager.m */; };
 		7DF0E93A151CB2C60050D94B /* JKLocalNotificationsContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D765A4B14CD38A5001B2405 /* JKLocalNotificationsContext.m */; };
 		7DF0E940151CB4060050D94B /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF0E93F151CB4060050D94B /* Constants.m */; };
+		AD379F0C1F92721C00CEA327 /* JKTriggerBuilderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AD379F0B1F92721C00CEA327 /* JKTriggerBuilderTest.m */; };
 		AD791B7B1F2274770012D327 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD791B7A1F2274770012D327 /* libOCMock.a */; };
 		AD791B7E1F2276BB0012D327 /* DeallocVerify.m in Sources */ = {isa = PBXBuildFile; fileRef = AD791B7D1F2276BB0012D327 /* DeallocVerify.m */; };
 		AD791B801F2279C40012D327 /* JKLocalNotificationsContextTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AD791B7F1F2279C40012D327 /* JKLocalNotificationsContextTest.m */; };
@@ -167,6 +168,7 @@
 		7DF0E92C151CAECB0050D94B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		7DF0E92F151CAECC0050D94B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		7DF0E93F151CB4060050D94B /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		AD379F0B1F92721C00CEA327 /* JKTriggerBuilderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKTriggerBuilderTest.m; sourceTree = "<group>"; };
 		AD791B771F22545B0012D327 /* Stubs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stubs.h; sourceTree = "<group>"; };
 		AD791B7A1F2274770012D327 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		AD791B7C1F2276BB0012D327 /* DeallocVerify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeallocVerify.h; sourceTree = "<group>"; };
@@ -426,6 +428,7 @@
 			children = (
 				AD9BCBDE1F8F08EA0099503C /* JKNotificationBuilderTest.m */,
 				AD9BCBF41F90560D0099503C /* JKNotificationRequestBuilderTest.m */,
+				AD379F0B1F92721C00CEA327 /* JKTriggerBuilderTest.m */,
 			);
 			name = builders;
 			sourceTree = "<group>";
@@ -758,6 +761,7 @@
 				ADF7BB5F1F223F3200045B97 /* JKNewLocalNotificationManager.m in Sources */,
 				ADF7BB611F223F3A00045B97 /* ExtensionUtils.m in Sources */,
 				ADEE69741F83B2F100CD7FE7 /* JKDelegateProxy.m in Sources */,
+				AD379F0C1F92721C00CEA327 /* JKTriggerBuilderTest.m in Sources */,
 				ADEE69501F81206600CD7FE7 /* JKLegacyLocalNotificationManager.m in Sources */,
 				AD9BCBCF1F8DBEC10099503C /* JKNewTestCase.m in Sources */,
 				AD791B801F2279C40012D327 /* JKLocalNotificationsContextTest.m in Sources */,

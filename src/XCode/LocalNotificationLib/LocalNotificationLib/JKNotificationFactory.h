@@ -12,7 +12,7 @@
 #import "JKLocalNotificationManager.h"
 
 @interface JKNotificationFactory : NSObject
-+ (instancetype)factory;
++ (instancetype)factory:(BOOL)useNewApi;
 
 - (id<JKAuthorizer>)createAuthorizer;
 - (JKNotificationListener *)createListener;

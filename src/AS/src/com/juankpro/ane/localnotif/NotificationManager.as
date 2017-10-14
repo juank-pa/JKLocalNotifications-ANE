@@ -72,13 +72,12 @@
      * @param contextBuilder An optionally injectable ANE context builder. If the <code>contextBuilder</code>
      * is not set then the <code>flash.external.ExtensionContext</code> class will be used.
      */
-    public function NotificationManager(contextBuilder:IContextBuilder = null) {
+    public function NotificationManager(useNewApi:Boolean = false, contextBuilder:IContextBuilder = null) {
       CONFIG::device {
         if(_extensionContext == null) {
           var builder:* = contextBuilder || ExtensionContext;
           _extensionContext = builder.createExtensionContext("com.juankpro.ane.LocalNotification",
-                                                             _contextType);
-          _extensionContext.call("createManager");
+                                                             _contextType + (useNewApi? "New" : ""));
         }
         _refCount++;
       }

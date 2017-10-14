@@ -29,32 +29,23 @@
 - (NSDateComponents *)dateComponentsFromDate:(NSDate *)date repeatInterval:(JKCalendarUnit)repeatInterval {
     switch(repeatInterval) {
         case JKCalendarUnitNone:
-            [self dateComponentsFromDate:date];
-            break;
+            return [self dateComponentsFromDate:date];
         case JKCalendarUnitYear:
             return [self yearlyIntervalFromDate:date];
-            break;
         case JKCalendarUnitMonth:
             return [self monthlyIntervalFromDate:date];
-            break;
         case JKCalendarUnitDay:
             return [self dailyIntervalFromDate:date];
-            break;
         case JKCalendarUnitHour:
-            return [self dailyIntervalFromDate:date];
-            break;
+            return [self hourlyIntervalFromDate:date];
         case JKCalendarUnitMinute:
             return [self minuteIntervalFromDate:date];
-            break;
         case JKCalendarUnitWeekday:
             return [self dailyIntervalFromDate:date];
-            break;
         case JKCalendarUnitWeekdayOrdinal:
             return [self weekdayOrdinalIntervalFromDate:date];
-            break;
         case JKCalendarUnitWeekOfYear:
             return [self weekOfYearIntervalFromDate:date];
-            break;
         default:
             break;
     }

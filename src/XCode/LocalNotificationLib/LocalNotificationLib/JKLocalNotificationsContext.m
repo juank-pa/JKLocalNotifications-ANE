@@ -290,53 +290,49 @@ FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32
 #ifndef SAMPLE
 
 - (uint32_t)initExtensionFunctions:(const FRENamedFunction**)namedFunctions {
-    uint32_t numFunctions = 11;
+    uint32_t numFunctions = 10;
     
     FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction)*numFunctions);  // TODO: Free this. 
     
-    func[0].name = (const uint8_t*)"createManager";
+    func[0].name = (const uint8_t*)"notify";
     func[0].functionData = NULL;
-    func[0].function = &ADEPCreateManager;
+    func[0].function = &ADEPNotify;
     
-    func[1].name = (const uint8_t*)"notify";
+    func[1].name = (const uint8_t*)"cancel";
     func[1].functionData = NULL;
-    func[1].function = &ADEPNotify;
+    func[1].function = &ADEPCancel;
     
-    func[2].name = (const uint8_t*)"cancel";
+    func[2].name = (const uint8_t*)"cancelAll";
     func[2].functionData = NULL;
-    func[2].function = &ADEPCancel;
+    func[2].function = &ADEPCancelAll;
     
-    func[3].name = (const uint8_t*)"cancelAll";
+    func[3].name = (const uint8_t*)"checkForNotificationAction";
     func[3].functionData = NULL;
-    func[3].function = &ADEPCancelAll;
+    func[3].function = &ADEPCheckForNotificationAction;
     
-    func[4].name = (const uint8_t*)"checkForNotificationAction";
+    func[4].name = (const uint8_t*)"getSelectedNotificationCode";
     func[4].functionData = NULL;
-    func[4].function = &ADEPCheckForNotificationAction;
-    
-    func[5].name = (const uint8_t*)"getSelectedNotificationCode";
+    func[4].function = &ADEPGetSelectedNotificationCode;
+
+    func[5].name = (const uint8_t*)"getSelectedNotificationData";
     func[5].functionData = NULL;
-    func[5].function = &ADEPGetSelectedNotificationCode;
-
-    func[6].name = (const uint8_t*)"getSelectedNotificationData";
+    func[5].function = &ADEPGetSelectedNotificationData;
+    
+    func[6].name = (const uint8_t*)"setApplicationBadgeNumber";
     func[6].functionData = NULL;
-    func[6].function = &ADEPGetSelectedNotificationData;
+    func[6].function = &ADEPSetApplicationBadgeNumber;
     
-    func[7].name = (const uint8_t*)"setApplicationBadgeNumber";
+    func[7].name = (const uint8_t*)"getApplicationBadgeNumber";
     func[7].functionData = NULL;
-    func[7].function = &ADEPSetApplicationBadgeNumber;
+    func[7].function = &ADEPGetApplicationBadgeNumber;
     
-    func[8].name = (const uint8_t*)"getApplicationBadgeNumber";
+    func[8].name = (const uint8_t*)"registerSettings";
     func[8].functionData = NULL;
-    func[8].function = &ADEPGetApplicationBadgeNumber;
-    
-    func[9].name = (const uint8_t*)"registerSettings";
-    func[9].functionData = NULL;
-    func[9].function = &ADEPRegisterSettings;
+    func[8].function = &ADEPRegisterSettings;
 
-    func[10].name = (const uint8_t*)"getSelectedSettings";
-    func[10].functionData = NULL;
-    func[10].function = &ADEPGetSelectedSettings;
+    func[9].name = (const uint8_t*)"getSelectedSettings";
+    func[9].functionData = NULL;
+    func[9].function = &ADEPGetSelectedSettings;
 
     *namedFunctions = func;
     

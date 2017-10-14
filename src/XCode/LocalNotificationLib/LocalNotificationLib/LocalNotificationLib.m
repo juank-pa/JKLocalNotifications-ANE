@@ -28,9 +28,11 @@ JKLocalNotificationsContext * __strong jkNotificationsContext;
 // A native context instance is created
 void ComJkLocalNotificationContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, 
                             uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) {
+    BOOL useNewApi = ctxType && strcmp((char *)ctxType, "LocalNotificationsContextNew") == 0 ? YES : NO;
+
     // Initialize the native context.
     @autoreleasepool {
-        JKNotificationFactory *factory = [JKNotificationFactory factory];
+        JKNotificationFactory *factory = [JKNotificationFactory factory:useNewApi];
         jkNotificationsContext = [JKLocalNotificationsContext notificationsContextWithContext:ctx factory:factory];
 
         *numFunctionsToTest = [jkNotificationsContext initExtensionFunctions:functionsToSet];

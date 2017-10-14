@@ -23,13 +23,10 @@ package {
       mockContextBuilder = new MockContextBuilder();
       mockContextBuilder.expects("createExtensionContext").withArgs(
         "com.juankpro.ane.LocalNotification",
-        "LocalNotificationsContext"
+        "LocalNotificationsContextNew"
       ).willReturn(mockContext);
 
-      CONFIG::device {
-        mockContext.expects("call").withArgs("createManager");
-      }
-      manager = new NotificationManager(mockContextBuilder);
+      manager = new NotificationManager(true, mockContextBuilder);
     }
 
     override protected function tearDown():void {
@@ -61,13 +58,34 @@ package {
       assertFalse("Is supported on device", NotificationManager.needsSubscription);
     }
 
-    public function testInstantiation():void {
+    public function testInstantiationNewApi():void {
       CONFIG::device {
-        assertTrue(mockContext.errorMessage(), mockContextBuilder.success());
+        assertTrue(mockContextBuilder.errorMessage(), mockContextBuilder.success());
         return;
       }
 
       assertFalse("Should not call context", mockContextBuilder.success());
+    }
+
+    public function testInstantiationLegacyApi():void {
+      manager.dispose();
+
+      mockContextBuilder = new MockContextBuilder();
+      mockContextBuilder.expects("createExtensionContext").withArgs(
+        "com.juankpro.ane.LocalNotification",
+        "LocalNotificationsContext"
+      ).willReturn(mockContext);
+
+      var newManager:NotificationManager = new NotificationManager(false, mockContextBuilder);
+
+      CONFIG::device {
+        assertTrue(mockContextBuilder.errorMessage(), mockContextBuilder.success());
+        newManager.dispose();
+        return;
+      }
+
+      assertFalse("Should not call context", mockContextBuilder.success());
+      newManager.dispose();
     }
 
     public function testCancel():void {
@@ -212,7 +230,7 @@ package {
     public function testDispose():void {
       mockContext.expects("dispose").times(1).noReturn();
 
-      (new NotificationManager(new MockContextBuilder())).dispose();
+      (new NotificationManager(true, new MockContextBuilder())).dispose();
       manager.dispose();
       CONFIG::device {
         assertTrue(mockContext.errorMessage(), mockContext.success());
