@@ -8,9 +8,10 @@
 
 #import <XCTest/XCTest.h>
 #import <UserNotifications/UserNotifications.h>
+#import "JKNewTestCase.h"
 #import "JKTriggerBuilder.h"
 
-@interface JKTriggerBuilderTest : XCTestCase
+@interface JKTriggerBuilderTest : JKNewTestCase
 @property (nonatomic, strong) JKTriggerBuilder *subject;
 @property (nonatomic, strong) UNCalendarNotificationTrigger *trigger;
 @property (nonatomic, strong) NSDateComponents *expectedComponents;
