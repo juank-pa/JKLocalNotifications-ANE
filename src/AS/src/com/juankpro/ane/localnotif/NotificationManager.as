@@ -18,7 +18,7 @@
    * @see #subscribe()
    */
   public class NotificationManager extends EventDispatcher {
-    CONFIG::device private static var _extensionContext:IContext = null;
+    CONFIG::device private static var _extensionContext:* = null;
     CONFIG::device private static var _refCount:int = 0;
 
     CONFIG::device private static const _contextType:String = "LocalNotificationsContext";
@@ -77,7 +77,7 @@
         if(_extensionContext == null) {
           var builder:* = contextBuilder || ExtensionContext;
           _extensionContext = builder.createExtensionContext("com.juankpro.ane.LocalNotification",
-                                                             _contextType) as IContext;
+                                                             _contextType);
           _extensionContext.call("createManager");
         }
         _refCount++;
