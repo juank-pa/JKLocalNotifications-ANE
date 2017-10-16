@@ -25,19 +25,14 @@
     [super tearDown];
 }
 
-- (void)testNewApiFactory {
-    JKNotificationFactory *factory = [JKNotificationFactory factory:YES];
+- (void)testApiFactory {
+    JKNotificationFactory *factory = [JKNotificationFactory factory];
     if([UNUserNotificationCenter class]) {
         XCTAssertEqual([factory class], [JKNewLocalNotificationFactory class]);
     }
     else {
         XCTAssertEqual([factory class], [JKLegacyLocalNotificationFactory class]);
     }
-}
-
-- (void)testLegacyApiFactory {
-    JKNotificationFactory *factory = [JKNotificationFactory factory:NO];
-    XCTAssertEqual([factory class], [JKLegacyLocalNotificationFactory class]);
 }
 
 @end

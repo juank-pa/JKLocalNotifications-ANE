@@ -9,7 +9,8 @@
 #import "JKNewLocalNotificationFactory.h"
 #import "JKNewLocalNotificationAuthorizer.h"
 #import "JKNewNotificationListener.h"
-#import "JKNewLocalNotificationManager.h"
+#import "JKLegacyLocalNotificationManager.h"
+#import "JKLegacyLocalNotificationFactory.h"
 
 @implementation JKNewLocalNotificationFactory
 
@@ -22,7 +23,7 @@
 }
 
 - (JKLocalNotificationManager *)createManager {
-    return [[JKNewLocalNotificationManager alloc] initWithFactory:self];
+    return [[JKLegacyLocalNotificationManager alloc] initWithFactory:[JKLegacyLocalNotificationFactory new]];
 }
 
 - (UNUserNotificationCenter *)notificationCenter {

@@ -10,9 +10,15 @@
 #import <UserNotifications/UserNotifications.h>
 #import "JKNewTestCase.h"
 #import "JKNewLocalNotificationFactory.h"
+#import "JKLegacyLocalNotificationFactory.h"
 #import "JKNewLocalNotificationAuthorizer.h"
 #import "JKNewLocalNotificationManager.h"
+#import "JKLegacyLocalNotificationManager.h"
 #import "JKNewNotificationListener.h"
+
+@interface JKLegacyLocalNotificationFactory ()
+@property (nonatomic, retain) JKLegacyLocalNotificationFactory *factory;
+@end
 
 @interface JKNewLocalNotificationFactoryTest : JKNewTestCase
 @property (nonatomic, strong) JKNewLocalNotificationFactory *subject;
@@ -40,14 +46,12 @@
 
 - (void)testCreateManager {
     JKLocalNotificationManager *manager = [self.subject createManager];
-    XCTAssertEqual([manager class], [JKNewLocalNotificationManager class]);
+    XCTAssertEqual([manager class], [JKLegacyLocalNotificationManager class]);
+    XCTAssertEqual([((JKLegacyLocalNotificationFactory *)manager).factory class], [JKLegacyLocalNotificationFactory class]);
 }
 
 - (void)testNotificationCenter {
-    id notificationCenterMock = OCMClassMock([UNUserNotificationCenter class]);
-    OCMStub([notificationCenterMock currentNotificationCenter]).andReturn(notificationCenterMock);
-    XCTAssertEqual(self.subject.notificationCenter, notificationCenterMock);
-    [notificationCenterMock stopMocking];
+    XCTAssertEqual(self.subject.notificationCenter, self.notificationCenterMock);
 }
 
 - (void)testCreateListener {

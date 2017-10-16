@@ -30,9 +30,9 @@ package com.juankpro.ane.localnotif {
       }
     }
 
-   /**
-    * @private
-    */
+    /**
+     * @private
+     */
     public function get notificationStyleFlags():uint {
       var flags:uint = 0;
       for each(var style:String in notificationStyles) {

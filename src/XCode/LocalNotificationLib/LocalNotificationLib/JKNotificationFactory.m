@@ -12,17 +12,14 @@
 #import "JKLegacyLocalNotificationFactory.h"
 #import "Constants.h"
 
-BOOL _useNewApi;
-
 @implementation JKNotificationFactory
 
 + (BOOL)isNewAPI {
-    return _useNewApi && !![UNUserNotificationCenter class];
+    return !![UNUserNotificationCenter class];
 }
 
-+ (instancetype)factory:(BOOL)useNewApi {
-    _useNewApi = useNewApi;
-    if (useNewApi && [self isNewAPI]) {
++ (instancetype)factory {
+    if ([self isNewAPI]) {
         return [JKNewLocalNotificationFactory new];
     }
     return [JKLegacyLocalNotificationFactory new];

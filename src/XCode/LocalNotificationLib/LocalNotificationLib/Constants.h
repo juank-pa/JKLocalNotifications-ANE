@@ -9,7 +9,7 @@
 #ifndef constants_h
 #define constants_h
 
-#import "JKLocalNotificationsContext.h"
+@class JKLocalNotificationsContext;
 
 extern JKLocalNotificationsContext * __strong jkNotificationsContext;
 

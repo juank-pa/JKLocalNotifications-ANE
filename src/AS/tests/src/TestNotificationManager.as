@@ -23,10 +23,10 @@ package {
       mockContextBuilder = new MockContextBuilder();
       mockContextBuilder.expects("createExtensionContext").withArgs(
         "com.juankpro.ane.LocalNotification",
-        "LocalNotificationsContextNew"
+        "LocalNotificationsContext"
       ).willReturn(mockContext);
 
-      manager = new NotificationManager(true, mockContextBuilder);
+      manager = new NotificationManager(mockContextBuilder);
     }
 
     override protected function tearDown():void {
@@ -65,27 +65,6 @@ package {
       }
 
       assertFalse("Should not call context", mockContextBuilder.success());
-    }
-
-    public function testInstantiationLegacyApi():void {
-      manager.dispose();
-
-      mockContextBuilder = new MockContextBuilder();
-      mockContextBuilder.expects("createExtensionContext").withArgs(
-        "com.juankpro.ane.LocalNotification",
-        "LocalNotificationsContext"
-      ).willReturn(mockContext);
-
-      var newManager:NotificationManager = new NotificationManager(false, mockContextBuilder);
-
-      CONFIG::device {
-        assertTrue(mockContextBuilder.errorMessage(), mockContextBuilder.success());
-        newManager.dispose();
-        return;
-      }
-
-      assertFalse("Should not call context", mockContextBuilder.success());
-      newManager.dispose();
     }
 
     public function testCancel():void {
@@ -230,7 +209,7 @@ package {
     public function testDispose():void {
       mockContext.expects("dispose").times(1).noReturn();
 
-      (new NotificationManager(true, new MockContextBuilder())).dispose();
+      (new NotificationManager(new MockContextBuilder())).dispose();
       manager.dispose();
       CONFIG::device {
         assertTrue(mockContext.errorMessage(), mockContext.success());

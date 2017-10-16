@@ -60,7 +60,7 @@ void ComJkLocalNotificationExtInitializer(void** extDataToSet, FREContextInitial
     const FRENamedFunction *functions = NULL;
 
     id factoryMock = OCMClassMock([JKNotificationFactory class]);
-    OCMStub([factoryMock factory:NO]).andReturn(factoryMock);
+    OCMStub([factoryMock factory]).andReturn(factoryMock);
 
     id notificationContextMock = OCMClassMock([JKLocalNotificationsContext class]);
     OCMStub([notificationContextMock notificationsContextWithContext:&context factory:factoryMock]).andReturn(notificationContextMock);
@@ -71,29 +71,6 @@ void ComJkLocalNotificationExtInitializer(void** extDataToSet, FREContextInitial
     XCTAssertEqual(functionsToSet, 3);
     XCTAssertEqual(jkNotificationsContext, notificationContextMock);
     OCMVerifyAll(notificationContextMock);
-
-    [factoryMock stopMocking];
-    [notificationContextMock stopMocking];
-}
-
-- (void)testContextInitializerNewApi {
-    int context = 1002;
-    uint32_t functionsToSet = 0;
-    const FRENamedFunction *functions = NULL;
-
-    id factoryMock = OCMClassMock([JKNotificationFactory class]);
-    OCMExpect([factoryMock factory:YES]).andReturn(factoryMock);
-
-    id notificationContextMock = OCMClassMock([JKLocalNotificationsContext class]);
-    OCMStub([notificationContextMock notificationsContextWithContext:&context factory:factoryMock]).andReturn(notificationContextMock);
-    OCMExpect([notificationContextMock initExtensionFunctions:&functions]).andReturn(3);
-
-    ComJkLocalNotificationContextInitializer(NULL, (uint8_t *)"LocalNotificationsContextNew", &context, &functionsToSet, &functions);
-
-    XCTAssertEqual(functionsToSet, 3);
-    XCTAssertEqual(jkNotificationsContext, notificationContextMock);
-    OCMVerifyAll(notificationContextMock);
-    OCMVerifyAll(factoryMock);
 
     [factoryMock stopMocking];
     [notificationContextMock stopMocking];

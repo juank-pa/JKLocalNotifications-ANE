@@ -26,11 +26,12 @@
 		7DF0E926151CAECB0050D94B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF0E925151CAECB0050D94B /* main.m */; };
 		7DF0E92A151CAECB0050D94B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF0E929151CAECB0050D94B /* AppDelegate.m */; };
 		7DF0E92D151CAECB0050D94B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF0E92C151CAECB0050D94B /* ViewController.m */; };
-		7DF0E930151CAECC0050D94B /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DF0E92E151CAECB0050D94B /* ViewController_iPhone.xib */; };
 		7DF0E939151CB2C20050D94B /* JKNewLocalNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D765A4914CD38A5001B2405 /* JKNewLocalNotificationManager.m */; };
 		7DF0E93A151CB2C60050D94B /* JKLocalNotificationsContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D765A4B14CD38A5001B2405 /* JKLocalNotificationsContext.m */; };
 		7DF0E940151CB4060050D94B /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF0E93F151CB4060050D94B /* Constants.m */; };
 		AD379F0C1F92721C00CEA327 /* JKTriggerBuilderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AD379F0B1F92721C00CEA327 /* JKTriggerBuilderTest.m */; };
+		AD379F0E1F92B3F000CEA327 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD379F0D1F92B3F000CEA327 /* Storyboard.storyboard */; };
+		AD379F101F92B6CF00CEA327 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD379F0F1F92B6CF00CEA327 /* LaunchScreen.storyboard */; };
 		AD791B7B1F2274770012D327 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD791B7A1F2274770012D327 /* libOCMock.a */; };
 		AD791B7E1F2276BB0012D327 /* DeallocVerify.m in Sources */ = {isa = PBXBuildFile; fileRef = AD791B7D1F2276BB0012D327 /* DeallocVerify.m */; };
 		AD791B801F2279C40012D327 /* JKLocalNotificationsContextTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AD791B7F1F2279C40012D327 /* JKLocalNotificationsContextTest.m */; };
@@ -166,9 +167,10 @@
 		7DF0E929151CAECB0050D94B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		7DF0E92B151CAECB0050D94B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		7DF0E92C151CAECB0050D94B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		7DF0E92F151CAECC0050D94B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		7DF0E93F151CB4060050D94B /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		AD379F0B1F92721C00CEA327 /* JKTriggerBuilderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKTriggerBuilderTest.m; sourceTree = "<group>"; };
+		AD379F0D1F92B3F000CEA327 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		AD379F0F1F92B6CF00CEA327 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AD791B771F22545B0012D327 /* Stubs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stubs.h; sourceTree = "<group>"; };
 		AD791B7A1F2274770012D327 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		AD791B7C1F2276BB0012D327 /* DeallocVerify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeallocVerify.h; sourceTree = "<group>"; };
@@ -230,7 +232,6 @@
 		ADF7BB4F1F223BD500045B97 /* LocalNotificationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalNotificationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADF7BB511F223BD500045B97 /* LocalNotificationLibTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalNotificationLibTest.m; sourceTree = "<group>"; };
 		ADF7BB531F223BD600045B97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		ADF7BB5B1F223E5900045B97 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		ADF7BB711F22471F00045B97 /* Stubs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stubs.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -294,7 +295,6 @@
 			children = (
 				AD9BCBC41F8C44AD0099503C /* UserNotifications.framework */,
 				AD791B7A1F2274770012D327 /* libOCMock.a */,
-				ADF7BB5B1F223E5900045B97 /* XCTest.framework */,
 				7D7659D914CC8741001B2405 /* Foundation.framework */,
 				7DF0E91A151CAECB0050D94B /* UIKit.framework */,
 				7DF0E91D151CAECB0050D94B /* CoreGraphics.framework */,
@@ -341,7 +341,8 @@
 				7DF0E929151CAECB0050D94B /* AppDelegate.m */,
 				7DF0E92B151CAECB0050D94B /* ViewController.h */,
 				7DF0E92C151CAECB0050D94B /* ViewController.m */,
-				7DF0E92E151CAECB0050D94B /* ViewController_iPhone.xib */,
+				AD379F0D1F92B3F000CEA327 /* Storyboard.storyboard */,
+				AD379F0F1F92B6CF00CEA327 /* LaunchScreen.storyboard */,
 				7DF0E920151CAECB0050D94B /* Supporting Files */,
 				7DF0E93F151CB4060050D94B /* Constants.m */,
 			);
@@ -679,8 +680,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD379F101F92B6CF00CEA327 /* LaunchScreen.storyboard in Resources */,
 				7DF0E924151CAECB0050D94B /* InfoPlist.strings in Resources */,
-				7DF0E930151CAECC0050D94B /* ViewController_iPhone.xib in Resources */,
+				AD379F0E1F92B3F000CEA327 /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -808,14 +810,6 @@
 				7DF0E923151CAECB0050D94B /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		7DF0E92E151CAECB0050D94B /* ViewController_iPhone.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7DF0E92F151CAECC0050D94B /* en */,
-			);
-			name = ViewController_iPhone.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -954,8 +948,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.juankpro.Sample;
 				PRODUCT_NAME = Sample;
-				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "${ADOBE_ANE}/**";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "${ADOBE_ANE}";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -976,8 +970,8 @@
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PRODUCT_BUNDLE_IDENTIFIER = com.juankpro.Sample;
 				PRODUCT_NAME = Sample;
-				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "${ADOBE_ANE}/**";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "${ADOBE_ANE}";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

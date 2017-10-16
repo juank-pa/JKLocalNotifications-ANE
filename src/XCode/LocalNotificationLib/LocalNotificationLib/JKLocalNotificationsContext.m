@@ -99,7 +99,9 @@
 
 - (void)didReceiveNotificationDataForNotificationListener:(JKNotificationListener *)listener {
 #ifdef SAMPLE
-    [self.delegate localNotificationContext:self didReceiveNotificationFromListener:listener];
+    [NSOperationQueue.mainQueue addOperationWithBlock:^ {
+        [self.delegate localNotificationContext:self didReceiveNotificationFromListener:listener];
+    }];
 #else
     // Dispatch event to AS side of ExtensionContext.
     FREResult result = FREDispatchStatusEventAsync(self.extensionContext, (const uint8_t*)JK_NOTIFICATION_SELECTED_EVENT, (const uint8_t*)JK_NOTIFICATION_STATUS_KEY);
@@ -108,12 +110,14 @@
 }
 
 - (void)notificationAuthorizer:(JKLocalNotificationManager *)notificationManager didAuthorizeWithSettings:(JKLocalNotificationSettings *)settings {
-#ifndef SAMPLE
+#ifdef SAMPLE
+    [NSOperationQueue.mainQueue addOperationWithBlock:^ {
+        [self.delegate localNotificationContext:self didRegisterSettings:settings];
+    }];
+#else
     // Dispatch event to AS side of ExtensionContext.
     FREResult result = FREDispatchStatusEventAsync(self.extensionContext, (const uint8_t*)JK_SETTINGS_SUBSCRIBED_EVENT, (const uint8_t*)JK_NOTIFICATION_STATUS_KEY);
     assert(result == FRE_OK);
-#else
-    [self.delegate localNotificationContext:self didRegisterSettings:settings];
 #endif
 }
 

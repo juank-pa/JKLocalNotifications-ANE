@@ -6,7 +6,6 @@
 //
 //
 
-#import <XCTest/XCTest.h>
 #import "JKLocalNotification.h"
 
 @interface JKNotificationBuilder : NSObject

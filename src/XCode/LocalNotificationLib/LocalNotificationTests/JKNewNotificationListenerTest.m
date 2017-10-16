@@ -67,18 +67,6 @@
     XCTAssertEqual([self.subject forwardingTargetForSelector:NULL], self.notificationCenterDelegateMock);
 }
 
-/*- (void)testSuccessfulForwarding {
-    id notificationCenterDelegateMock = OCMProtocolMock(@protocol(UNUserNotificationCenterDelegate));
-    id notificationMock = OCMClassMock([UNNotification class]);
-    void (^block)(UNNotificationPresentationOptions options) = ^(UNNotificationPresentationOptions options){ };
-
-    OCMExpect([notificationCenterDelegateMock userNotificationCenter:self.notificationCenterMock willPresentNotification:notificationMock withCompletionHandler:block]);
-    self.subject.savedDelegate = notificationCenterDelegateMock;
-    [self.subject userNotificationCenter:self.notificationCenterMock willPresentNotification:notificationMock withCompletionHandler:block];
-
-    OCMVerifyAll(notificationCenterDelegateMock);
-}*/
-
 - (void)testResponsToSelector {
     XCTAssertFalse([self.subject respondsToSelector:@selector(tableView:canEditRowAtIndexPath:)]);
     XCTAssertTrue([self.subject respondsToSelector:@selector(userNotificationCenter:willPresentNotification:withCompletionHandler:)]);

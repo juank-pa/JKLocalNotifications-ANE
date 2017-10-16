@@ -35,7 +35,7 @@
     [self.context cancelAll];
 }
 
-- (IBAction)celarBadge:(id)sender {
+- (IBAction)clearBadge:(id)sender {
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 }
 
@@ -46,7 +46,7 @@
     notification.playSound = YES;
     notification.body = @"Hello";
     notification.actionLabel = @"Rock";
-    notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:15];
+    notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:5];
     notification.numberAnnotation = 2;
     //notification.repeatInterval = NSSecondCalendarUnit;
     notification.playSound = YES;
@@ -70,7 +70,10 @@
 
     JKLocalNotificationSettings *settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes: UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert];
     [self.context authorizeWithSettings:settings];
-    [self.context checkForNotificationAction];
+
+    if([UNUserNotificationCenter class] == nil) {
+        [self.context checkForNotificationAction];
+    }
 }
 
 - (void)printMessage:(NSString*)message {
@@ -91,12 +94,7 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    }
-    else {
-        return YES;
-    }
+    return YES;
 }
 
 @end
