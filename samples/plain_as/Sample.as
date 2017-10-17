@@ -47,7 +47,7 @@
       if (NotificationManager.isSupported) {
         notificationManager = new NotificationManager();
 
-        if (NotificationManager.needsSubsciption) {
+        if (NotificationManager.needsSubscription) {
           var options:LocalNotifierSubscribeOptions = new LocalNotifierSubscribeOptions();
           options.notificationStyles = NotificationManager.supportedNotificationStyles;
           notificationManager.addEventListener(NotificationEvent.SETTINGS_SUBSCRIBED,

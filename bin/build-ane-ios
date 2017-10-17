@@ -1,6 +1,7 @@
 #!/bin/zsh
 
-source ./config.sh
+SCRIPT_PATH="$(dirname "$0")"
+source $SCRIPT_PATH/config/config.sh
 
 set -e
 
