@@ -6,7 +6,6 @@
 //
 //
 
-#import <UserNotifications/UserNotifications.h>
 #import <XCTest/XCTest.h>
 
 @interface JKNewTestCase : XCTestCase

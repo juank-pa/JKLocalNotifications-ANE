@@ -6,6 +6,7 @@
 //
 //
 
+#import <UserNotifications/UserNotifications.h>
 #import "JKNewTestCase.h"
 
 @implementation JKNewTestCase

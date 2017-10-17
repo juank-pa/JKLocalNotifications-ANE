@@ -37,14 +37,14 @@
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    if ([self.savedDelegate respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:)]) {
+    if ([self.savedDelegate respondsToSelector:@selector(userNotificationCenter:willPresentNotification:withCompletionHandler:)]) {
         [self.savedDelegate userNotificationCenter:center willPresentNotification:notification withCompletionHandler:^(UNNotificationPresentationOptions options){
-            [self handleNotification:notification withCompletionHandler:completionHandler options:options];
+            [self handleNotification:notification withCompletionHandler:completionHandler];
         }];
         return;
     }
 
-    [self handleNotification:notification withCompletionHandler:completionHandler options:UNNotificationPresentationOptionNone];
+    [self handleNotification:notification withCompletionHandler:completionHandler];
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
@@ -58,7 +58,7 @@
     [self handleResponse:response withCompletionHandler:completionHandler];
 }
 
-- (void)handleNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler options:(UNNotificationPresentationOptions)options {
+- (void)handleNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
     NSDictionary *userInfo = notification.request.content.userInfo;
     [self dispatchDidReceiveNotificationWithUserInfo:userInfo];
     completionHandler(UNNotificationPresentationOptionNone);
