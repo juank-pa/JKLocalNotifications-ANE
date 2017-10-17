@@ -58,7 +58,7 @@ package {
       assertFalse("Is supported on device", NotificationManager.needsSubscription);
     }
 
-    public function testInstantiationNewApi():void {
+    public function testInstantiation():void {
       CONFIG::device {
         assertTrue(mockContextBuilder.errorMessage(), mockContextBuilder.success());
         return;
