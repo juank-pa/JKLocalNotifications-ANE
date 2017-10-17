@@ -155,4 +155,20 @@
     OCMVerifyAll(deletegateMock);
 }
 
+- (void)testCheckForNotificationActionTriggersJustOnce {
+    id deletegateMock = OCMProtocolMock(@protocol(JKNotificationListenerDelegate));
+
+    self.subject.delegate = deletegateMock;
+    [self.subject checkForNotificationAction];
+
+    OCMReject([deletegateMock didReceiveNotificationDataForNotificationListener:self.subject]);
+
+    [self.subject checkForNotificationAction];
+
+    XCTAssertEqualObjects(self.subject.notificationCode, @"NotificationCodeKey");
+    XCTAssertEqualObjects(self.subject.notificationData, @"NotificationDataKey");
+
+    OCMVerifyAll(deletegateMock);
+}
+
 @end

@@ -11,7 +11,18 @@
 #import "Constants.h"
 #import "FlashRuntimeExtensions+Private.h"
 
+@interface JKNotificationListener ()
+@property (nonatomic, assign, getter=hasTriggered) BOOL triggered;
+@end
+
 @implementation JKNotificationListener
+
+- (instancetype)initWithTarget:(id)target {
+    if(self = [super initWithTarget:target]) {
+        _triggered = NO;
+    }
+    return self;
+}
 
 @synthesize delegate = _delegate;
 
@@ -30,7 +41,8 @@
     _notificationCode = userInfo[JK_NOTIFICATION_CODE_KEY];
     _notificationData = userInfo[JK_NOTIFICATION_DATA_KEY];
 
-    if ([self.delegate respondsToSelector:@selector(didReceiveNotificationDataForNotificationListener:)]) {
+    if (!self.hasTriggered && [self.delegate respondsToSelector:@selector(didReceiveNotificationDataForNotificationListener:)]) {
+        self.triggered = YES;
         [self.delegate didReceiveNotificationDataForNotificationListener:self];
     }
 }
