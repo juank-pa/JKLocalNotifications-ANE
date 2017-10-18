@@ -78,7 +78,6 @@
           var builder:* = contextBuilder || ExtensionContext;
           _extensionContext = builder.createExtensionContext("com.juankpro.ane.LocalNotification",
                                                              _contextType);
-          _extensionContext.call("createManager");
         }
         _refCount++;
       }

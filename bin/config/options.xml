@@ -5,5 +5,6 @@
         <option>-ios_version_min 8.4</option>
         <option>-liconv</option>
         <option>-w</option>
+        <option>-weak_framework UserNotifications</option>
     </linkerOptions>
 </platform>

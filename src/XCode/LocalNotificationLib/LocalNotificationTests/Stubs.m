@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <string.h>
 #import "Stubs.h"
-#import "LocalNotificationManager.h"
+#import "Constants.h"
 
 #ifdef __cplusplus
 "C" {
@@ -197,7 +197,7 @@
                                  const uint8_t** value
                                  ) {
         freObjectArgument = object;
-        *length = strlen((char *)resultString);
+        *length = (uint32_t) strlen((char *)resultString);
         *value = resultString;
         return result(object);
     }
@@ -610,10 +610,10 @@
     }
 
     NSDictionary* FRPE_getApplicationLaunchOptions() {
-        UILocalNotification *localNotification = [[[UILocalNotification alloc] init] autorelease];
+        UILocalNotification *localNotification = [UILocalNotification new];
         localNotification.userInfo = @{
-                                       NOTIFICATION_CODE_KEY: @"NotificationCodeKey",
-                                       NOTIFICATION_DATA_KEY: @"NotificationDataKey"
+                                       JK_NOTIFICATION_CODE_KEY: @"NotificationCodeKey",
+                                       JK_NOTIFICATION_DATA_KEY: @"NotificationDataKey"
                                        };
         return @{UIApplicationLaunchOptionsLocalNotificationKey: localNotification};
     }
@@ -676,3 +676,43 @@ const NSString *const FRPE_ApplicationDidRegisterForRemoteNotificationsWithDevic
 // UserInfo dictionary of FRPE_ApplicationDidFailToRegisterForRemoteNotificationsWithError
 //
 const NSString *const FRPE_ApplicationDidFailToRegisterForRemoteNotificationsWithErrorKey = @"FRPE_ApplicationDidFailToRegisterForRemoteNotificationsWithErrorKey";
+
+@implementation StubNewFactory
+
+@synthesize notificationCenter = _notificationCenter;
+
+- (UNUserNotificationCenter *)notificationCenter {
+    if (!_notificationCenter) {
+        _notificationCenter = [StubNotificationCenter new];
+    }
+    return _notificationCenter;
+}
+
+@end
+
+@implementation StubLegacyFactory
+
+@synthesize application = _application;
+
+- (UIApplication *)application {
+    if (!_application) {
+        _application = (id)[[StubApplication alloc] init];
+    }
+    return _application;
+}
+
+@end
+
+@implementation StubApplication
+@end
+
+@implementation StubNotificationCenter
+
+- (instancetype)init {
+    return self;
+}
+
+@end
+
+@implementation StubCenterDelegate
+@end

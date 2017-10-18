@@ -7,11 +7,6 @@ package com.juankpro.ane.localnotif {
 	 */
 	public class NotificationTimeInterval {
 		/**
-		 * Represents an era repeat interval
-		 * <p>Supported OS: iOS</p>
-		 */
-		public static const ERA_CALENDAR_UNIT:uint = 1 << 1;
-		/**
 		 * Represents a year repeat interval.
 		 * On Android will just trigger every 365 days. The date might not be exact.
 		 * <p>Supported OS: iOS, Android</p>
@@ -43,25 +38,29 @@ package com.juankpro.ane.localnotif {
 		 * <p>Supported OS: iOS, Android</p>
 		 */
 		public static const SECOND_CALENDAR_UNIT:uint = 1 << 7;
+    CONFIG::android {
+      /**
+       * Represents a week repeat interval
+       * <p>Supported OS: iOS, Android</p>
+       */
+      public static const WEEK_CALENDAR_UNIT:uint = 1 << 8;
+    }
+    CONFIG::iphone {
+      /**
+       * Represents a week repeat interval
+       * <p>Supported OS: iOS, Android</p>
+       */
+      public static const WEEK_CALENDAR_UNIT:uint = 1 << 13;
+    }
 		/**
-		 * Represents a week repeat interval
-		 * <p>Supported OS: iOS, Android</p>
-		 */
-		public static const WEEK_CALENDAR_UNIT:uint = 1 << 8;
-		/**
-		 * Represents a week day (e.g. each Monday) repeat interval
-		 * <p>Supported OS: iOS, Android</p>
-		 */
-		public static const WEEKDAY_CALENDAR_UNIT:uint = 1 << 9;
-		/**
-		 * Represents a week day ordinal repeat interval
-		 * <p>Supported OS: iOS, Android</p>
+		 * Represents a week day ordinal repeat interval e.g. repeat every second Monday every month
+		 * <p>Supported OS: iOS</p>
 		 */
 		public static const WEEKDAY_ORDINAL_CALENDAR_UNIT:uint = 1 << 10;
 		/**
 		 * Represents a quarter year repeat interval
-		 * On Android will just trigger every 365/4 days. The date might not be exact.
-		 * <p>Supported OS: iOS, Android</p>
+		 * Will just trigger every 365/4 days. The date might not be exact.
+		 * <p>Supported OS: Android</p>
 		 */
 		public static const QUARTER_CALENDAR_UNIT:uint = 1 << 11;
 

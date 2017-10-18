@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-source ./bin/config.sh
+source ./bin/config/config.sh
 
 SDK_PATH="$HOME/Developer/AIR_SDK"
 ASDOC_PATH="$SDK_PATH/bin/asdoc"

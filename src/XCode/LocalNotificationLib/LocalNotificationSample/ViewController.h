@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LocalNotificationsContext.h"
+#import "JKLocalNotificationsContext.h"
 
 @interface ViewController : UIViewController <LocalNotificationDelegate>
 

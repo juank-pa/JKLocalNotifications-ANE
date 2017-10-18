@@ -8,7 +8,13 @@
 
 #ifndef Stubs_h
 #define Stubs_h
+#import <UserNotifications/UserNotifications.h>
 #import "FlashRuntimeExtensions.h"
+#import "JKLocalNotificationsContext.h"
+#import "JKNewLocalNotificationFactory.h"
+#import "JKLegacyLocalNotificationFactory.h"
+
+extern JKLocalNotificationsContext *jkNotificationsContext;
 
 extern void *nativeContext;
 extern void *sentFreContext;
@@ -45,5 +51,23 @@ FREObject ADEPGetSelectedSettings(FREContext ctx, void* funcData, uint32_t argc,
 FREObject ADEPGetSelectedNotificationCode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
 FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
 void resetEvent();
+
+@interface StubCenterDelegate: NSObject<UNUserNotificationCenterDelegate>
+@end
+
+@interface StubApplication: NSObject
+@property (nonatomic, weak) id<UIApplicationDelegate> delegate;
+@end
+
+@interface StubNotificationCenter: UNUserNotificationCenter
+@end
+
+@interface StubNewFactory : JKNewLocalNotificationFactory
+@property (nonatomic, strong, readwrite) UNUserNotificationCenter *notificationCenter;
+@end
+
+@interface StubLegacyFactory : JKLegacyLocalNotificationFactory
+@property (nonatomic, strong, readwrite) UIApplication *application;
+@end
 
 #endif /* Stubs_h */

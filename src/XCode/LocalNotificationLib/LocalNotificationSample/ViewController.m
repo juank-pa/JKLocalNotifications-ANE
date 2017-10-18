@@ -7,14 +7,15 @@
 //
 
 #import "ViewController.h"
-#import "LocalNotificationsContext.h"
-#import "LocalNotification.h"
-#import "LocalNotificationManager.h"
+#import "JKLocalNotificationsContext.h"
+#import "JKLocalNotification.h"
+#import "JKNotificationFactory.h"
+#import "JKLocalNotificationSettings.h"
 #import "FlashRuntimeExtensions+Private.h"
 
 @interface ViewController ()
-@property (nonatomic, assign) IBOutlet UITextView *debugText;
-@property (nonatomic, retain) LocalNotificationsContext *context;
+@property (nonatomic, weak) IBOutlet UITextView *debugText;
+@property (nonatomic, strong) JKLocalNotificationsContext *context;
 @end
 
 @implementation ViewController
@@ -24,8 +25,6 @@
 
 - (void)dealloc {
     self.context.delegate = nil;
-    [self.context release];
-    [super dealloc];
 }
 
 - (IBAction)cancelByCode:(id)sender {
@@ -36,18 +35,18 @@
     [self.context cancelAll];
 }
 
-- (IBAction)celarBadge:(id)sender {
+- (IBAction)clearBadge:(id)sender {
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 }
 
 - (IBAction)postNotification:(id)sender {
-    LocalNotification *notification = [[[LocalNotification alloc] init] autorelease];
+    JKLocalNotification *notification = [JKLocalNotification new];
     
     notification.notificationCode = @"JKCode";
     notification.playSound = YES;
     notification.body = @"Hello";
     notification.actionLabel = @"Rock";
-    notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:15];
+    notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:5];
     notification.numberAnnotation = 2;
     //notification.repeatInterval = NSSecondCalendarUnit;
     notification.playSound = YES;
@@ -61,18 +60,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.context = [[[LocalNotificationsContext alloc] initWithContext:NULL] autorelease];
-    [self.context createManager];
-    
+
+    JKNotificationFactory *factory = [JKNotificationFactory factory];
+    self.context = [JKLocalNotificationsContext notificationsContextWithContext:NULL factory:factory];
+
     [self printMessage:@"Before Delegate"];
-    
     self.context.delegate = self;
-
-    [self.context registerSettingTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert)];
-    [self.context checkForNotificationAction];
-
     [self printMessage:@"After Delegate"];
+
+    JKLocalNotificationSettings *settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes: UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert];
+    [self.context authorizeWithSettings:settings];
+
+    if([UNUserNotificationCenter class] == nil) {
+        [self.context checkForNotificationAction];
+    }
 }
 
 - (void)printMessage:(NSString*)message {
@@ -84,22 +85,16 @@
     self.debugText.text = [NSString stringWithFormat:@"%@-----\n%@%@\n", self.debugText.text, newTitle, message];
 }
 
-- (void)localNotificationContext:(LocalNotificationsContext *)context didReceiveLocalNotification:(UILocalNotification *)notification {
-    [self printMessage:notification.description title:@"Local Notification"];
-    //[self.context cancel:[notification.userInfo objectForKey:NOTIFICATION_CODE_KEY]];
+- (void)localNotificationContext:(JKLocalNotificationsContext *)context didReceiveNotificationFromListener:(JKNotificationListener *)listener {
+    [self printMessage:listener.notificationCode title:@"Local Notification"];
 }
 
-- (void)localNotificationContext:(LocalNotificationsContext *)context didRegisterSettings:(UIUserNotificationSettings *)settings {
-    [self printMessage:settings.description title:@"Register settings"];
+- (void)localNotificationContext:(JKLocalNotificationsContext *)context didRegisterSettings:(JKLocalNotificationSettings *)settings {
+    [self printMessage:@(settings.types).description title:@"Register settings"];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    }
-    else {
-        return YES;
-    }
+    return YES;
 }
 
 @end

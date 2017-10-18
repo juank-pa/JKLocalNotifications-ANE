@@ -16,16 +16,15 @@ NSInteger deallocationCount = 0;
 }
 
 + (instancetype)instance {
-    return [[self new] autorelease];
+    return [self new];
 }
 
 + (NSInteger)deallocationCount {
     return deallocationCount;
 }
 
-- (oneway void)release {
+- (void)dealloc {
     deallocationCount++;
-    [super release];
 }
 
 @end
