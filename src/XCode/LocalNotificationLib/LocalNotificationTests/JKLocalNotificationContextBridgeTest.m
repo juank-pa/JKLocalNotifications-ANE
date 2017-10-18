@@ -54,7 +54,10 @@ FREObject args[] = {&context, &context};
     int codeContext, notificationContext;
     FREObject args[] = {&codeContext, &notificationContext};
     NSString *code = @"code";
-    NSDate *date = [NSDate date];
+
+    //10/17/17, 8:50 PM
+
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:(int)NSDate.date.timeIntervalSince1970];
     NSData *data = [NSData data];
 
     int fireDateContext, timeContext, repeatIntervalContext, actionLabelContext;
@@ -93,9 +96,7 @@ FREObject args[] = {&context, &context};
     id notificationMock = OCMStrictClassMock([JKLocalNotification class]);
     OCMStub([notificationMock localNotification]).andReturn(notificationMock);
     OCMExpect([notificationMock setNotificationCode:@"code"]);
-    OCMExpect([notificationMock setFireDate:[OCMArg checkWithBlock:^BOOL(NSDate *value) {
-        return value.timeIntervalSince1970 == date.timeIntervalSince1970;
-    }]]);
+    OCMExpect([notificationMock setFireDate:date]);
     OCMExpect([notificationMock setRepeatInterval:NSCalendarUnitWeekday]);
     OCMExpect([notificationMock setActionLabel:@"actionLabel"]);
     OCMExpect([notificationMock setBody:@"body"]);
