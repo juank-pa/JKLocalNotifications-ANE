@@ -12,8 +12,8 @@ This LocalNotification ANE repository contains many different components:
 - The Java source code to allow notifications on Android devices (src/Eclipse).
 - The Objective-C source code to allow notifications on iOS devices (src/XCode).
 - The AS3 source code to bridge between ActionScript and the native libraries (src/AS).
-- Shell files that allows building native code into an ANE file (bin).
-- A sample application that allow testing the ANE (samples).
+- Shell files that allow building native code into an ANE file (bin).
+- A sample application that allows testing the ANE (samples).
 
 We'll explain all of these components one by one but first let's go over the requirements.
 
