@@ -12,8 +12,7 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (retain, nonatomic) UIWindow *window;
-@property (retain, nonatomic) ViewController *viewController;
-+ (NSDictionary *)getLaunchOptions;
+@property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) NSDictionary *options;
 
 @end

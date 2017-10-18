@@ -34,10 +34,10 @@
     NSString *newNativeContext = @"nativeContext";
     int freContext;
 
-    XCTAssertNil(nativeContext);
+    XCTAssertNil((__bridge id)nativeContext);
     [ExtensionUtils setContextID:newNativeContext forFREContext:&freContext];
     XCTAssertEqual(sentFreContext, &freContext);
-    XCTAssertEqual(nativeContext, newNativeContext);
+    XCTAssertEqual((__bridge id)nativeContext, newNativeContext);
 }
 
 - (void)testGetContextId {
@@ -46,7 +46,7 @@
 
     id contextData = [ExtensionUtils getContextID:&freContext];
     XCTAssertEqual(sentFreContext, &freContext);
-    XCTAssertEqual(nativeContext, contextData);
+    XCTAssertEqual((__bridge id)nativeContext, contextData);
 }
 
 - (void)testGetPropertyFromObject {
@@ -137,9 +137,9 @@
 - (void)testGetByteArrayFromObject {
     XCTAssertNil([ExtensionUtils getDataFromFREObject:NULL]);
     NSData *byteArray = [ExtensionUtils getDataFromFREObject:freObjectBoolean];
-    NSString *string = [[[NSString alloc] initWithBytes:byteArray.bytes
-                                                 length:byteArray.length - 1
-                                               encoding:NSUTF8StringEncoding] autorelease];
+    NSString *string = [[NSString alloc] initWithBytes:byteArray.bytes
+                                                length:byteArray.length - 1
+                                              encoding:NSUTF8StringEncoding];
     XCTAssertEqualObjects(string, @"result");
     XCTAssertEqual(freObjectArgument, freObjectBoolean);
     XCTAssertEqual(byteArrayReleased, freObjectBoolean);
@@ -158,6 +158,7 @@
 
     FREObject ret = [ExtensionUtils getFREObjectFromData: data];
     XCTAssertEqual(strcmp(rawData, ret), 0);
+    [utilsMock stopMocking];
 }
 
 @end

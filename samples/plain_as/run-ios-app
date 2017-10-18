@@ -41,14 +41,16 @@ echo "***** packaging SWF file into IPA *****"
 
 echo "**** Installing IPA in iOS simulator ******"
 
+DEVICE_ID=3
+
 "$ADT" -installApp \
   -platform ios \
-  -device 1 \
+  -device $DEVICE_ID \
   -package $APP_NAME.ipa
 
 echo "**** Lanching iOS simulator ******"
 
 "$ADT" -launchApp \
   -platform ios \
-  -device 1 \
+  -device $DEVICE_ID \
   -appid com.juankpro.Sample

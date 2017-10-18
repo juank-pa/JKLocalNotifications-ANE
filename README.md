@@ -1,8 +1,10 @@
+# JKLocalNotifications ANE
+
 [![Build Status](https://travis-ci.org/juank-pa/JKLocalNotifications-ANE.svg?branch=master)](https://travis-ci.org/juank-pa/JKLocalNotifications-ANE)
 
-This is a Native Extension based in the one exposed by
-[Daniel Koestler](http://blogs.adobe.com/koestler/) that fixes some issues
-and adds some other capabilities to the iOS side like the ability to schedule
+This is a Native Extension based on the one exposed by
+[Daniel Koestler](http://blogs.adobe.com/koestler/). It fixes some issues
+and adds some other capabilities to the iOS side, like the ability to re-schedule
 local notifications in the future and the ability to update the application
 badge number at will.
 
@@ -11,7 +13,7 @@ This LocalNotification ANE repository contains many different components:
 - The Objective-C source code to allow notifications on iOS devices (src/XCode).
 - The AS3 source code to bridge between ActionScript and the native libraries (src/AS).
 - Shell files that allow building native code into an ANE file (bin).
-- A sample application to allow testing the ANE (samples).
+- A sample application that allows testing the ANE (samples).
 
 We'll explain all of these components one by one but first let's go over the requirements.
 
@@ -36,27 +38,30 @@ Mocking is powered by [OCMock](http://ocmock.org/).
 3. The `LocalNotificationSample` project is a simple native application to test
 the library functionality.
 
-The Objective-C project needs to use manual memory management to interact with
-AIR projects and ANE architecture.
+The Objective-C project was ported to ARC architecture to simplify code
+and prevent memory leaks.
 
 ## Building the library
 To test your AIR application using the iOS simulator, build the library while having
-one of the iOS simulator devices selected. `Debug` builds are fine.
+one of the iOS simulator devices selected in XCode. `Debug` builds are fine.
 
 To generate the final version for real devices, build the library while having
-a real device selected. You can compile the library for `Debug` or `Release` but it is
-highly recommended to build it for `Release` for performance reasons.
+a real device selected in XCode. You can compile the library for `Debug` or `Release`
+but it is highly recommended to build it for `Release` for performance reasons.
 
 The resulting `.a` library will be placed inside `src/XCode/LocalNotificationLib/Debug`
-or `src/XCode/LocalNotificationLib/Release` depending on the used configuration.
+or `src/XCode/LocalNotificationLib/Release` depending on the configuration.
 
-## About UILocalNotification
-The project uses `UILocalNotification` class to implement notifications, which is
-considered deprecatedi in favor of `UNUserNotificationCenter`.
-I do not maintain this repo regularly so this might continue like this up until it is
-absolutely necessary. If there are enough requirements for this feature I might
-be able to implement it or at least help through code reviews on a PR.
-You are welcome to collaborate!
+## UILocalNotification vs. UNUserNotificationCenter
+This ANE uses the new `UNUserNotificationCenter` notifications API for iOS 10
+and later, while still using `UILocalNotification` for iOS 8-9. The idea behind
+this was to start supporting the new `UNUserNotificationCenter` features in the
+near future and ease the transition when `UILocalNotification` was no longer
+available.
+
+Right now both implementations do the exact same thing but soon newer
+ANE versions will migrate completely to the new API to support even more
+features, while dropping support for iOS 9 and prior.
 
 # The Java source code
 This is an Eclipse project placed at the `src/Eclipse` folder.
@@ -91,7 +96,7 @@ To add additional tests place them in the `src/AS/tests/src` folder.
 The test class must inherit `asunit.framework.TestCase` and test methods must start with
 the `test` prefix.
 
-Once you create your test class add it to the test suite `src/AS/tests/src/AllTests.as`.
+Once you create your test class, add it to the test suite `src/AS/tests/src/AllTests.as`.
 There is a static test `Array` at the top of this file listing the test classes.
 
 ### Running tests
@@ -110,10 +115,10 @@ To compile the ANE:
 1. First ensure that you have compiled the iOS and Android source codes for
 the desired device target. I might try to automatize the library compilation in the
 future but for now you need to do this manually.
-2. Change directory to `bin`. This is very important.
+2. Change directory to `bin`.
 3. If necessary update the `bin/config.sh` file to adjust your AIR SDK path and version.
 You might also need to adjust the XCode `CONFIGURATION` to match the configuration you used
-to compile the XCode `.a` library.
+to compile the XCode `.a` library (`Debug` or `Release`).
 4. You can now run any of the scripts depending on which kind of ANE you need.
 
 ## A shell script for every need
@@ -144,14 +149,14 @@ ANE will be placed at `bin/ext`, you can then use this ANE file to compile the
 repository provided samples or for your own projects.
 
 ## Samples
-Originally I placed a sample for FlashBuilder as well as for Flash Professional
+Originally I placed a FlashBuilder sample as well as a Flash Professional one
 (now Animate). Because I am now a huge fan of command-line workflows I no longer
 support these editors. I left the samples in there but further support for them
-will definitively will depend on the collaborators.
+will definitively will depend on collaborators.
 
 The only supported sample right now is the one at `samples/plain_as`. This is a
 command-line based simple project. The sample contains a single `Sample.as` file
-a custom sound `fx05.caf` a test cetificate and some shell scripts.
+a custom sound `fx05.caf` a test cetificate for Android and some shell scripts.
 
 The sample will show buttons for sending a notification and cancelling it, as well
 as a simple console to print results.
@@ -194,7 +199,7 @@ it and use it. Use the samples provided to learn a bit more.
 
 # Documentation
 The AS3 classes are well documented by using comments. But if you need a user friendly
-documentation you can run the following command while in the root path:
+documentation you can run the following command while at the root path:
 ```bash
 ./build-doc
 ```

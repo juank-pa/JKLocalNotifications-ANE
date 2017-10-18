@@ -21,7 +21,8 @@
      * is fired (only if alert syle is "Alerts").
      * The second is on the unlock slider when the device is locked. If left as null,
      * the iOS default string "View" will be used.
-     * <p>Supported OS: iOS </p>
+     * <p>In iOS 10 and later this property has no effect.</p>
+     * <p>Supported OS: iOS</p>
      * @default null
      * @see #hasAction
      */
@@ -38,6 +39,7 @@
 
     /**
      * The body text of the notification.
+     * A body is mandatory otherwise the notification might not trigger.
      * <p>Supported OS: Android, iOS</p>
      * @default value is null.
      */
@@ -55,9 +57,10 @@
      * Specifies if the notification has an action or not. On both OSs, if a notification's action is performed,
      * at the very least, the app will be brought to the foreground if it was in the background or
      * launched if it had been shutdown. On iOS, the way to perform the action of a notification manifests itself
-     * as a button on the notification dialog (only if alert style is "Alerts") and in
+     * as a button on the notification dialog (only if notification style is "Alert") and in
      * the unlock slider when the device is locked. On Android, the way to perform an action is not visible,
      * it is performed by selecting the notification from the notification list (window shade).
+     * <p>In iOS 10 and later this property has no effect.</p>
      * <p>Supported OS: Android, iOS</p>
      * @default true
      * @see #actionLabel
@@ -127,6 +130,8 @@
     /**
      * The title of the notification. On iOS devices the title will only be visible at
      * the notification center entry.
+     * <p>In iOS 10 and later the title also appears in the notification banner itself even
+       when the device is locked.</p>
      * <p>Supported OS: iOS, Android</p>
      * @default null
      */

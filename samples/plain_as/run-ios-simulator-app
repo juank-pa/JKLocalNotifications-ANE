@@ -5,7 +5,7 @@ set -e
 SDK="${HOME}/Developer/AIR_SDK"
 AMXML="${SDK}/bin/amxmlc"
 ADT="${SDK}/bin/adt"
-IPHONE_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator10.2.sdk"
+IPHONE_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"
 
 # name of ipa file
 APP_NAME=sample
@@ -39,7 +39,7 @@ echo "***** packaging SWF file into IPA *****"
 
 echo "**** Installing IPA in iOS simulator ******"
 
-export AIR_IOS_SIMULATOR_DEVICE="iPhone 4s"
+export AIR_IOS_SIMULATOR_DEVICE="iPhone 5"
 
 "$ADT" -installApp \
   -platform ios \
@@ -47,7 +47,7 @@ export AIR_IOS_SIMULATOR_DEVICE="iPhone 4s"
   -device ios-simulator \
   -package ./$APP_NAME.ipa
 
-echo "**** Lanching iOS simulator ******"
+echo "**** Launching iOS simulator ******"
 
 "$ADT" -launchApp \
   -platform ios \

@@ -13,38 +13,15 @@
 
 NSDictionary *FRPE_getApplicationLaunchOptions()
 {
-    return [AppDelegate getLaunchOptions];
+    return [[UIApplication sharedApplication].delegate performSelector:@selector(options)];
 }
 
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize viewController = _viewController;
-
-static NSDictionary *options;
-
-+ (NSDictionary *)getLaunchOptions {
-    return options;
-}
-
-- (void)dealloc {
-    [self.window release];
-    [self.viewController release];
-    [super dealloc];
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    options = [launchOptions retain];
-
-    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil] autorelease];
-    }
-    else {
-        self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil] autorelease];
-    }
-    self.window.rootViewController = self.viewController;
-    [self.window makeKeyAndVisible];
+    self.options = launchOptions;
     return YES;
 }
 

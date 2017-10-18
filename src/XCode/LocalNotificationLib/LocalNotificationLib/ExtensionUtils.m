@@ -24,7 +24,7 @@
 #ifndef SAMPLE
 
 + (void)setContextID:(id)contextID forFREContext:(FREContext)freContext {
-    FRESetContextNativeData(freContext, contextID);
+    FRESetContextNativeData(freContext, (__bridge void *)(contextID));
 }
 
 + (id)getContextID:(FREContext)ctx {
@@ -102,7 +102,7 @@
     
     if (freObjectType == FRE_TYPE_STRING) {
         FREGetObjectAsUTF8(freObject, &strLen, &strAS); // NOTE: Memory allocated for strAS is managed by FRE library.
-        returnString = [[[NSString alloc] initWithBytes:strAS length:strLen encoding:NSUTF8StringEncoding] autorelease];
+        returnString = [[NSString alloc] initWithBytes:strAS length:strLen encoding:NSUTF8StringEncoding];
     }
     
     return returnString;

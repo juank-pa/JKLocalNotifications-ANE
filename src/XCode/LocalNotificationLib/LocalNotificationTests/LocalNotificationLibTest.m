@@ -10,7 +10,8 @@
 #import <OCMock/OCMock.h>
 #include <string.h>
 #import "Stubs.h"
-#import "LocalNotificationsContext.h"
+#import "JKLocalNotificationsContext.h"
+#import "JKNotificationFactory.h"
 #import "ExtensionUtils.h"
 #import "DeallocVerify.h"
 
@@ -20,7 +21,7 @@ void ComJkLocalNotificationContextFinalizer(FREContext ctx);
 void ComJkLocalNotificationExtInitializer(void** extDataToSet, FREContextInitializer* ctxInitializerToSet,
                                           FREContextFinalizer* ctxFinalizerToSet);
 
-@interface LocalNotificationsContext ()
+@interface JKLocalNotificationsContext ()
 @property (nonatomic, assign) FREContext extensionContext;
 @end
 
@@ -37,6 +38,7 @@ void ComJkLocalNotificationExtInitializer(void** extDataToSet, FREContextInitial
 }
 
 - (void)tearDown {
+    jkNotificationsContext = nil;
     [super tearDown];
 }
 
@@ -57,31 +59,32 @@ void ComJkLocalNotificationExtInitializer(void** extDataToSet, FREContextInitial
     uint32_t functionsToSet = 0;
     const FRENamedFunction *functions = NULL;
 
-    id notificationContextMock = OCMClassMock([LocalNotificationsContext class]);
-    OCMStub([notificationContextMock notificationsContextWithContext:&context]).andReturn(notificationContextMock);
-    OCMExpect([notificationContextMock initExtensionFunctions:&functions]).andReturn(3);
+    id factoryMock = OCMClassMock([JKNotificationFactory class]);
+    OCMStub([factoryMock factory]).andReturn(factoryMock);
 
-    id utilMock = OCMClassMock([ExtensionUtils class]);
-    OCMExpect([utilMock setContextID:notificationContextMock forFREContext:&context]);
+    id notificationContextMock = OCMClassMock([JKLocalNotificationsContext class]);
+    OCMStub([notificationContextMock notificationsContextWithContext:&context factory:factoryMock]).andReturn(notificationContextMock);
+    OCMExpect([notificationContextMock initExtensionFunctions:&functions]).andReturn(3);
 
     ComJkLocalNotificationContextInitializer(NULL, NULL, &context, &functionsToSet, &functions);
 
     XCTAssertEqual(functionsToSet, 3);
+    XCTAssertEqual(jkNotificationsContext, notificationContextMock);
     OCMVerifyAll(notificationContextMock);
-    OCMVerifyAll(utilMock);
 
-    [(id)nativeContext release];
+    [factoryMock stopMocking];
+    [notificationContextMock stopMocking];
 }
 
 - (void)testContextFinalizer {
     [DeallocVerify reset];
-    int context = 1002;
-    DeallocVerify *verify = [[DeallocVerify instance] retain];
 
-    id utilMock = OCMClassMock([ExtensionUtils class]);
-    OCMExpect([utilMock getContextID:&context]).andReturn(verify);
+    @autoreleasepool {
+        jkNotificationsContext = (id)[DeallocVerify instance];
+        ComJkLocalNotificationContextFinalizer(NULL);
+    }
 
-    ComJkLocalNotificationContextFinalizer(&context);
+    XCTAssertNil(jkNotificationsContext);
     XCTAssertEqual(DeallocVerify.deallocationCount, 1);
 }
 

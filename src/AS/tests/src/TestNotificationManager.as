@@ -26,9 +26,6 @@ package {
         "LocalNotificationsContext"
       ).willReturn(mockContext);
 
-      CONFIG::device {
-        mockContext.expects("call").withArgs("createManager");
-      }
       manager = new NotificationManager(mockContextBuilder);
     }
 
@@ -63,7 +60,7 @@ package {
 
     public function testInstantiation():void {
       CONFIG::device {
-        assertTrue(mockContext.errorMessage(), mockContextBuilder.success());
+        assertTrue(mockContextBuilder.errorMessage(), mockContextBuilder.success());
         return;
       }
 
