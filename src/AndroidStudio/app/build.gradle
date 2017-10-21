@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 8
+    compileSdkVersion 26
     buildToolsVersion "26.0.2"
 
     defaultConfig {
-        minSdkVersion 8
-        targetSdkVersion 15
+        minSdkVersion 16
+        targetSdkVersion 26
     }
 
     buildTypes {
@@ -18,6 +18,5 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.0'
     compile files('libs/FlashRuntimeExtensions.jar')
 }

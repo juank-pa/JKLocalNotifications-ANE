@@ -1,0 +1,87 @@
+<?xml version="1.0" ?>
+<swc xmlns="http://www.adobe.com/flash/swccatalog/9">
+    <versions>
+        <swc version="1.2"/>
+        <compiler name="ActionScript Compiler" version="2.0.0" build="354203"/>
+    </versions>
+    <features>
+        <feature-script-deps/>
+    </features>
+    <libraries>
+        <library path="library.swf">
+            <script name="com/juankpro/ane/localnotif/IContext" mod="1502047727000">
+                <def id="com.juankpro.ane.localnotif:IContext"/>
+                <dep id="Array" type="s"/>
+                <dep id="flash.events:IEventDispatcher" type="i"/>
+            </script>
+            <script name="com/juankpro/ane/localnotif/IContextBuilder" mod="1502047727000">
+                <def id="com.juankpro.ane.localnotif:IContextBuilder"/>
+                <dep id="Object" type="i"/>
+                <dep id="String" type="s"/>
+            </script>
+            <script name="com/juankpro/ane/localnotif/LocalNotifierSubscribeOptions" mod="1508211350000">
+                <def id="com.juankpro.ane.localnotif:LocalNotifierSubscribeOptions"/>
+                <dep id="Object" type="i"/>
+                <dep id="String" type="e"/>
+                <dep id="__AS3__.vec:Vector" type="e"/>
+                <dep id="com.juankpro.ane.localnotif:NotificationManager" type="e"/>
+                <dep id="int" type="e"/>
+                <dep id="uint" type="s"/>
+            </script>
+            <script name="com/juankpro/ane/localnotif/Notification" mod="1508211350000">
+                <def id="com.juankpro.ane.localnotif:Notification"/>
+                <dep id="Boolean" type="s"/>
+                <dep id="Date" type="s"/>
+                <dep id="Object" type="i"/>
+                <dep id="String" type="s"/>
+                <dep id="com.juankpro.ane.localnotif:NotificationAlertPolicy" type="e"/>
+                <dep id="com.juankpro.ane.localnotif:NotificationIconType" type="e"/>
+                <dep id="int" type="s"/>
+                <dep id="uint" type="s"/>
+            </script>
+            <script name="com/juankpro/ane/localnotif/NotificationAlertPolicy" mod="1502047727000">
+                <def id="com.juankpro.ane.localnotif:NotificationAlertPolicy"/>
+                <dep id="Error" type="e"/>
+                <dep id="Object" type="i"/>
+                <dep id="String" type="s"/>
+            </script>
+            <script name="com/juankpro/ane/localnotif/NotificationEvent" mod="1502047727000">
+                <def id="com.juankpro.ane.localnotif:NotificationEvent"/>
+                <dep id="Boolean" type="s"/>
+                <dep id="Object" type="s"/>
+                <dep id="String" type="s"/>
+                <dep id="com.juankpro.ane.localnotif:LocalNotifierSubscribeOptions" type="s"/>
+                <dep id="flash.events:Event" type="i"/>
+            </script>
+            <script name="com/juankpro/ane/localnotif/NotificationIconType" mod="1502047727000">
+                <def id="com.juankpro.ane.localnotif:NotificationIconType"/>
+                <dep id="Error" type="e"/>
+                <dep id="Object" type="i"/>
+                <dep id="String" type="s"/>
+            </script>
+            <script name="com/juankpro/ane/localnotif/NotificationManager" mod="1508211350000">
+                <def id="com.juankpro.ane.localnotif:NotificationManager"/>
+                <dep id="Boolean" type="s"/>
+                <dep id="Function" type="s"/>
+                <dep id="String" type="s"/>
+                <dep id="__AS3__.vec:Vector" type="e"/>
+                <dep id="com.juankpro.ane.localnotif:IContextBuilder" type="s"/>
+                <dep id="com.juankpro.ane.localnotif:LocalNotifierSubscribeOptions" type="s"/>
+                <dep id="com.juankpro.ane.localnotif:Notification" type="s"/>
+                <dep id="com.juankpro.ane.localnotif:NotificationEvent" type="e"/>
+                <dep id="flash.events:EventDispatcher" type="i"/>
+                <dep id="flash.notifications:NotificationStyle" type="e"/>
+                <dep id="int" type="s"/>
+            </script>
+            <script name="com/juankpro/ane/localnotif/NotificationTimeInterval" mod="1508211350000">
+                <def id="com.juankpro.ane.localnotif:NotificationTimeInterval"/>
+                <dep id="Error" type="e"/>
+                <dep id="Object" type="i"/>
+                <dep id="uint" type="s"/>
+            </script>
+            <digests>
+                <digest type="SHA-256" signed="false" value="b33b5cb5101c3cde05c497cecf137f87330b288aefc716c18cc14d7197baa0d1"/>
+            </digests>
+        </library>
+    </libraries>
+</swc>
