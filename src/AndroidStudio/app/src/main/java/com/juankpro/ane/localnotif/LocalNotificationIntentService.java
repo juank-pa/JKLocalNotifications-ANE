@@ -19,7 +19,6 @@
 
 package com.juankpro.ane.localnotif;
 
-
 import java.util.List;
 
 import android.app.ActivityManager;
@@ -29,77 +28,47 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+public class LocalNotificationIntentService extends IntentService {
+    public LocalNotificationIntentService() {
+        super("com.juankpro.ane.localnotif.LocalNotificationIntentService");
+    }
 
-public class LocalNotificationIntentService extends IntentService 
-{	
-    public LocalNotificationIntentService() 
-	{
-		super("com.juankpro.ane.localnotif.LocalNotificationIntentService");
-    }
-    
-    
     @Override
-    public final void onHandleIntent(Intent intent) 
-    {	
-		LocalNotificationManager.wasNotificationSelected = true;
-		LocalNotificationManager.selectedNotificationCode = intent.getStringExtra(AlarmIntentService.NOTIFICATION_CODE_KEY);
-		LocalNotificationManager.selectedNotificationData = intent.getByteArrayExtra(AlarmIntentService.ACTION_DATA_KEY);
-		
-		Context context = getApplicationContext();
-		boolean isAppInForeground = isAppInForeground(context);
-		
-		if (LocalNotificationManager.freContextInstance != null)
-		{
-			// The app is running, so dispatch the notification selected event via the cached instance. 
-			LocalNotificationManager.wasNotificationSelected = false;
-				
-			LocalNotificationManager.freContextInstance.dispatchNotificationSelectedEvent();
-			
-			if (isAppInForeground)
-			{
-				Log.d("LocalNotificationIntentService::onHandleIntent", "App is running in foreground");
-			}
-			else
-			{
-				Log.d("LocalNotificationIntentService::onHandleIntent", "App is running in background");
-			}
-		}
-		else
-		{
-			Log.d("LocalNotificationIntentService::onHandleIntent", "App is not running");
-		}
-		
-		if (!isAppInForeground)
-		{
-			// If the app is not running, or it's running, but in the background, start it by bringing it to the foreground or launching it.
-			// The OS will handle what happens correctly.
-			Intent newIntent = new Intent();
-			newIntent.setClassName(context, intent.getStringExtra(AlarmIntentService.MAIN_ACTIVITY_CLASS_NAME_KEY));
-			newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			context.startActivity(newIntent);
-		}
-		
-		Log.d("LocalNotificationIntentService::onHandleIntent", "Intent: " + intent.toString());
+    public final void onHandleIntent(Intent intent) {
+        Context context = getApplicationContext();
+
+        String code = intent.getStringExtra(Constants.NOTIFICATION_CODE_KEY);
+        byte[] data = intent.getByteArrayExtra(Constants.ACTION_DATA_KEY);
+        new LocalNotificationDispatcher(context).attemptDispatch(code, data);
+
+        // If the app is not running, or it's running, but in the background, start it by bringing it to the foreground or launching it.
+        // The OS will handle what happens correctly.
+        int appStatus = ApplicationStatus.getStatus(context);
+        if(appStatus != ApplicationStatus.FOREGORUND) { bringActivityToForeground(context, intent); }
+
+        logStatus(intent, appStatus);
     }
-    
-    
-    private boolean isAppInForeground(Context context) 
-    {
-        ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-        if (appProcesses != null) 
-        {
-        	final String packageName = context.getPackageName();
-            for (RunningAppProcessInfo appProcess : appProcesses) 
-            {
-            	if (appProcess.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) 
-            	{
-            		return true;
-            	}
-            }
+
+    private void bringActivityToForeground(Context context, Intent intent) {
+        Intent newIntent = new Intent();
+        newIntent.setClassName(context, intent.getStringExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY));
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(newIntent);
+    }
+
+    private void logStatus(Intent intent, int appStatus) {
+        switch(appStatus) {
+            case ApplicationStatus.FOREGORUND:
+                Logger.log("LocalNotificationIntentService::onHandleIntent App is running in foreground");
+                break;
+            case ApplicationStatus.BACKGROUND:
+                Logger.log("LocalNotificationIntentService::onHandleIntent App is running in background");
+                break;
+            case ApplicationStatus.NOT_STARTED:
+                Logger.log("LocalNotificationIntentService::onHandleIntent App is running");
+                break;
         }
-        
-        return false;
+        Logger.log("LocalNotificationIntentService::onHandleIntent Intent: " + intent.toString());
     }
 }
 

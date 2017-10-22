@@ -30,311 +30,143 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 
 
-public class LocalNotificationManager 
-{	
-	public final static String ANE_NAME = "JK_ANE_LocalNotification";
-	
-	Context androidActivity;
-	Context androidContext;
-	NotificationManager notificationManager;
-	
-	public static boolean wasNotificationSelected = false;
-	public static String selectedNotificationCode = "";
-	public static byte[] selectedNotificationData = {};
-	public static LocalNotificationsContext freContextInstance = null;
-	
-	/**
-	 * Represents a second in milliseconds
-	 */
-	private final static long SECOND_CALENDAR_UNIT_MS = 1000;
-	/**
-	 * Represents a minute in milliseconds
-	 */
-	private final static long MINUTE_CALENDAR_UNIT_MS = SECOND_CALENDAR_UNIT_MS * 60;
-	/**
-	 * Represents a week in milliseconds
-	 */
-	private final static long HOUR_CALENDAR_UNIT_MS = MINUTE_CALENDAR_UNIT_MS * 60;
-	/**
-	 * Represents a day in milliseconds
-	 */
-	private final static long DAY_CALENDAR_UNIT_MS = HOUR_CALENDAR_UNIT_MS * 24;
-	/**
-	 * Represents a month in milliseconds
-	 * Not exact
-	 */
-	private final static long MONTH_CALENDAR_UNIT_MS = DAY_CALENDAR_UNIT_MS * 30;
-	/**
-	 * Represents a year in milliseconds
-	 * Not exact
-	 */
-	private final static long YEAR_CALENDAR_UNIT_MS = DAY_CALENDAR_UNIT_MS * 365;
-	/**
-	 * Represents a year in milliseconds
-	 * Not supported
-	 */
-	private final static long ERA_CALENDAR_UNIT_MS = YEAR_CALENDAR_UNIT_MS;
-	/**
-	 * Represents an hour in milliseconds
-	 */
-	private final static long WEEK_CALENDAR_UNIT_MS = DAY_CALENDAR_UNIT_MS * 7;
-	/**
-	 * Represents a week day (e.g. each Monday) in milliseconds
-	 */
-	private final static long WEEKDAY_CALENDAR_UNIT_MS = DAY_CALENDAR_UNIT_MS * 7;
-	/**
-	 * Represents a week day ordinal in milliseconds
-	 * Not supported
-	 */
-	private final static long WEEKDAY_ORDINAL_CALENDAR_UNIT_MS = MONTH_CALENDAR_UNIT_MS;
-	/**
-	 * Represents a quarter year in milliseconds
-	 * Not exact
-	 */
-	private final static long QUARTER_CALENDAR_UNIT_MS = YEAR_CALENDAR_UNIT_MS / 4;
-	
-	
-	
-	
-	/**
-	 * Represents an era repeat interval
-	 */
-	public final static int ERA_CALENDAR_UNIT = 1 << 1;
-	/**
-	 * Represents a year repeat interval
-	 */
-	public final static int YEAR_CALENDAR_UNIT = 1 << 2;
-	/**
-	 * Represents a month repeat interval
-	 */
-	public final static int MONTH_CALENDAR_UNIT = 1 << 3;
-	/**
-	 * Represents a day repeat interval
-	 */
-	public final static int DAY_CALENDAR_UNIT = 1 << 4;
-	/**
-	 * Represents an hour repeat interval
-	 */
-	public final static int HOUR_CALENDAR_UNIT = 1 << 5;
-	/**
-	 * Represents a minute repeat interval
-	 */
-	public final static int MINUTE_CALENDAR_UNIT = 1 << 6;
-	/**
-	 * Represents a second repeat interval
-	 */
-	public final static int SECOND_CALENDAR_UNIT = 1 << 7;
-	/**
-	 * Represents a week repeat interval
-	 */
-	public final static int WEEK_CALENDAR_UNIT = 1 << 8;
-	/**
-	 * Represents a week day (e.g. each Monday) repeat interval
-	 */
-	public final static int WEEKDAY_CALENDAR_UNIT = 1 << 9;
-	/**
-	 * Represents a week day ordinal repeat interval
-	 */
-	public final static int WEEKDAY_ORDINAL_CALENDAR_UNIT = 1 << 10;
-	/**
-	 * Represents a quarter year repeat interval
-	 */
-	public final static int QUARTER_CALENDAR_UNIT = 1 << 11;
+class LocalNotificationManager {
+    private final static String ANE_NAME = "JK_ANE_LocalNotification";
 
-	static public long mapIntervalToMilliseconds(int interval)
-	{
-		switch(interval)
-		{
-		case ERA_CALENDAR_UNIT:
-			return ERA_CALENDAR_UNIT_MS;
-		case YEAR_CALENDAR_UNIT:
-			return YEAR_CALENDAR_UNIT_MS;
-		case MONTH_CALENDAR_UNIT:
-			return MONTH_CALENDAR_UNIT_MS;
-		case DAY_CALENDAR_UNIT:
-			return DAY_CALENDAR_UNIT_MS;
-		case HOUR_CALENDAR_UNIT:
-			return HOUR_CALENDAR_UNIT_MS;
-		case MINUTE_CALENDAR_UNIT:
-			return MINUTE_CALENDAR_UNIT_MS;
-		case SECOND_CALENDAR_UNIT:
-			return SECOND_CALENDAR_UNIT_MS;
-		case WEEK_CALENDAR_UNIT:
-			return WEEK_CALENDAR_UNIT_MS;
-		case WEEKDAY_CALENDAR_UNIT:
-			return WEEKDAY_CALENDAR_UNIT_MS;
-		case WEEKDAY_ORDINAL_CALENDAR_UNIT:
-			return WEEKDAY_ORDINAL_CALENDAR_UNIT_MS;
-		case QUARTER_CALENDAR_UNIT:
-			return QUARTER_CALENDAR_UNIT_MS;
-		default:
-			return 0;
-		}
-	}
-	
-	
-	public LocalNotificationManager(Context activity)
-	{
-		androidActivity = activity;
-		
-		androidContext = activity.getApplicationContext();
-		
-		notificationManager = (NotificationManager)androidContext.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
-		
-		Log.d("LocalNotificationManager::initialize", "Called with activity: " + activity.toString());
-	}
-	
-	
-	public void notify(LocalNotification localNotification)
-	{
-		// Time.
-		long notificationTime = localNotification.fireDate.getTime();
-		
-		final Intent intent = new Intent(androidContext, AlarmIntentService.class);
-		
-		intent.setAction(localNotification.code);
-		intent.putExtra(AlarmIntentService.TITLE, localNotification.title);
-		intent.putExtra(AlarmIntentService.BODY, localNotification.body);
-		intent.putExtra(AlarmIntentService.TICKER_TEXT, localNotification.tickerText);
-		intent.putExtra(AlarmIntentService.NOTIFICATION_CODE_KEY, localNotification.code);
-		intent.putExtra(AlarmIntentService.ICON_RESOURCE, localNotification.iconResourceId);
-		intent.putExtra(AlarmIntentService.NUMBER_ANNOTATION, localNotification.numberAnnotation);
-		intent.putExtra(AlarmIntentService.PLAY_SOUND, localNotification.playSound);
-		intent.putExtra(AlarmIntentService.SOUND_NAME, localNotification.soundName);
-		intent.putExtra(AlarmIntentService.VIBRATE, localNotification.vibrate);
-		intent.putExtra(AlarmIntentService.CANCEL_ON_SELECT, localNotification.cancelOnSelect);
-		intent.putExtra(AlarmIntentService.REPEAT_UNTIL_ACKNOWLEDGE, localNotification.repeatAlertUntilAcknowledged);
-		intent.putExtra(AlarmIntentService.ON_GOING, localNotification.ongoing);
-		intent.putExtra(AlarmIntentService.ALERT_POLICY, localNotification.alertPolicy);
-		intent.putExtra(AlarmIntentService.HAS_ACTION, localNotification.hasAction);
-		intent.putExtra(AlarmIntentService.ACTION_DATA_KEY, localNotification.actionData);
-		
-		Log.d("LocalNotificationManager", "when:" + String.valueOf(notificationTime) + ", current:" + System.currentTimeMillis());
+    private Context androidContext;
+    private NotificationManager notificationManager;
 
-		
-		// If a notification is specified to have an action, set up the intent to launch the app when the notification is selected by a user.
-		if (localNotification.hasAction)
-		{
-			intent.putExtra(AlarmIntentService.MAIN_ACTIVITY_CLASS_NAME_KEY, localNotification.activityClassName);
-			Log.d("LocalNotificationManager::notify", "Activity Class Name: " + localNotification.activityClassName);
-		}
-		
-		final PendingIntent pendingIntent = PendingIntent.getBroadcast(androidContext, localNotification.code.hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
-		final AlarmManager am = getAlarmManager();
-		
-		long repeatInterval = mapIntervalToMilliseconds(localNotification.repeatInterval);
-		
-		if (repeatInterval != 0) 
-		{
-		    am.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime, repeatInterval, pendingIntent);
-		} 
-		else 
-		{
-		    am.set(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
-		}
-		
-		Log.d("LocalNotificationManager::notify", "Called with notification code: " + localNotification.code);
-	}
-	
-	
-	public void cancel(String notificationCode)
-	{		
-		/*
+    LocalNotificationManager(Context activity) {
+        androidContext = activity.getApplicationContext();
+        notificationManager = (NotificationManager)androidContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Logger.log("LocalNotificationManager::initialize Called with activity: " + activity.toString());
+    }
+
+    void notify(LocalNotification localNotification) {
+        // Time.
+        long notificationTime = localNotification.fireDate.getTime();
+
+        final Intent intent = new Intent(androidContext, AlarmIntentService.class);
+
+        intent.setAction(localNotification.code);
+        intent.putExtra(Constants.TITLE, localNotification.title);
+        intent.putExtra(Constants.BODY, localNotification.body);
+        intent.putExtra(Constants.TICKER_TEXT, localNotification.tickerText);
+        intent.putExtra(Constants.NOTIFICATION_CODE_KEY, localNotification.code);
+        intent.putExtra(Constants.ICON_RESOURCE, localNotification.iconResourceId);
+        intent.putExtra(Constants.NUMBER_ANNOTATION, localNotification.numberAnnotation);
+        intent.putExtra(Constants.PLAY_SOUND, localNotification.playSound);
+        intent.putExtra(Constants.SOUND_NAME, localNotification.soundName);
+        intent.putExtra(Constants.VIBRATE, localNotification.vibrate);
+        intent.putExtra(Constants.CANCEL_ON_SELECT, localNotification.cancelOnSelect);
+        intent.putExtra(Constants.REPEAT_UNTIL_ACKNOWLEDGE, localNotification.repeatAlertUntilAcknowledged);
+        intent.putExtra(Constants.ON_GOING, localNotification.ongoing);
+        intent.putExtra(Constants.ALERT_POLICY, localNotification.alertPolicy);
+        intent.putExtra(Constants.HAS_ACTION, localNotification.hasAction);
+        intent.putExtra(Constants.ACTION_DATA_KEY, localNotification.actionData);
+
+        Logger.log("LocalNotificationManager when:" + String.valueOf(notificationTime) + ", current:" + System.currentTimeMillis());
+
+        // If a notification is specified to have an action, set up the intent to launch the app when the notification is selected by a user.
+        if (localNotification.hasAction) {
+            intent.putExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY, localNotification.activityClassName);
+            Logger.log("LocalNotificationManager::notify Activity Class Name: " + localNotification.activityClassName);
+        }
+
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(androidContext, localNotification.code.hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        final AlarmManager am = getAlarmManager();
+
+        NotificationTimeInterval interval = new NotificationTimeInterval(localNotification.repeatInterval);
+        long repeatInterval = interval.toMilliseconds();
+
+        if (repeatInterval != 0) {
+            am.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime, repeatInterval, pendingIntent);
+        } else {
+            am.set(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
+        }
+
+        Logger.log("LocalNotificationManager::notify Called with notification code: " + localNotification.code);
+    }
+
+    void cancel(String notificationCode) {
+        /*
 		 * Create an intent that looks similar, to the one that was registered
 		 * using add. Making sure the notification id in the action is the same.
 		 * Now we can search for such an intent using the 'getService' method
 		 * and cancel it.
 		 */
-		final Intent intent = new Intent(androidContext, AlarmIntentService.class);
-		intent.setAction(notificationCode);
+        final Intent intent = new Intent(androidContext, AlarmIntentService.class);
+        intent.setAction(notificationCode);
 
-		final PendingIntent pi = PendingIntent.getBroadcast(androidContext, notificationCode.hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
-		final AlarmManager am = getAlarmManager();
+        final PendingIntent pi = PendingIntent.getBroadcast(androidContext, notificationCode.hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        final AlarmManager am = getAlarmManager();
 
-		try 
-		{
-		    am.cancel(pi);
-			Log.d("LocalNotificationManager::cancel", "Called with notification code: " + notificationCode);
-		} 
-		catch (Exception e) 
-		{
-			Log.d("LocalNotificationManager::cancel", "Exception: " + e.getMessage());		    
-		}
-		
-		notificationManager.cancel(notificationCode, AlarmIntentService.STANDARD_NOTIFICATION_ID);		
-	}
-	
+        try {
+            am.cancel(pi);
+            Logger.log("LocalNotificationManager::cancel Called with notification code: " + notificationCode);
+        } catch (Exception e) {
+            Logger.log("LocalNotificationManager::cancel Exception: " + e.getMessage());
+        }
 
-    private AlarmManager getAlarmManager() 
-    {
-		final AlarmManager am = (AlarmManager) androidContext.getSystemService(Context.ALARM_SERVICE);
-		return am;
+        notificationManager.cancel(notificationCode, Constants.STANDARD_NOTIFICATION_ID);
     }
-	
-	
-	public void cancelAll()
-	{		
-		final SharedPreferences alarmSettings = androidContext.getSharedPreferences(ANE_NAME, Context.MODE_PRIVATE);
-		
-		final Map<String, ?> allAlarms = alarmSettings.getAll();
-		final Set<String> alarmIds = allAlarms.keySet();
 
-		for (String alarmId : alarmIds) 
-		{
-		    Log.d(ANE_NAME, "Canceling notification with id: " + alarmId);
-		    String alarmCode = alarmId;
-		    cancel(alarmCode);
-		}
-		
-		notificationManager.cancelAll();
-		
-		Log.d("LocalNotificationManager::cancelAll", "Called");
-	}
-	
-		
-	/**
+    private AlarmManager getAlarmManager() {
+        return (AlarmManager) androidContext.getSystemService(Context.ALARM_SERVICE);
+    }
+
+    void cancelAll() {
+        final SharedPreferences alarmSettings = androidContext.getSharedPreferences(ANE_NAME, Context.MODE_PRIVATE);
+
+        final Map<String, ?> allAlarms = alarmSettings.getAll();
+        final Set<String> alarmIds = allAlarms.keySet();
+
+        for (String alarmId : alarmIds) {
+            Logger.log(ANE_NAME + "Canceling notification with id: " + alarmId);
+            cancel(alarmId);
+        }
+
+        notificationManager.cancelAll();
+        Logger.log("LocalNotificationManager::cancelAll Called");
+    }
+
+    /**
      * Persist the information of this notification to the Android Shared Preferences.
      * This will allow the application to restore the alarm upon device reboot.
      * Also this is used by the cancelAllNotifications method.
-     * 
-     * @see #cancelAllNotifications()
-     * 
-     * @param notification
-     *            The notification to persist.
+     *
+     * @param notification The notification to persist.
+     * @see #cancelAll()
      */
-    public void persistNotification(LocalNotification notification) 
-    {
-    	Log.d("LocalNotificationManager::persistNotification", "Notification: " + notification.code);
-    	final SharedPreferences alarmSettings = androidContext.getSharedPreferences(ANE_NAME, Context.MODE_PRIVATE);    	
-    	notification.serialize(alarmSettings);
+    void persistNotification(LocalNotification notification) {
+        Logger.log("LocalNotificationManager::persistNotification Notification: " + notification.code);
+        final SharedPreferences alarmSettings = androidContext.getSharedPreferences(ANE_NAME, Context.MODE_PRIVATE);
+        notification.serialize(alarmSettings);
     }
-    
+
     /**
      * Remove a specific notification from the Android shared Preferences
-     * 
-     * @param notification
-     *            The notification to persist.
+     *
+     * @param notificationCode The notification to persist.
      */
-    public void unpersistNotification(String notificationCode) 
-    {
-    	Log.d("LocalNotificationManager::unpersistNotification", "Notification: " + notificationCode);
-    	final Editor alarmSettingsEditor = androidContext.getSharedPreferences(ANE_NAME, Context.MODE_PRIVATE).edit();
-    	alarmSettingsEditor.remove(notificationCode);
-    	alarmSettingsEditor.commit();
+    void unpersistNotification(String notificationCode) {
+        Logger.log("LocalNotificationManager::unpersistNotification Notification: " + notificationCode);
+        final Editor alarmSettingsEditor = androidContext.getSharedPreferences(ANE_NAME, Context.MODE_PRIVATE).edit();
+        alarmSettingsEditor.remove(notificationCode);
+        alarmSettingsEditor.apply();
     }
-    
+
     /**
      * Clear all notifications from the Android shared Preferences
      */
-    public void unpersistAllNotifications() 
-    {
-    	Log.d("LocalNotificationManager::unpersistAllNotifications", "Called");
-		final Editor alarmSettingsEditor = androidContext.getSharedPreferences(ANE_NAME, Context.MODE_PRIVATE).edit();
-		alarmSettingsEditor.clear();
-		alarmSettingsEditor.commit();
+    void unpersistAllNotifications() {
+        Logger.log("LocalNotificationManager::unpersistAllNotifications Called");
+        final Editor alarmSettingsEditor = androidContext.getSharedPreferences(ANE_NAME, Context.MODE_PRIVATE).edit();
+        alarmSettingsEditor.clear();
+        alarmSettingsEditor.apply();
     }
 }
 

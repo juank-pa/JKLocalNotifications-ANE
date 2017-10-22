@@ -21,21 +21,18 @@ package com.juankpro.ane.localnotif;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREExtension;
 
-public class Extension implements FREExtension
-{
-	@Override
-	public FREContext createContext(String extId)
-	{
-		return new LocalNotificationsContext();
-	}
+public class Extension implements FREExtension {
+    @Override
+    public FREContext createContext(String extId) {
+        Logger.log("Create Context");
+        return LocalNotificationsContext.getInstance();
+    }
 
-	@Override
-	public void initialize()
-	{
-	}
+    @Override
+    public void initialize() {
+    }
 
-	@Override
-	public void dispose()
-	{
-	}
+    @Override
+    public void dispose() {
+    }
 }
