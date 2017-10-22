@@ -2,9 +2,9 @@
 
 set -e
 
-SDK="${HOME}/Developer/AIR_SDK"
-AMXML="${SDK}/bin/amxmlc"
-ADT="${SDK}/bin/adt"
+SDK="$HOME/Developer/AIR_SDK"
+AMXML="$SDK/bin/amxmlc"
+ADT="$SDK/bin/adt"
 IPHONE_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"
 
 # name of ipa file

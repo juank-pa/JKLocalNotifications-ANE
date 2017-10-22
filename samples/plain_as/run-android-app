@@ -1,0 +1,56 @@
+#!/bin/zsh
+
+set -e
+
+SDK="$HOME/Developer/AIR_SDK"
+AMXML="$SDK/bin/amxmlc"
+ADT="$SDK/bin/adt"
+ANDROID_SDK="$HOME/Library/Android/sdk"
+
+# name of APP file
+APP_NAME=sample
+
+# Certificate password
+CERT_FILE=jk.p12
+CERT_PASS=1234
+
+echo "***** ANDROID EMULATOR APP ******"
+echo "***** compiling SWF file *****"
+"$AMXML" -swf-version 26 \
+  -debug=true \
+  -define+=CONFIG::device,true \
+  -define+=CONFIG::iphone,false \
+  -define+=CONFIG::android,true \
+  -external-library-path+=./../../bin/ext/LocalNotificationLib.ane \
+  -output ./$APP_NAME.swf \
+  -- ./Sample.as
+
+echo "***** packaging SWF file into APK *****"
+
+"$ADT" -package \
+  -target apk-captive-runtime \
+  -storetype pkcs12 -keystore $CERT_FILE \
+  -storepass $CERT_PASS \
+  -keypass $CERT_PASS \
+  $APP_NAME.apk \
+  ${APP_NAME}-app.xml \
+  $APP_NAME.swf \
+  -extdir ./../../bin/ext
+
+# For these steps emulator must be running
+# Create and configure an emulator then run it
+# To run use: emulator ave Test_Device_Name
+# To list devices: adb devices
+# debugger: platform-tools/adb log cat
+
+#echo "**** Install AIR SDK in Android emulator *****"
+#"$ADT" -installRuntime \
+#  -platform android \
+#  -platformsdk "$ANDROID_SDK"
+
+echo "**** Install app in Android emulator ******"
+
+"$ADT" -installApp \
+  -platform android \
+  -package $APP_NAME.apk
+
