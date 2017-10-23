@@ -37,3 +37,12 @@ class ApplicationStatus {
         inForeground = false;
     }
 }
+
+/*
+    NOTE: Backup plan
+    private boolean getActive() {
+        ActivityManager.RunningAppProcessInfo myProcess = new ActivityManager.RunningAppProcessInfo();
+        ActivityManager.getMyMemoryState(myProcess);
+        return (myProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_GONE);
+    }
+}*/

@@ -8,7 +8,7 @@ import android.util.Log;
 
 class Logger {
     static void log(String message) {
-        Log.i("JKNotification", message);
+        Log.d("JKNotification", message);
     }
 
     static void error(String message) {

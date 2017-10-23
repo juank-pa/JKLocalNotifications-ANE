@@ -43,7 +43,9 @@ public class LocalNotificationIntentService extends IntentService {
 
         // If the app is not running, or it's running, but in the background, start it by bringing it to the foreground or launching it.
         // The OS will handle what happens correctly.
-        if(!ApplicationStatus.getInForeground()) { bringActivityToForeground(context, intent); }
+        if(!ApplicationStatus.getInForeground()) {
+            bringActivityToForeground(context, intent);
+        }
 
         logStatus(intent);
     }

@@ -33,32 +33,18 @@ class AlarmHandler {
         String tickerText = bundle.getString(Constants.TICKER_TEXT);
         String title = bundle.getString(Constants.TITLE);
         String body = bundle.getString(Constants.BODY);
-        Logger.log("numberAnnotation " + numberAnnotation);
-        Logger.log("iconResource " + iconResource);
-        Logger.log("tickerText " + tickerText);
-        Logger.log("title " + title);
-        Logger.log("body " + body);
-        Logger.log("getDefaults " + getDefaults());
-        Logger.log("Before builder " + context);
 
-        try {
-            NotificationCompat.Builder builder =
-                    new NotificationCompat.Builder(context)
-                            .setSmallIcon(iconResource)
-                            .setContentTitle(title)
-                            .setContentText(body)
-                            .setTicker(tickerText)
-                            .setDefaults(getDefaults())
-                            .setNumber(numberAnnotation);
-            Logger.log("After builder");
-            setupMiscellaneous(builder);
-            setupAction(builder);
-            return builder;
-        }
-        catch(Throwable e) {
-            Logger.log("Error " + e.toString());
-        }
-        return null;
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(iconResource)
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setTicker(tickerText)
+                        .setDefaults(getDefaults())
+                        .setNumber(numberAnnotation);
+        setupMiscellaneous(builder);
+        setupAction(builder);
+        return builder;
     }
 
     private int getDefaults() {
@@ -83,7 +69,6 @@ class AlarmHandler {
         if (!bundle.getBoolean(Constants.HAS_ACTION)) { return; }
 
         String code = bundle.getString(Constants.NOTIFICATION_CODE_KEY);
-        Logger.log("setupAction code " + code);
         assert code != null;
 
         final PendingIntent pendingIntent =
@@ -110,9 +95,6 @@ class AlarmHandler {
 
     private void setupMiscellaneous(NotificationCompat.Builder builder) {
         String alertPolicy = bundle.getString(Constants.ALERT_POLICY);
-        Logger.log("alertPolicy " + alertPolicy);
-        Logger.log("ongoing " + bundle.getBoolean(Constants.ON_GOING));
-        Logger.log("auto cancel " + bundle.getBoolean(Constants.CANCEL_ON_SELECT));
         builder.setOngoing(bundle.getBoolean(Constants.ON_GOING))
                 .setAutoCancel(bundle.getBoolean(Constants.CANCEL_ON_SELECT))
                 .setOnlyAlertOnce(alertPolicy != null && alertPolicy.compareTo("firstNotification") == 0);

@@ -72,6 +72,7 @@ class LocalNotificationsContext extends FREContext {
         functionMap.put("checkForNotificationAction", new FunctionHelper() {
             @Override
             public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
+                Logger.log("LocalNotificationsContext checking for notification");
                 if (LocalNotificationCache.getInstance().wasUpdated()) {
                     dispatchNotificationSelectedEvent();
                 }
