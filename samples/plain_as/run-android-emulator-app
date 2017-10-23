@@ -1,30 +1,43 @@
-# path to YOUR Android SDK
-export AIR_ANDROID_SDK_HOME="/Users/juancarlos/android-sdk-macosx"
+#!/bin/zsh
 
-# path to the ADT tool in Flash Builder sdks
-ACOMPC="/Applications/Adobe Flash Builder 4.7/sdks/4.6.0/bin/acompc"
+set -e
 
-# path to the ADT tool in Flash Builder sdks
-ADT="/Applications/Adobe Flash CS6/AIR3.2/bin/adt"
-
-# native Android project folder
-NATIVE_XCODE_FOLDER=../src/XCode/LocalNotificationLib
-
-# AS lib folder
-LIB_FOLDER=../src/FlashBuilder
+ANDROID_SDK="$HOME/Library/Android/sdk"
+SDK="$HOME/Developer/AIR_SDK"
+AMXML="$SDK/bin/amxmlc"
+ADT="$SDK/bin/adt"
 
 # name of APP file
 APP_NAME=sample
 
 # Certificate password
+CERT_FILE=test_android.p12
 CERT_PASS=1234
-
-#===================================================================
 
 echo "***** ANDROID EMULATOR APP ******"
 echo "***** packaging SWF file *****"
 
-"$ADT" -package -target apk-emulator -storetype pkcs12 -keystore test.p12 -storepass ${CERT_PASS} -keypass ${CERT_PASS} ${APP_NAME}.apk ${APP_NAME}-app.xml -extdir ../../bin ${APP_NAME}.swf
+"$AMXML" -swf-version 26 \
+  -debug=true \
+  -define+=CONFIG::device,true \
+  -define+=CONFIG::iphone,false \
+  -define+=CONFIG::android,true \
+  -external-library-path+=./../../bin/ext/LocalNotificationLib.ane \
+  -output ./$APP_NAME.swf \
+  -- ./Sample.as
+
+echo "***** packaging SWF file into APK *****"
+
+# options: apk, apk‑captive‑runtime, apk-debug, apk-emulator, apk-profile
+"$ADT" -package \
+  -target apk-emulator \
+  -storetype pkcs12 -keystore $CERT_FILE \
+  -storepass $CERT_PASS \
+  -keypass $CERT_PASS \
+  $APP_NAME.apk \
+  ${APP_NAME}-app.xml \
+  $APP_NAME.swf \
+  -extdir ../../bin
 
 # For these steps emulator must be running
 # Create and configure an emulator then run it
@@ -32,26 +45,14 @@ echo "***** packaging SWF file *****"
 # To list devices: adb devices
 # debugger: platform-tools/adb log cat
 
-echo "**** Install AIR SDK in Android emulator *****"
-"$ADT" -installRuntime -platform android -platformsdk "$AIR_ANDROID_SDK_HOME"
+# NOTE: Uncomment this if compiling non-captive APK
+#echo "**** Install AIR SDK in Android emulator *****"
+#"$ADT" -installRuntime \
+#  -platform android \
+#  -platformsdk "$ANDROID_SDK"
 
 echo "**** Install app in Android emulator ******"
 
-"$ADT" -installApp -platform android -platformsdk "$AIR_ANDROID_SDK_HOME" -package ${APP_NAME}.apk
-
-
-
-
-
-#**** Package for iOS *******
-
-#"/Applications/Adobe Flash Builder 4.6/sdks/4.6.0/bin/adt" -package -target ipa-ad-hoc -storetype pkcs12 -keystore iphone_dev.p12 -provisioning-profile TESTDEVIPOD.mobileprovision sample.ipa sample-app.xml sample.swf fx05.caf -extdir ../../bin -platformsdk /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/
-
-
-#**** Package for Android device ******
-
-#"/Applications/Adobe Flash Builder 4.6/sdks/4.6.0/bin/adt" -package -target apk -storetype pkcs12 -keystore test.p12 test.apk test-app.xml -extdir ../../bin test.swf fx05.wav
-
-#Note: password is 1234
-
-
+"$ADT" -installApp \
+  -platform android \
+  -package $APP_NAME.apk

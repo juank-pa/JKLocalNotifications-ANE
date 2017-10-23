@@ -11,13 +11,12 @@ ANDROID_SDK="$HOME/Library/Android/sdk"
 APP_NAME=sample
 
 # Certificate password
-CERT_FILE=jk.p12
+CERT_FILE=test_android.p12
 CERT_PASS=1234
 
 echo "***** ANDROID EMULATOR APP ******"
 echo "***** compiling SWF file *****"
 "$AMXML" -swf-version 26 \
-  -debug=true \
   -define+=CONFIG::device,true \
   -define+=CONFIG::iphone,false \
   -define+=CONFIG::android,true \
@@ -27,6 +26,7 @@ echo "***** compiling SWF file *****"
 
 echo "***** packaging SWF file into APK *****"
 
+# options: apk, apk‑captive‑runtime, apk-debug, apk-emulator, apk-profile
 "$ADT" -package \
   -target apk-captive-runtime \
   -storetype pkcs12 -keystore $CERT_FILE \
@@ -37,12 +37,9 @@ echo "***** packaging SWF file into APK *****"
   $APP_NAME.swf \
   -extdir ./../../bin/ext
 
-# For these steps emulator must be running
-# Create and configure an emulator then run it
-# To run use: emulator ave Test_Device_Name
-# To list devices: adb devices
-# debugger: platform-tools/adb log cat
+# For these steps the device must be running
 
+# NOTE: Uncomment this if compiling non-captive APK
 #echo "**** Install AIR SDK in Android emulator *****"
 #"$ADT" -installRuntime \
 #  -platform android \
@@ -53,4 +50,3 @@ echo "**** Install app in Android emulator ******"
 "$ADT" -installApp \
   -platform android \
   -package $APP_NAME.apk
-

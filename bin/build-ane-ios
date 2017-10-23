@@ -55,7 +55,7 @@ echo "****** Creating ANE package *******"
 		-swc $TEMP_PATH/$ANE_NAME.swc \
 		-platform iPhone-ARM \
 		-C $TEMP_PATH/iphone/ . \
-		-platformoptions $CONFIG_PATH/options.xml
+		-platformoptions $CONFIG_PATH/options_ios.xml
 
 echo "****** ANE package created *******"
 echo ""
