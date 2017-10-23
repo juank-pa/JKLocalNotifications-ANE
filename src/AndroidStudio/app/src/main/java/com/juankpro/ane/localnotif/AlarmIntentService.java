@@ -31,8 +31,9 @@ public class AlarmIntentService extends BroadcastReceiver {
         Bundle bundle = intent.getExtras();
         String code = bundle.getString(Constants.NOTIFICATION_CODE_KEY);
         byte[] data = bundle.getByteArray(Constants.ACTION_DATA_KEY);
-        boolean dispatched = new LocalNotificationDispatcher(context).attemptDispatch(code, data);
 
+        boolean dispatched =
+                new LocalNotificationDispatcher(context, code, data).dispatchInForeground();
         if (dispatched) { return; }
 
         AlarmHandler handler = new AlarmHandler(context, bundle);

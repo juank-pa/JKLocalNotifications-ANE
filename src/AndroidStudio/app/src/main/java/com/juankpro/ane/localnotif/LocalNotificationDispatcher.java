@@ -8,15 +8,27 @@ import android.content.Context;
 
 class LocalNotificationDispatcher {
     private Context context;
+    private String code;
+    private byte[] data;
 
-    LocalNotificationDispatcher(Context context) {
+    LocalNotificationDispatcher(Context context, String code, byte[] data) {
         this.context = context;
+        this.code = code;
+        this.data = data;
     }
 
-    boolean attemptDispatch(String code, byte[] data) {
+    boolean dispatchInForeground() {
+        return dispatchWhen(ApplicationStatus.getInForeground());
+    }
+
+    boolean dispatchInBackground() {
+        return dispatchWhen(ApplicationStatus.getActive());
+    }
+
+    private boolean dispatchWhen(boolean condition) {
         LocalNotificationCache.getInstance().setData(code, data);
 
-        if (ApplicationStatus.getStatus(context) == ApplicationStatus.FOREGORUND && LocalNotificationsContext.hasInstance()) {
+        if (condition) {
             LocalNotificationsContext.getInstance().dispatchNotificationSelectedEvent();
             return true;
         }

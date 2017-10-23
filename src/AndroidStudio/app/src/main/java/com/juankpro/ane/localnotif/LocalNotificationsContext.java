@@ -37,15 +37,11 @@ class LocalNotificationsContext extends FREContext {
     private static LocalNotificationsContext currentContext;
 
     static LocalNotificationsContext getInstance() {
-        if(!hasInstance()) {
+        if(currentContext == null) {
             Logger.log("LocalNotificationsContext instantiating!");
             currentContext = new LocalNotificationsContext();
         }
         return currentContext;
-    }
-
-    static boolean hasInstance() {
-        return currentContext != null && currentContext.notificationManager != null;
     }
 
     private LocalNotificationManager notificationManager;
@@ -141,6 +137,23 @@ class LocalNotificationsContext extends FREContext {
             }
         });
 
+        functionMap.put("activate", new FunctionHelper() {
+            @Override
+            public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
+                ApplicationStatus.setInForeground(true);
+                return null;
+            }
+        });
+
+        functionMap.put("deactivate", new FunctionHelper() {
+            @Override
+            public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
+                ApplicationStatus.setInForeground(false);
+                return null;
+            }
+        });
+
+        ApplicationStatus.setInForeground(true);
         return functionMap;
     }
 

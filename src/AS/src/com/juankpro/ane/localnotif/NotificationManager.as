@@ -3,6 +3,7 @@
   import flash.events.*;
   import flash.external.*;
   import flash.utils.*;
+  import flash.desktop.*
 
   /**
    * A class to notify the user of events that happen through notifications; it is used in conjunction
@@ -78,9 +79,21 @@
           var builder:* = contextBuilder || ExtensionContext;
           _extensionContext = builder.createExtensionContext("com.juankpro.ane.LocalNotification",
                                                              _contextType);
+          CONFIG::android {
+            NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, activateHandler);
+            NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, deactivateHandler);
+          }
         }
         _refCount++;
       }
+    }
+
+    CONFIG::device private function activateHandler(e:Event):void {
+      _extensionContext.call("activate");
+    }
+
+    CONFIG::device private function deactivateHandler(e:Event):void {
+      _extensionContext.call("deactivate");
     }
 
     /**
