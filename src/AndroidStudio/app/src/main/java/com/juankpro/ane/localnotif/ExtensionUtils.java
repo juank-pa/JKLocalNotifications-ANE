@@ -16,14 +16,11 @@
  * from Adobe Systems Incorporated.
  **************************************************************************/
 
-
 package com.juankpro.ane.localnotif;
-
 
 import java.util.Date;
 
 import com.adobe.fre.FREObject;
-
 
 class ExtensionUtils {
     /**

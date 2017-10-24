@@ -1,24 +1,4 @@
-/*************************************************************************
- *
- * ADOBE CONFIDENTIAL
- * ___________________
- *
- *  Copyright 2011 Adobe Systems Incorporated
- *  All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Adobe Systems Incorporated and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Adobe Systems Incorporated and its
- * suppliers and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Adobe Systems Incorporated.
- **************************************************************************/
-
-
 package com.juankpro.ane.localnotif;
-
 
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +11,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+/**
+ * Created by Juank on 10/21/17.
+ */
 
 class LocalNotificationManager {
     private final static String ANE_NAME = "JK_ANE_LocalNotification";

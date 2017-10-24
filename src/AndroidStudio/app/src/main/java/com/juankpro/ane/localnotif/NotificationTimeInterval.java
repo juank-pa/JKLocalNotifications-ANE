@@ -45,35 +45,35 @@ class NotificationTimeInterval {
     /**
      * Represents a year repeat interval
      */
-    private final static int YEAR_CALENDAR_UNIT = 1 << 2;
+    final static int YEAR_CALENDAR_UNIT = 1 << 2;
     /**
      * Represents a month repeat interval
      */
-    private final static int MONTH_CALENDAR_UNIT = 1 << 3;
+    final static int MONTH_CALENDAR_UNIT = 1 << 3;
     /**
      * Represents a day repeat interval
      */
-    private final static int DAY_CALENDAR_UNIT = 1 << 4;
+    final static int DAY_CALENDAR_UNIT = 1 << 4;
     /**
      * Represents an hour repeat interval
      */
-    private final static int HOUR_CALENDAR_UNIT = 1 << 5;
+    final static int HOUR_CALENDAR_UNIT = 1 << 5;
     /**
      * Represents a minute repeat interval
      */
-    private final static int MINUTE_CALENDAR_UNIT = 1 << 6;
+    final static int MINUTE_CALENDAR_UNIT = 1 << 6;
     /**
      * Represents a second repeat interval
      */
-    private final static int SECOND_CALENDAR_UNIT = 1 << 7;
+    final static int SECOND_CALENDAR_UNIT = 1 << 7;
     /**
      * Represents a week repeat interval
      */
-    private final static int WEEK_CALENDAR_UNIT = 1 << 13;
+    final static int WEEK_CALENDAR_UNIT = 1 << 13;
     /**
      * Represents a quarter year repeat interval
      */
-    private final static int QUARTER_CALENDAR_UNIT = 1 << 11;
+    final static int QUARTER_CALENDAR_UNIT = 1 << 11;
 
     static private long mapIntervalToMilliseconds(int interval) {
         switch (interval) {

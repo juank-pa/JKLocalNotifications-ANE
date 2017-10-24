@@ -1,29 +1,13 @@
-/*************************************************************************
- *
- * ADOBE CONFIDENTIAL
- * ___________________
- *
- *  Copyright 2011 Adobe Systems Incorporated
- *  All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Adobe Systems Incorporated and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Adobe Systems Incorporated and its
- * suppliers and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Adobe Systems Incorporated.
- **************************************************************************/
-
-
 package com.juankpro.ane.localnotif;
-
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+/**
+ * Created by Juank on 10/22/17.
+ */
 
 public class AlarmIntentService extends BroadcastReceiver {
     @Override
@@ -33,7 +17,7 @@ public class AlarmIntentService extends BroadcastReceiver {
         byte[] data = bundle.getByteArray(Constants.ACTION_DATA_KEY);
 
         boolean dispatched =
-                new LocalNotificationDispatcher(context, code, data).dispatchInForeground();
+                new LocalNotificationDispatcher(code, data).dispatchInForeground();
         if (dispatched) { return; }
 
         AlarmHandler handler = new AlarmHandler(context, bundle);

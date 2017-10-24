@@ -7,6 +7,10 @@ package com.juankpro.ane.localnotif;
 class ApplicationStatus {
     static private ApplicationStatus instance = new ApplicationStatus();
 
+    static void reset() {
+        instance = new ApplicationStatus();
+    }
+
     static void setInForeground(boolean inForeground) {
         if (inForeground) {
             instance.moveToForeground();

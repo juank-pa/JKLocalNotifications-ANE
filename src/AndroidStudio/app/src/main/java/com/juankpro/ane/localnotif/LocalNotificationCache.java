@@ -10,6 +10,10 @@ class LocalNotificationCache {
         return instance;
     }
 
+    static void clear() {
+        instance = new LocalNotificationCache();
+    }
+
     private String notificationCode;
     private byte[] notificationData;
 

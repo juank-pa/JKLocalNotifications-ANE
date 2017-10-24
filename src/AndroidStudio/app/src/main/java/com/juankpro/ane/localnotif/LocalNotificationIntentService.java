@@ -1,32 +1,12 @@
-/*************************************************************************
- *
- * ADOBE CONFIDENTIAL
- * ___________________
- *
- *  Copyright 2011 Adobe Systems Incorporated
- *  All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Adobe Systems Incorporated and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Adobe Systems Incorporated and its
- * suppliers and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Adobe Systems Incorporated.
- **************************************************************************/
-
-
 package com.juankpro.ane.localnotif;
 
-import java.util.List;
-
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+
+/**
+ * Created by Juank on 10/21/17.
+ */
 
 public class LocalNotificationIntentService extends IntentService {
     public LocalNotificationIntentService() {
@@ -39,7 +19,7 @@ public class LocalNotificationIntentService extends IntentService {
 
         String code = intent.getStringExtra(Constants.NOTIFICATION_CODE_KEY);
         byte[] data = intent.getByteArrayExtra(Constants.ACTION_DATA_KEY);
-        new LocalNotificationDispatcher(context, code, data).dispatchInBackground();
+        new LocalNotificationDispatcher(code, data).dispatchInBackground();
 
         // If the app is not running, or it's running, but in the background, start it by bringing it to the foreground or launching it.
         // The OS will handle what happens correctly.

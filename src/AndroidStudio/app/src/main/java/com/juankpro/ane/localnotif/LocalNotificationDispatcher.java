@@ -1,20 +1,29 @@
 package com.juankpro.ane.localnotif;
 
-import android.content.Context;
-
 /**
  * Created by Juank on 10/22/17.
  */
 
 class LocalNotificationDispatcher {
-    private Context context;
     private String code;
     private byte[] data;
+    private LocalNotificationsContext notificationContext;
 
-    LocalNotificationDispatcher(Context context, String code, byte[] data) {
-        this.context = context;
+    LocalNotificationDispatcher(LocalNotificationsContext notificationContext, String code, byte[] data) {
+        this.notificationContext = notificationContext;
         this.code = code;
         this.data = data;
+    }
+
+    LocalNotificationDispatcher(String code, byte[] data) {
+        this(null, code, data);
+    }
+
+    LocalNotificationsContext getNotificationContext() {
+        if (notificationContext == null) {
+            return LocalNotificationsContext.getInstance();
+        }
+        return notificationContext;
     }
 
     boolean dispatchInForeground() {
@@ -29,7 +38,7 @@ class LocalNotificationDispatcher {
         LocalNotificationCache.getInstance().setData(code, data);
 
         if (condition) {
-            LocalNotificationsContext.getInstance().dispatchNotificationSelectedEvent();
+            getNotificationContext().dispatchNotificationSelectedEvent();
             return true;
         }
         return false;

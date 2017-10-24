@@ -8,10 +8,10 @@ import android.util.Log;
 
 class Logger {
     static void log(String message) {
-        Log.d("JKNotification", message);
+        try{ Log.d("JKNotification", message); } catch(Exception e) {}
     }
 
     static void error(String message) {
-        Log.e("JKNotification", message);
+        try{ Log.e("JKNotification", message); } catch(Exception e) {}
     }
 }
