@@ -1,5 +1,6 @@
 *.tmp
 *.ipa
+*.apk
 *.swf
 *.dSYM
 *.provisioningprofile

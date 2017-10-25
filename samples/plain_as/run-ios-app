@@ -2,15 +2,16 @@
 
 set -e
 
-SDK="${HOME}/Developer/AIR_SDK"
-AMXML="${SDK}/bin/amxmlc"
-ADT="${SDK}/bin/adt"
+SDK="$HOME/Developer/AIR_SDK"
+AMXML="$SDK/bin/amxmlc"
+ADT="$SDK/bin/adt"
+IPHONE_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"
 
 # name of ipa file
 APP_NAME=sample
 
 # Certificate
-CERT_FILE=jk.p12
+CERT_FILE=test_ios.p12
 CERT_PASS=1234
 PROVISIONING_PROFILE=test.mobileprovision
 
@@ -41,7 +42,7 @@ echo "***** packaging SWF file into IPA *****"
 
 echo "**** Installing IPA in iOS simulator ******"
 
-DEVICE_ID=3
+DEVICE_ID=4
 
 "$ADT" -installApp \
   -platform ios \

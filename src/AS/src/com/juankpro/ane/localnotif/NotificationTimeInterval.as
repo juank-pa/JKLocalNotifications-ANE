@@ -38,20 +38,11 @@ package com.juankpro.ane.localnotif {
 		 * <p>Supported OS: iOS, Android</p>
 		 */
 		public static const SECOND_CALENDAR_UNIT:uint = 1 << 7;
-    CONFIG::android {
-      /**
-       * Represents a week repeat interval
-       * <p>Supported OS: iOS, Android</p>
-       */
-      public static const WEEK_CALENDAR_UNIT:uint = 1 << 8;
-    }
-    CONFIG::iphone {
-      /**
-       * Represents a week repeat interval
-       * <p>Supported OS: iOS, Android</p>
-       */
-      public static const WEEK_CALENDAR_UNIT:uint = 1 << 13;
-    }
+    /**
+     * Represents a week repeat interval
+     * <p>Supported OS: iOS, Android</p>
+     */
+    public static const WEEK_CALENDAR_UNIT:uint = 1 << 13;
 		/**
 		 * Represents a week day ordinal repeat interval e.g. repeat every second Monday every month
 		 * <p>Supported OS: iOS</p>

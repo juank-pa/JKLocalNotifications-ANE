@@ -9,18 +9,21 @@ rm -rf $TEMP_PATH
 
 echo "****** ANDROID VERSION *******"
 
+mkdir -p $TEMP_PATH/app-debug
 mkdir -p $TEMP_PATH/android
 mkdir -p $TEMP_PATH/android/res
 
 echo "****** Copying native library *******"
 
 # copy resources
-cp -R $NATIVE_ANDROID_FOLDER/res $TEMP_PATH/android
+unzip $NATIVE_ANDROID_FOLDER/app/build/outputs/aar/app-debug.aar -d $TEMP_PATH/app-debug
+cp -R $TEMP_PATH/app-debug/res $TEMP_PATH/android
 
-# copy JAR file
 # TODO: Try to automatize Android compilation
 #jar cf $TEMP_PATH/android/$JAR_NAME -C ./$NATIVE_ANDROID_FOLDER/bin .
-cp $NATIVE_ANDROID_FOLDER/bin/eclipse.jar $TEMP_PATH/android/$JAR_NAME
+cp $TEMP_PATH/app-debug/classes.jar $TEMP_PATH/android/$JAR_NAME
+cp $NATIVE_ANDROID_FOLDER/app/libs/support-v4.jar $TEMP_PATH/android
+cp $NATIVE_ANDROID_FOLDER/app/libs/support-compat.jar $TEMP_PATH/android
 
 echo "****** Compiling AS3 library *******"
 
@@ -52,6 +55,7 @@ echo "****** Creating ANE package *******"
 		$CONFIG_PATH/extension_android.xml \
 		-swc $TEMP_PATH/$ANE_NAME.swc \
 		-platform Android-ARM \
+		-platformoptions $CONFIG_PATH/options_android.xml \
 		-C $TEMP_PATH/android/ .
 
 echo "****** ANE package created *******"
