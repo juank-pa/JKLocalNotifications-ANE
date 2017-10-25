@@ -9,7 +9,7 @@ local notifications in the future and the ability to update the application
 badge number at will.
 
 This LocalNotification ANE repository contains many different components:
-- The Java source code to allow notifications on Android devices (src/Eclipse).
+- The Java source code to allow notifications on Android devices (src/AndroidStudio).
 - The Objective-C source code to allow notifications on iOS devices (src/XCode).
 - The AS3 source code to bridge between ActionScript and the native libraries (src/AS).
 - Shell files that allow building native code into an ANE file (bin).
@@ -24,7 +24,7 @@ the SDK anywhere in your computer, all the shell scripts expect to find it at
 `$HOME/Developer/AIR_SDK` so it will be a good idea to place it there. If you still
 decide to place the SDK somewhere else please update the corresponding shell files.
 * XCode 8.2.1 or greater with support for iOS 8.4 or greater.
-* Eclipse or the Android Studio.
+* Android Studio for the Android native code.
 
 # The Objective-C source code
 This is basically an XCode project placed at the `src/XCode` directory.
@@ -64,14 +64,20 @@ ANE versions will migrate completely to the new API to support even more
 features, while dropping support for iOS 9 and prior.
 
 # The Java source code
-This is an Eclipse project placed at the `src/Eclipse` folder.
-I personally have very little knowledge about Java so this source code is one of the
-least maintained ones. Having a collaborating team for this source code will be welcome.
+This is an Android Studio project placed at the `src/AndroidStudio` folder.
+Thanks to all of the ANE supporters I have found the desire to start learning Android
+a bit more and have started to revamp the otherwise completely outdated Android project.
+This project supports Android SDK 16 (4.1 - Jelly Bean) and later.
 
 You need to compile the project to generate the expected files to build the ANE.
 Additionally the project contains icons in the resource folder `res` which are copied
 to the final ANE to allow the Java version to set an icon for the notification.
 Edit the icons in this project if you want to customize them.
+
+For now, the only way to generate the required `.aar` file is to compile the project as
+a debug build. But I'll try to find a way to generate the release build as well.
+In any case, it seems once AIR compiles the final APK it returns a release version
+either way.
 
 # The ActionScript 3.0 source code
 
@@ -92,7 +98,7 @@ The source code comes with a test suite at the `src/AS/tests` folder and are sup
 `ASUnit` and `Mock4AS`.
 
 ### Adding new tests
-To add additional tests place them in the `src/AS/tests/src` folder.
+To add additional tests place them inside the `src/AS/tests/src` folder.
 The test class must inherit `asunit.framework.TestCase` and test methods must start with
 the `test` prefix.
 
@@ -156,7 +162,7 @@ will definitively will depend on collaborators.
 
 The only supported sample right now is the one at `samples/plain_as`. This is a
 command-line based simple project. The sample contains a single `Sample.as` file
-a custom sound `fx05.caf` a test cetificate for Android and some shell scripts.
+a custom sound `fx05.caf` and some shell scripts.
 
 The sample will show buttons for sending a notification and cancelling it, as well
 as a simple console to print results.
@@ -190,6 +196,10 @@ Use the different scripts to compile your desired application:
 * To build and install an Android emulator APK file:
   ```bash
   ./run-android-emulator-app
+  ```
+* And finally, to build and install an Android device APK file:
+  ```bash
+  ./run-android-app
   ```
 
 # ANE distribution

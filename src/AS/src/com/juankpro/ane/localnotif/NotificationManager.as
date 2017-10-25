@@ -80,8 +80,8 @@
           _extensionContext = builder.createExtensionContext("com.juankpro.ane.LocalNotification",
                                                              _contextType);
           CONFIG::android {
-            NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, activateHandler);
-            NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, deactivateHandler);
+            NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, activateHandler, false, 0, true);
+            NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, deactivateHandler, false, 0, true);
           }
         }
         _refCount++;
