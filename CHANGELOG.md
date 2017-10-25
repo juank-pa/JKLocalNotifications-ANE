@@ -1,8 +1,8 @@
 ### Version 1.0.2
-* Improved and added new build scripts for the Android ANE ans sample application.
-* The Android project was so outdated the was actully not working at all. The Android project
+* Improved and new build scripts for the Android ANE ans sample application.
+* The Android project was so outdated the was actually not working at all. The Android project
   has been ported from Eclipse to Android Studio and has been completely revamped to make it work
-  and also to attach to better coding practices.
+  and to use better coding practices.
 * Added a test suite for the basic Android classes. Other components tests are still pending.
 
 ### Version 1.0.1
