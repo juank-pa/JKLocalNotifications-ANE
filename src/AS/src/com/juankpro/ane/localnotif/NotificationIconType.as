@@ -5,12 +5,12 @@
 	 * <p>Supported OS: Android</p>
 	 */
     final public class NotificationIconType {
-        public static const ALERT:String = "alert";
-        public static const DOCUMENT:String = "document";
-        public static const ERROR:String = "error";
-        public static const FLAG:String = "flag";
-        public static const INFO:String = "info";
-        public static const MESSAGE:String = "message";
+        public static const ALERT:String = "jk_localnotif_alert_icon";
+        public static const DOCUMENT:String = "jk_localnotif_document_icon";
+        public static const ERROR:String = "jk_localnotif_error_icon";
+        public static const FLAG:String = "jk_localnotif_flag_icon";
+        public static const INFO:String = "jk_localnotif_info_icon";
+        public static const MESSAGE:String = "jk_localnotif_message_icon";
 
         /**
          * @private
