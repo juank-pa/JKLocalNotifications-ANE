@@ -218,6 +218,11 @@ Use the different scripts to compile your desired application:
   ./run-android-app
   ```
 
+**NOTE:** The run shell scripts for Android not only compile and package the project but also
+they re-compile the ANE because the Sample uses a custom icon and this forces the re-compilation.
+These scripts add the resources at `samples/plain_as/res` to the generated ANE extension.
+More information [here](#adding-android-custom-icons-hack).
+
 # ANE distribution
 If what you want is simply get the latest version of the ANE and use it in your own
 project you will find the latest compiled version of the IPA at `bin/dist`. Just grab

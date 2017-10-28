@@ -2,10 +2,10 @@
 
 set -e
 
+ANDROID_SDK="$HOME/Library/Android/sdk"
 SDK="$HOME/Developer/AIR_SDK"
 AMXML="$SDK/bin/amxmlc"
 ADT="$SDK/bin/adt"
-ANDROID_SDK="$HOME/Library/Android/sdk"
 EXT_DIR="../../bin/ext"
 
 # name of APP file
@@ -16,12 +16,12 @@ CERT_FILE=test_android.p12
 CERT_PASS=1234
 
 echo "***** COPYING ANE RESOURCES"
-if [ -d "$EXT_DIR/res" ]; then
-  rm -rf $EXT_DIR
-fi
+mkdir $EXT_DIR/../res
 cp -R res $EXT_DIR/..
 
 $EXT_DIR/../build-ane-android
+
+rm -rf $EXT_DIR/../res
 
 echo "***** ANDROID APP ******"
 echo "***** compiling SWF file *****"
