@@ -13,6 +13,7 @@ class Constants {
     static final String ACTION_DATA_KEY = "com.juankpro.ane.localnotif.actionDataKey";
 
     static final String ICON_RESOURCE = "NOTIF_ICON_RESOURCE";
+    static final String ICON_NAME = "NOTIF_ICON_NAME";
     static final String TITLE = "NOTIF_TITLE";
     static final String BODY = "NOTIF_BODY";
     static final String NUMBER_ANNOTATION = "NOTIF_NUM_ANNOT";
