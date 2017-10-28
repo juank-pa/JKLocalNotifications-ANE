@@ -25,6 +25,10 @@ cp $TEMP_PATH/app-debug/classes.jar $TEMP_PATH/android/$JAR_NAME
 cp $NATIVE_ANDROID_FOLDER/app/libs/support-v4.jar $TEMP_PATH/android
 cp $NATIVE_ANDROID_FOLDER/app/libs/support-compat.jar $TEMP_PATH/android
 
+if [ -d "$SCRIPT_PATH/res" ]; then
+  cp -Rf $SCRIPT_PATH/res $TEMP_PATH/android
+fi
+
 echo "****** Compiling AS3 library *******"
 
 # compile Android SWC version

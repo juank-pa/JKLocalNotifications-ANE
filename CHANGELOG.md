@@ -1,3 +1,7 @@
+### Version 1.0.3
+* Added the ability to use custom icons for Android notifications through a
+  [hack](https://github.com/juank-pa/JKLocalNotifications-ANE#adding-android-custom-icons-hack).
+
 ### Version 1.0.2
 * Improved and new build scripts for the Android ANE ans sample application.
 * The Android project was so outdated the was actually not working at all. The Android project

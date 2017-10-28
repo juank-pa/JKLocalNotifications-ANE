@@ -6,6 +6,7 @@ ANDROID_SDK="$HOME/Library/Android/sdk"
 SDK="$HOME/Developer/AIR_SDK"
 AMXML="$SDK/bin/amxmlc"
 ADT="$SDK/bin/adt"
+EXT_DIR="../../bin/ext"
 
 # name of APP file
 APP_NAME=sample
@@ -14,9 +15,16 @@ APP_NAME=sample
 CERT_FILE=test_android.p12
 CERT_PASS=1234
 
-echo "***** ANDROID EMULATOR APP ******"
-echo "***** packaging SWF file *****"
+echo "***** COPYING ANE RESOURCES"
+mkdir $EXT_DIR/../res
+cp -R res $EXT_DIR/..
 
+$EXT_DIR/../build-ane-android
+
+rm -rf $EXT_DIR/../res
+
+echo "***** ANDROID EMULATOR APP ******"
+echo "***** compiling SWF file *****"
 "$AMXML" -swf-version 26 \
   -debug=true \
   -define+=CONFIG::device,true \
@@ -37,7 +45,7 @@ echo "***** packaging SWF file into APK *****"
   $APP_NAME.apk \
   ${APP_NAME}-app.xml \
   $APP_NAME.swf \
-  -extdir ../../bin
+  -extdir $EXT_DIR
 
 # For these steps emulator must be running
 # Create and configure an emulator then run it

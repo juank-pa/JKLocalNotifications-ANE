@@ -2,10 +2,11 @@
 
 set -e
 
+ANDROID_SDK="$HOME/Library/Android/sdk"
 SDK="$HOME/Developer/AIR_SDK"
 AMXML="$SDK/bin/amxmlc"
 ADT="$SDK/bin/adt"
-ANDROID_SDK="$HOME/Library/Android/sdk"
+EXT_DIR="../../bin/ext"
 
 # name of APP file
 APP_NAME=sample
@@ -14,7 +15,15 @@ APP_NAME=sample
 CERT_FILE=test_android.p12
 CERT_PASS=1234
 
-echo "***** ANDROID EMULATOR APP ******"
+echo "***** COPYING ANE RESOURCES"
+mkdir $EXT_DIR/../res
+cp -R res $EXT_DIR/..
+
+$EXT_DIR/../build-ane-android
+
+rm -rf $EXT_DIR/../res
+
+echo "***** ANDROID APP ******"
 echo "***** compiling SWF file *****"
 "$AMXML" -swf-version 26 \
   -define+=CONFIG::device,true \
@@ -35,7 +44,7 @@ echo "***** packaging SWF file into APK *****"
   $APP_NAME.apk \
   ${APP_NAME}-app.xml \
   $APP_NAME.swf \
-  -extdir ./../../bin/ext
+  -extdir $EXT_DIR
 
 # For these steps the device must be running
 
@@ -45,7 +54,7 @@ echo "***** packaging SWF file into APK *****"
 #  -platform android \
 #  -platformsdk "$ANDROID_SDK"
 
-echo "**** Install app in Android emulator ******"
+echo "**** Install app in Android device ******"
 
 "$ADT" -installApp \
   -platform android \

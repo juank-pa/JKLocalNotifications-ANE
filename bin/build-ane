@@ -19,12 +19,15 @@ echo "****** Copying native library *******"
 unzip $NATIVE_ANDROID_FOLDER/app/build/outputs/aar/app-debug.aar -d $TEMP_PATH/app-debug
 cp -R $TEMP_PATH/app-debug/res $TEMP_PATH/android
 
-
 # TODO: Try to automatize Android compilation
 #jar cf $TEMP_PATH/android/$JAR_NAME -C ./$NATIVE_ANDROID_FOLDER/bin .
 cp $TEMP_PATH/app-debug/classes.jar $TEMP_PATH/android/$JAR_NAME
 cp $NATIVE_ANDROID_FOLDER/app/libs/support-v4.jar $TEMP_PATH/android
 cp $NATIVE_ANDROID_FOLDER/app/libs/support-compat.jar $TEMP_PATH/android
+
+if [ -d "$SCRIPT_PATH/res" ]; then
+  cp -Rf $SCRIPT_PATH/res $TEMP_PATH/android
+fi
 
 echo "****** Compiling AS3 library *******"
 

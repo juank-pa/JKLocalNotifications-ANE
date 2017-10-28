@@ -5,12 +5,12 @@
 	 * <p>Supported OS: Android</p>
 	 */
     final public class NotificationIconType {
-        public static const ALERT:String = "alert";
-        public static const DOCUMENT:String = "document";
-        public static const ERROR:String = "error";
-        public static const FLAG:String = "flag";
-        public static const INFO:String = "info";
-        public static const MESSAGE:String = "message";
+        public static const ALERT:String = "ic_stat_notify_ln_alert";
+        public static const DOCUMENT:String = "ic_stat_notify_ln_document";
+        public static const ERROR:String = "ic_stat_notify_ln_error";
+        public static const FLAG:String = "ic_stat_notify_ln_flag";
+        public static const INFO:String = "ic_stat_notify_ln_info";
+        public static const MESSAGE:String = "ic_stat_notify_ln_message";
 
         /**
          * @private

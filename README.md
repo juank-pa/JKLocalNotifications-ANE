@@ -63,7 +63,7 @@ Right now both implementations do the exact same thing but soon newer
 ANE versions will migrate completely to the new API to support even more
 features, while dropping support for iOS 9 and prior.
 
-# The Java source code
+# The Android source code
 This is an Android Studio project placed at the `src/AndroidStudio` folder.
 Thanks to all of the ANE supporters I have found the desire to start learning Android
 a bit more and have started to revamp the otherwise completely outdated Android project.
@@ -74,10 +74,26 @@ Additionally the project contains icons in the resource folder `res` which are c
 to the final ANE to allow the Java version to set an icon for the notification.
 Edit the icons in this project if you want to customize them.
 
-For now, the only way to generate the required `.aar` file is to compile the project as
-a debug build. But I'll try to find a way to generate the release build as well.
-In any case, it seems once AIR compiles the final APK it returns a release version
-either way.
+## Adding Android custom icons HACK
+There is a way to add custom icons to the Android notifications but only through a hack.
+Referencing a packaged bitmap directly is possible only on Android API level 24 (Nougat) and later.
+This will have forced the ANE to support level 24 and later versions and I'm always trying to
+support 95-99% of the currently existing devices.
+
+The hack needs the developer to re-compile the ANE through the following procedure:
+
+1. Add a `res` folder under the `bin` folder.
+2. Place all additional resources there using the same structure as required for Android projects.
+3. Compile the ANE using one of the build shell scripts.
+4. In your AS3 application code set the `Notification.iconType` to the name of the file without
+   including the file extension.
+5. Compile your application normally.
+
+## Android known issues
+Since Android API level 26 (Oreo) all notifications need to be assigned to a notification channel
+otherwise they will not trigger. Because of this breaking change the ANE is not currently working
+on devices with those API levels. To make them work again I need to add breaking changes into
+the AS3 ANE code as well. This has been already scheduled so please be patient.
 
 # The ActionScript 3.0 source code
 
@@ -201,6 +217,11 @@ Use the different scripts to compile your desired application:
   ```bash
   ./run-android-app
   ```
+
+**NOTE:** The run shell scripts for Android not only compile and package the project but also
+they re-compile the ANE because the Sample uses a custom icon and this forces the re-compilation.
+These scripts add the resources at `samples/plain_as/res` to the generated ANE extension.
+More information [here](#adding-android-custom-icons-hack).
 
 # ANE distribution
 If what you want is simply get the latest version of the ANE and use it in your own

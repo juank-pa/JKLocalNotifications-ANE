@@ -115,6 +115,7 @@
           notification.fireDate = new Date((new Date()).time + (15 * 1000));
           notification.numberAnnotation = 3;
           notification.actionData = {sampleData:"Hello World!"};
+          notification.iconType = "ic_stat_notify_dog_icon";
 
           notificationManager.notifyUser(NOTIFICATION_CODE, notification);
           printNotification('Posted Message', notification);
