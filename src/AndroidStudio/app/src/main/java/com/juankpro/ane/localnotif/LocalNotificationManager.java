@@ -3,7 +3,9 @@ package com.juankpro.ane.localnotif;
 import java.util.Map;
 import java.util.Set;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -150,6 +152,16 @@ class LocalNotificationManager {
         final Editor alarmSettingsEditor = androidContext.getSharedPreferences(ANE_NAME, Context.MODE_PRIVATE).edit();
         alarmSettingsEditor.clear();
         alarmSettingsEditor.apply();
+    }
+
+    @TargetApi(26)
+    void createNotificationChannel(NotificationChannel channel) {
+        notificationManager.createNotificationChannel(channel);
+    }
+
+    @TargetApi(26)
+    void deleteNotificationChannel(String channelId) {
+        notificationManager.deleteNotificationChannel(channelId);
     }
 }
 

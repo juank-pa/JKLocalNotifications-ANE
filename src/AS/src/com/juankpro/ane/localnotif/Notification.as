@@ -98,9 +98,14 @@
     /**
      * Specifies if a sound will be played when the notification arrives.
      * The volume that it's played at are defined by the user settings on the OS.
+     * <p>This property is ignored for Android API level 26 (Oreo) devices.
+     * You need to create a <code>NotificationChannel</code> and set the channel
+     * <code>importance</code> in addition to setting this property in order to
+     * support all Android APIs</p>
      * <p>Supported OS: Android, iOS</p>
      * @default true
      * @see #soundName
+     * @see com.juankpro.ane.localnotif.NotificationChannel#importance
      */
     public var playSound:Boolean = true;
 
@@ -141,8 +146,13 @@
 
     /**
      * Specifies if the device should vibrate when a notification arrives.
+     * <p>This property is ignored for Android API level 26 (Oreo) devices.
+     * You need to create a <code>NotificationChannel</code> and set the channel
+     * <code>vibrationEnabled</code> property in addition to setting this property
+     * in order to support all Android APIs</p>
      * <p>Supported OS: Android</p>
      * @default true
+     * @see com.juankpro.ane.localnotif.NotificationChannel#vibrationEnabled
      */
     public var vibrate:Boolean = true;
 

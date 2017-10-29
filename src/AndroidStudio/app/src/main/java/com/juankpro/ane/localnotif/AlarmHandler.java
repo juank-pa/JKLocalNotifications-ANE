@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
@@ -24,18 +25,18 @@ class AlarmHandler {
     void postNotification() {
         String code = bundle.getString(Constants.NOTIFICATION_CODE_KEY);
         final NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(code, Constants.STANDARD_NOTIFICATION_ID, getBuilder().build());
+        notificationManager.notify(code, Constants.STANDARD_NOTIFICATION_ID, createBuilder().build());
     }
 
-    private NotificationCompat.Builder getBuilder() {
+    private Notification.Builder createBuilder() {
         int numberAnnotation = bundle.getInt(Constants.NUMBER_ANNOTATION);
         int iconResource = bundle.getInt(Constants.ICON_RESOURCE);
         String tickerText = bundle.getString(Constants.TICKER_TEXT);
         String title = bundle.getString(Constants.TITLE);
         String body = bundle.getString(Constants.BODY);
 
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context)
+        Notification.Builder builder =
+                getBuilder(bundle)
                         .setSmallIcon(iconResource)
                         .setContentTitle(title)
                         .setContentText(body)
@@ -45,6 +46,14 @@ class AlarmHandler {
         setupMiscellaneous(builder);
         setupAction(builder);
         return builder;
+    }
+
+    private Notification.Builder getBuilder(Bundle bundle) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = bundle.getString("CHANNEL_ID");
+            return new Notification.Builder(context, channelId);
+        }
+        return new Notification.Builder(context);
     }
 
     private int getDefaults() {
@@ -65,7 +74,7 @@ class AlarmHandler {
         return showLights? Notification.DEFAULT_LIGHTS : 0;
     }
 
-    private void setupAction(NotificationCompat.Builder builder) {
+    private void setupAction(Notification.Builder builder) {
         if (!bundle.getBoolean(Constants.HAS_ACTION)) { return; }
 
         String code = bundle.getString(Constants.NOTIFICATION_CODE_KEY);
@@ -93,7 +102,7 @@ class AlarmHandler {
         return intent;
     }
 
-    private void setupMiscellaneous(NotificationCompat.Builder builder) {
+    private void setupMiscellaneous(Notification.Builder builder) {
         String alertPolicy = bundle.getString(Constants.ALERT_POLICY);
         builder.setOngoing(bundle.getBoolean(Constants.ON_GOING))
                 .setAutoCancel(bundle.getBoolean(Constants.CANCEL_ON_SELECT))

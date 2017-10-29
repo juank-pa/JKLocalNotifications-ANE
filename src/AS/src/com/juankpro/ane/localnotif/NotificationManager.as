@@ -230,6 +230,44 @@
     }
 
     /**
+     * Creates a notification channel to allow sending notifications for Android API level 26 (Oreo) devices.
+     * <p>Android API level 26 (Oreo) devices require a notification channel to be created
+     * before sending any notifications. This channel controls properties like the
+     * vibration, sound and presence.</p>
+     * <p>Because prior API versions let you control these properties for each Notification,
+     * to support the complete range of Android devices you need to set the corresponding
+     * <code>Notification</code> properties as well.</p>
+     * <p>Calling this method for a channel with an already existing id will update the name
+     * and description for the channel. Other properties will remain unchanged.</p>
+     * <p>Supported OS: Android</p>
+     * @param channel The <code>NotificationChannel</code> to create.
+     * @see com.juankpro.ane.localnotif.NotificationChannel
+     * @see #deleteNotificationChannel
+     */
+    public function createNotificationChannel(channel:NotificationChannel):void {
+      CONFIG::device {
+        CONFIG::android {
+          _extensionContext.call("createNotificationChannel", channel);
+        }
+      }
+    }
+
+    /**
+     * Deletes a previously created notification channel for Android API level 26 (Oreo) devices.
+     * <p>Supported OS: Android</p>
+     * @param channelId The id of the <code>NotificationChannel</code> to delete.
+     * @see com.juankpro.ane.localnotif.NotificationChannel
+     * @see #createNotificationChannel
+     */
+    public function deleteNotificationChannel(channelId:String):void {
+      CONFIG::device {
+        CONFIG::android {
+          _extensionContext.call("deleteNotificationChannel", channelId);
+        }
+      }
+    }
+
+    /**
      * Removes the Notification Manager from memory.
      * Once disposed any calls to the object methods will be ignored.
      * <p>Supported OS: Android, iOS</p>

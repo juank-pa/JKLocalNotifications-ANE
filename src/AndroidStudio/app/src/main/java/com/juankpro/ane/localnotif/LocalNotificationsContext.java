@@ -1,5 +1,10 @@
 package com.juankpro.ane.localnotif;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
+
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -138,11 +143,27 @@ class LocalNotificationsContext extends FREContext {
             }
         });
 
+        functionMap.put("createNotificationChannel", new FunctionHelper() {
+            @Override
+            public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
+                createNotificationChannel(passedArgs[0], context);
+                return null;
+            }
+        });
+
+        functionMap.put("deleteNotificationChannel", new FunctionHelper() {
+            @Override
+            public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
+                deleteNotificationChannel(passedArgs[1].getAsString());
+                return null;
+            }
+        });
+
         ApplicationStatus.setInForeground(true);
         return functionMap;
     }
 
-    private static LocalNotification decodeLocalNotification(String code, FREObject freObject, FREContext freContext) throws Exception {
+    private LocalNotification decodeLocalNotification(String code, FREObject freObject, FREContext freContext) throws Exception {
         // Get the activity class name and pass it to the notification.
         String activityClassName = freContext.getActivity().getClass().getName();
         Logger.log("LocalNotificationsContext::decodeLocalNotification Activity Class Name: " + activityClassName);
@@ -201,6 +222,25 @@ class LocalNotificationsContext extends FREContext {
     void dispatchNotificationSelectedEvent() {
         LocalNotificationCache.getInstance().reset();
         dispatchStatusEventAsync(NOTIFICATION_SELECTED, STATUS);
+    }
+
+    private void createNotificationChannel(FREObject freObject, FREContext freContent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    ExtensionUtils.getStringProperty(freObject, "id", null),
+                    ExtensionUtils.getStringProperty(freObject, "name", null),
+                    ExtensionUtils.getIntProperty(freObject, "importance", NotificationManager.IMPORTANCE_DEFAULT)
+            );
+            channel.setDescription(ExtensionUtils.getStringProperty(freObject, "description", null));
+            channel.enableVibration(ExtensionUtils.getBooleanProperty(freObject, "vibrationEnabled", false));
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void deleteNotificationChannel(String channelId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager.deleteNotificationChannel(channelId);
+        }
     }
 
     private static int getIconResourceIdFromString(String iconType, FREContext freContext) {
