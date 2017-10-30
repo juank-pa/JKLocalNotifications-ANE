@@ -1,0 +1,13 @@
+<extension xmlns="http://ns.adobe.com/air/extension/26.0">
+    <id>com.juankpro.ane.LocalNotification</id>
+    <versionNumber>1.0.0</versionNumber>
+    <platforms>
+        <platform name="Android-x86">
+            <applicationDeployment>
+                <nativeLibrary>localnotification.jar</nativeLibrary>
+                <initializer>com.juankpro.ane.localnotif.Extension</initializer>
+                <finalizer>com.juankpro.ane.localnotif.Extension</finalizer>
+            </applicationDeployment>
+        </platform>
+    </platforms>
+</extension>
