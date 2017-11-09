@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+# name of APP file
+APP_NAME=sample
+
+# Certificate password
+CERT_FILE=test_android.p12
+CERT_PASS=1234
+
+RES_PATH="$EXT_PATH/../res"
+
+echo "***** COPYING ANE RESOURCES"
+rm -rf $RES_PATH
+mkdir $RES_PATH
+cp -R res $RES_PATH/..
+
+source $BUILD_ANE_PATH
+
+rm -rf $RES_PATH
+
+echo "***** ANDROID APP ******"
+echo "***** compiling SWF file *****"
+
+"$AMXML" -swf-version $AIR_VERSION \
+  -define+=CONFIG::device,true \
+  -define+=CONFIG::iphone,false \
+  -define+=CONFIG::android,true \
+  -external-library-path+=$EXT_PATH/LocalNotificationLib.ane \
+  -output $APP_NAME.swf \
+  -- Sample.as
+

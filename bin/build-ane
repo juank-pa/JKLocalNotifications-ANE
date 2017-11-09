@@ -1,94 +1,12 @@
 #!/bin/zsh
 
+set -e
 SCRIPT_PATH="$(dirname "$0")"
 source $SCRIPT_PATH/config/config.sh
-
-set -e
-
 rm -rf $TEMP_PATH
 
-echo "****** ANDROID VERSION *******"
-
-mkdir -p $TEMP_PATH/app-debug
-mkdir -p $TEMP_PATH/android
-mkdir -p $TEMP_PATH/android/res
-
-echo "****** Copying native library *******"
-
-# copy resources
-unzip $NATIVE_ANDROID_FOLDER/app/build/outputs/aar/app-debug.aar -d $TEMP_PATH/app-debug
-cp -R $TEMP_PATH/app-debug/res $TEMP_PATH/android
-
-# TODO: Try to automatize Android compilation
-#jar cf $TEMP_PATH/android/$JAR_NAME -C ./$NATIVE_ANDROID_FOLDER/bin .
-cp $TEMP_PATH/app-debug/classes.jar $TEMP_PATH/android/$JAR_NAME
-cp $NATIVE_ANDROID_FOLDER/app/libs/support-v4.jar $TEMP_PATH/android
-cp $NATIVE_ANDROID_FOLDER/app/libs/support-compat.jar $TEMP_PATH/android
-
-if [ -d "$SCRIPT_PATH/res" ]; then
-  cp -Rf $SCRIPT_PATH/res $TEMP_PATH/android
-fi
-
-echo "****** Compiling AS3 library *******"
-
-# compile Android SWC version
-"$ACOMPC" \
-    -swf-version $AIR_VERSION \
-    -define+=CONFIG::device,true \
-    -define+=CONFIG::iphone,false \
-    -define+=CONFIG::android,true \
-    -source-path $LIB_FOLDER/src/ \
-    -output $TEMP_PATH/$ANE_NAME.swc \
-    -include-sources $LIB_FOLDER/src/
-
-echo "****** Extracting compiled data *******"
-
-# grab SWC library
-unzip $TEMP_PATH/$ANE_NAME.swc -d $TEMP_PATH
-mv $TEMP_PATH/library.swf $TEMP_PATH/android
-rm $TEMP_PATH/catalog.xml
-
-echo "****** END ANDROID VERSION *******"
-echo ""
-
-echo "****** IOS VERSION *******"
-
-mkdir -p $TEMP_PATH/iphone
-
-echo "****** Compiling native library *******"
-
-# TODO: Try to automatize XCode compilation
-#xcodebuild \
-#  -project $NATIVE_XCODE_FOLDER/$IOS_LIB_NAME.xcodeproj \
-#  -scheme $IOS_LIB_NAME \
-#  -destination="$PLATFORM" \
-#  -configuration $CONFIGURATION \
-#  -quiet \
-#  build
-
-cp $NATIVE_XCODE_FOLDER/$CONFIGURATION/lib$IOS_LIB_NAME.a $TEMP_PATH/iphone/
-
-echo "****** Compiling AS3 library *******"
-
-# compile iOS SWC version
-"$ACOMPC" \
-  -swf-version $AIR_VERSION \
-	-define+=CONFIG::device,true \
-	-define+=CONFIG::iphone,true \
-	-define+=CONFIG::android,false \
-	-source-path $LIB_FOLDER/src/ \
-	-output $TEMP_PATH/$ANE_NAME.swc \
-	-include-sources $LIB_FOLDER/src/
-
-echo "****** Extracting compiled data *******"
-
-# grab SWC library
-unzip $TEMP_PATH/$ANE_NAME.swc -d $TEMP_PATH
-mv $TEMP_PATH/library.swf $TEMP_PATH/iphone
-rm $TEMP_PATH/catalog.xml
-
-echo "****** END IOS VERSION *******"
-echo ""
+source $SCRIPT_PATH/prepare_android
+source $SCRIPT_PATH/prepare_ios
 
 echo "****** DEFAULT VERSION *******"
 
@@ -96,7 +14,6 @@ mkdir -p $TEMP_PATH/default
 
 echo "****** Compiling AS3 library *******"
 
-# compile Default SWC version
 "$ACOMPC" \
     -swf-version $AIR_VERSION \
     -define+=CONFIG::device,false \
@@ -106,8 +23,7 @@ echo "****** Compiling AS3 library *******"
     -output $TEMP_PATH/$ANE_NAME.swc \
     -include-sources $LIB_FOLDER/src/
 
-# grab SWC library
-unzip $TEMP_PATH/$ANE_NAME.swc -d $TEMP_PATH
+unzip -q $TEMP_PATH/$ANE_NAME.swc -d $TEMP_PATH
 mv $TEMP_PATH/library.swf $TEMP_PATH/default
 rm $TEMP_PATH/catalog.xml
 
@@ -117,18 +33,21 @@ echo ""
 echo "****** Creating ANE package *******"
 
 "$ADT" -package \
-		-target ane \
-		$RESULT_PATH/$ANE_NAME.ane \
-		$CONFIG_PATH/extension.xml \
-		-swc $TEMP_PATH/$ANE_NAME.swc \
-		-platform Android-ARM \
-		-platformoptions $CONFIG_PATH/options_android.xml \
-		-C $TEMP_PATH/android/ . \
-		-platform iPhone-ARM \
-		-platformoptions $CONFIG_PATH/options_ios.xml \
-		-C $TEMP_PATH/iphone/ . \
-		-platform default \
-		-C $TEMP_PATH/default/ library.swf
+  -target ane \
+  $EXT_PATH/$ANE_NAME.ane \
+  $CONFIG_PATH/extension.xml \
+  -swc $TEMP_PATH/$ANE_NAME.swc \
+  -platform Android-ARM \
+  -platformoptions $CONFIG_PATH/options_android.xml \
+  -C $TEMP_PATH/android/ . \
+  -platform Android-x86 \
+  -platformoptions $CONFIG_PATH/options_android.xml \
+  -C $TEMP_PATH/android/ . \
+  -platform iPhone-ARM \
+  -platformoptions $CONFIG_PATH/options_ios.xml \
+  -C $TEMP_PATH/iphone/ . \
+  -platform default \
+  -C $TEMP_PATH/default/ library.swf
 
 echo "****** ANE package created *******"
 echo ""

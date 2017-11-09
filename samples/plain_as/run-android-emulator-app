@@ -1,63 +1,29 @@
 #!/bin/zsh
 
 set -e
+source ../../bin/config/config.sh
+BUILD_ANE_PATH="$EXT_PATH/../build-ane-android-emulator"
 
-ANDROID_SDK="$HOME/Library/Android/sdk"
-SDK="$HOME/Developer/AIR_SDK"
-AMXML="$SDK/bin/amxmlc"
-ADT="$SDK/bin/adt"
-EXT_DIR="../../bin/ext"
-
-# name of APP file
-APP_NAME=sample
-
-# Certificate password
-CERT_FILE=test_android.p12
-CERT_PASS=1234
-
-echo "***** COPYING ANE RESOURCES"
-mkdir $EXT_DIR/../res
-cp -R res $EXT_DIR/..
-
-$EXT_DIR/../build-ane-android
-
-rm -rf $EXT_DIR/../res
-
-echo "***** ANDROID EMULATOR APP ******"
-echo "***** compiling SWF file *****"
-"$AMXML" -swf-version 26 \
-  -debug=true \
-  -define+=CONFIG::device,true \
-  -define+=CONFIG::iphone,false \
-  -define+=CONFIG::android,true \
-  -external-library-path+=./../../bin/ext/LocalNotificationLib.ane \
-  -output ./$APP_NAME.swf \
-  -- ./Sample.as
+source prepare_android
 
 echo "***** packaging SWF file into APK *****"
 
 # options: apk, apk‑captive‑runtime, apk-debug, apk-emulator, apk-profile
 "$ADT" -package \
   -target apk-emulator \
+  -arch x86 \
   -storetype pkcs12 -keystore $CERT_FILE \
   -storepass $CERT_PASS \
   -keypass $CERT_PASS \
   $APP_NAME.apk \
   ${APP_NAME}-app.xml \
   $APP_NAME.swf \
-  -extdir $EXT_DIR
+  -extdir $EXT_PATH
 
-# For these steps emulator must be running
-# Create and configure an emulator then run it
-# To run use: emulator ave Test_Device_Name
-# To list devices: adb devices
-# debugger: platform-tools/adb log cat
-
-# NOTE: Uncomment this if compiling non-captive APK
-#echo "**** Install AIR SDK in Android emulator *****"
-#"$ADT" -installRuntime \
-#  -platform android \
-#  -platformsdk "$ANDROID_SDK"
+# To install successfully emulator must be running.
+# Create and configure an emulator then run it.
+# Set -device if more than one device is running.
+# To list devices: adt -devices -platform iOS|android
 
 echo "**** Install app in Android emulator ******"
 

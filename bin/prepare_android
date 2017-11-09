@@ -1,0 +1,49 @@
+#!/bin/zsh
+
+PREPARE_SCRIPT_PATH="$(dirname "$0")"
+
+echo "****** ANDROID VERSION *******"
+
+mkdir -p $TEMP_PATH/app-debug
+mkdir -p $TEMP_PATH/android
+mkdir -p $TEMP_PATH/android/res
+
+# echo "****** Compiling native library *******"
+# TODO: Try to automatize Android compilation
+#jar cf $TEMP_PATH/android/$JAR_NAME -C ./$NATIVE_ANDROID_FOLDER/bin .
+
+echo "****** Copying native library *******"
+
+# copy resources
+unzip -q $NATIVE_ANDROID_FOLDER/app/build/outputs/aar/app-debug.aar -d $TEMP_PATH/app-debug
+cp -R $TEMP_PATH/app-debug/res $TEMP_PATH/android
+
+cp $TEMP_PATH/app-debug/classes.jar $TEMP_PATH/android/$JAR_NAME
+cp $NATIVE_ANDROID_FOLDER/app/libs/support-v4.jar $TEMP_PATH/android
+cp $NATIVE_ANDROID_FOLDER/app/libs/support-compat.jar $TEMP_PATH/android
+
+if [ -d "$PREPARE_SCRIPT_PATH/res" ]; then
+  cp -Rf $PREPARE_SCRIPT_PATH/res $TEMP_PATH/android
+fi
+
+echo "****** Compiling AS3 library *******"
+
+# compile Android SWC version
+"$ACOMPC" \
+    -swf-version $AIR_VERSION \
+    -define+=CONFIG::device,true \
+    -define+=CONFIG::iphone,false \
+    -define+=CONFIG::android,true \
+    -source-path $LIB_FOLDER/src/ \
+    -output $TEMP_PATH/$ANE_NAME.swc \
+    -include-sources $LIB_FOLDER/src/
+
+echo "****** Extracting compiled data *******"
+
+# grab SWC library
+unzip -q $TEMP_PATH/$ANE_NAME.swc -d $TEMP_PATH
+mv $TEMP_PATH/library.swf $TEMP_PATH/android
+rm $TEMP_PATH/catalog.xml
+
+echo "****** END ANDROID VERSION *******"
+echo ""

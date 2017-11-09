@@ -1,6 +1,12 @@
 <platform xmlns="http://ns.adobe.com/air/extension/26.0">
-    <packagedDependencies>
-      <packagedDependency>support-v4.jar</packagedDependency>
-      <packagedDependency>support-compat.jar</packagedDependency>
-    </packagedDependencies>
+  <packagedDependencies>
+    <packagedDependency>support-v4.jar</packagedDependency>
+    <packagedDependency>support-compat.jar</packagedDependency>
+  </packagedDependencies>
+  <packagedResources>
+    <packagedResource>
+      <packageName>com.juankpro.ane.localnotif</packageName>
+      <folderName>res</folderName>
+    </packagedResource>
+  </packagedResources>
 </platform>

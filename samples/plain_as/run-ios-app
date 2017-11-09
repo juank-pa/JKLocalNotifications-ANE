@@ -1,30 +1,11 @@
 #!/bin/zsh
 
 set -e
+source ../../bin/config/config.sh
 
-SDK="$HOME/Developer/AIR_SDK"
-AMXML="$SDK/bin/amxmlc"
-ADT="$SDK/bin/adt"
-IPHONE_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"
+DEVICE_ID=4
 
-# name of ipa file
-APP_NAME=sample
-
-# Certificate
-CERT_FILE=test_ios.p12
-CERT_PASS=1234
-PROVISIONING_PROFILE=test.mobileprovision
-
-echo "***** IOS SIMULATOR APP ******"
-echo "***** compiling SWF file *****"
-"$AMXML" -swf-version 26 \
-  -debug=true \
-  -define+=CONFIG::device,true \
-  -define+=CONFIG::iphone,true \
-  -define+=CONFIG::android,false \
-  -external-library-path+=./../../bin/ext/LocalNotificationLib.ane \
-  -output ./$APP_NAME.swf \
-  -- ./Sample.as
+source prepare_ios
 
 echo "***** packaging SWF file into IPA *****"
 
@@ -38,11 +19,9 @@ echo "***** packaging SWF file into IPA *****"
   ${APP_NAME}-app.xml \
   $APP_NAME.swf \
   fx05.caf \
-  -extdir ./../../bin/ext
+  -extdir $EXT_PATH
 
 echo "**** Installing IPA in iOS simulator ******"
-
-DEVICE_ID=4
 
 "$ADT" -installApp \
   -platform ios \

@@ -8,6 +8,7 @@ ACOMPC="$SDK_PATH/bin/acompc"
 
 # path to the ADT tool in AIR sdks
 ADT="$SDK_PATH/bin/adt"
+AMXML="$SDK_PATH/bin/amxmlc"
 
 # AS3 lib folder
 LIB_FOLDER=$CONFIG_SCRIPT_PATH/../../src/AS
@@ -38,4 +39,4 @@ ANE_NAME=LocalNotificationLib
 # helpers
 TEMP_PATH=$CONFIG_SCRIPT_PATH/../tmp
 CONFIG_PATH=$CONFIG_SCRIPT_PATH/../config
-RESULT_PATH=$CONFIG_SCRIPT_PATH/../ext
+EXT_PATH=$CONFIG_SCRIPT_PATH/../ext
