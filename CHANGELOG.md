@@ -1,3 +1,7 @@
+### Version 1.0.5
+* You can now use a custom sound for notifications in Android.
+* Android notifications support large notification body texts by using expanded layout.
+
 ### Version 1.0.4
 * Added batch scripts to allow compiling the ANEs and running the sample application on
   Android devices on Windows.

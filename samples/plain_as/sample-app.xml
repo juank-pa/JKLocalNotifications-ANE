@@ -33,6 +33,11 @@
               <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
           </receiver>
+          <provider
+            android:name=".AssetProvider"
+            android:authorities="com.juankpro.ane.localnotif.provider"
+            android:enabled="true"
+            android:exported="true"></provider>
         </application>
       </manifest>
       ]]>

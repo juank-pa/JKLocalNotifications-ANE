@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
@@ -42,27 +43,47 @@ class AlarmHandler {
                         .setTicker(tickerText)
                         .setDefaults(getDefaults())
                         .setNumber(numberAnnotation);
+        setupSound(builder);
         setupMiscellaneous(builder);
         setupAction(builder);
         return builder;
     }
 
     private int getDefaults() {
-        return soundDefault(bundle.getBoolean(Constants.PLAY_SOUND)) |
-                vibrateDefault(bundle.getBoolean(Constants.VIBRATE)) |
-                lightDefault(true);
+        return getSoundDefault() |
+                getVibrateDefault() |
+                Notification.DEFAULT_LIGHTS;
     }
 
-    private int soundDefault(boolean playSound) {
-        return playSound? Notification.DEFAULT_SOUND : 0;
+    private int getSoundDefault() {
+        return shouldPlayDefaultSound()? Notification.DEFAULT_SOUND : 0;
     }
 
-    private int vibrateDefault(boolean vibrate) {
+    private int getVibrateDefault() {
+        boolean vibrate = bundle.getBoolean(Constants.VIBRATE);
         return vibrate? Notification.DEFAULT_VIBRATE : 0;
     }
 
-    private int lightDefault(boolean showLights) {
-        return showLights? Notification.DEFAULT_LIGHTS : 0;
+    private boolean shouldPlayDefaultSound() {
+        return shouldPlaySound() && getSoundName() == null;
+    }
+
+    private boolean shouldPlayCustomSound() {
+        return shouldPlaySound() && getSoundName() != null;
+    }
+
+    private boolean shouldPlaySound() {
+        return bundle.getBoolean(Constants.PLAY_SOUND);
+    }
+
+    private String getSoundName() {
+        return bundle.getString(Constants.SOUND_NAME);
+    }
+
+    private void setupSound(NotificationCompat.Builder builder) {
+        if (shouldPlayCustomSound()) {
+            builder.setSound(Uri.parse("content://com.juankpro.ane.localnotif.provider/" + getSoundName()));
+        }
     }
 
     private void setupAction(NotificationCompat.Builder builder) {
