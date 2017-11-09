@@ -1,3 +1,10 @@
+### Version 1.0.4
+* Added batch scripts to allow compiling the ANEs and running the sample application on
+  Android devices on Windows.
+* Refactored build scripts to prevent repetition.
+* Added support for Android x86 devices.
+* Fixed broken distribution ANE.
+
 ### Version 1.0.3
 * Added the ability to use custom icons for Android notifications through a
   [hack](https://github.com/juank-pa/JKLocalNotifications-ANE#adding-android-custom-icons-hack).

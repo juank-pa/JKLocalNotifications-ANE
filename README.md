@@ -89,11 +89,9 @@ The hack needs the developer to re-compile the ANE through the following procedu
    including the file extension.
 5. Compile your application normally.
 
-## Android known issues
-Since Android API level 26 (Oreo) all notifications need to be assigned to a notification channel
-otherwise they will not trigger. Because of this breaking change the ANE is not currently working
-on devices with those API levels. To make them work again I need to add breaking changes into
-the AS3 ANE code as well. This has been already scheduled so please be patient.
+**Note:** You can actually simply open the ANE file with a compression app e.g. 7zip
+and modify or add icons at will. Thanks to [@subdan](https://github.com/subdan)
+for pointing this out.
 
 # The ActionScript 3.0 source code
 
@@ -169,6 +167,18 @@ but not for production:
 Intermediate files will be placed inside the `bin/tmp` folder while the resulting
 ANE will be placed at `bin/ext`, you can then use this ANE file to compile the
 repository provided samples or for your own projects.
+
+### Windows command line scripts
+I'm planning to create .bat files for Windows to replicate the build shell scripts
+into this OS as well.
+
+Right now only the build `bin/build-ane-android.bat` and `bin/build-ane-android-simulator`
+scripts are implemented, as well as the `samples/plain_as/run-android-app.bat` and 
+`samples/plain_as/run-android-emulator-app.bat` scripts to allow packaging and installing
+the sample application into Android emulator or real devices.
+
+These batch scripts depend on the 7zip `7za` command line application, so you might need to
+download it and place it in your PATH.
 
 ## Samples
 Originally I placed a FlashBuilder sample as well as a Flash Professional one
