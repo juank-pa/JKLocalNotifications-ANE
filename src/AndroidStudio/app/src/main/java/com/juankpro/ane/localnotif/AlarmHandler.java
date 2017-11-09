@@ -34,6 +34,8 @@ class AlarmHandler {
         String title = bundle.getString(Constants.TITLE);
         String body = bundle.getString(Constants.BODY);
 
+        NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle()
+                .bigText(body);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(iconResource)
@@ -41,7 +43,8 @@ class AlarmHandler {
                         .setContentText(body)
                         .setTicker(tickerText)
                         .setDefaults(getDefaults())
-                        .setNumber(numberAnnotation);
+                        .setNumber(numberAnnotation)
+                        .setStyle(style);
         setupMiscellaneous(builder);
         setupAction(builder);
         return builder;
@@ -50,7 +53,7 @@ class AlarmHandler {
     private int getDefaults() {
         return soundDefault(bundle.getBoolean(Constants.PLAY_SOUND)) |
                 vibrateDefault(bundle.getBoolean(Constants.VIBRATE)) |
-                lightDefault(true);
+                Notification.DEFAULT_LIGHTS;
     }
 
     private int soundDefault(boolean playSound) {
@@ -59,10 +62,6 @@ class AlarmHandler {
 
     private int vibrateDefault(boolean vibrate) {
         return vibrate? Notification.DEFAULT_VIBRATE : 0;
-    }
-
-    private int lightDefault(boolean showLights) {
-        return showLights? Notification.DEFAULT_LIGHTS : 0;
     }
 
     private void setupAction(NotificationCompat.Builder builder) {
