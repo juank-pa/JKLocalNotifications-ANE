@@ -33,17 +33,13 @@
       stage.addEventListener(Event.RESIZE, resizeHandler);
     }
 
-    private var initialized:Boolean = false;
-
     private function resizeHandler(event:Event):void {
+      stage.removeEventListener(Event.RESIZE, resizeHandler);
       initApp();
       printMessage("Resized");
     }
 
     private function initApp():void {
-      if (initialized) return;
-      initialized = true;
-
       if (NotificationManager.isSupported) {
         notificationManager = new NotificationManager();
 
@@ -109,10 +105,10 @@
         case postButton:
           var notification:Notification = new Notification();
           notification.title = "Sample Title";
-          notification.body = "Body sample";
+          notification.body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque condimentum magna a interdum pharetra. Integer pharetra magna at viverra lobortis.";
           notification.actionLabel = "Rumble";
           notification.soundName = "fx05.caf";
-          notification.fireDate = new Date((new Date()).time + (15 * 1000));
+          notification.fireDate = new Date((new Date()).time + (10 * 1000));
           notification.numberAnnotation = 3;
           notification.actionData = {sampleData:"Hello World!"};
           notification.iconType = "ic_stat_notify_dog_icon";
