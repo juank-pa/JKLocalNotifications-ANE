@@ -1,8 +1,12 @@
 package com.juankpro.ane.localnotif;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -11,15 +15,17 @@ import static org.mockito.Mockito.*;
  * Created by Juank on 10/24/17.
  */
 
-public class LocalNotificationDispatcherTest {
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({LocalNotificationsContext.class})
+public class LocalNotificationEventDispatcherTest {
     @Mock private LocalNotificationsContext context;
-    private LocalNotificationDispatcher subject;
+    private LocalNotificationEventDispatcher subject;
     private String code = "My Code";
     private byte[] data = new byte[]{0};
 
-    private LocalNotificationDispatcher getSubject() {
+    private LocalNotificationEventDispatcher getSubject() {
         if (subject == null) {
-            subject = new LocalNotificationDispatcher(context, code, data);
+            subject = new LocalNotificationEventDispatcher(code, data);
         }
         return subject;
     }
@@ -28,18 +34,9 @@ public class LocalNotificationDispatcherTest {
         ApplicationStatus.reset();
         LocalNotificationCache.clear();
         MockitoAnnotations.initMocks(this);
-    }
 
-    @Test
-    public void dispatcher_initializedWithoutContext_generatesADefaultOne() {
-        LocalNotificationDispatcher dispatcher = new LocalNotificationDispatcher(code, data);
-        assertNotSame(context, dispatcher.getNotificationContext());
-    }
-
-    @Test
-    public void dispatcher_initializedWithContext_usesGivenContext() {
-        setup();
-        assertSame(getSubject().getNotificationContext(), context);
+        PowerMockito.mockStatic(LocalNotificationsContext.class);
+        when(LocalNotificationsContext.getInstance()).thenReturn(context);
     }
 
     private void assertCache() {
