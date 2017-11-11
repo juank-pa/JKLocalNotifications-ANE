@@ -173,7 +173,7 @@ I'm planning to create .bat files for Windows to replicate the build shell scrip
 into this OS as well.
 
 Right now only the build `bin/build-ane-android.bat` and `bin/build-ane-android-simulator`
-scripts are implemented, as well as the `samples/plain_as/run-android-app.bat` and 
+scripts are implemented, as well as the `samples/plain_as/run-android-app.bat` and
 `samples/plain_as/run-android-emulator-app.bat` scripts to allow packaging and installing
 the sample application into Android emulator or real devices.
 
@@ -235,8 +235,9 @@ More information [here](#adding-android-custom-icons-hack).
 
 # ANE distribution
 If what you want is simply get the latest version of the ANE and use it in your own
-project you will find the latest compiled version of the IPA at `bin/dist`. Just grab
-it and use it. Use the samples provided to learn a bit more.
+project you can download the latest compiled version from the
+[Releases](https://github.com/juank-pa/JKLocalNotifications-ANE/releases) page.
+Just grab it and use it. Use the samples provided to learn a bit more.
 
 # Documentation
 The AS3 classes are well documented by using comments. But if you need a user friendly

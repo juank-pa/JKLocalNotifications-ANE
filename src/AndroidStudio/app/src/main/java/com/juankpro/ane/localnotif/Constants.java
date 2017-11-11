@@ -7,6 +7,8 @@ package com.juankpro.ane.localnotif;
 class Constants {
     static final int STANDARD_NOTIFICATION_ID = 0;
 
+    static final String NOTIFICATION_INTENT_SERVICE = "com.juankpro.ane.localnotif.LocalNotificationIntentService";
+
     static final String MAIN_ACTIVITY_CLASS_NAME_KEY = "com.juankpro.ane.localnotif.mainActivityClassNameKey";
 
     static final String NOTIFICATION_CODE_KEY = "com.juankpro.ane.localnotif.notificationCodeKey";

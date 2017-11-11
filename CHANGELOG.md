@@ -1,3 +1,6 @@
+### Version 1.0.5
+* Android notifications support large notification body texts using expanded layout.
+
 ### Version 1.0.4
 * Added batch scripts to allow compiling the ANEs and running the sample application on
   Android devices on Windows.

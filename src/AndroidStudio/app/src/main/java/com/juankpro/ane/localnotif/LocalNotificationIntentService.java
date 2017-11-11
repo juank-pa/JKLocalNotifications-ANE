@@ -10,24 +10,24 @@ import android.content.Intent;
 
 public class LocalNotificationIntentService extends IntentService {
     public LocalNotificationIntentService() {
-        super("com.juankpro.ane.localnotif.LocalNotificationIntentService");
+        super(Constants.NOTIFICATION_INTENT_SERVICE);
     }
 
     @Override
     public final void onHandleIntent(Intent intent) {
         Context context = getApplicationContext();
 
-        String code = intent.getStringExtra(Constants.NOTIFICATION_CODE_KEY);
-        byte[] data = intent.getByteArrayExtra(Constants.ACTION_DATA_KEY);
-        new LocalNotificationDispatcher(code, data).dispatchInBackground();
+        tryEventDispatch(intent);
 
-        // If the app is not running, or it's running, but in the background, start it by bringing it to the foreground or launching it.
-        // The OS will handle what happens correctly.
-        if(!ApplicationStatus.getInForeground()) {
-            bringActivityToForeground(context, intent);
-        }
+        if(!ApplicationStatus.getInForeground()) bringActivityToForeground(context, intent);
 
         logStatus(intent);
+    }
+
+    private boolean tryEventDispatch(Intent intent) {
+        String code = intent.getStringExtra(Constants.NOTIFICATION_CODE_KEY);
+        byte[] data = intent.getByteArrayExtra(Constants.ACTION_DATA_KEY);
+        return new LocalNotificationEventDispatcher(code, data).dispatchInBackground();
     }
 
     private void bringActivityToForeground(Context context, Intent intent) {

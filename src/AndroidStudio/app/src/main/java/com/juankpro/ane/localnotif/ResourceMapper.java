@@ -1,7 +1,5 @@
 package com.juankpro.ane.localnotif;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.adobe.fre.FREContext;
 
 /**
