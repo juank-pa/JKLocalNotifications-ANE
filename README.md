@@ -80,6 +80,10 @@ Additionally the project contains icons in the resource folder `res` which are c
 to the final ANE to allow the Java version to set an icon for the notification.
 Edit the icons in this project if you want to customize them.
 
+Don't forget to look at the sample project at `samples/plain_as` to see what are
+the permissions and components needed in your own application XML file to make this
+ANE work.
+
 ## Adding Android custom icons HACK
 There is a way to add custom icons to the Android notifications but only through a hack.
 Referencing a packaged bitmap directly is possible only on Android API level 24 (Nougat) and later.

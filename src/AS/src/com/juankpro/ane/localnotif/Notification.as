@@ -49,7 +49,7 @@
      * Specifies if the notification is cleared from the notifications list and status bar after
      * it is selected.
      * <p>Supported OS: Android</p>
-     * @default true
+     * @default false
      */
     public var cancelOnSelect:Boolean = false;
 
@@ -108,8 +108,10 @@
      * Specifies a sound by name that will be played when the notification arrives.
      * If <code>playSound</code> is true but <code>soundName</code> is not defined
      * then the operating system default sound is used.
-     * <p>Supported OS: iOS</p>
-     * @default true
+     * <p>Android and iOS support different audio formats so, to make the notification
+     * sound compatible with both you need to use the wav format at 8, 16 or 44KHz.</p>
+     * <p>Supported OS: Android, iOS</p>
+     * @default null
      * @see #playSound
      */
     public var soundName:String = null;
