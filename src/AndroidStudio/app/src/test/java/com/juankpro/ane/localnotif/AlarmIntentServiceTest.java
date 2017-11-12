@@ -2,7 +2,6 @@ package com.juankpro.ane.localnotif;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,8 +35,6 @@ public class AlarmIntentServiceTest {
     private Bundle bundle;
     @Mock
     private Intent intent;
-    @Mock
-    private PendingIntent pendingIntent;
     @Mock
     private NotificationIntentFactory intentFactory;
     @Mock
