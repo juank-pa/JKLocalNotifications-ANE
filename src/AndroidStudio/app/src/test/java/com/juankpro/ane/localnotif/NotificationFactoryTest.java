@@ -3,6 +3,7 @@ package com.juankpro.ane.localnotif;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
@@ -10,13 +11,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -27,7 +28,7 @@ import static org.junit.Assert.*;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({NotificationFactory.class})
+@PrepareForTest({NotificationFactory.class,Uri.class})
 public class NotificationFactoryTest {
     @Mock
     private Context context;
@@ -116,25 +117,35 @@ public class NotificationFactoryTest {
         getSubject().create(intentFactory);
         verify(builder).setDefaults(Notification.DEFAULT_LIGHTS);
 
-        when(bundle.getBoolean(Constants.PLAY_SOUND)).thenAnswer(new Answer<Boolean>() {
-            public Boolean answer(InvocationOnMock invocation) {
-                return true;
-            }
-        });
+        when(bundle.getBoolean(Constants.PLAY_SOUND)).thenReturn(true);
 
         getSubject().create(intentFactory);
         verify(builder).setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS);
+        verify(builder, never()).setSound(any(Uri.class));
+    }
+
+    @Test
+    public void factory_create_createsWithCustomSound() {
+        setup();
+
+        when(bundle.getBoolean(Constants.PLAY_SOUND)).thenReturn(true);
+        when(bundle.getString(Constants.SOUND_NAME)).thenReturn("sound.mp3");
+
+        Uri uri = mock(Uri.class);
+        PowerMockito.mockStatic(Uri.class);
+        when(Uri.parse("content://com.juankpro.ane.localnotif.provider/sound.mp3")).thenReturn(uri);
+
+
+        getSubject().create(intentFactory);
+        verify(builder).setDefaults(Notification.DEFAULT_LIGHTS);
+        verify(builder).setSound(uri);
     }
 
     @Test
     public void factory_create_createsWithDefaultVibration() {
         setup();
 
-        when(bundle.getBoolean(Constants.VIBRATE)).thenAnswer(new Answer<Boolean>() {
-            public Boolean answer(InvocationOnMock invocation) {
-                return true;
-            }
-        });
+        when(bundle.getBoolean(Constants.VIBRATE)).thenReturn(true);
 
         getSubject().create(intentFactory);
         verify(builder).setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
@@ -147,11 +158,7 @@ public class NotificationFactoryTest {
         getSubject().create(intentFactory);
         verify(builder).setOngoing(false);
 
-        when(bundle.getBoolean(Constants.ON_GOING)).thenAnswer(new Answer<Boolean>() {
-            public Boolean answer(InvocationOnMock invocation) {
-                return true;
-            }
-        });
+        when(bundle.getBoolean(Constants.ON_GOING)).thenReturn(true);
 
         getSubject().create(intentFactory);
         verify(builder).setOngoing(true);
@@ -164,11 +171,7 @@ public class NotificationFactoryTest {
         getSubject().create(intentFactory);
         verify(builder).setAutoCancel(false);
 
-        when(bundle.getBoolean(Constants.CANCEL_ON_SELECT)).thenAnswer(new Answer<Boolean>() {
-            public Boolean answer(InvocationOnMock invocation) {
-                return true;
-            }
-        });
+        when(bundle.getBoolean(Constants.CANCEL_ON_SELECT)).thenReturn(true);
 
         getSubject().create(intentFactory);
         verify(builder).setAutoCancel(true);
@@ -181,11 +184,7 @@ public class NotificationFactoryTest {
         getSubject().create(intentFactory);
         verify(builder).setOnlyAlertOnce(false);
 
-        when(bundle.getString(Constants.ALERT_POLICY)).thenAnswer(new Answer<String>() {
-            public String answer(InvocationOnMock invocation) {
-                return "firstNotification";
-            }
-        });
+        when(bundle.getString(Constants.ALERT_POLICY)).thenReturn("firstNotification");
 
         getSubject().create(intentFactory);
         verify(builder).setOnlyAlertOnce(true);
@@ -195,11 +194,7 @@ public class NotificationFactoryTest {
     public void factory_create_createsToAlertOnlyOnceWithSomethingElse() {
         setup();
 
-        when(bundle.getString(Constants.ALERT_POLICY)).thenAnswer(new Answer<String>() {
-            public String answer(InvocationOnMock invocation) {
-                return "somethingElse";
-            }
-        });
+        when(bundle.getString(Constants.ALERT_POLICY)).thenReturn("somethingElse");
 
         getSubject().create(intentFactory);
         verify(builder).setOnlyAlertOnce(false);
@@ -209,11 +204,10 @@ public class NotificationFactoryTest {
     public void factory_create_createsWithAction() {
         setup();
 
-        when(bundle.getBoolean(Constants.HAS_ACTION)).thenAnswer(new Answer<Boolean>() {
-            public Boolean answer(InvocationOnMock invocation) {
-                return true;
-            }
-        });
+        getSubject().create(intentFactory);
+        verify(builder, never()).setContentIntent(pendingIntent);
+
+        when(bundle.getBoolean(Constants.HAS_ACTION)).thenReturn(true);
 
 
         getSubject().create(intentFactory);
