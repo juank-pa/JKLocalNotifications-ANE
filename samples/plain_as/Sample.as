@@ -107,7 +107,7 @@
           notification.title = "Sample Title";
           notification.body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque condimentum magna a interdum pharetra. Integer pharetra magna at viverra lobortis.";
           notification.actionLabel = "Rumble";
-          notification.soundName = "fx05.caf";
+          notification.soundName = "fx05.wav";
           notification.fireDate = new Date((new Date()).time + (10 * 1000));
           notification.numberAnnotation = 3;
           notification.actionData = {sampleData:"Hello World!"};

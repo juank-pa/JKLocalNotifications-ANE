@@ -40,8 +40,8 @@ public class LocalNotificationEventDispatcherTest {
     }
 
     private void assertCache() {
-        assertEquals(LocalNotificationCache.getInstance().getNotificationCode(), code);
-        assertEquals(LocalNotificationCache.getInstance().getNotificationData(), data);
+        assertEquals(code, LocalNotificationCache.getInstance().getNotificationCode());
+        assertEquals(data, LocalNotificationCache.getInstance().getNotificationData());
         assertTrue(LocalNotificationCache.getInstance().wasUpdated());
     }
 
