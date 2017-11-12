@@ -1,3 +1,6 @@
+### Version 1.1.0
+* You can now use a custom sound for notifications in Android.
+
 ### Unreleased
 * Fixed a bug that prevented a notification from triggering if the app was not currently
   running and the event listener was registered after registering some other event listeners.
@@ -21,7 +24,7 @@
   [hack](https://github.com/juank-pa/JKLocalNotifications-ANE#adding-android-custom-icons-hack).
 
 ### Version 1.0.2
-* Improved and new build scripts for the Android ANE ans sample application.
+* Improved and new build scripts for the Android ANE and sample application.
 * The Android project was so outdated the was actually not working at all. The Android project
   has been ported from Eclipse to Android Studio and has been completely revamped to make it work
   and to use better coding practices.
@@ -41,3 +44,4 @@
 * Add notification information for Android and iOS.
 * Trigger notifications at a specific date in the future.
 * Re-schedule notifications at regular intervals.
+* The ANE was reborn after a long sleep.

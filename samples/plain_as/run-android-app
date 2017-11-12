@@ -17,6 +17,7 @@ echo "***** packaging SWF file into APK *****"
   $APP_NAME.apk \
   ${APP_NAME}-app.xml \
   $APP_NAME.swf \
+  fx05.wav \
   -extdir $EXT_PATH
 
 # For these steps the device must be running
