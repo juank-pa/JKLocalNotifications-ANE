@@ -61,26 +61,15 @@ public class AssetProvider extends ContentProvider {
         try {
             final File cacheFile = new File(getContext().getCacheDir(), assetPath);
 
-            if (cacheFile.exists()) {
-                Logger.log("File already in cache.");
-                return getFd(cacheFile);
-            }
+            if (cacheFile.exists()) return getFd(cacheFile);
 
-            Logger.log("Decompressing file: " + assetPath);
             cacheFile.getParentFile().mkdirs();
             copyToCacheFile(assetPath, cacheFile);
             return getFd(cacheFile);
         }
-        catch (FileNotFoundException e) {
-            Logger.log("FileNotFoundException: " + e.getMessage());
-            throw e;
+        catch (Exception e) {
+            throw new FileNotFoundException(e.getMessage());
         }
-        catch (IOException e) {
-            Logger.log("Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     private void copyToCacheFile(final String assetPath, final File cacheFile) throws IOException {

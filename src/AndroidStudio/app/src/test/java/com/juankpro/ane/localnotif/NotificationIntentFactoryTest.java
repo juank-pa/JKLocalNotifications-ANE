@@ -9,8 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -48,21 +46,9 @@ public class NotificationIntentFactoryTest {
     private void setup() {
         MockitoAnnotations.initMocks(this);
 
-        when(bundle.getString(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY)).thenAnswer(new Answer<String>() {
-            public String answer(InvocationOnMock invocation) {
-                return "ActivityClassName";
-            }
-        });
-        when(bundle.getString(Constants.NOTIFICATION_CODE_KEY)).thenAnswer(new Answer<String>() {
-            public String answer(InvocationOnMock invocation) {
-                return "MyCode";
-            }
-        });
-        when(bundle.getByteArray(Constants.ACTION_DATA_KEY)).thenAnswer(new Answer<byte[]>() {
-            public byte[] answer(InvocationOnMock invocation) {
-                return bytes;
-            }
-        });
+        when(bundle.getString(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY)).thenReturn("ActivityClassName");
+        when(bundle.getString(Constants.NOTIFICATION_CODE_KEY)).thenReturn("MyCode");
+        when(bundle.getByteArray(Constants.ACTION_DATA_KEY)).thenReturn(bytes);
 
         try {
             PowerMockito.whenNew(Intent.class).withNoArguments().thenReturn(intent);

@@ -21,8 +21,8 @@ public class LocalNotificationCacheTest {
     public void notificationCache_setDataForSelectedNotification() {
         byte[] data = {0};
         getSubject().setData("My Code", data);
-        assertEquals(getSubject().getNotificationCode(), "My Code");
-        assertEquals(getSubject().getNotificationData(), data);
+        assertEquals("My Code", getSubject().getNotificationCode());
+        assertEquals(data, getSubject().getNotificationData());
     }
 
     @Test
@@ -50,8 +50,8 @@ public class LocalNotificationCacheTest {
 
         getSubject().reset();
 
-        assertEquals(getSubject().getNotificationCode(), "My Code");
-        assertEquals(getSubject().getNotificationData(), data);
+        assertEquals("My Code", getSubject().getNotificationCode());
+        assertEquals(data, getSubject().getNotificationData());
     }
 
     @Test
