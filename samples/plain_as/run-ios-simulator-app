@@ -18,6 +18,8 @@ echo "***** packaging SWF file into IPA *****"
   ${APP_NAME}-app.xml \
   $APP_NAME.swf \
   fx05.wav \
+  Default~iphone.png \
+  -platformsdk $IPHONE_SDK \
   -extdir $EXT_PATH
 
 echo "**** Installing IPA in iOS simulator ******"
@@ -26,11 +28,13 @@ echo "**** Installing IPA in iOS simulator ******"
 "$ADT" -installApp \
   -platform ios \
   -device ios-simulator \
-  -package $APP_NAME.ipa
+  -package $APP_NAME.ipa \
+  -platformsdk $IPHONE_SDK
 
 echo "**** Launching iOS simulator ******"
 
 "$ADT" -launchApp \
   -platform ios \
   -device ios-simulator \
-  -appid com.juankpro.Sample
+  -appid com.juankpro.Sample \
+  -platformsdk $IPHONE_SDK
