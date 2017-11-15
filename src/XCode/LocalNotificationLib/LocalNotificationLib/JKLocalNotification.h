@@ -24,6 +24,7 @@
 @property(nonatomic, copy) NSString *soundName;
 @property(nonatomic, assign) JKCalendarUnit repeatInterval;
 @property(nonatomic, readonly) NSDictionary *userInfo;
+@property(nonatomic, copy) NSString *launchImage;
 
 @end
 
