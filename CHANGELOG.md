@@ -1,5 +1,7 @@
 ### Version 1.1.0
 * You can now use a custom sound for notifications in Android.
+* Use the new `Notification.launchImage` property to replace the launch image used when the
+  application is launched when a specific notification triggers.
 
 ### Version 1.0.5
 * Android notifications support large notification body texts using expanded layout.
