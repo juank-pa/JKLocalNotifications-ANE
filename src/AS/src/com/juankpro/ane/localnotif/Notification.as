@@ -168,6 +168,17 @@
     public var repeatInterval:uint = 0;
 
     /**
+     * The image to use when launching the application. This image will replace
+     * the default launch image used while launching the app normally.
+     * <p>This represents the base name of the image so, many images can be
+     * provided following the <a href="https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW24">iOS naming convention</a>
+     * for default images</p>
+     * <p>Supported OS: iOS</p>
+     * @default null
+     */
+    public var launchImage:String = null;
+
+    /**
      * Initializes the notification.
      * <p>Supported OS: Android, iOS</p>
      */

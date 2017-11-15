@@ -112,6 +112,7 @@
           notification.numberAnnotation = 3;
           notification.actionData = {sampleData:"Hello World!"};
           notification.iconType = "ic_stat_notify_dog_icon";
+          notification.launchImage = "DefaultPink.png";
 
           notificationManager.notifyUser(NOTIFICATION_CODE, notification);
           printNotification('Posted Message', notification);
