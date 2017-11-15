@@ -29,6 +29,7 @@
     self.notification.hasAction = YES;
     self.notification.numberAnnotation = 10;
     self.notification.notificationCode = @"code123";
+    self.notification.launchImage = @"launchImage";
 
     self.subject = [JKNotificationBuilder new];
 }
@@ -46,6 +47,7 @@
     XCTAssertEqualObjects(self.notification.userInfo, self.localNotification.userInfo);
     XCTAssertEqual(self.notification.fireDate, self.localNotification.fireDate);
     XCTAssertEqual(self.localNotification.timeZone, [NSTimeZone defaultTimeZone]);
+    XCTAssertEqual(self.localNotification.alertLaunchImage, self.notification.launchImage);
 
     if ([self.localNotification respondsToSelector:@selector(alertTitle)]) {
         XCTAssertEqual(self.localNotification.alertTitle, self.notification.title);

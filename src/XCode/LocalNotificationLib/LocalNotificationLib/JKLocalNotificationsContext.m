@@ -151,11 +151,17 @@ FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
         }
         
         // Repeat Interval.
+        FREObject freLaunghImage = [ExtensionUtils getProperty:@"launchImage" fromObject:notification];
+        if (freLaunghImage) {
+            localNotification.launchImage = [ExtensionUtils getStringFromFREObject:freLaunghImage];
+        }
+
+        // Repeat Interval.
         FREObject freRepeatInterval = [ExtensionUtils getProperty:@"repeatInterval" fromObject:notification];
         if (freRepeatInterval) {
             localNotification.repeatInterval = [ExtensionUtils getUIntFromFREObject:freRepeatInterval];
         }
-        
+
         // Action Label.
         FREObject freActionLabel = [ExtensionUtils getProperty:@"actionLabel" fromObject:notification];
         if (freActionLabel) {
