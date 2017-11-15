@@ -24,6 +24,7 @@
     localNotification.soundName = [self soundNameForNotification:notification];
     localNotification.applicationIconBadgeNumber = notification.numberAnnotation;
     localNotification.userInfo = notification.userInfo;
+    localNotification.alertLaunchImage = notification.launchImage;
 
     if ([localNotification respondsToSelector:@selector(setAlertTitle:)]) {
         localNotification.alertTitle = notification.title;

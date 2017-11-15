@@ -20,6 +20,7 @@ echo "***** packaging SWF file into IPA *****"
   $APP_NAME.swf \
   fx05.wav \
   Default~iphone.png \
+  DefaultPink~iphone.png \
   -extdir $EXT_PATH
 
 echo "**** Installing IPA in iOS simulator ******"
