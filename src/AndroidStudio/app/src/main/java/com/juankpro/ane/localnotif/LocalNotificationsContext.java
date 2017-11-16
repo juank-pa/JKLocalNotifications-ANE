@@ -178,9 +178,9 @@ class LocalNotificationsContext extends FREContext {
 
         // Miscellaneous.
         localNotification.cancelOnSelect = ExtensionUtils.getBooleanProperty(freObject, "cancelOnSelect", localNotification.cancelOnSelect);
-        localNotification.repeatAlertUntilAcknowledged = ExtensionUtils.getBooleanProperty(freObject, "repeatAlertUntilAcknowledged", localNotification.repeatAlertUntilAcknowledged);
         localNotification.alertPolicy = ExtensionUtils.getStringProperty(freObject, "alertPolicy", localNotification.alertPolicy);
         localNotification.ongoing = ExtensionUtils.getBooleanProperty(freObject, "ongoing", localNotification.ongoing);
+        localNotification.priority = ExtensionUtils.getIntProperty(freObject, "priority", localNotification.priority);
 
         // Action data.
         FREByteArray byteArray = (FREByteArray) freObject.getProperty("actionData");

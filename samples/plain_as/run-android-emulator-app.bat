@@ -1,10 +1,10 @@
 echo off
 
 set RUN_SCRIPT_PATH=%~dp0
-call %RUN_SCRIPT_PATH%..\..\bin\config\config
+call ..\..\bin\config\config
 set BUILD_ANE_PATH=%EXT_PATH%\..\build-ane-android-emulator
 
-call %RUN_SCRIPT_PATH%prepare_android
+call prepare_android
 
 echo ***** packaging SWF file into APK *****
 
@@ -15,9 +15,10 @@ call %ADT% -package ^
   -storetype pkcs12 -keystore %CERT_FILE% ^
   -storepass %CERT_PASS% ^
   -keypass %CERT_PASS% ^
-  %RUN_SCRIPT_PATH%%APP_NAME%.apk ^
-  %RUN_SCRIPT_PATH%%APP_NAME%-app.xml ^
-  %RUN_SCRIPT_PATH%%APP_NAME%.swf ^
+  %APP_NAME%.apk ^
+  %APP_NAME%-app.xml ^
+  %APP_NAME%.swf ^
+  fx05.wav ^
   -extdir %EXT_PATH%
 
 :: To install successfully emulator must be running.

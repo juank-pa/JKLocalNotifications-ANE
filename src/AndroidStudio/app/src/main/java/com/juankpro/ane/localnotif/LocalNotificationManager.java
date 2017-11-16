@@ -45,11 +45,11 @@ class LocalNotificationManager {
         intent.putExtra(Constants.SOUND_NAME, localNotification.soundName);
         intent.putExtra(Constants.VIBRATE, localNotification.vibrate);
         intent.putExtra(Constants.CANCEL_ON_SELECT, localNotification.cancelOnSelect);
-        intent.putExtra(Constants.REPEAT_UNTIL_ACKNOWLEDGE, localNotification.repeatAlertUntilAcknowledged);
         intent.putExtra(Constants.ON_GOING, localNotification.ongoing);
         intent.putExtra(Constants.ALERT_POLICY, localNotification.alertPolicy);
         intent.putExtra(Constants.HAS_ACTION, localNotification.hasAction);
         intent.putExtra(Constants.ACTION_DATA_KEY, localNotification.actionData);
+        intent.putExtra(Constants.PRIORITY, localNotification.priority);
 
         Logger.log("LocalNotificationManager when:" + String.valueOf(notificationTime) + ", current:" + System.currentTimeMillis());
 

@@ -65,6 +65,7 @@ public class NotificationFactoryTest {
         when(bundle.getString(Constants.TITLE)).thenReturn("Title");
         when(bundle.getString(Constants.BODY)).thenReturn("Body");
         when(bundle.getString(Constants.NOTIFICATION_CODE_KEY)).thenReturn("MyCode");
+        when(bundle.getInt(Constants.PRIORITY)).thenReturn(2);
 
         when(builder.setContentTitle(any(CharSequence.class))).thenReturn(builder);
         when(builder.setContentText(any(CharSequence.class))).thenReturn(builder);
@@ -77,6 +78,7 @@ public class NotificationFactoryTest {
         when(builder.setAutoCancel(anyBoolean())).thenReturn(builder);
         when(builder.setOnlyAlertOnce(anyBoolean())).thenReturn(builder);
         when(builder.setStyle(any(NotificationCompat.Style.class))).thenReturn(builder);
+        when(builder.setPriority(anyInt())).thenReturn(builder);
         when(builder.build()).thenReturn(notification);
 
         when(textStyle.bigText(anyString())).thenReturn(textStyle);
@@ -93,6 +95,7 @@ public class NotificationFactoryTest {
         verify(builder).setTicker("Ticker text");
         verify(builder).setContentTitle("Title");
         verify(builder).setContentText("Body");
+        verify(builder).setPriority(2);
         assertSame(notification, this.notification);
     }
 
