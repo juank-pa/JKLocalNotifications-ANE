@@ -1,10 +1,9 @@
 echo off
 
-set RUN_SCRIPT_PATH=%~dp0
-call %RUN_SCRIPT_PATH%..\..\bin\config\config
+call .\..\..\bin\config\config
 set BUILD_ANE_PATH=%EXT_PATH%\..\build-ane-android
 
-call %RUN_SCRIPT_PATH%\prepare_android
+call prepare_android
 
 echo ***** packaging SWF file into APK *****
 
@@ -17,6 +16,7 @@ call %ADT% -package ^
   %APP_NAME%.apk ^
   %APP_NAME%-app.xml ^
   %APP_NAME%.swf ^
+  fx05.wav ^
   -extdir %EXT_PATH%
 
 :: For these steps the device must be running

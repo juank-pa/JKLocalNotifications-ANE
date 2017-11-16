@@ -1,8 +1,16 @@
 #!/bin/bash
 
-cd $TRAVIS_BUILD_DIR/src/XCode/LocalNotificationLib
+set -ev
 
-xcodebuild test \
-  -project LocalNotificationLib.xcodeproj \
-  -scheme LocalNotificationTests \
-  -destination "$XCODE_DESTINATION"
+if [ "$LANG" = "Android" ]
+then
+  cd $TRAVIS_BUILD_DIR/src/AndroidStudio
+  ./gradlew test
+else
+  cd $TRAVIS_BUILD_DIR/src/XCode/LocalNotificationLib
+
+  xcodebuild test \
+    -project LocalNotificationLib.xcodeproj \
+    -scheme LocalNotificationTests \
+    -destination "$XCODE_DESTINATION"
+fi
