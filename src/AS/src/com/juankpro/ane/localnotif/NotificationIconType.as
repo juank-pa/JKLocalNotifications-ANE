@@ -1,7 +1,7 @@
 ﻿package com.juankpro.ane.localnotif {
 	/**
 	 * A class of constants representing the different icon types available to use with the
-   * <code>iconType</code> property of the Notification class.
+     * <code>iconType</code> property of the Notification class.
 	 * <p>Supported OS: Android</p>
 	 */
     final public class NotificationIconType {

@@ -117,14 +117,6 @@
     public var soundName:String = null;
 
     /**
-     * The alert (sound and vibration) of a notification will be repeated until it is canceled
-     * or the notifications list is opened.
-     * <p>Supported OS: Android</p>
-     * @default false
-     */
-    public var repeatAlertUntilAcknowledged:Boolean = false;
-
-    /**
      * The text that is displayed in the status bar when the notification first arrives.
      * <p>Supported OS: Android</p>
      * @default null
@@ -171,12 +163,24 @@
      * The image to use when launching the application. This image will replace
      * the default launch image used while launching the app normally.
      * <p>This represents the base name of the image so, many images can be
-     * provided following the <a href="https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW24">iOS naming convention</a>
+     * provided following the <a href="https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW24" target="_blank">iOS naming convention</a>
      * for default images</p>
      * <p>Supported OS: iOS</p>
      * @default null
      */
     public var launchImage:String = null;
+
+    /**
+     * Determines the amount of presence given to the notification on Android devices.
+     * Lower priority levels might not sound or vibrate while high priority levels can
+     * even show a heads-up notification.
+     * <p>For a detail on priority levels see <code>NotificationPriority</code>.</p>
+     * <p>Heads-up notifications are only available since Android 5.0 (API level 21).</p>
+     * <p>Supported OS: Android</p>
+     * @default NotificationPriority.DEFAULT
+     * @see com.juankpro.ane.localnotif.NotificationPriority
+   */
+    public var priority:int = NotificationPriority.DEFAULT;
 
     /**
      * Initializes the notification.
