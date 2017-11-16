@@ -8,6 +8,12 @@ and adds some other capabilities to the iOS side, like the ability to re-schedul
 local notifications in the future and the ability to update the application
 badge number at will.
 
+**Important Note**
+The ANE binary is no longer packed with this repository only its source code. You
+can download the latest compiled version from the Github repository
+[Releases](https://github.com/juank-pa/JKLocalNotifications-ANE/releases) page.
+Use the provided samples to learn more about its usage.
+
 This LocalNotification ANE repository contains many different components:
 - The Java source code to allow notifications on Android devices (src/AndroidStudio).
 - The Objective-C source code to allow notifications on iOS devices (src/XCode).
@@ -225,12 +231,6 @@ These scripts add the resources at `samples/plain_as/res` to the generated ANE e
 More information [here](#adding-android-custom-icons-hack).
 
 Note that Windows batch files are also provided to allow packaging and compiling the Android app.
-
-# ANE distribution
-If what you want is simply get the latest version of the ANE and use it in your own
-project you can download the latest compiled version from the Github repository
-[Releases](https://github.com/juank-pa/JKLocalNotifications-ANE/releases) page.
-Just grab it and use it. Use the samples provided to learn a bit more.
 
 # Documentation
 The AS3 classes are well documented by using comments. But if you need a user friendly
