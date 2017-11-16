@@ -84,18 +84,9 @@ Referencing a packaged bitmap directly is possible only on Android API level 24 
 This will have forced the ANE to support level 24 and later versions and I'm always trying to
 support 95-99% of the currently existing devices.
 
-The hack needs the developer to re-compile the ANE through the following procedure:
-
-1. Add a `res` folder under the `bin` folder.
-2. Place all additional resources there using the same structure as required for Android projects.
-3. Compile the ANE using one of the build shell scripts.
-4. In your AS3 application code set the `Notification.iconType` to the name of the file without
-   including the file extension.
-5. Compile your application normally.
-
-**Note:** You can actually simply open the ANE file with a compression app e.g. 7zip
+The hack is to simply open the ANE file with a compression app e.g. 7zip
 and modify or add icons at will. Thanks to [@subdan](https://github.com/subdan)
-for pointing this out.
+for pointing this one out.
 
 # The ActionScript 3.0 source code
 
@@ -139,7 +130,7 @@ To compile the ANE:
 1. First ensure that you have compiled the iOS and Android source codes for
 the desired device target. I might try to automatize the library compilation in the
 future but for now you need to do this manually.
-2. Change directory to `bin`.
+2. Change directory to `bin`. (optional)
 3. If necessary update the `bin/config.sh` file to adjust your AIR SDK path and version.
 You might also need to adjust the XCode `CONFIGURATION` to match the configuration you used
 to compile the XCode `.a` library (`Debug` or `Release`).
@@ -161,9 +152,12 @@ but not for production:
   # or
   ./build-ane-android
   ```
-* If you want to compile a version of the ANE suitable for the iOS simulator use:
+* If you want to compile a version of the ANE suitable for the iOS simulator or Android
+  emulator use:
   ```bash
   ./build-ane-ios-simulator
+  # or
+  ./build-ane-android-emulator
   ```
   Please modify the `CONFIGURATION` to match the configuration used to compile
   the `.a` library.
@@ -173,26 +167,19 @@ ANE will be placed at `bin/ext`, you can then use this ANE file to compile the
 repository provided samples or for your own projects.
 
 ### Windows command line scripts
-I'm planning to create .bat files for Windows to replicate the build shell scripts
-into this OS as well.
-
 Right now only the build `bin/build-ane-android.bat` and `bin/build-ane-android-simulator`
 scripts are implemented, as well as the `samples/plain_as/run-android-app.bat` and
 `samples/plain_as/run-android-emulator-app.bat` scripts to allow packaging and installing
 the sample application into Android emulator or real devices.
 
-These batch scripts depend on the 7zip `7za` command line application, so you might need to
+These batch scripts depend on the 7zip `7za` command line application, so you need to
 download it and place it in your PATH.
 
 ## Samples
-Originally I placed a FlashBuilder sample as well as a Flash Professional one
-(now Animate). Because I am now a huge fan of command-line workflows I no longer
-support these editors. I left the samples in there but further support for them
-will definitively will depend on collaborators.
-
-The only supported sample right now is the one at `samples/plain_as`. This is a
-command-line based simple project. The sample contains a single `Sample.as` file
-a custom sound `fx05.caf` and some shell scripts.
+The repository has a sample project located at `samples/plain_as`. This is a
+command-line based simple project. The sample contains a single `Sample.as` file,
+a custom sound `fx05.wav`, default sample launch screens for iOS, sample custom icons
+for Android and some shell scripts to package the application.
 
 The sample will show buttons for sending a notification and cancelling it, as well
 as a simple console to print results.
@@ -237,9 +224,11 @@ they re-compile the ANE because the Sample uses a custom icon and this forces th
 These scripts add the resources at `samples/plain_as/res` to the generated ANE extension.
 More information [here](#adding-android-custom-icons-hack).
 
+Note that Windows batch files are also provided to allow packaging and compiling the Android app.
+
 # ANE distribution
 If what you want is simply get the latest version of the ANE and use it in your own
-project you can download the latest compiled version from the
+project you can download the latest compiled version from the Github repository
 [Releases](https://github.com/juank-pa/JKLocalNotifications-ANE/releases) page.
 Just grab it and use it. Use the samples provided to learn a bit more.
 
@@ -252,3 +241,5 @@ documentation you can run the following command while at the root path:
 This will create a doc folder at the root path on this repo with an HTML version of the
 documentation. Open the `index.html` file to read it.
 This command needs the AIR SDK installed in the expected folder. See [Requirements](#requirements).
+Lastly, I will start uploading the documentation in a zipped format downloadable from the
+Github repository Releases page.
