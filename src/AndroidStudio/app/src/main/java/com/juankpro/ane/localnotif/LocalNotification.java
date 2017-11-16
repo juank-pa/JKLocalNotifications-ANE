@@ -6,6 +6,7 @@ import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.NotificationManager;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
@@ -33,7 +34,6 @@ class LocalNotification {
 
     // Miscellaneous.
     boolean cancelOnSelect = false;
-    boolean repeatAlertUntilAcknowledged = false;
     boolean ongoing = false;
     String alertPolicy = "";
 
@@ -45,6 +45,8 @@ class LocalNotification {
 
     Date fireDate = new Date();
     int repeatInterval = 0;
+
+    int priority = NotificationManager.IMPORTANCE_DEFAULT;
 
     String activityClassName = "";
 
@@ -90,7 +92,6 @@ class LocalNotification {
             jsonObject.putOpt("iconResourceId", iconResourceId);
             jsonObject.putOpt("numberAnnotation", numberAnnotation);
             jsonObject.putOpt("cancelOnSelect", cancelOnSelect);
-            jsonObject.putOpt("repeatAlertUntilAcknowledged", repeatAlertUntilAcknowledged);
             jsonObject.putOpt("ongoing", ongoing);
             jsonObject.putOpt("alertPolicy", alertPolicy);
             jsonObject.putOpt("hasAction", hasAction);
@@ -98,6 +99,7 @@ class LocalNotification {
             jsonObject.putOpt("fireDate", fireDate.getTime());
             jsonObject.putOpt("repeatInterval", repeatInterval);
             jsonObject.putOpt("activityClassName", activityClassName);
+            jsonObject.putOpt("priority", priority);
 
             // Action data.
             for (byte anActionData : actionData) {
@@ -135,12 +137,12 @@ class LocalNotification {
             iconResourceId = jsonObject.optInt("iconResourceId", iconResourceId);
             numberAnnotation = jsonObject.optInt("numberAnnotation", numberAnnotation);
             cancelOnSelect = jsonObject.optBoolean("cancelOnSelect", cancelOnSelect);
-            repeatAlertUntilAcknowledged = jsonObject.optBoolean("repeatAlertUntilAcknowledged", repeatAlertUntilAcknowledged);
             ongoing = jsonObject.optBoolean("ongoing", ongoing);
             alertPolicy = jsonObject.optString("alertPolicy", alertPolicy);
             hasAction = jsonObject.optBoolean("hasAction", hasAction);
             soundName = jsonObject.optString("soundName", soundName);
             activityClassName = jsonObject.optString("activityClassName", activityClassName);
+            priority = jsonObject.optInt("priority", priority);
 
             long dateTime = jsonObject.optLong("fireDate", fireDate.getTime());
 

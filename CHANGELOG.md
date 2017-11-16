@@ -2,6 +2,9 @@
 * You can now use a custom sound for notifications in Android.
 * Use the new `Notification.launchImage` property to replace the launch image used when the
   application is launched when a specific notification triggers.
+* Allow Android packages to determine the notification priority to allow a more fine-grained
+  control over the notification presence and allow showing a heads-up notification for
+  Android 5.0 (API level 21) and later devices.
 
 ### Version 1.0.7
 * Fixed a bug that prevented a notification from triggering if the app was not currently
