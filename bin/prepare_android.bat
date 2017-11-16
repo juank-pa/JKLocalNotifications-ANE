@@ -18,7 +18,7 @@ copy %TEMP_PATH%\app-debug\classes.jar %TEMP_PATH%\android\%JAR_NAME%
 copy %NATIVE_ANDROID_FOLDER%\app\libs\support-v4.jar %TEMP_PATH%\android
 copy %NATIVE_ANDROID_FOLDER%\app\libs\support-compat.jar %TEMP_PATH%\android
 
-xcopy /E /Q %SCRIPT_PATH%res %TEMP_PATH%\android\res
+xcopy /E /Q %PREPARE_SCRIPT_PATH%res %TEMP_PATH%\android\res
 
 echo ****** Compiling AS3 library *******
 
