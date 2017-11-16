@@ -1,7 +1,4 @@
-set SCRIPT_PATH=%~dp0
-call %SCRIPT_PATH%config\config
-
-rmdir /S /Q %TEMP_PATH%
+set PREPARE_SCRIPT_PATH=%~dp0
 
 echo ****** ANDROID VERSION *******
 

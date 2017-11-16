@@ -23,8 +23,8 @@ class Constants {
     static final String SOUND_NAME = "NOTIF_SOUND_NAME";
     static final String VIBRATE = "NOTIF_VIBRATE";
     static final String CANCEL_ON_SELECT = "NOTIF_CANCEL_OS";
-    static final String REPEAT_UNTIL_ACKNOWLEDGE = "NOTIF_RUA";
     static final String ON_GOING = "NOTIF_ONGOING";
     static final String ALERT_POLICY = "NOTIF_POLICY";
     static final String HAS_ACTION = "NOTIF_HAS_ACTION";
+    static final String PRIORITY = "NOTIF_PRIORITY";
 }
