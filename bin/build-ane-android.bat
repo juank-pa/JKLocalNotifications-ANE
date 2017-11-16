@@ -1,7 +1,10 @@
 echo off
 
-set BUILD_ANE_PATH=%~dp0
-call %BUILD_ANE_PATH%prepare_android
+set SCRIPT_PATH=%~dp0
+call %SCRIPT_PATH%/config/config.sh
+rmdir /S /Q %TEMP_PATH%
+
+call %SCRIPT_PATH%prepare_android
 
 echo ****** Creating ANE package *******
 

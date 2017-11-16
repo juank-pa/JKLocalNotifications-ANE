@@ -25,6 +25,7 @@ class NotificationFactory {
         String tickerText = bundle.getString(Constants.TICKER_TEXT);
         String title = bundle.getString(Constants.TITLE);
         String body = bundle.getString(Constants.BODY);
+        int priority = bundle.getInt(Constants.PRIORITY);
 
         NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle()
                 .bigText(body);
@@ -35,7 +36,8 @@ class NotificationFactory {
                 .setTicker(tickerText)
                 .setDefaults(getDefaults())
                 .setNumber(numberAnnotation)
-                .setStyle(style);
+                .setStyle(style)
+                .setPriority(priority);
 
         setupSound(builder);
         setupMiscellaneous(builder);
