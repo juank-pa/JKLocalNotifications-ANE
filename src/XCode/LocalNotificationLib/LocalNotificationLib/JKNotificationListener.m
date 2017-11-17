@@ -27,8 +27,11 @@
 @synthesize delegate = _delegate;
 
 - (void)checkForNotificationAction {
+    if(self.hasTriggered) return;
     UILocalNotification *localNotification = [self localNotificationFromLaunchOptions];
-    [self dispatchDidReceiveNotificationWithUserInfo:localNotification.userInfo];
+    [self dispatchDidReceiveNotificationWithUserInfo:localNotification.userInfo completionHandler:^{
+        self.triggered = YES;
+    }];
 }
 
 - (UILocalNotification *)localNotificationFromLaunchOptions {
@@ -37,13 +40,17 @@
 }
 
 - (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo {
+    [self dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:NULL];
+}
+
+- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo completionHandler:(void(^)())completionHandler {
     if(!userInfo) { return; }
     _notificationCode = userInfo[JK_NOTIFICATION_CODE_KEY];
     _notificationData = userInfo[JK_NOTIFICATION_DATA_KEY];
 
     if (!self.hasTriggered && [self.delegate respondsToSelector:@selector(didReceiveNotificationDataForNotificationListener:)]) {
-        self.triggered = YES;
         [self.delegate didReceiveNotificationDataForNotificationListener:self];
+        if (completionHandler) completionHandler();
     }
 }
 
