@@ -9,11 +9,12 @@
 #import <UserNotifications/UserNotifications.h>
 #import "JKNewNotificationListener.h"
 #import "JKNewLocalNotificationFactory.h"
+#import "JKNotificationDispatcher.h"
 #import "Constants.h"
 
 @interface JKNotificationListener ()<UNUserNotificationCenterDelegate>
 @property (nonatomic, strong) id savedDelegate;
-- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo;
+@property (nonatomic, strong) JKNotificationDispatcher *dispatcher;
 @end
 
 @interface JKNewNotificationListener ()
@@ -60,14 +61,18 @@
 
 - (void)handleNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
     NSDictionary *userInfo = notification.request.content.userInfo;
-    [self dispatchDidReceiveNotificationWithUserInfo:userInfo];
-    completionHandler(UNNotificationPresentationOptionNone);
+    if ([userInfo[JK_NOTIFICATION_SHOW_IN_FOREGROUND] boolValue]) {
+        completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
+        return;
+    }
+    [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:^{
+        completionHandler(UNNotificationPresentationOptionNone);
+    }];
 }
 
 - (void)handleResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
     NSDictionary *userInfo = response.notification.request.content.userInfo;
-    [self dispatchDidReceiveNotificationWithUserInfo:userInfo];
-    completionHandler();
+    [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:completionHandler];
 }
 
 @end

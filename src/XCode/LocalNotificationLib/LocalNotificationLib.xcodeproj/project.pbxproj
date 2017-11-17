@@ -32,6 +32,10 @@
 		AD379F0C1F92721C00CEA327 /* JKTriggerBuilderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AD379F0B1F92721C00CEA327 /* JKTriggerBuilderTest.m */; };
 		AD379F0E1F92B3F000CEA327 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD379F0D1F92B3F000CEA327 /* Storyboard.storyboard */; };
 		AD379F101F92B6CF00CEA327 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD379F0F1F92B6CF00CEA327 /* LaunchScreen.storyboard */; };
+		AD658A581FBE934B00DF5992 /* JKNotificationDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = AD658A561FBE934B00DF5992 /* JKNotificationDispatcher.h */; };
+		AD658A591FBE934B00DF5992 /* JKNotificationDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = AD658A571FBE934B00DF5992 /* JKNotificationDispatcher.m */; };
+		AD658A5A1FBF013F00DF5992 /* JKNotificationDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = AD658A571FBE934B00DF5992 /* JKNotificationDispatcher.m */; };
+		AD658A5B1FBF014000DF5992 /* JKNotificationDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = AD658A571FBE934B00DF5992 /* JKNotificationDispatcher.m */; };
 		AD791B7B1F2274770012D327 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD791B7A1F2274770012D327 /* libOCMock.a */; };
 		AD791B7E1F2276BB0012D327 /* DeallocVerify.m in Sources */ = {isa = PBXBuildFile; fileRef = AD791B7D1F2276BB0012D327 /* DeallocVerify.m */; };
 		AD791B801F2279C40012D327 /* JKLocalNotificationsContextTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AD791B7F1F2279C40012D327 /* JKLocalNotificationsContextTest.m */; };
@@ -171,6 +175,8 @@
 		AD379F0B1F92721C00CEA327 /* JKTriggerBuilderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKTriggerBuilderTest.m; sourceTree = "<group>"; };
 		AD379F0D1F92B3F000CEA327 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		AD379F0F1F92B6CF00CEA327 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AD658A561FBE934B00DF5992 /* JKNotificationDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKNotificationDispatcher.h; sourceTree = "<group>"; };
+		AD658A571FBE934B00DF5992 /* JKNotificationDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKNotificationDispatcher.m; sourceTree = "<group>"; };
 		AD791B771F22545B0012D327 /* Stubs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stubs.h; sourceTree = "<group>"; };
 		AD791B7A1F2274770012D327 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		AD791B7C1F2276BB0012D327 /* DeallocVerify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeallocVerify.h; sourceTree = "<group>"; };
@@ -477,6 +483,8 @@
 				ADF7BB461F21607B00045B97 /* JKLegacyNotificationListener.m */,
 				ADEE69171F80638600CD7FE7 /* JKNewNotificationListener.h */,
 				ADEE69181F80638600CD7FE7 /* JKNewNotificationListener.m */,
+				AD658A561FBE934B00DF5992 /* JKNotificationDispatcher.h */,
+				AD658A571FBE934B00DF5992 /* JKNotificationDispatcher.m */,
 			);
 			name = listener;
 			sourceTree = "<group>";
@@ -578,6 +586,7 @@
 				7DB6C33B1576B9A200EB395C /* ExtensionUtils.h in Headers */,
 				ADEE69531F81208E00CD7FE7 /* JKLocalNotificationManager.h in Headers */,
 				ADEE693C1F8092C100CD7FE7 /* JKAuthorizer.h in Headers */,
+				AD658A581FBE934B00DF5992 /* JKNotificationDispatcher.h in Headers */,
 				ADEE695F1F81BD0B00CD7FE7 /* JKCalendarUnit.h in Headers */,
 				7DB6C33D1576B9A200EB395C /* FlashRuntimeExtensions.h in Headers */,
 				ADEE69461F80A0DE00CD7FE7 /* JKNotificationListener.h in Headers */,
@@ -717,6 +726,7 @@
 				ADEE692A1F80901B00CD7FE7 /* JKNotificationFactory.m in Sources */,
 				7D765A5514CD38A5001B2405 /* JKLocalNotificationsContext.m in Sources */,
 				ADEE691E1F8078EA00CD7FE7 /* JKNewLocalNotificationAuthorizer.m in Sources */,
+				AD658A591FBE934B00DF5992 /* JKNotificationDispatcher.m in Sources */,
 				AD9BCBE51F8F7AAB0099503C /* JKNotificationRequestBuilder.m in Sources */,
 				7DB6C33C1576B9A200EB395C /* ExtensionUtils.m in Sources */,
 				AD9BCBDD1F8F06290099503C /* JKNotificationBuilder.m in Sources */,
@@ -749,6 +759,7 @@
 				ADF7BB4A1F22364400045B97 /* JKLegacyNotificationListener.m in Sources */,
 				ADEE69481F80A0DE00CD7FE7 /* JKNotificationListener.m in Sources */,
 				ADEE69321F8090FC00CD7FE7 /* JKNewLocalNotificationFactory.m in Sources */,
+				AD658A5B1FBF014000DF5992 /* JKNotificationDispatcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -795,6 +806,7 @@
 				AD9BCBC71F8C65C30099503C /* LocalNotificationLib.m in Sources */,
 				ADEE696A1F82636400CD7FE7 /* JKLegacyNotificationAuthorizerTest.m in Sources */,
 				AD9BCBD41F8DCB510099503C /* JKNewNotificationAuthorizerTest.m in Sources */,
+				AD658A5A1FBF013F00DF5992 /* JKNotificationDispatcher.m in Sources */,
 				ADF7BB5E1F223F2C00045B97 /* JKLegacyNotificationListener.m in Sources */,
 				AD9BCBD61F8E37F70099503C /* JKNewLocalNotificationManagerTest.m in Sources */,
 				AD9BCBE01F8F0DAC0099503C /* JKNotificationBuilder.m in Sources */,

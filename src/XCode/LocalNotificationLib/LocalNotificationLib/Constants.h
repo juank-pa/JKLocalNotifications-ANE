@@ -15,6 +15,7 @@ extern JKLocalNotificationsContext * __strong jkNotificationsContext;
 
 static const NSString *JK_NOTIFICATION_CODE_KEY = @"notificationCodeKey";
 static const NSString *JK_NOTIFICATION_DATA_KEY = @"notificationDataKey";
+static const NSString *JK_NOTIFICATION_SHOW_IN_FOREGROUND = @"showInForeGroundKey";
 
 static const char* const JK_NOTIFICATION_STATUS_KEY = "status";
 static const char* const JK_NOTIFICATION_SELECTED_EVENT = "notificationSelected";

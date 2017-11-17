@@ -9,12 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "JKLegacyNotificationListener.h"
 #import "JKLegacyLocalNotificationFactory.h"
+#import "JKNotificationDispatcher.h"
 #import "FlashRuntimeExtensions+Private.h"
 #import "Constants.h"
 
 @interface JKNotificationListener ()<UIApplicationDelegate>
 @property (nonatomic, strong) id savedDelegate;
-- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo;
+@property (nonatomic, strong) JKNotificationDispatcher *dispatcher;
 @end
 
 @interface JKLegacyNotificationListener ()
@@ -41,7 +42,7 @@
     if ([self.savedDelegate respondsToSelector:@selector(application:didReceiveLocalNotification:)]) {
         [self.savedDelegate application:application didReceiveLocalNotification:notification];
     }
-    [self dispatchDidReceiveNotificationWithUserInfo:notification.userInfo];
+    [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:notification.userInfo];
 }
 
 @end

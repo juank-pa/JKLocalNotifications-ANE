@@ -13,6 +13,7 @@
 #import "JKNewTestCase.h"
 #import "JKNewNotificationListener.h"
 #import "JKNewLocalNotificationFactory.h"
+#import "JKNotificationDispatcher.h"
 
 @interface JKNewNotificationListener ()<UNUserNotificationCenterDelegate>
 @property (nonatomic, strong) id savedDelegate;
@@ -23,6 +24,7 @@
 @property (nonatomic, strong) id notificationCenterMock;
 @property (nonatomic, strong) id notificationCenterDelegateMock;
 @property (nonatomic, strong) id factoryMock;
+@property (nonatomic, strong) id dispatcherMock;
 @end
 
 @implementation JKNewNotificationListenerTest
@@ -37,10 +39,14 @@
     self.factoryMock = OCMClassMock([JKNewLocalNotificationFactory class]);
     OCMStub([self.factoryMock notificationCenter]).andReturn(self.notificationCenterMock);
 
+    self.dispatcherMock = OCMClassMock([JKNotificationDispatcher class]);
+    OCMStub([self.dispatcherMock dispatcherWithListener:[OCMArg any]]).andReturn(self.dispatcherMock);
+
     self.subject = [[JKNewNotificationListener alloc] initWithFactory:self.factoryMock];
 }
 
 - (void)tearDown {
+    [self.dispatcherMock stopMocking];
     [super tearDown];
 }
 
@@ -57,6 +63,7 @@
 - (void)testDeallocation {
     StubNewFactory *factory = [StubNewFactory new];
     factory.notificationCenter.delegate = self.notificationCenterDelegateMock;
+    [self.dispatcherMock stopMocking];
     @autoreleasepool {
         [[JKNewNotificationListener alloc] initWithFactory:factory];
     }
@@ -72,103 +79,238 @@
     XCTAssertTrue([self.subject respondsToSelector:@selector(userNotificationCenter:willPresentNotification:withCompletionHandler:)]);
 }
 
-- (void)testDidReceiveLocalNotificationForwardsInvocationAndCallsDelegate {
-    NSData *data = [NSData data];
-    __block bool completed = false;
-
-    UNMutableNotificationContent *content = [UNMutableNotificationContent new];
-    content.userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code", JK_NOTIFICATION_DATA_KEY: data};
-    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"id" content:content trigger:nil];
-
-    id responseMock = OCMClassMock([UNNotificationResponse class]);
-    id notificationMock = OCMClassMock([UNNotification class]);
-
-    OCMStub([responseMock notification]).andReturn(notificationMock);
-    OCMStub([notificationMock request]).andReturn(request);
-
-    id delegateMock = OCMProtocolMock(@protocol(JKNotificationListenerDelegate));
-    OCMExpect([delegateMock didReceiveNotificationDataForNotificationListener:self.subject]);
-
-    self.subject.delegate = delegateMock;
-
-    OCMExpect([self.notificationCenterDelegateMock userNotificationCenter:self.notificationCenterMock didReceiveNotificationResponse:responseMock withCompletionHandler:[OCMArg invokeBlock]]);
-
-    [self.subject userNotificationCenter:self.notificationCenterMock
-          didReceiveNotificationResponse:responseMock
-                   withCompletionHandler:^{
-                       completed = true;
-                   }];
-
-    XCTAssert(completed);
-    XCTAssertEqualObjects(self.subject.notificationCode, @"code");
-    XCTAssertEqualObjects(self.subject.notificationData, data);
-    OCMVerifyAll(self.notificationCenterDelegateMock);
-    OCMVerifyAll(delegateMock);
+// Helper methods to stub a notification response
+- (UNNotificationResponse *)notificationResponse {
+    return [self notificationResponseWithInfo:@{}];
 }
 
-- (void)testDidReceiveLocalNotificationForwardsCallsDelegate {
-    NSData *data = [NSData data];
-    __block bool completed = false;
-
-    id savedDelegateMock = OCMPartialMock([StubCenterDelegate new]);
-    UNMutableNotificationContent *content = [UNMutableNotificationContent new];
-    content.userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code", JK_NOTIFICATION_DATA_KEY: data};
-    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"id" content:content trigger:nil];
-
+- (UNNotificationResponse *)notificationResponseWithInfo:(NSDictionary *)userInfo {
     id responseMock = OCMClassMock([UNNotificationResponse class]);
     id notificationMock = OCMClassMock([UNNotification class]);
 
+    UNMutableNotificationContent *content = [UNMutableNotificationContent new];
+    content.userInfo = userInfo;
+    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"id" content:content trigger:nil];
+
     OCMStub([responseMock notification]).andReturn(notificationMock);
     OCMStub([notificationMock request]).andReturn(request);
+    return responseMock;
+}
 
-    id delegateMock = OCMProtocolMock(@protocol(JKNotificationListenerDelegate));
-    OCMExpect([delegateMock didReceiveNotificationDataForNotificationListener:self.subject]);
+- (void)testDidReceiveNotificationDispatchesWhenOriginalDelegateNotImplemented {
+    UNNotificationResponse *responseMock = self.notificationResponse;
+    NSDictionary *userInfo = responseMock.notification.request.content.userInfo;
+    id savedDelegateMock = OCMPartialMock([StubCenterDelegate new]);
+    void (^testBlock)() = ^{};
 
-    self.subject.delegate = delegateMock;
+    OCMReject([savedDelegateMock userNotificationCenter:[OCMArg any]
+                         didReceiveNotificationResponse:[OCMArg any]
+                                  withCompletionHandler:[OCMArg any]]);
+    OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:testBlock]);
+
     self.subject.savedDelegate = savedDelegateMock;
+    [self.subject userNotificationCenter:self.notificationCenterMock
+          didReceiveNotificationResponse:responseMock
+                   withCompletionHandler:testBlock];
 
-    OCMReject([savedDelegateMock userNotificationCenter:[OCMArg any] didReceiveNotificationResponse:[OCMArg any] withCompletionHandler:[OCMArg any]]);
+    OCMVerifyAll(self.dispatcherMock);
+    OCMVerifyAll(savedDelegateMock);
+}
+
+- (void)testDidReceiveNotificationDispatchesIfOriginalDelegateCallsCompleteHandler {
+    UNNotificationResponse *responseMock = self.notificationResponse;
+    NSDictionary *userInfo = responseMock.notification.request.content.userInfo;
+    void (^testBlock)() = ^{};
+
+    OCMExpect([self.notificationCenterDelegateMock userNotificationCenter:self.notificationCenterMock
+                                           didReceiveNotificationResponse:responseMock
+                                                    withCompletionHandler:[OCMArg invokeBlock]]);
+    OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:testBlock]);
 
     [self.subject userNotificationCenter:self.notificationCenterMock
           didReceiveNotificationResponse:responseMock
-                   withCompletionHandler:^{
-                       completed = true;
-                   }];
+                   withCompletionHandler:testBlock];
 
-    XCTAssert(completed);
-    XCTAssertEqualObjects(self.subject.notificationCode, @"code");
-    XCTAssertEqualObjects(self.subject.notificationData, data);
+    OCMVerifyAll(self.dispatcherMock);
     OCMVerifyAll(self.notificationCenterDelegateMock);
-    OCMVerifyAll(delegateMock);
+}
+
+- (void)testDidReceiveNotificationDoesNotDispatchIfOriginalDelegateDoesNotCallIt {
+    UNNotificationResponse *responseMock = self.notificationResponse;
+    NSDictionary *userInfo = responseMock.notification.request.content.userInfo;
+    id delegateMock = OCMProtocolMock(@protocol(JKNotificationListenerDelegate));
+    void (^testBlock)() = ^{};
+
+    OCMExpect([self.notificationCenterDelegateMock userNotificationCenter:self.notificationCenterMock
+                                           didReceiveNotificationResponse:responseMock
+                                                    withCompletionHandler:testBlock]);
+    OCMReject([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:testBlock]);
+
+    self.subject.delegate = delegateMock;
+    [self.subject userNotificationCenter:self.notificationCenterMock
+          didReceiveNotificationResponse:responseMock
+                   withCompletionHandler:testBlock];
+
+    OCMVerifyAll(self.dispatcherMock);
+}
+
+- (void)testWillPresentNotificationDispatchesWhenOriginalDelegateNotImplemented {
+    UNNotification *notificationMock = self.notificationResponse.notification;
+    NSDictionary *userInfo = notificationMock.request.content.userInfo;
+    id savedDelegateMock = OCMPartialMock([StubCenterDelegate new]);
+
+    __block BOOL blockCalled = NO;
+    __block int blockParam = -1;
+    void (^testBlock)(UNNotificationPresentationOptions) = ^(UNNotificationPresentationOptions options){
+        blockParam = options;
+        blockCalled = YES;
+    };
+
+    OCMReject([savedDelegateMock userNotificationCenter:[OCMArg any]
+                                willPresentNotification:[OCMArg any]
+                                  withCompletionHandler:[OCMArg any]]);
+    OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:[OCMArg invokeBlock]]);
+
+    self.subject.savedDelegate = savedDelegateMock;
+    [self.subject userNotificationCenter:self.notificationCenterMock
+                 willPresentNotification:notificationMock
+                   withCompletionHandler:testBlock];
+
+    XCTAssertTrue(blockCalled);
+    XCTAssertEqual(blockParam, UNNotificationPresentationOptionNone);
+    OCMVerifyAll(self.dispatcherMock);
+    OCMVerifyAll(savedDelegateMock);
+}
+
+- (void)testWillPresentNotificationDispatchesIfOriginalDelegateCallsCompleteHandler {
+    UNNotification *notificationMock = self.notificationResponse.notification;
+    NSDictionary *userInfo = notificationMock.request.content.userInfo;
+
+    __block BOOL blockCalled = NO;
+    __block int blockParam = -1;
+    void (^testBlock)(UNNotificationPresentationOptions) = ^(UNNotificationPresentationOptions options){
+        blockParam = options;
+        blockCalled = YES;
+    };
+
+    OCMExpect([self.notificationCenterDelegateMock userNotificationCenter:self.notificationCenterMock
+                                                  willPresentNotification:notificationMock
+                                                    withCompletionHandler:[OCMArg invokeBlock]]);
+    OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:[OCMArg invokeBlock]]);
+
+    [self.subject userNotificationCenter:self.notificationCenterMock
+                 willPresentNotification:notificationMock
+                   withCompletionHandler:testBlock];
+
+    XCTAssertTrue(blockCalled);
+    XCTAssertEqual(blockParam, UNNotificationPresentationOptionNone);
+    OCMVerifyAll(self.dispatcherMock);
+    OCMVerifyAll(self.notificationCenterDelegateMock);
+}
+
+- (void)testWillPresentNotificationDoesNotDispatchIfOriginalDelegateDoesNotCallIt {
+    UNNotification *notificationMock = self.notificationResponse.notification;
+    NSDictionary *userInfo = notificationMock.request.content.userInfo;
+    id delegateMock = OCMProtocolMock(@protocol(JKNotificationListenerDelegate));
+
+    __block BOOL blockCalled = NO;
+    __block int blockParam = -1;
+    void (^testBlock)(UNNotificationPresentationOptions) = ^(UNNotificationPresentationOptions options){
+        blockParam = options;
+        blockCalled = YES;
+    };
+
+    OCMExpect([self.notificationCenterDelegateMock userNotificationCenter:self.notificationCenterMock
+                                                  willPresentNotification:notificationMock
+                                                    withCompletionHandler:[OCMArg any]]);
+    OCMReject([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:[OCMArg any]]);
+
+    self.subject.delegate = delegateMock;
+    [self.subject userNotificationCenter:self.notificationCenterMock
+                 willPresentNotification:notificationMock
+                   withCompletionHandler:testBlock];
+
+    XCTAssertFalse(blockCalled);
+    OCMVerifyAll(self.dispatcherMock);
+    OCMVerifyAll(self.notificationCenterDelegateMock);
+}
+
+- (void)testWillPresentNotificationDoesNotDispatchWhenOriginalDelegateNotImplementedAndNotificationShowsInForeground {
+    NSDictionary *showInForegroundData = @{JK_NOTIFICATION_SHOW_IN_FOREGROUND: @(YES)};
+    UNNotification *notificationMock = [self notificationResponseWithInfo:showInForegroundData].notification;
+    NSDictionary *userInfo = notificationMock.request.content.userInfo;
+    id savedDelegateMock = OCMPartialMock([StubCenterDelegate new]);
+
+    __block BOOL blockCalled = NO;
+    __block int blockParam = -1;
+    void (^testBlock)(UNNotificationPresentationOptions) = ^(UNNotificationPresentationOptions options){
+        blockParam = options;
+        blockCalled = YES;
+    };
+
+    OCMReject([savedDelegateMock userNotificationCenter:[OCMArg any]
+                                willPresentNotification:[OCMArg any]
+                                  withCompletionHandler:[OCMArg any]]);
+    OCMReject([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:[OCMArg invokeBlock]]);
+
+    self.subject.savedDelegate = savedDelegateMock;
+    [self.subject userNotificationCenter:self.notificationCenterMock
+                 willPresentNotification:notificationMock
+                   withCompletionHandler:testBlock];
+
+    XCTAssertTrue(blockCalled);
+    XCTAssertEqual(blockParam, UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
+    OCMVerifyAll(self.dispatcherMock);
+    OCMVerifyAll(savedDelegateMock);
+}
+
+- (void)testWillPresentNotificationDoesNotDispatchIfOriginalDelegateCallsCompleteHandlerAndNotificationShowsInForeground {
+    NSDictionary *showInForegroundData = @{JK_NOTIFICATION_SHOW_IN_FOREGROUND: @(YES)};
+    UNNotification *notificationMock = [self notificationResponseWithInfo:showInForegroundData].notification;
+    NSDictionary *userInfo = notificationMock.request.content.userInfo;
+
+    __block BOOL blockCalled = NO;
+    __block int blockParam = -1;
+    void (^testBlock)(UNNotificationPresentationOptions) = ^(UNNotificationPresentationOptions options){
+        blockParam = options;
+        blockCalled = YES;
+    };
+
+    OCMExpect([self.notificationCenterDelegateMock userNotificationCenter:self.notificationCenterMock
+                                                  willPresentNotification:notificationMock
+                                                    withCompletionHandler:[OCMArg invokeBlock]]);
+    OCMReject([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:[OCMArg invokeBlock]]);
+
+    [self.subject userNotificationCenter:self.notificationCenterMock
+                 willPresentNotification:notificationMock
+                   withCompletionHandler:testBlock];
+
+    XCTAssertTrue(blockCalled);
+    XCTAssertEqual(blockParam, UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
+    OCMVerifyAll(self.dispatcherMock);
+    OCMVerifyAll(self.notificationCenterDelegateMock);
 }
 
 - (void)testCheckForNotificationAction {
-    id deletegateMock = OCMProtocolMock(@protocol(JKNotificationListenerDelegate));
-    OCMExpect([deletegateMock didReceiveNotificationDataForNotificationListener:self.subject]);
+    NSDictionary *userInfo = @{
+                               JK_NOTIFICATION_CODE_KEY: @"NotificationCodeKey",
+                               JK_NOTIFICATION_DATA_KEY: @"NotificationDataKey"
+                               };
 
-    self.subject.delegate = deletegateMock;
-    [self.subject checkForNotificationAction];
-
-    XCTAssertEqualObjects(self.subject.notificationCode, @"NotificationCodeKey");
-    XCTAssertEqualObjects(self.subject.notificationData, @"NotificationDataKey");
-
-    OCMVerifyAll(deletegateMock);
-}
-
-- (void)testCheckForNotificationActionTriggersJustOnce {
-    id deletegateMock = OCMProtocolMock(@protocol(JKNotificationListenerDelegate));
-
-    self.subject.delegate = deletegateMock;
-    [self.subject checkForNotificationAction];
-
-    OCMReject([deletegateMock didReceiveNotificationDataForNotificationListener:self.subject]);
+    OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:NULL]);
 
     [self.subject checkForNotificationAction];
 
-    XCTAssertEqualObjects(self.subject.notificationCode, @"NotificationCodeKey");
-    XCTAssertEqualObjects(self.subject.notificationData, @"NotificationDataKey");
-
-    OCMVerifyAll(deletegateMock);
+    OCMVerifyAll(self.dispatcherMock);
 }
 
 @end
