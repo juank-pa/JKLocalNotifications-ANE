@@ -29,6 +29,7 @@
 		7DF0E939151CB2C20050D94B /* JKNewLocalNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D765A4914CD38A5001B2405 /* JKNewLocalNotificationManager.m */; };
 		7DF0E93A151CB2C60050D94B /* JKLocalNotificationsContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D765A4B14CD38A5001B2405 /* JKLocalNotificationsContext.m */; };
 		7DF0E940151CB4060050D94B /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF0E93F151CB4060050D94B /* Constants.m */; };
+		87525FBE1FBF3EC500C0E9E2 /* JKNotificationDispatcherTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 87525FBD1FBF3EC500C0E9E2 /* JKNotificationDispatcherTest.m */; };
 		AD379F0C1F92721C00CEA327 /* JKTriggerBuilderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AD379F0B1F92721C00CEA327 /* JKTriggerBuilderTest.m */; };
 		AD379F0E1F92B3F000CEA327 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD379F0D1F92B3F000CEA327 /* Storyboard.storyboard */; };
 		AD379F101F92B6CF00CEA327 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD379F0F1F92B6CF00CEA327 /* LaunchScreen.storyboard */; };
@@ -172,6 +173,7 @@
 		7DF0E92B151CAECB0050D94B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		7DF0E92C151CAECB0050D94B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		7DF0E93F151CB4060050D94B /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		87525FBD1FBF3EC500C0E9E2 /* JKNotificationDispatcherTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKNotificationDispatcherTest.m; sourceTree = "<group>"; };
 		AD379F0B1F92721C00CEA327 /* JKTriggerBuilderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKTriggerBuilderTest.m; sourceTree = "<group>"; };
 		AD379F0D1F92B3F000CEA327 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		AD379F0F1F92B6CF00CEA327 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -445,6 +447,7 @@
 			children = (
 				AD9BCBD11F8DBF7E0099503C /* JKNewNotificationListenerTest.m */,
 				ADEE696B1F83A4BF00CD7FE7 /* JKLegacyNotificationListenerTest.m */,
+				87525FBD1FBF3EC500C0E9E2 /* JKNotificationDispatcherTest.m */,
 			);
 			name = listener;
 			sourceTree = "<group>";
@@ -787,6 +790,7 @@
 				ADEE69201F8078EA00CD7FE7 /* JKNewLocalNotificationAuthorizer.m in Sources */,
 				AD9BCBBE1F8C198E0099503C /* JKLegacyLocalNotificationFactoryTest.m in Sources */,
 				ADEE696C1F83A4BF00CD7FE7 /* JKLegacyNotificationListenerTest.m in Sources */,
+				87525FBE1FBF3EC500C0E9E2 /* JKNotificationDispatcherTest.m in Sources */,
 				ADEE69611F81BD2700CD7FE7 /* JKNewNotificationListener.m in Sources */,
 				AD9BCBE91F8F82000099503C /* JKLocalNotificationTest.m in Sources */,
 				AD791B881F24F5650012D327 /* JKLegacyLocalNotificationManagerTest.m in Sources */,

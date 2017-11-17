@@ -17,7 +17,6 @@
 
 @interface JKNotificationDispatcher ()
 @property (nonatomic, weak) JKNotificationListener *listener;
-@property (nonatomic, assign, getter=hasTriggered) BOOL triggered;
 @end
 
 @implementation JKNotificationDispatcher
@@ -42,8 +41,7 @@
     self.listener.notificationCode = userInfo[JK_NOTIFICATION_CODE_KEY];
     self.listener.notificationData = userInfo[JK_NOTIFICATION_DATA_KEY];
 
-    if (!self.hasTriggered && [self.listener.delegate respondsToSelector:@selector(didReceiveNotificationDataForNotificationListener:)]) {
-        self.triggered = YES;
+    if ([self.listener.delegate respondsToSelector:@selector(didReceiveNotificationDataForNotificationListener:)]) {
         [self.listener.delegate didReceiveNotificationDataForNotificationListener:self.listener];
     }
     if (completionHandler) completionHandler();

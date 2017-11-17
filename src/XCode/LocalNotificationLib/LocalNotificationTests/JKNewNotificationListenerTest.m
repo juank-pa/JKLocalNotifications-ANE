@@ -306,7 +306,20 @@
                                };
 
     OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
-                                                            completionHandler:NULL]);
+                                                            completionHandler:[OCMArg any]]);
+
+    [self.subject checkForNotificationAction];
+
+    OCMVerifyAll(self.dispatcherMock);
+}
+
+- (void)testCheckForNotificationActionOnlyOnce {
+    OCMStub([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:[OCMArg any]
+                                                          completionHandler:[OCMArg invokeBlock]]);
+
+    [self.subject checkForNotificationAction];
+    OCMReject([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:[OCMArg any]
+                                                            completionHandler:[OCMArg invokeBlock]]);
 
     [self.subject checkForNotificationAction];
 

@@ -13,6 +13,7 @@
 #import "FlashRuntimeExtensions+Private.h"
 
 @interface JKNotificationListener ()
+@property (nonatomic, assign, getter=hasTriggered) BOOL triggered;
 @property (nonatomic, strong) JKNotificationDispatcher *dispatcher;
 @property (nonatomic, readwrite) NSString *notificationCode;
 @property (nonatomic, readwrite) NSData *notificationData;
@@ -32,8 +33,11 @@
 @synthesize notificationData = _notificationData;
 
 - (void)checkForNotificationAction {
+    if (self.hasTriggered) return;
     UILocalNotification *localNotification = [self localNotificationFromLaunchOptions];
-    [self dispatchDidReceiveNotificationWithUserInfo:localNotification.userInfo];
+    [self dispatchDidReceiveNotificationWithUserInfo:localNotification.userInfo completionHandler:^{
+        self.triggered = YES;
+    }];
 }
 
 - (UILocalNotification *)localNotificationFromLaunchOptions {
