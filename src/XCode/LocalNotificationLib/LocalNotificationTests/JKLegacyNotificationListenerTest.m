@@ -12,6 +12,7 @@
 #import "JKLegacyTestCase.h"
 #import "JKLegacyNotificationListener.h"
 #import "JKLegacyLocalNotificationFactory.h"
+#import "JKNotificationDispatcher.h"
 
 @interface JKLegacyNotificationListener ()<UIApplicationDelegate>
 @property (nonatomic, strong) id savedDelegate;
@@ -22,6 +23,7 @@
 @property (nonatomic, strong) id factoryMock;
 @property (nonatomic, strong) id appMock;
 @property (nonatomic, strong) id appDelegateMock;
+@property (nonatomic, strong) id dispatcherMock;
 @end
 
 @implementation JKLegacyNotificationListenerTest
@@ -35,10 +37,14 @@
     self.factoryMock = OCMClassMock([JKLegacyLocalNotificationFactory class]);
     OCMStub([self.factoryMock application]).andReturn(self.appMock);
 
+    self.dispatcherMock = OCMClassMock([JKNotificationDispatcher class]);
+    OCMStub([self.dispatcherMock dispatcherWithListener:[OCMArg any]]).andReturn(self.dispatcherMock);
+
     self.subject = [[JKLegacyNotificationListener alloc] initWithFactory:self.factoryMock];
 }
 
 - (void)tearDown {
+    [self.dispatcherMock stopMocking];
     [super tearDown];
 }
 
@@ -55,6 +61,7 @@
 - (void)testDeallocation {
     StubLegacyFactory *factory = [StubLegacyFactory new];
     factory.application.delegate = self.appDelegateMock;
+    [self.dispatcherMock stopMocking];
     @autoreleasepool {
         [[JKLegacyNotificationListener alloc] initWithFactory:factory];
     }
@@ -79,45 +86,72 @@
     XCTAssertTrue([self.subject respondsToSelector:@selector(applicationWillTerminate:)]);
 }
 
-- (void)testDidReceiveLocalNotificationForwardsInvocation {
+- (void)testDidReceiveLocalNotificationDelegatesIfImplemented {
     UILocalNotification *notification = [UILocalNotification new];
     NSData *data = [NSData data];
     notification.userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code", JK_NOTIFICATION_DATA_KEY: data};
-    OCMExpect([self.appDelegateMock application:self.appMock didReceiveLocalNotification:notification]);
+
+    OCMExpect([self.appDelegateMock application:self.appMock
+                    didReceiveLocalNotification:notification]);
+    //OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:notification.userInfo]);
 
     [self.subject application:self.appMock didReceiveLocalNotification:notification];
 
+    //OCMVerifyAll(self.dispatcherMock);
     OCMVerifyAll(self.appDelegateMock);
 }
 
-- (void)testDidReceiveLocalNotificationCallsDelegate {
+- (void)testDidReceiveLocalNotificationDispatches {
     UILocalNotification *notification = [UILocalNotification new];
     NSData *data = [NSData data];
     notification.userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code", JK_NOTIFICATION_DATA_KEY: data};
 
-    id deletegateMock = OCMProtocolMock(@protocol(JKNotificationListenerDelegate));
-    OCMExpect([deletegateMock didReceiveNotificationDataForNotificationListener:self.subject]);
+    OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:notification.userInfo completionHandler:NULL]);
 
-    self.subject.delegate = deletegateMock;
     [self.subject application:self.appMock didReceiveLocalNotification:notification];
 
-    XCTAssertEqualObjects(self.subject.notificationCode, @"code");
-    XCTAssertEqualObjects(self.subject.notificationData, data);
+    OCMVerifyAll(self.dispatcherMock);
+}
 
-    OCMVerifyAll(deletegateMock);
+- (void)testDidReceiveLocalNotificationDispatchesMoreThanOnce {
+    UILocalNotification *notification = [UILocalNotification new];
+    NSData *data = [NSData data];
+    notification.userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code", JK_NOTIFICATION_DATA_KEY: data};
+
+    [self.subject application:self.appMock didReceiveLocalNotification:notification];
+
+    OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:notification.userInfo completionHandler:NULL]);
+
+    [self.subject application:self.appMock didReceiveLocalNotification:notification];
+
+    OCMVerifyAll(self.dispatcherMock);
 }
 
 - (void)testCheckForNotificationAction {
-    id deletegateMock = OCMProtocolMock(@protocol(JKNotificationListenerDelegate));
-    OCMExpect([deletegateMock didReceiveNotificationDataForNotificationListener:self.subject]);
+    NSDictionary *userInfo = @{
+                               JK_NOTIFICATION_CODE_KEY: @"NotificationCodeKey",
+                               JK_NOTIFICATION_DATA_KEY: @"NotificationDataKey"
+                               };
 
-    self.subject.delegate = deletegateMock;
+    OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:[OCMArg any]]);
+
     [self.subject checkForNotificationAction];
 
-    XCTAssertEqualObjects(self.subject.notificationCode, @"NotificationCodeKey");
-    XCTAssertEqualObjects(self.subject.notificationData, @"NotificationDataKey");
+    OCMVerifyAll(self.dispatcherMock);
+}
 
-    OCMVerifyAll(deletegateMock);
+- (void)testCheckForNotificationActionOnlyOnce {
+    OCMStub([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:[OCMArg any]
+                                                          completionHandler:[OCMArg invokeBlock]]);
+
+    [self.subject checkForNotificationAction];
+    OCMReject([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:[OCMArg any]
+                                                            completionHandler:[OCMArg any]]);
+
+    [self.subject checkForNotificationAction];
+
+    OCMVerifyAll(self.dispatcherMock);
 }
 
 @end

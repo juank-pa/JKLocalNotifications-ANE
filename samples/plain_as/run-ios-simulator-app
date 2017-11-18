@@ -3,7 +3,7 @@
 set -e
 source ../../bin/config/config.sh
 
-export AIR_IOS_SIMULATOR_DEVICE="iPhone 5"
+export AIR_IOS_SIMULATOR_DEVICE="iPhone 5s"
 
 source prepare_ios
 
@@ -18,7 +18,8 @@ echo "***** packaging SWF file into IPA *****"
   ${APP_NAME}-app.xml \
   $APP_NAME.swf \
   fx05.caf \
-  -extdir $EXT_PATH
+  -extdir $EXT_PATH \
+  -platformsdk $IPHONE_SDK
 
 echo "**** Installing IPA in iOS simulator ******"
 
@@ -26,11 +27,13 @@ echo "**** Installing IPA in iOS simulator ******"
 "$ADT" -installApp \
   -platform ios \
   -device ios-simulator \
-  -package $APP_NAME.ipa
+  -package $APP_NAME.ipa \
+  -platformsdk $IPHONE_SDK
 
 echo "**** Launching iOS simulator ******"
 
 "$ADT" -launchApp \
   -platform ios \
   -device ios-simulator \
-  -appid com.juankpro.Sample
+  -appid com.juankpro.Sample \
+  -platformsdk $IPHONE_SDK

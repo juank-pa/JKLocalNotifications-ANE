@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "JKLegacyNotificationListener.h"
 #import "JKLegacyLocalNotificationFactory.h"
+#import "JKNotificationDispatcher.h"
 #import "FlashRuntimeExtensions+Private.h"
 #import "Constants.h"
 

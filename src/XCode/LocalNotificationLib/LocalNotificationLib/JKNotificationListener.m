@@ -8,27 +8,37 @@
 
 #import <UIKit/UIKit.h>
 #import "JKNotificationListener.h"
+#import "JKNotificationDispatcher.h"
 #import "Constants.h"
 #import "FlashRuntimeExtensions+Private.h"
 
 @interface JKNotificationListener ()
 @property (nonatomic, assign, getter=hasTriggered) BOOL triggered;
+@property (nonatomic, strong) JKNotificationDispatcher *dispatcher;
+@property (nonatomic, readwrite) NSString *notificationCode;
+@property (nonatomic, readwrite) NSData *notificationData;
 @end
 
 @implementation JKNotificationListener
 
 - (instancetype)initWithTarget:(id)target {
-    if(self = [super initWithTarget:target]) {
+    if (self = [super initWithTarget:target]) {
+        _dispatcher = [JKNotificationDispatcher dispatcherWithListener:self];
         _triggered = NO;
     }
     return self;
 }
 
 @synthesize delegate = _delegate;
+@synthesize notificationCode = _notificationCode;
+@synthesize notificationData = _notificationData;
 
 - (void)checkForNotificationAction {
+    if(self.hasTriggered) return;
     UILocalNotification *localNotification = [self localNotificationFromLaunchOptions];
-    [self dispatchDidReceiveNotificationWithUserInfo:localNotification.userInfo];
+    [self dispatchDidReceiveNotificationWithUserInfo:localNotification.userInfo completionHandler:^{
+        self.triggered = YES;
+    }];
 }
 
 - (UILocalNotification *)localNotificationFromLaunchOptions {
@@ -37,14 +47,11 @@
 }
 
 - (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo {
-    if(!userInfo) { return; }
-    _notificationCode = userInfo[JK_NOTIFICATION_CODE_KEY];
-    _notificationData = userInfo[JK_NOTIFICATION_DATA_KEY];
+    [self dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:NULL];
+}
 
-    if (!self.hasTriggered && [self.delegate respondsToSelector:@selector(didReceiveNotificationDataForNotificationListener:)]) {
-        self.triggered = YES;
-        [self.delegate didReceiveNotificationDataForNotificationListener:self];
-    }
+- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo completionHandler:(void(^)())completionHandler {
+    [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:completionHandler];
 }
 
 @end
