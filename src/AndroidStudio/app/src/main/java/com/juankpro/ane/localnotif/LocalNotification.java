@@ -48,6 +48,8 @@ class LocalNotification {
 
     int priority = NotificationManager.IMPORTANCE_DEFAULT;
 
+    boolean showInForeground = false;
+
     String activityClassName = "";
 
     /**
