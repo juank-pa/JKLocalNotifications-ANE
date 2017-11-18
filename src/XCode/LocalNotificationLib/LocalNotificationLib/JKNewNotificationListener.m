@@ -14,7 +14,7 @@
 
 @interface JKNotificationListener ()<UNUserNotificationCenterDelegate>
 @property (nonatomic, strong) id savedDelegate;
-@property (nonatomic, strong) JKNotificationDispatcher *dispatcher;
+- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler;
 @end
 
 @interface JKNewNotificationListener ()
@@ -65,14 +65,14 @@
         completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
         return;
     }
-    [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:^{
+    [self dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:^{
         completionHandler(UNNotificationPresentationOptionNone);
     }];
 }
 
 - (void)handleResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
     NSDictionary *userInfo = response.notification.request.content.userInfo;
-    [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:completionHandler];
+    [self dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:completionHandler];
 }
 
 @end

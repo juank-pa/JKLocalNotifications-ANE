@@ -3,7 +3,7 @@
 set -e
 source ../../bin/config/config.sh
 
-export AIR_IOS_SIMULATOR_DEVICE="iPhone 5"
+export AIR_IOS_SIMULATOR_DEVICE="iPhone 5s"
 
 source prepare_ios
 

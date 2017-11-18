@@ -24,6 +24,7 @@
 - (instancetype)initWithTarget:(id)target {
     if (self = [super initWithTarget:target]) {
         _dispatcher = [JKNotificationDispatcher dispatcherWithListener:self];
+        _triggered = NO;
     }
     return self;
 }
