@@ -15,6 +15,8 @@
 @interface JKNotificationListener ()
 @property (nonatomic, assign, getter=hasTriggered) BOOL triggered;
 @property (nonatomic, strong) JKNotificationDispatcher *dispatcher;
+@property (nonatomic, readwrite) NSString *notificationCode;
+@property (nonatomic, readwrite) NSData *notificationData;
 @end
 
 @implementation JKNotificationListener
@@ -28,6 +30,8 @@
 }
 
 @synthesize delegate = _delegate;
+@synthesize notificationCode = _notificationCode;
+@synthesize notificationData = _notificationData;
 
 - (void)checkForNotificationAction {
     if(self.hasTriggered) return;
