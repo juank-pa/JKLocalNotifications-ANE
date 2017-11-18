@@ -93,11 +93,9 @@
 
     OCMExpect([self.appDelegateMock application:self.appMock
                     didReceiveLocalNotification:notification]);
-    //OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:notification.userInfo]);
 
     [self.subject application:self.appMock didReceiveLocalNotification:notification];
 
-    //OCMVerifyAll(self.dispatcherMock);
     OCMVerifyAll(self.appDelegateMock);
 }
 

@@ -15,7 +15,7 @@
 
 @interface JKNotificationListener ()<UIApplicationDelegate>
 @property (nonatomic, strong) id savedDelegate;
-@property (nonatomic, strong) JKNotificationDispatcher *dispatcher;
+- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo;
 @end
 
 @interface JKLegacyNotificationListener ()
@@ -42,7 +42,7 @@
     if ([self.savedDelegate respondsToSelector:@selector(application:didReceiveLocalNotification:)]) {
         [self.savedDelegate application:application didReceiveLocalNotification:notification];
     }
-    [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:notification.userInfo];
+    [self dispatchDidReceiveNotificationWithUserInfo:notification.userInfo];
 }
 
 @end
