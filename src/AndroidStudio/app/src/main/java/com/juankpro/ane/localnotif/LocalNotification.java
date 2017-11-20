@@ -83,6 +83,7 @@ class LocalNotification {
             jsonObject.putOpt("repeatInterval", repeatInterval);
             jsonObject.putOpt("activityClassName", activityClassName);
             jsonObject.putOpt("priority", priority);
+            jsonObject.putOpt("showInForeground", showInForeground);
 
             // Action data.
             for (byte anActionData : actionData) {
@@ -126,6 +127,7 @@ class LocalNotification {
             soundName = jsonObject.optString("soundName", soundName);
             activityClassName = jsonObject.optString("activityClassName", activityClassName);
             priority = jsonObject.optInt("priority", priority);
+            showInForeground = jsonObject.optBoolean("showInForeground", showInForeground);
 
             long dateTime = jsonObject.optLong("fireDate", fireDate.getTime());
 
