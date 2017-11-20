@@ -50,6 +50,7 @@
     notification.numberAnnotation = 2;
     //notification.repeatInterval = NSSecondCalendarUnit;
     notification.playSound = YES;
+    notification.showInForeground = YES;
     
     [self.context notify:notification];
 }

@@ -28,6 +28,7 @@
         _repeatInterval = 0;
         _fireDate = nil;
         _soundName = nil;
+        _showInForeground = NO;
     }
     return self;
 }
@@ -35,6 +36,7 @@
 - (NSDictionary *)userInfo {
     NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithCapacity:2];
     infoDict[JK_NOTIFICATION_CODE_KEY] = self.notificationCode;
+    infoDict[JK_NOTIFICATION_SHOW_IN_FOREGROUND] = @(self.showInForeground);
 
     if(self.actionData) {
         infoDict[JK_NOTIFICATION_DATA_KEY] = self.actionData;
