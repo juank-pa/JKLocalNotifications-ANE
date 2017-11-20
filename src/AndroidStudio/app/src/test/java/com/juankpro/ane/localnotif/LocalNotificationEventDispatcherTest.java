@@ -48,14 +48,14 @@ public class LocalNotificationEventDispatcherTest {
     @Test
     public void dispatcher_dispatchInForeground_setsCacheIfAppIsNotActive() {
         setup();
-        getSubject().dispatchInForeground();
+        getSubject().dispatchWhenInForeground();
         assertCache();
     }
 
     @Test
     public void dispatcher_dispatchInForeground_doesNotDispatchesIfAppIsNotActive() {
         setup();
-        getSubject().dispatchInForeground();
+        getSubject().dispatchWhenInForeground();
         verify(context, never()).dispatchNotificationSelectedEvent();
     }
 
@@ -64,7 +64,7 @@ public class LocalNotificationEventDispatcherTest {
         setup();
         ApplicationStatus.setInForeground(true);
         ApplicationStatus.setInForeground(false);
-        getSubject().dispatchInForeground();
+        getSubject().dispatchWhenInForeground();
         assertCache();
     }
 
@@ -72,7 +72,7 @@ public class LocalNotificationEventDispatcherTest {
     public void dispatcher_dispatchInForeground_doesNotDispatchesIfAppIsInBackground() {
         setup();
         ApplicationStatus.reset();
-        getSubject().dispatchInForeground();
+        getSubject().dispatchWhenInForeground();
         verify(context, never()).dispatchNotificationSelectedEvent();
     }
 
@@ -80,7 +80,7 @@ public class LocalNotificationEventDispatcherTest {
     public void dispatcher_dispatchInForeground_setsCacheIfAppIsInForeground() {
         setup();
         ApplicationStatus.setInForeground(true);
-        getSubject().dispatchInForeground();
+        getSubject().dispatchWhenInForeground();
         assertCache();
     }
 
@@ -88,7 +88,7 @@ public class LocalNotificationEventDispatcherTest {
     public void dispatcher_dispatchInForeground_dispatchesIfAppIsInForeground() {
         setup();
         ApplicationStatus.setInForeground(true);
-        getSubject().dispatchInForeground();
+        getSubject().dispatchWhenInForeground();
         verify(context).dispatchNotificationSelectedEvent();
     }
 }

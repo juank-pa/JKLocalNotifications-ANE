@@ -50,6 +50,7 @@ class LocalNotificationManager {
         intent.putExtra(Constants.HAS_ACTION, localNotification.hasAction);
         intent.putExtra(Constants.ACTION_DATA_KEY, localNotification.actionData);
         intent.putExtra(Constants.PRIORITY, localNotification.priority);
+        intent.putExtra(Constants.SHOW_IN_FOREGROUND, localNotification.showInForeground);
 
         Logger.log("LocalNotificationManager when:" + String.valueOf(notificationTime) + ", current:" + System.currentTimeMillis());
 

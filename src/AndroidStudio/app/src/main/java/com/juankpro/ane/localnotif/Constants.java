@@ -27,4 +27,5 @@ class Constants {
     static final String ALERT_POLICY = "NOTIF_POLICY";
     static final String HAS_ACTION = "NOTIF_HAS_ACTION";
     static final String PRIORITY = "NOTIF_PRIORITY";
+    static final String SHOW_IN_FOREGROUND = "NOTIF_SHOW_IN_FOREGROUND";
 }

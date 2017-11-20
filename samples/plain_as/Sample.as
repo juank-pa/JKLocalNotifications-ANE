@@ -115,6 +115,7 @@
           notification.launchImage = "DefaultPink.png";
           notification.tickerText = "test ticker ";
           notification.priority = NotificationPriority.HIGH;
+          notification.showInForeground = true;
 
           notificationManager.notifyUser(NOTIFICATION_CODE, notification);
           printNotification('Posted Message', notification);

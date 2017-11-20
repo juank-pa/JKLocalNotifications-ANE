@@ -65,7 +65,7 @@ public class LocalNotificationIntentServiceTest {
     public void intentService_onHandleIntent_triesToDispatchEventToBackground() {
         setup();
         getSubject().onHandleIntent(intent);
-        verify(dispatcher).dispatchInBackground();
+        verify(dispatcher).dispatchWhenActive();
     }
 
     @Test

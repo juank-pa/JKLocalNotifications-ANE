@@ -29,7 +29,8 @@
 - (void)testNotificationWithData {
     NSData *data = [NSData dataWithBytes:"hi" length:3];
     NSDictionary *userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code123",
-                               JK_NOTIFICATION_DATA_KEY: data};
+                               JK_NOTIFICATION_DATA_KEY: data,
+                               JK_NOTIFICATION_SHOW_IN_FOREGROUND:@(NO) };
 
     self.subject.actionData = data;
 
@@ -37,7 +38,15 @@
 }
 
 - (void)testNotificationWithoutData {
-    NSDictionary *userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code123"};
+    NSDictionary *userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code123",
+                               JK_NOTIFICATION_SHOW_IN_FOREGROUND:@(NO) };
+    XCTAssertEqualObjects(self.subject.userInfo, userInfo);
+}
+
+- (void)testNotificationThatShowsInForeground {
+    NSDictionary *userInfo = @{JK_NOTIFICATION_CODE_KEY: @"code123",
+                               JK_NOTIFICATION_SHOW_IN_FOREGROUND:@(YES) };
+    self.subject.showInForeground = YES;
     XCTAssertEqualObjects(self.subject.userInfo, userInfo);
 }
 
