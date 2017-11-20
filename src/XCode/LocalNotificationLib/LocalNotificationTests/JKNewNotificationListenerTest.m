@@ -233,6 +233,64 @@
     OCMVerifyAll(self.notificationCenterDelegateMock);
 }
 
+- (void)testWillPresentNotificationDoesNotDispatchWhenOriginalDelegateNotImplementedAndNotificationShowsInForeground {
+    NSDictionary *showInForegroundData = @{JK_NOTIFICATION_SHOW_IN_FOREGROUND: @(YES)};
+    UNNotification *notificationMock = [self notificationResponseWithInfo:showInForegroundData].notification;
+    NSDictionary *userInfo = notificationMock.request.content.userInfo;
+    id savedDelegateMock = OCMPartialMock([StubCenterDelegate new]);
+
+    __block BOOL blockCalled = NO;
+    __block int blockParam = -1;
+    void (^testBlock)(UNNotificationPresentationOptions) = ^(UNNotificationPresentationOptions options){
+        blockParam = options;
+        blockCalled = YES;
+    };
+
+    OCMReject([savedDelegateMock userNotificationCenter:[OCMArg any]
+                                willPresentNotification:[OCMArg any]
+                                  withCompletionHandler:[OCMArg any]]);
+    OCMReject([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:[OCMArg invokeBlock]]);
+
+    self.subject.savedDelegate = savedDelegateMock;
+    [self.subject userNotificationCenter:self.notificationCenterMock
+                 willPresentNotification:notificationMock
+                   withCompletionHandler:testBlock];
+
+    XCTAssertTrue(blockCalled);
+    XCTAssertEqual(blockParam, UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
+    OCMVerifyAll(self.dispatcherMock);
+    OCMVerifyAll(savedDelegateMock);
+}
+
+- (void)testWillPresentNotificationDoesNotDispatchIfOriginalDelegateCallsCompleteHandlerAndNotificationShowsInForeground {
+    NSDictionary *showInForegroundData = @{JK_NOTIFICATION_SHOW_IN_FOREGROUND: @(YES)};
+    UNNotification *notificationMock = [self notificationResponseWithInfo:showInForegroundData].notification;
+    NSDictionary *userInfo = notificationMock.request.content.userInfo;
+
+    __block BOOL blockCalled = NO;
+    __block int blockParam = -1;
+    void (^testBlock)(UNNotificationPresentationOptions) = ^(UNNotificationPresentationOptions options){
+        blockParam = options;
+        blockCalled = YES;
+    };
+
+    OCMExpect([self.notificationCenterDelegateMock userNotificationCenter:self.notificationCenterMock
+                                                  willPresentNotification:notificationMock
+                                                    withCompletionHandler:[OCMArg invokeBlock]]);
+    OCMReject([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo
+                                                            completionHandler:[OCMArg invokeBlock]]);
+
+    [self.subject userNotificationCenter:self.notificationCenterMock
+                 willPresentNotification:notificationMock
+                   withCompletionHandler:testBlock];
+
+    XCTAssertTrue(blockCalled);
+    XCTAssertEqual(blockParam, UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
+    OCMVerifyAll(self.dispatcherMock);
+    OCMVerifyAll(self.notificationCenterDelegateMock);
+}
+
 - (void)testWillPresentNotificationDoesNotDispatchIfOriginalDelegateDoesNotCallBlock {
     UNNotification *notificationMock = self.notificationResponse.notification;
     NSDictionary *userInfo = notificationMock.request.content.userInfo;
@@ -310,9 +368,9 @@
     [self.subject checkForNotificationAction];
     OCMReject([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:[OCMArg any]
                                                             completionHandler:[OCMArg any]]);
-    
+
     [self.subject checkForNotificationAction];
-    
+
     OCMVerifyAll(self.dispatcherMock);
 }
 

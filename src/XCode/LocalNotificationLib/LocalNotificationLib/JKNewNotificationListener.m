@@ -61,6 +61,10 @@
 
 - (void)handleNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
     NSDictionary *userInfo = notification.request.content.userInfo;
+    if ([userInfo[JK_NOTIFICATION_SHOW_IN_FOREGROUND] boolValue]) {
+        completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
+        return;
+    }
     [self dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:^{
         completionHandler(UNNotificationPresentationOptionNone);
     }];

@@ -179,8 +179,19 @@
      * <p>Supported OS: Android</p>
      * @default NotificationPriority.DEFAULT
      * @see com.juankpro.ane.localnotif.NotificationPriority
-   */
+     */
     public var priority:int = NotificationPriority.DEFAULT;
+
+    /**
+     * If <code>true</code> it allows the notification to appear in the foreground in
+     * addition to the background. This will make the notification not to trigger anything
+     * in the application unless the user taps the notification.
+     * <p>This feature is only available for iOS 10 and later, and all Android versions
+     * supported by the ANE.</p>
+     * <p>Supported OS: iOS, Android</p>
+     * @default false
+     */
+    public var showInForeground:Boolean = false
 
     /**
      * Initializes the notification.

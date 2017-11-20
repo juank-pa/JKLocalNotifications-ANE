@@ -25,6 +25,7 @@
 @property(nonatomic, assign) JKCalendarUnit repeatInterval;
 @property(nonatomic, readonly) NSDictionary *userInfo;
 @property(nonatomic, copy) NSString *launchImage;
+@property(nonatomic, assign) BOOL showInForeground;
 
 @end
 

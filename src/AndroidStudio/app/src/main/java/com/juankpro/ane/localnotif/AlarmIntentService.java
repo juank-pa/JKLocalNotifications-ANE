@@ -16,6 +16,12 @@ public class AlarmIntentService extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
         String code = bundle.getString(Constants.NOTIFICATION_CODE_KEY);
+        boolean showInForeground = bundle.getBoolean(Constants.SHOW_IN_FOREGROUND);
+
+        if (showInForeground) {
+            sendNotification(code, context, bundle);
+            return;
+        }
 
         if (tryEventDispatch(code, bundle)) return;
 
@@ -25,7 +31,7 @@ public class AlarmIntentService extends BroadcastReceiver {
 
     private boolean tryEventDispatch(String code, Bundle bundle) {
         byte[] data = bundle.getByteArray(Constants.ACTION_DATA_KEY);
-        return new LocalNotificationEventDispatcher(code, data).dispatchInForeground();
+        return new LocalNotificationEventDispatcher(code, data).dispatchWhenInForeground();
     }
 
     private void sendNotification(String code, Context context, Bundle bundle) {

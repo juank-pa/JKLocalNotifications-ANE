@@ -176,6 +176,8 @@ class LocalNotificationsContext extends FREContext {
         // Action.
         localNotification.hasAction = ExtensionUtils.getBooleanProperty(freObject, "hasAction", localNotification.hasAction);
 
+        localNotification.showInForeground = ExtensionUtils.getBooleanProperty(freObject, "showInForeground", localNotification.showInForeground);
+
         // Miscellaneous.
         localNotification.cancelOnSelect = ExtensionUtils.getBooleanProperty(freObject, "cancelOnSelect", localNotification.cancelOnSelect);
         localNotification.alertPolicy = ExtensionUtils.getStringProperty(freObject, "alertPolicy", localNotification.alertPolicy);

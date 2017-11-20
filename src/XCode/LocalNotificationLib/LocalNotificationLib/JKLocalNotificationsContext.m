@@ -208,9 +208,16 @@ FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
         FREObject freActionData = [ExtensionUtils getProperty:@"actionData" fromObject:notification];
 
         if (freActionData) {
-             localNotification.actionData = [ExtensionUtils getDataFromFREObject:freActionData];
+            localNotification.actionData = [ExtensionUtils getDataFromFREObject:freActionData];
         }
-        
+
+        // Action Data.
+        FREObject freShowInForeground = [ExtensionUtils getProperty:@"showInForeground" fromObject:notification];
+
+        if (freShowInForeground) {
+            localNotification.showInForeground = [ExtensionUtils getBoolFromFREObject:freShowInForeground];
+        }
+
         // Notify.
         [jkNotificationsContext notify:localNotification];
     }

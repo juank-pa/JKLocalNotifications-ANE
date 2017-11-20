@@ -27,7 +27,7 @@ public class LocalNotificationIntentService extends IntentService {
     private boolean tryEventDispatch(Intent intent) {
         String code = intent.getStringExtra(Constants.NOTIFICATION_CODE_KEY);
         byte[] data = intent.getByteArrayExtra(Constants.ACTION_DATA_KEY);
-        return new LocalNotificationEventDispatcher(code, data).dispatchInBackground();
+        return new LocalNotificationEventDispatcher(code, data).dispatchWhenActive();
     }
 
     private void bringActivityToForeground(Context context, Intent intent) {

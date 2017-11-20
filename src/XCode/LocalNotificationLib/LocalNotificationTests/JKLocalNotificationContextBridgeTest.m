@@ -62,7 +62,7 @@ FREObject args[] = {&context, &context};
 
     int fireDateContext, timeContext, repeatIntervalContext, actionLabelContext;
     int bodyContext, hasActionContext, numberAnnotationContext, playSoundContext;
-    int soundNameContext, actionDataContext, titleContext, launchImageContext;
+    int soundNameContext, actionDataContext, titleContext, launchImageContext, showInForegroundContext;
 
     OCMStub([self.utilsMock getStringFromFREObject:&codeContext]).andReturn(code);
 
@@ -79,6 +79,7 @@ FREObject args[] = {&context, &context};
     OCMStub([self.utilsMock getProperty:@"soundName" fromObject:&notificationContext]).andReturn((void *)&soundNameContext);
     OCMStub([self.utilsMock getProperty:@"actionData" fromObject:&notificationContext]).andReturn((void *)&actionDataContext);
     OCMStub([self.utilsMock getProperty:@"launchImage" fromObject:&notificationContext]).andReturn((void *)&launchImageContext);
+    OCMStub([self.utilsMock getProperty:@"showInForeground" fromObject:&notificationContext]).andReturn((void *)&showInForegroundContext);
 
 
     // Value fetch
@@ -93,6 +94,7 @@ FREObject args[] = {&context, &context};
     OCMStub([self.utilsMock getStringFromFREObject:&soundNameContext]).andReturn(@"soundName");
     OCMStub([self.utilsMock getDataFromFREObject:&actionDataContext]).andReturn(data);
     OCMStub([self.utilsMock getStringFromFREObject:&launchImageContext]).andReturn(@"launchImage.png");
+    OCMStub([self.utilsMock getBoolFromFREObject:&showInForegroundContext]).andReturn(YES);
 
 
     id notificationMock = OCMStrictClassMock([JKLocalNotification class]);
@@ -109,6 +111,7 @@ FREObject args[] = {&context, &context};
     OCMExpect([notificationMock setSoundName:@"soundName"]);
     OCMExpect([notificationMock setActionData:data]);
     OCMExpect([notificationMock setLaunchImage:@"launchImage.png"]);
+    OCMExpect([notificationMock setShowInForeground:YES]);
 
     OCMExpect([jkNotificationsContext notify:notificationMock]);
 

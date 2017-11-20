@@ -34,7 +34,7 @@
 @synthesize notificationData = _notificationData;
 
 - (void)checkForNotificationAction {
-    if(self.hasTriggered) return;
+    if (self.hasTriggered) return;
     UILocalNotification *localNotification = [self localNotificationFromLaunchOptions];
     [self dispatchDidReceiveNotificationWithUserInfo:localNotification.userInfo completionHandler:^{
         self.triggered = YES;
