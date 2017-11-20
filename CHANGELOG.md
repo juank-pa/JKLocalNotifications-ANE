@@ -1,3 +1,7 @@
+### Version 1.0.6
+* Fixed a bug that made notification events to trigger only once During the application
+  lifetime.
+
 ### Version 1.0.5
 * Android notifications support large notification body texts using expanded layout.
 
