@@ -13,11 +13,11 @@ class LocalNotificationEventDispatcher {
         this.data = data;
     }
 
-    boolean dispatchInForeground() {
+    boolean dispatchWhenInForeground() {
         return dispatchWhen(ApplicationStatus.getInForeground());
     }
 
-    boolean dispatchInBackground() {
+    boolean dispatchWhenActive() {
         return dispatchWhen(ApplicationStatus.getActive());
     }
 

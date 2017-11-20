@@ -5,6 +5,8 @@
 * Allow Android packages to determine the notification priority to allow a more fine-grained
   control over the notification presence and allow showing a heads-up notification for
   Android 5.0 (API level 21) and later devices.
+* Notifications can also show in the foreground. When notifications display in the foreground
+  no event is dispatched.
 
 ### Version 1.0.5
 * Android notifications support large notification body texts using expanded layout.
