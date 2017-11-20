@@ -142,7 +142,7 @@
 
     /**
      * The date and time when the system should deliver the notification.
-     * <p>Supported OS: iOS, Android</p>
+     * <p>Supported OS: Android, iOS</p>
      * @default null
      */
     public var fireDate:Date;
@@ -153,7 +153,7 @@
      * delivery at the specified interval.
      * <p>Use the constants defined on <code>NotificationTimeInterval</code> or
      * zero if you want the notification to trigger only once.</p>
-     * <p>Supported OS: iOS, Android</p>
+     * <p>Supported OS: Android, iOS</p>
      * @default 0 which means don't repeat
      * @see com.juankpro.ane.localnotif.NotificationTimeInterval
      */
@@ -188,10 +188,20 @@
      * in the application unless the user taps the notification.
      * <p>This feature is only available for iOS 10 and later, and all Android versions
      * supported by the ANE.</p>
-     * <p>Supported OS: iOS, Android</p>
+     * <p>Supported OS: Android, iOS</p>
      * @default false
      */
-    public var showInForeground:Boolean = false
+    public var showInForeground:Boolean = false;
+
+    /**
+     * Defines the id of the category to associate with this notification. This category
+     * defines the action buttons the notification will show to the user.
+     * <p>Categories must be registered using <code>NotificationManager.subscribe</code></p>
+     * <p>Supported OS: Android, iOS</p>
+     * @see com.juankpro.ane.localnotif.NotificationManager#subscribe
+     * @see com.juankpro.ane.localnotif.NotificationCategory
+     */
+    public var category:String;
 
     /**
      * Initializes the notification.

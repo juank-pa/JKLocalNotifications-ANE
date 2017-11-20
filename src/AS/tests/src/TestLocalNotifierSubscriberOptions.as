@@ -2,6 +2,7 @@ package {
   import asunit.framework.TestCase;
   import com.juankpro.ane.localnotif.LocalNotifierSubscribeOptions;
   import flash.notifications.NotificationStyle;
+  import com.juankpro.ane.localnotif.NotificationCategory;
 
   public class TestLocalNotifierSubscriberOptions extends TestCase {
     private var options:LocalNotifierSubscribeOptions;
@@ -13,6 +14,17 @@ package {
     override protected function setUp():void {
       super.setUp();
       options = new LocalNotifierSubscribeOptions();
+    }
+
+    public function testInitializationWithActions():void {
+      var actions:Vector.<NotificationCategory> = new Vector.<NotificationCategory>();
+      options = new LocalNotifierSubscribeOptions(actions);
+      assertSame(actions, options.categories);
+    }
+
+    public function testInitializationWithNoActions():void {
+      options = new LocalNotifierSubscribeOptions();
+      assertEquals(0, options.categories.length);
     }
 
     public function testSetNotificationStyleBadgeFlag():void {

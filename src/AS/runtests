@@ -9,7 +9,7 @@ ADL="${SDK}/bin/adl"
 DEBUG=true
 
 echo "Compiling iOS version"
-"$AMXML" -swf-version 26 \
+"$AMXML" -swf-version 37 \
   -debug=$DEBUG \
   -define+=CONFIG::device,true \
   -define+=CONFIG::iphone,true \
@@ -24,7 +24,7 @@ echo "\nRunning tests for iOS"
 "$ADL" ./tests/TestApp.xml ./tests
 
 echo "Compiling Android version"
-"$AMXML" -swf-version 26 \
+"$AMXML" -swf-version 37 \
   -debug=$DEBUG \
   -define+=CONFIG::device,true \
   -define+=CONFIG::iphone,false \
@@ -39,7 +39,7 @@ echo "\nRunning tests for Android"
 "$ADL" ./tests/TestApp.xml ./tests
 
 echo "Compiling Default version"
-"$AMXML" -swf-version 26 \
+"$AMXML" -swf-version 37 \
   -debug=$DEBUG \
   -define+=CONFIG::device,false \
   -define+=CONFIG::iphone,true \
