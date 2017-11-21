@@ -1,28 +1,36 @@
 package com.juankpro.ane.localnotif;
 
-import java.nio.ByteBuffer;
+import android.content.Context;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.adobe.fre.FREByteArray;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
+import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
+import com.juankpro.ane.localnotif.category.LocalNotificationCategoryManager;
+import com.juankpro.ane.localnotif.decoder.LocalNotificationDecoder;
+import com.juankpro.ane.localnotif.decoder.LocalNotificationSettingsDecoder;
+import com.juankpro.ane.localnotif.fre.ExtensionUtils;
+import com.juankpro.ane.localnotif.fre.FunctionHelper;
+import com.juankpro.ane.localnotif.util.ApplicationStatus;
+import com.juankpro.ane.localnotif.util.Logger;
+import com.juankpro.ane.localnotif.util.PersistenceManager;
 
 /**
  * Created by Juank on 10/21/17.
  */
 
-
 class LocalNotificationsContext extends FREContext {
     static final private String STATUS = "status";
     static final private String NOTIFICATION_SELECTED = "notificationSelected";
+    static final private String SETTINGS_SUBSCRIBED = "settingsSubscribed";
 
     private static LocalNotificationsContext currentContext;
 
     static LocalNotificationsContext getInstance() {
-        if(currentContext == null) {
-            Logger.log("LocalNotificationsContext instantiating!");
+        if (currentContext == null) {
             currentContext = new LocalNotificationsContext();
         }
         return currentContext;
@@ -30,37 +38,44 @@ class LocalNotificationsContext extends FREContext {
 
     private LocalNotificationManager notificationManager;
 
-    private LocalNotificationsContext() {
-        Logger.log("LocalNotificationsContext cache instance");
-    }
-
     private LocalNotificationManager getManager() {
         if (notificationManager == null) {
-            notificationManager = new LocalNotificationManager(getActivity());
+            notificationManager = new LocalNotificationManager(getApplicationContext());
         }
         return notificationManager;
+    }
+
+    private PersistenceManager persistenceManager;
+
+    private PersistenceManager getPersistenceManager() {
+        if (persistenceManager == null) {
+            persistenceManager = new PersistenceManager(getApplicationContext());
+        }
+        return persistenceManager;
+    }
+
+    private LocalNotificationCategoryManager categoryManager;
+
+    private LocalNotificationCategoryManager getCategoryManager() {
+        if (categoryManager == null) {
+            categoryManager = new LocalNotificationCategoryManager(getApplicationContext());
+        }
+        return categoryManager;
     }
 
     @Override
     public void dispose() {
         currentContext = null;
-        Logger.log("LocalNotificationsContext::dispose set instance to null");
     }
 
     @Override
     public Map<String, FREFunction> getFunctions() {
-        Logger.log("LocalNotificationsContext registering functions");
-
         Map<String, FREFunction> functionMap = new HashMap<>();
 
         functionMap.put("checkForNotificationAction", new FunctionHelper() {
             @Override
             public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
-                Logger.log("LocalNotificationsContext checking for notification");
-                if (LocalNotificationCache.getInstance().wasUpdated()) {
-                    dispatchNotificationSelectedEvent();
-                }
-
+                checkForNotificationAction();
                 return null;
             }
         });
@@ -68,37 +83,28 @@ class LocalNotificationsContext extends FREContext {
         functionMap.put("getSelectedNotificationCode", new FunctionHelper() {
             @Override
             public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
-                Logger.log("LocalNotificationsContext::getSelectedNotificationCode code: " + LocalNotificationCache.getInstance().getNotificationCode());
-                return FREObject.newObject(LocalNotificationCache.getInstance().getNotificationCode());
+                return getSelectedNotificationCode();
             }
         });
 
         functionMap.put("getSelectedNotificationData", new FunctionHelper() {
             @Override
             public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
-                FREObject byteArray = FREObject.newObject("flash.utils.ByteArray", null);
+                return getSelectedNotificationData();
+            }
+        });
 
-                byte[] data = LocalNotificationCache.getInstance().getNotificationData();
-
-                // Construct an ActionScript ByteArray object containing the action data of the selected notification.
-                for (byte aByte : data) {
-                    FREObject arguments[] = new FREObject[1];
-                    arguments[0] = FREObject.newObject(aByte);
-                    byteArray.callMethod("writeByte", arguments);
-                }
-
-                Logger.log("LocalNotificationsContext::getSelectedNotificationData byte array: " + new String(LocalNotificationCache.getInstance().getNotificationData()));
-                return byteArray;
+        functionMap.put("getSelectedNotificationAction", new FunctionHelper() {
+            @Override
+            public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
+                return getSelectedNotificationAction();
             }
         });
 
         functionMap.put("notify", new FunctionHelper() {
             @Override
             public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
-                LocalNotification localNotification = decodeLocalNotification(passedArgs[0].getAsString(), passedArgs[1], context);
-                getManager().persistNotification(localNotification);
-                // Fire the notification from the specified manager.
-                getManager().notify(localNotification);
+                sendNotification(context, passedArgs);
                 return null;
             }
         });
@@ -106,9 +112,7 @@ class LocalNotificationsContext extends FREContext {
         functionMap.put("cancel", new FunctionHelper() {
             @Override
             public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
-                String notificationCode = passedArgs[0].getAsString();
-                getManager().unpersistNotification(notificationCode);
-                getManager().cancel(notificationCode);
+                cancel(passedArgs[0].getAsString());
                 return null;
             }
         });
@@ -116,8 +120,7 @@ class LocalNotificationsContext extends FREContext {
         functionMap.put("cancelAll", new FunctionHelper() {
             @Override
             public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
-                getManager().cancelAll();
-                getManager().unpersistAllNotifications();
+                cancelAll();
                 return null;
             }
         });
@@ -138,66 +141,37 @@ class LocalNotificationsContext extends FREContext {
             }
         });
 
+        functionMap.put("registerSettings", new FunctionHelper() {
+            @Override
+            public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
+                registerSettings(context, passedArgs[0]);
+                return null;
+            }
+        });
+
+        functionMap.put("getSelectedSettings", new FunctionHelper() {
+            @Override
+            public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
+                return getSelectedSettings();
+            }
+        });
+
         ApplicationStatus.setInForeground(true);
         return functionMap;
     }
 
-    private static LocalNotification decodeLocalNotification(String code, FREObject freObject, FREContext freContext) throws Exception {
-        // Get the activity class name and pass it to the notification.
-        String activityClassName = freContext.getActivity().getClass().getName();
-        Logger.log("LocalNotificationsContext::decodeLocalNotification Activity Class Name: " + activityClassName);
+    private void registerSettings(final FREContext context, FREObject object) {
+        try {
+            LocalNotificationSettingsDecoder decoder = new LocalNotificationSettingsDecoder(context);
+            LocalNotificationCategory[] categories = decoder.decodeObject(object).categories;
+            getCategoryManager().registerCategories(categories);
 
-        LocalNotification localNotification = new LocalNotification(activityClassName);
+            dispatchSettingsSubscribed();
+        } catch (Throwable e) { e.printStackTrace(); }
+    }
 
-        // Notification Name.
-        localNotification.code = code;
-
-        // IMPORTANT: These property names must match the names in the Notification ActionScript class exactly.
-        localNotification.fireDate = ExtensionUtils.getDateProperty(freObject, "fireDate", localNotification.fireDate);
-        localNotification.repeatInterval = ExtensionUtils.getIntProperty(freObject, "repeatInterval", localNotification.repeatInterval);
-
-        // Text.
-        localNotification.tickerText = ExtensionUtils.getStringProperty(freObject, "tickerText", localNotification.tickerText);
-        localNotification.title = ExtensionUtils.getStringProperty(freObject, "title", localNotification.title);
-        localNotification.body = ExtensionUtils.getStringProperty(freObject, "body", localNotification.body);
-
-        // Sound.
-        localNotification.playSound = ExtensionUtils.getBooleanProperty(freObject, "playSound", localNotification.playSound);
-        localNotification.soundName = ExtensionUtils.getStringProperty(freObject, "soundName", localNotification.soundName);
-
-        // Vibration.
-        localNotification.vibrate = ExtensionUtils.getBooleanProperty(freObject, "vibrate", localNotification.vibrate);
-
-        // Icon.
-        String iconType = ExtensionUtils.getStringProperty(freObject, "iconType", "");
-        localNotification.iconResourceId = getIconResourceIdFromString(iconType, freContext);
-        localNotification.numberAnnotation = ExtensionUtils.getIntProperty(freObject, "numberAnnotation", localNotification.numberAnnotation);
-
-        // Action.
-        localNotification.hasAction = ExtensionUtils.getBooleanProperty(freObject, "hasAction", localNotification.hasAction);
-
-        localNotification.showInForeground = ExtensionUtils.getBooleanProperty(freObject, "showInForeground", localNotification.showInForeground);
-
-        // Miscellaneous.
-        localNotification.cancelOnSelect = ExtensionUtils.getBooleanProperty(freObject, "cancelOnSelect", localNotification.cancelOnSelect);
-        localNotification.alertPolicy = ExtensionUtils.getStringProperty(freObject, "alertPolicy", localNotification.alertPolicy);
-        localNotification.ongoing = ExtensionUtils.getBooleanProperty(freObject, "ongoing", localNotification.ongoing);
-        localNotification.priority = ExtensionUtils.getIntProperty(freObject, "priority", localNotification.priority);
-
-        // Action data.
-        FREByteArray byteArray = (FREByteArray) freObject.getProperty("actionData");
-        if (byteArray != null) {
-            byteArray.acquire();
-            ByteBuffer byteBuffer = byteArray.getBytes();
-            byteArray.release();
-
-            localNotification.actionData = new byte[byteBuffer.limit()];
-            byteBuffer.get(localNotification.actionData);
-        } else {
-            localNotification.actionData = new byte[0];
-        }
-
-        return localNotification;
+    private void dispatchSettingsSubscribed() {
+        dispatchStatusEventAsync(SETTINGS_SUBSCRIBED, STATUS);
     }
 
     void dispatchNotificationSelectedEvent() {
@@ -205,9 +179,49 @@ class LocalNotificationsContext extends FREContext {
         dispatchStatusEventAsync(NOTIFICATION_SELECTED, STATUS);
     }
 
-    private static int getIconResourceIdFromString(String iconType, FREContext freContext) {
-        if (freContext == null) { return 0; }
-        return new ResourceMapper().getResourceIdFor(iconType, freContext);
+    private FREObject getSelectedSettings() throws Exception {
+        return FREObject.newObject(7);
+    }
+
+    private Context getApplicationContext() {
+        return getActivity().getApplicationContext();
+    }
+
+    private void checkForNotificationAction() {
+        if (LocalNotificationCache.getInstance().wasUpdated()) dispatchNotificationSelectedEvent();
+        Logger.log("LocalNotificationsContext checking for notification");
+    }
+
+    private FREObject getSelectedNotificationCode() throws Exception {
+        Logger.log("LocalNotificationsContext::getSelectedNotificationCode code: " + LocalNotificationCache.getInstance().getNotificationCode());
+        return FREObject.newObject(LocalNotificationCache.getInstance().getNotificationCode());
+    }
+
+    private FREObject getSelectedNotificationData() {
+        Logger.log("LocalNotificationsContext::getSelectedNotificationData byte array: " + new String(LocalNotificationCache.getInstance().getNotificationData()));
+        return ExtensionUtils.getFreObject(LocalNotificationCache.getInstance().getNotificationData());
+    }
+
+    private FREObject getSelectedNotificationAction() throws Exception {
+        Logger.log("LocalNotificationsContext::getSelectedNotificationAction action: " + LocalNotificationCache.getInstance().getActionId());
+        return FREObject.newObject(LocalNotificationCache.getInstance().getActionId());
+    }
+
+    private void sendNotification(FREContext context, FREObject[] passedArgs) {
+        LocalNotification localNotification =
+                new LocalNotificationDecoder(context, passedArgs[0]).decodeObject(passedArgs[1]);
+        getPersistenceManager().writeNotification(localNotification);
+        getManager().notify(localNotification);
+    }
+
+    private void cancel(String notificationCode) {
+        getPersistenceManager().removeNotification(notificationCode);
+        getManager().cancel(notificationCode);
+    }
+
+    private void cancelAll() {
+        getManager().cancelAll();
+        getPersistenceManager().clearNotifications();
     }
 }
 

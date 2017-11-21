@@ -15,11 +15,25 @@ package com.juankpro.ane.localnotif {
      * @see com.juankpro.ane.localnotif.NotificationEvent
      */
     public var identifier:String;
+
     /**
      * The action button title. It defines the label to use for the button.
      * <p>Supported OS: Android, iOS</p>
      */
     public var title:String;
+    
+    /**
+     * Specifies the type of icon to display for the notification action, specified by the
+     * <code>NotificationIconType</code> class constants.
+     * <p>You can also send any other file name (without the extension). For custom icons to work
+     * you will need to recompile the ANE adding the custom icons to the res folder.</p>
+     * <p>This icon is not only supported in Android but also required.</p>
+     * <p>Supported OS: Android</p>
+     * @default NotificationIconType.ALERT
+     * @see com.juankpro.ane.localnotif.NotificationIconType
+     * <p>Supported OS: Android</p>
+     */
+    public var icon:String = NotificationIconType.ALERT;
 
     /**
      * Constructor

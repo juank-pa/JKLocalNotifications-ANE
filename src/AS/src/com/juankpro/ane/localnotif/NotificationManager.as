@@ -244,7 +244,7 @@
      */
     public function subscribe(options:LocalNotifierSubscribeOptions):void {
       CONFIG::device {
-        _extensionContext.call("registerSettings", options.notificationStyleFlags);
+        _extensionContext.call("registerSettings", options);
       }
     }
 

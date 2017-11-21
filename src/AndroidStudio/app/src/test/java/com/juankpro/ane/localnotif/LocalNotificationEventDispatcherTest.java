@@ -1,5 +1,8 @@
 package com.juankpro.ane.localnotif;
 
+import com.juankpro.ane.localnotif.util.ApplicationStatus;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -22,15 +25,17 @@ public class LocalNotificationEventDispatcherTest {
     private LocalNotificationEventDispatcher subject;
     private String code = "My Code";
     private byte[] data = new byte[]{0};
+    private String actionId = "ActionId";
 
     private LocalNotificationEventDispatcher getSubject() {
         if (subject == null) {
-            subject = new LocalNotificationEventDispatcher(code, data);
+            subject = new LocalNotificationEventDispatcher(code, data, actionId);
         }
         return subject;
     }
 
-    private void setup() {
+    @Before
+    public void setup() {
         ApplicationStatus.reset();
         LocalNotificationCache.clear();
         MockitoAnnotations.initMocks(this);
@@ -42,26 +47,24 @@ public class LocalNotificationEventDispatcherTest {
     private void assertCache() {
         assertEquals(code, LocalNotificationCache.getInstance().getNotificationCode());
         assertEquals(data, LocalNotificationCache.getInstance().getNotificationData());
+        assertEquals(actionId, LocalNotificationCache.getInstance().getActionId());
         assertTrue(LocalNotificationCache.getInstance().wasUpdated());
     }
 
     @Test
     public void dispatcher_dispatchInForeground_setsCacheIfAppIsNotActive() {
-        setup();
         getSubject().dispatchWhenInForeground();
         assertCache();
     }
 
     @Test
     public void dispatcher_dispatchInForeground_doesNotDispatchesIfAppIsNotActive() {
-        setup();
         getSubject().dispatchWhenInForeground();
         verify(context, never()).dispatchNotificationSelectedEvent();
     }
 
     @Test
     public void dispatcher_dispatchInForeground_setsCacheIfAppIsInBackground() {
-        setup();
         ApplicationStatus.setInForeground(true);
         ApplicationStatus.setInForeground(false);
         getSubject().dispatchWhenInForeground();
@@ -70,7 +73,6 @@ public class LocalNotificationEventDispatcherTest {
 
     @Test
     public void dispatcher_dispatchInForeground_doesNotDispatchesIfAppIsInBackground() {
-        setup();
         ApplicationStatus.reset();
         getSubject().dispatchWhenInForeground();
         verify(context, never()).dispatchNotificationSelectedEvent();
@@ -78,7 +80,6 @@ public class LocalNotificationEventDispatcherTest {
 
     @Test
     public void dispatcher_dispatchInForeground_setsCacheIfAppIsInForeground() {
-        setup();
         ApplicationStatus.setInForeground(true);
         getSubject().dispatchWhenInForeground();
         assertCache();
@@ -86,7 +87,6 @@ public class LocalNotificationEventDispatcherTest {
 
     @Test
     public void dispatcher_dispatchInForeground_dispatchesIfAppIsInForeground() {
-        setup();
         ApplicationStatus.setInForeground(true);
         getSubject().dispatchWhenInForeground();
         verify(context).dispatchNotificationSelectedEvent();

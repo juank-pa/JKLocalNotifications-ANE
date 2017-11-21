@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.juankpro.ane.localnotif.factory.NotificationPendingIntentFactory;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -13,6 +16,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,8 +29,8 @@ import static org.junit.Assert.*;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({NotificationIntentFactory.class,PendingIntent.class})
-public class NotificationIntentFactoryTest {
+@PrepareForTest({NotificationPendingIntentFactory.class,PendingIntent.class})
+public class NotificationPendingIntentFactoryTest {
     @Mock
     private Context context;
     @Mock
@@ -34,16 +40,17 @@ public class NotificationIntentFactoryTest {
     @Mock
     private PendingIntent pendingIntent;
     private byte[] bytes = new byte[]{};
-    private NotificationIntentFactory subject;
+    private NotificationPendingIntentFactory subject;
 
-    private NotificationIntentFactory getSubject() {
+    private NotificationPendingIntentFactory getSubject() {
         if (subject == null) {
-            subject = new NotificationIntentFactory(context, bundle);
+            subject = new NotificationPendingIntentFactory(context, bundle);
         }
         return subject;
     }
 
-    private void setup() {
+    @Before
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
         when(bundle.getString(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY)).thenReturn("ActivityClassName");
@@ -55,13 +62,12 @@ public class NotificationIntentFactoryTest {
         } catch(Exception e) { e.printStackTrace(); }
 
         PowerMockito.mockStatic(PendingIntent.class);
-        when(PendingIntent.getService(context, "MyCode".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
-                .thenReturn(pendingIntent);
     }
 
     @Test
     public void factory_createPendingIntent_createsPendingIntent() {
-        setup();
+        when(PendingIntent.getService(context, "MyCode".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
+                .thenReturn(pendingIntent);
 
         assertSame(pendingIntent, getSubject().createPendingIntent());
 
@@ -69,5 +75,20 @@ public class NotificationIntentFactoryTest {
         verify(intent).putExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY, "ActivityClassName");
         verify(intent).putExtra(Constants.NOTIFICATION_CODE_KEY, "MyCode");
         verify(intent).putExtra(Constants.ACTION_DATA_KEY, bytes);
+        verify(intent, never()).putExtra(eq(Constants.ACTION_ID_KEY), anyString());
+    }
+
+    @Test
+    public void factory_createPendingIntent_createsPendingIntentForAction() {
+        when(PendingIntent.getService(context, "MyCodeActionId".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
+                .thenReturn(pendingIntent);
+
+        assertSame(pendingIntent, getSubject().createPendingIntent("ActionId"));
+
+        verify(intent).setClassName(context, Constants.NOTIFICATION_INTENT_SERVICE);
+        verify(intent).putExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY, "ActivityClassName");
+        verify(intent).putExtra(Constants.NOTIFICATION_CODE_KEY, "MyCode");
+        verify(intent).putExtra(Constants.ACTION_DATA_KEY, bytes);
+        verify(intent).putExtra(Constants.ACTION_ID_KEY, "ActionId");
     }
 }

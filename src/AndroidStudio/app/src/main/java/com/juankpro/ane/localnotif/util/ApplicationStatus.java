@@ -1,17 +1,17 @@
-package com.juankpro.ane.localnotif;
+package com.juankpro.ane.localnotif.util;
 
 /**
  * Created by Juank on 10/22/17.
  */
 
-class ApplicationStatus {
+public class ApplicationStatus {
     static private ApplicationStatus instance = new ApplicationStatus();
 
-    static void reset() {
+    public static void reset() {
         instance = new ApplicationStatus();
     }
 
-    static void setInForeground(boolean inForeground) {
+    public static void setInForeground(boolean inForeground) {
         if (inForeground) {
             instance.moveToForeground();
             return;
@@ -22,11 +22,11 @@ class ApplicationStatus {
     private boolean active = false;
     private boolean inForeground = false;
 
-    static boolean getActive() {
+    public static boolean getActive() {
         return instance.active;
     }
 
-    static boolean getInForeground() {
+    public static boolean getInForeground() {
         return instance.inForeground;
     }
 

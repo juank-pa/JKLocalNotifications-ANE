@@ -81,8 +81,8 @@
     public function NotificationEvent(type:String, code:String = null, data:Object = null, action:String = null) {
       super(type, true, false);
       this.notificationCode = code;
-      this.notificationAction = action;
       this.actionData = data;
+      this.notificationAction = action;
     }
 
     /**
@@ -96,7 +96,7 @@
      * @private
      */
     override public function toString() : String {
-      return formatToString("NotificationEvent", "type", "bubbles", "cancelable", "eventPhase", "notificationCode", "actionData");
+      return formatToString("NotificationEvent", "type", "bubbles", "cancelable", "eventPhase", "notificationCode", "actionData", "notificationAction");
     }
   }
 }

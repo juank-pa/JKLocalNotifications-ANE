@@ -145,6 +145,7 @@
           notification.tickerText = "test ticker ";
           notification.priority = NotificationPriority.HIGH;
           notification.showInForeground = true;
+          notification.category = "category";
 
           notificationManager.notifyUser(NOTIFICATION_CODE, notification);
           printNotification('Posted Message', notification);
@@ -182,7 +183,8 @@
 
     private function notificationActionHandler(event:NotificationEvent):void {
       printMessage("Code: " + event.notificationCode +
-        "\nSample Data: {" + event.actionData.sampleData + "}",
+        "\nSample Data: {" + event.actionData.sampleData + "}" +
+        "\nAction: " + event.notificationAction,
         "Received notification");
     }
 

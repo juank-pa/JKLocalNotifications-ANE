@@ -1,4 +1,4 @@
-package com.juankpro.ane.localnotif;
+package com.juankpro.ane.localnotif.util;
 
 import com.adobe.fre.FREContext;
 
@@ -6,8 +6,8 @@ import com.adobe.fre.FREContext;
  * Created by Juank on 10/21/17.
  */
 
-class ResourceMapper {
-    Integer getResourceIdFor(String iconType, FREContext freContext) {
+public class ResourceMapper {
+    public Integer getResourceIdFor(String iconType, FREContext freContext) {
         return freContext.getResourceId("drawable." + iconType);
     }
 }

@@ -7,62 +7,67 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.NotificationManager;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.os.Build;
+
+import com.juankpro.ane.localnotif.serialization.IDeserializable;
+import com.juankpro.ane.localnotif.serialization.ISerializable;
+import com.juankpro.ane.localnotif.util.Logger;
 
 /**
  * Created by Juank on 10/22/17.
  */
 
-class LocalNotification {
-    String code = "";
+public class LocalNotification implements ISerializable, IDeserializable {
+    public String code = "";
 
     // Text.
-    String tickerText = "";
-    String title = "";
-    String body = "";
+    public String tickerText = "";
+    public String title = "";
+    public String body = "";
 
     // Sound.
-    boolean playSound = false;
+    public boolean playSound = false;
 
     // Vibration.
-    boolean vibrate = false;
+    public boolean vibrate = false;
 
     // Icon.
-    int iconResourceId = 0;
-    int numberAnnotation = 0;
+    public int iconResourceId = 0;
+    public int numberAnnotation = 0;
 
     // Miscellaneous.
-    boolean cancelOnSelect = false;
-    boolean ongoing = false;
-    String alertPolicy = "";
+    public boolean cancelOnSelect = false;
+    public boolean ongoing = false;
+    public String alertPolicy = "";
 
-    String soundName = "";
+    public String soundName = "";
 
     // Action.
-    boolean hasAction = true;
-    byte[] actionData = {};
+    public boolean hasAction = true;
+    public byte[] actionData = {};
 
-    Date fireDate = new Date();
-    int repeatInterval = 0;
+    public Date fireDate = new Date();
+    public int repeatInterval = 0;
 
-    int priority = NotificationManager.IMPORTANCE_DEFAULT;
+    public int priority;
 
-    boolean showInForeground = false;
+    public  boolean showInForeground = false;
 
-    String activityClassName = "";
+    public String activityClassName = "";
+    public String category = "";
 
-    /**
-     * The activityClassName parameter can be null if you expect to call deserialize to retrieve it afterward.
-     */
-    LocalNotification(String activityClassName) {
-        this.activityClassName = activityClassName;
+    public LocalNotification() {
+        this(null);
     }
 
+    public LocalNotification(String activityClassName) {
+        this.activityClassName = activityClassName;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            priority = NotificationManager.IMPORTANCE_DEFAULT;
+        }
+    }
 
-    void serialize(SharedPreferences prefs) {
-        Editor editor = prefs.edit();
-
+    public JSONObject serialize() {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -84,34 +89,21 @@ class LocalNotification {
             jsonObject.putOpt("activityClassName", activityClassName);
             jsonObject.putOpt("priority", priority);
             jsonObject.putOpt("showInForeground", showInForeground);
+            jsonObject.putOpt("category", category);
 
-            // Action data.
             for (byte anActionData : actionData) {
                 jsonObject.accumulate("actionData", (int)anActionData);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Logger.log("LocalNotification::serialize Exception");
         }
-
-
-        // Basic properties.
-        editor.putString(code, jsonObject.toString());
-        editor.commit();
+        return jsonObject;
     }
 
 
-    void deserialize(SharedPreferences prefs, String code) {
-        String jsonString = prefs.getString(code, "");
-        JSONObject jsonObject = null;
-
-        try {
-            jsonObject = new JSONObject(jsonString);
-        } catch (Exception e) {
-            Logger.log("LocalNotification::deserialize No valid JSON string Exception");
-        }
-
+    public void deserialize(JSONObject jsonObject) {
         if (jsonObject != null) {
-            // Note: using the current value as the default value in each case.
             this.code = jsonObject.optString("code", code);
             tickerText = jsonObject.optString("tickerText", tickerText);
             title = jsonObject.optString("title", title);
@@ -128,6 +120,7 @@ class LocalNotification {
             activityClassName = jsonObject.optString("activityClassName", activityClassName);
             priority = jsonObject.optInt("priority", priority);
             showInForeground = jsonObject.optBoolean("showInForeground", showInForeground);
+            category = jsonObject.optString("category", category);
 
             long dateTime = jsonObject.optLong("fireDate", fireDate.getTime());
 

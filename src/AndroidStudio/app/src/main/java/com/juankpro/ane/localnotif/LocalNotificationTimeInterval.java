@@ -4,7 +4,7 @@ package com.juankpro.ane.localnotif;
  * Created by Juank on 10/21/17.
  */
 
-class NotificationTimeInterval {
+class LocalNotificationTimeInterval {
     /**
      * Represents a second in milliseconds
      */
@@ -100,7 +100,7 @@ class NotificationTimeInterval {
 
     private int intervalId;
 
-    NotificationTimeInterval(int intervalId) {
+    LocalNotificationTimeInterval(int intervalId) {
         this.intervalId = intervalId;
     }
 

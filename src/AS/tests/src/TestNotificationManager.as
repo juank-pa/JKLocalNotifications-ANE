@@ -194,11 +194,10 @@ package {
       assertFalse("Should not call context", mockContext.success());
     }
 
-    public function testSubscribe():void
-    {
-      mockContext.expects("call").withArgs("registerSettings", 3).noReturn();
+    public function testSubscribe():void {
       var options:LocalNotifierSubscribeOptions = new LocalNotifierSubscribeOptions();
       options.notificationStyles = Vector.<String>([NotificationStyle.SOUND, NotificationStyle.BADGE]);
+      mockContext.expects("call").withArgs("registerSettings", options).noReturn();
       manager.subscribe(options);
       CONFIG::device {
         assertTrue(mockContext.errorMessage(), mockContext.success());
