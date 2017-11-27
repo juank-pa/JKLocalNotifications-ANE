@@ -8,50 +8,42 @@
 
 #import <UIKit/UIKit.h>
 #import "JKNotificationListener.h"
+#import "JKNotificationListener+Private.h"
 #import "JKNotificationDispatcher.h"
 #import "Constants.h"
-#import "FlashRuntimeExtensions+Private.h"
 
 @interface JKNotificationListener ()
-@property (nonatomic, assign, getter=hasTriggered) BOOL triggered;
-@property (nonatomic, strong) JKNotificationDispatcher *dispatcher;
-@property (nonatomic, readwrite) NSString *notificationCode;
-@property (nonatomic, readwrite) NSData *notificationData;
+@property (nonatomic, readwrite) JKNotificationDispatcher *dispatcher;
 @end
 
 @implementation JKNotificationListener
 
-- (instancetype)initWithTarget:(id)target {
-    if (self = [super initWithTarget:target]) {
-        _dispatcher = [JKNotificationDispatcher dispatcherWithListener:self];
-        _triggered = NO;
++ (instancetype)sharedListener {
+    static JKNotificationListener *_sharedInstance = nil;
+    static dispatch_once_t oncePredicate;
+    dispatch_once(&oncePredicate, ^{
+        _sharedInstance = [self new];
+    });
+    return _sharedInstance;
+}
+
+- (instancetype)setupWithOriginalDelegate:(id<UIApplicationDelegate>)originalDelegate {
+    self.originalDelegate = originalDelegate;
+    return self;
+}
+
+- (instancetype)init {
+    if (self = [super initWithTarget:nil]) {
+        _dispatcher = [[JKNotificationDispatcher alloc] initWithListener:self];
     }
     return self;
 }
 
-@synthesize delegate = _delegate;
-@synthesize notificationCode = _notificationCode;
-@synthesize notificationData = _notificationData;
-
 - (void)checkForNotificationAction {
-    if (self.hasTriggered) return;
-    UILocalNotification *localNotification = [self localNotificationFromLaunchOptions];
-    [self dispatchDidReceiveNotificationWithUserInfo:localNotification.userInfo completionHandler:^{
-        self.triggered = YES;
+    if (self.userInfo == nil) return;
+    [self.dispatcher dispatchDidReceiveNotificationWithActionId:self.notificationAction userInfo:self.userInfo completionHandler:^{
+        self.userInfo = nil;
     }];
-}
-
-- (UILocalNotification *)localNotificationFromLaunchOptions {
-    NSDictionary *launchOptions = FRPE_getApplicationLaunchOptions();
-    return [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-}
-
-- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo {
-    [self dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:NULL];
-}
-
-- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo completionHandler:(void(^)())completionHandler {
-    [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:completionHandler];
 }
 
 @end

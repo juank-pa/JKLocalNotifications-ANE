@@ -15,16 +15,15 @@
 #import "Constants.h"
 #import "Stubs.h"
 
-@interface JKLegacyLocalNotificationAuthorizer (Test)<UIApplicationDelegate>
-@property (nonatomic, retain) id savedDelegate;
+@interface JKLegacyLocalNotificationAuthorizer (Test)<JKNotificationListenerDelegate>
 @end
 
 @interface JKLegacyNotificationAuthorizerTest : JKLegacyTestCase
-@property (nonatomic, retain) JKLegacyLocalNotificationAuthorizer *subject;
-@property (nonatomic, retain) JKLocalNotificationSettings *settings;
-@property (nonatomic, retain) id factoryMock;
-@property (nonatomic, retain) id appMock;
-@property (nonatomic, retain) id appDelegateMock;
+@property (nonatomic, strong) JKLegacyLocalNotificationAuthorizer *subject;
+@property (nonatomic, strong) JKLocalNotificationSettings *settings;
+@property (nonatomic, strong) id factoryMock;
+@property (nonatomic, strong) id appMock;
+@property (nonatomic, strong) id listenerMock;
 @end
 
 @implementation JKLegacyNotificationAuthorizerTest
@@ -34,11 +33,11 @@
 
     self.settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes:JKLocalNotificationTypeAlert | JKLocalNotificationTypeBadge];
 
-    self.appDelegateMock = OCMProtocolMock(@protocol(UIApplicationDelegate));
+    self.listenerMock = OCMClassMock([JKNotificationListener class]);
     self.appMock = OCMClassMock([UIApplication class]);
-    OCMStub([self.appMock delegate]).andReturn(self.appDelegateMock);
 
     self.factoryMock = OCMClassMock([JKLegacyLocalNotificationFactory class]);
+    OCMStub([self.factoryMock listener]).andReturn(self.listenerMock);
     OCMStub([self.factoryMock application]).andReturn(self.appMock);
 
     self.subject = [[JKLegacyLocalNotificationAuthorizer alloc] initWithFactory:self.factoryMock];
@@ -50,44 +49,18 @@
 
 - (void)testInitialization {
     JKLegacyLocalNotificationAuthorizer *subject = [JKLegacyLocalNotificationAuthorizer alloc];
-    XCTAssertNil(subject.savedDelegate);
-    OCMExpect([self.appMock setDelegate:subject]);
+    OCMExpect([self.listenerMock setDelegate:subject]);
     [subject initWithFactory:self.factoryMock];
-
-    XCTAssertEqual(subject.savedDelegate, self.appDelegateMock);
-    OCMVerifyAll(self.appMock);
+    OCMVerifyAll(self.listenerMock);
 }
 
-- (void)testDeallocation {
-    StubLegacyFactory *factory = [StubLegacyFactory new];
-    factory.application.delegate = self.appDelegateMock;
-    @autoreleasepool {
-        [[JKLegacyLocalNotificationAuthorizer alloc] initWithFactory:factory];
-    }
-    XCTAssertEqual(factory.application.delegate, self.appDelegateMock);
-}
-
-- (void)testForwardingTargetForSelector {
-    XCTAssertEqual([self.subject forwardingTargetForSelector:NULL], self.appDelegateMock);
-}
-
-- (void)testSuccessfulForwarding {
-    id appDelegateMock = OCMProtocolMock(@protocol(UIApplicationDelegate));
-    OCMExpect([appDelegateMock applicationWillTerminate:self.appMock]);
-    self.subject.savedDelegate = appDelegateMock;
-    [self.subject applicationWillTerminate:self.appMock];
-
-    OCMVerifyAll(appDelegateMock);
-}
-
-- (void)testResponsToSelector {
-    XCTAssertFalse([self.subject respondsToSelector:@selector(tableView:canEditRowAtIndexPath:)]);
-    XCTAssertTrue([self.subject respondsToSelector:@selector(applicationWillTerminate:)]);
-}
 
 - (void)testRequestAuthorizationWithSettings {
+    id settingsBuilderMock = OCMClassMock([JKLegacyNotificationSettingsBuilder class]);
+    OCMStub([self.factoryMock createSettingsBuilder]).andReturn(settingsBuilderMock);
+
     id settingsMock = OCMClassMock([UIUserNotificationSettings class]);
-    OCMStub([self.factoryMock createSettingsForTypes:self.settings.notificationTypes]).andReturn(settingsMock);
+    OCMStub([settingsBuilderMock buildFromSettings:self.settings]).andReturn(settingsMock);
 
     OCMExpect([self.appMock registerUserNotificationSettings:settingsMock]);
 
@@ -96,7 +69,7 @@
     OCMVerifyAll(self.appMock);
 }
 
-- (void)testApplicationDidRegisterUserNotificationSettings {
+- (void)testNotificationListenerDidRegisterUserNotificationSettings {
     XCTAssertNil(self.subject.settings);
 
     UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge;
@@ -108,7 +81,7 @@
     self.subject.delegate = delegateMock;
 
     UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
-    [self.subject application:self.appMock didRegisterUserNotificationSettings:settings];
+    [self.subject notificationListener:self.listenerMock didRegisterUserNotificationSettings:settings];
 
     XCTAssertEqual(self.subject.settings, settingsMock);
     OCMVerifyAll(delegateMock);

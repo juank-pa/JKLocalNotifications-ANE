@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,62 +15,72 @@
             <objects>
                 <viewController id="zfR-Nb-983" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="p75-yd-mVo"/>
-                        <viewControllerLayoutGuide type="bottom" id="Btj-RF-NPg"/>
+                        <viewControllerLayoutGuide type="top" id="iMH-vW-3JP"/>
+                        <viewControllerLayoutGuide type="bottom" id="5Qp-Tb-aSY"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="xIn-iA-T68">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M23-vb-xCP">
-                                <rect key="frame" x="16" y="28" width="47" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M23-vb-xCP">
+                                <rect key="frame" x="16" y="20" width="31" height="30"/>
                                 <state key="normal" title="Post"/>
                                 <connections>
                                     <action selector="postNotification:" destination="zfR-Nb-983" eventType="touchUpInside" id="w0P-Q9-cek"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V9e-3c-JW8">
-                                <rect key="frame" x="132" y="28" width="63" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V9e-3c-JW8">
+                                <rect key="frame" x="134" y="20" width="48" height="30"/>
                                 <state key="normal" title="Cancel"/>
                                 <connections>
                                     <action selector="cancelAll:" destination="zfR-Nb-983" eventType="touchUpInside" id="vAp-ZA-uFN"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L66-h0-wdw">
-                                <rect key="frame" x="237" y="28" width="122" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Cancel by Code"/>
-                                <connections>
-                                    <action selector="cancelByCode:" destination="zfR-Nb-983" eventType="touchUpInside" id="Plu-vl-YL3"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRe-wG-zmR">
-                                <rect key="frame" x="16" y="81" width="100" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Clear Badge"/>
-                                <connections>
-                                    <action selector="clearBadge:" destination="zfR-Nb-983" eventType="touchUpInside" id="aNp-CD-l4o"/>
-                                </connections>
-                            </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lFN-xY-FUc">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lFN-xY-FUc">
                                 <rect key="frame" x="0.0" y="356" width="375" height="311"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardAppearance="alert"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cfE-uE-BVv">
-                                <rect key="frame" x="16" y="318" width="47" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cfE-uE-BVv">
+                                <rect key="frame" x="16" y="318" width="36" height="30"/>
                                 <state key="normal" title="Clear"/>
                                 <connections>
                                     <action selector="clearText:" destination="zfR-Nb-983" eventType="touchUpInside" id="HbY-my-FUJ"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRe-wG-zmR">
+                                <rect key="frame" x="16" y="58" width="84" height="30"/>
+                                <state key="normal" title="Clear Badge"/>
+                                <connections>
+                                    <action selector="clearBadge:" destination="zfR-Nb-983" eventType="touchUpInside" id="aNp-CD-l4o"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L66-h0-wdw">
+                                <rect key="frame" x="250" y="20" width="109" height="30"/>
+                                <state key="normal" title="Cancel by Code"/>
+                                <connections>
+                                    <action selector="cancelByCode:" destination="zfR-Nb-983" eventType="touchUpInside" id="Plu-vl-YL3"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="lFN-xY-FUc" firstAttribute="leading" secondItem="xIn-iA-T68" secondAttribute="leading" id="8nd-ID-xav"/>
+                            <constraint firstItem="V9e-3c-JW8" firstAttribute="centerX" secondItem="xIn-iA-T68" secondAttribute="centerX" constant="-29.5" id="FGU-ID-jRP"/>
+                            <constraint firstItem="lFN-xY-FUc" firstAttribute="top" secondItem="cfE-uE-BVv" secondAttribute="bottom" constant="8" symbolic="YES" id="P9M-rW-ul2"/>
+                            <constraint firstItem="M23-vb-xCP" firstAttribute="baseline" secondItem="V9e-3c-JW8" secondAttribute="baseline" id="Pra-UK-l3B"/>
+                            <constraint firstItem="M23-vb-xCP" firstAttribute="leading" secondItem="NRe-wG-zmR" secondAttribute="leading" id="c4e-jZ-Xxk"/>
+                            <constraint firstItem="NRe-wG-zmR" firstAttribute="leading" secondItem="cfE-uE-BVv" secondAttribute="leading" id="dW3-n0-cCA"/>
+                            <constraint firstItem="cfE-uE-BVv" firstAttribute="centerY" secondItem="xIn-iA-T68" secondAttribute="centerY" id="fcx-DP-C3x"/>
+                            <constraint firstItem="V9e-3c-JW8" firstAttribute="baseline" secondItem="L66-h0-wdw" secondAttribute="baseline" id="gGt-hc-ayC"/>
+                            <constraint firstItem="NRe-wG-zmR" firstAttribute="top" secondItem="M23-vb-xCP" secondAttribute="bottom" constant="8" symbolic="YES" id="ihF-If-iqb"/>
+                            <constraint firstAttribute="trailing" secondItem="lFN-xY-FUc" secondAttribute="trailing" id="mrS-YB-8X5"/>
+                            <constraint firstItem="L66-h0-wdw" firstAttribute="trailing" secondItem="xIn-iA-T68" secondAttribute="trailingMargin" id="oi0-mF-kbg"/>
+                            <constraint firstItem="lFN-xY-FUc" firstAttribute="bottom" secondItem="5Qp-Tb-aSY" secondAttribute="top" id="s6M-id-UAT"/>
+                            <constraint firstItem="M23-vb-xCP" firstAttribute="top" secondItem="iMH-vW-3JP" secondAttribute="bottom" id="v4s-Cf-aCH"/>
+                            <constraint firstItem="M23-vb-xCP" firstAttribute="leading" secondItem="xIn-iA-T68" secondAttribute="leadingMargin" id="y30-bG-TET"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="debugText" destination="lFN-xY-FUc" id="x59-jb-L5D"/>

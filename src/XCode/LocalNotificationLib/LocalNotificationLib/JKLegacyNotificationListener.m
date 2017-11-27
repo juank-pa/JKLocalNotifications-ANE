@@ -2,47 +2,75 @@
 //  JKLegacyNotificationListener.m
 //  LocalNotificationLib
 //
-//  Created by Juan Carlos Pazmino on 7/20/17.
-//
+//  Created by Juan Carlos Pazmiño on 11/29/17.
+//  Copyright © 2017 Juank. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <UserNotifications/UserNotifications.h>
 #import "JKLegacyNotificationListener.h"
-#import "JKLegacyLocalNotificationFactory.h"
 #import "JKNotificationDispatcher.h"
-#import "FlashRuntimeExtensions+Private.h"
-#import "Constants.h"
+#import "JKNotificationFactory.h"
 
-@interface JKNotificationListener ()<UIApplicationDelegate>
-@property (nonatomic, strong) id savedDelegate;
-- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo;
-@end
-
-@interface JKLegacyNotificationListener ()
-@property (nonatomic, strong) JKLegacyLocalNotificationFactory *factory;
+@interface JKLegacyNotificationListener ()<UIApplicationDelegate>
+- (void)didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
 @end
 
 @implementation JKLegacyNotificationListener
 
-@dynamic savedDelegate;
-
-- (instancetype)initWithFactory:(JKLegacyLocalNotificationFactory *)factory {
-    if (self = [super initWithTarget:factory.application.delegate]) {
-        _factory = factory;
-        _factory.application.delegate = self;
-    }
-    return self;
++ (void)load {
+    if (JKNotificationFactory.isNewAPI) return;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(createStarterNotificationChecker:)
+                                                 name:@"UIApplicationDidFinishLaunchingNotification"
+                                               object:nil];
 }
 
-- (void)dealloc {
-    self.factory.application.delegate = self.savedDelegate;
++ (void)createStarterNotificationChecker:(NSNotification *)notification {
+    UIApplication *app = JKNotificationFactory.factory.application;
+    id<UIApplicationDelegate> originalDelegate = app.delegate;
+    app.delegate = [[self sharedListener] setupWithOriginalDelegate:originalDelegate];
+    [[self sharedListener] didFinishLaunchingWithOptions:notification.userInfo];
+}
+
+@dynamic originalDelegate;
+
+- (void)didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    UILocalNotification *notification = launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
+    [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:notification.userInfo];
+}
+
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+    if ([self.originalDelegate respondsToSelector:@selector(application:didRegisterUserNotificationSettings:)]) {
+        [self.originalDelegate application:application didRegisterUserNotificationSettings:notificationSettings];
+    }
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-    if ([self.savedDelegate respondsToSelector:@selector(application:didReceiveLocalNotification:)]) {
-        [self.savedDelegate application:application didReceiveLocalNotification:notification];
+    if ([self.originalDelegate respondsToSelector:@selector(application:didReceiveLocalNotification:)]) {
+        [self.originalDelegate application:application didReceiveLocalNotification:notification];
     }
-    [self dispatchDidReceiveNotificationWithUserInfo:notification.userInfo];
+    [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:notification.userInfo];
+}
+
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler {
+    if ([self.originalDelegate respondsToSelector:@selector(application:handleActionWithIdentifier:forLocalNotification:completionHandler:)]) {
+        [self.originalDelegate application:application handleActionWithIdentifier:identifier forLocalNotification:notification completionHandler:^{
+            [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier userInfo:notification.userInfo completionHandler:completionHandler];
+        }];
+        return;
+    }
+
+    [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier userInfo:notification.userInfo completionHandler:completionHandler];
+}
+
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification withResponseInfo:(NSDictionary *)responseInfo completionHandler:(void (^)())completionHandler {
+    if ([self.originalDelegate respondsToSelector:@selector(application:handleActionWithIdentifier:forLocalNotification:withResponseInfo:completionHandler:)]) {
+        [self.originalDelegate application:application handleActionWithIdentifier:identifier forLocalNotification:notification withResponseInfo:responseInfo completionHandler:^{
+            [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier userInfo:notification.userInfo completionHandler:completionHandler];
+        }];
+        return;
+    }
+    [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier userInfo:notification.userInfo completionHandler:completionHandler];
 }
 
 @end

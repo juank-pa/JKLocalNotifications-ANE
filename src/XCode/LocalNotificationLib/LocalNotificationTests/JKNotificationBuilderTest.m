@@ -30,6 +30,7 @@
     self.notification.numberAnnotation = 10;
     self.notification.notificationCode = @"code123";
     self.notification.launchImage = @"launchImage";
+    self.notification.category = @"Category1";
 
     self.subject = [JKNotificationBuilder new];
 }
@@ -39,15 +40,16 @@
 }
 
 - (void)verifyNotification {
-    XCTAssertEqual(self.notification.repeatInterval, (JKCalendarUnit)self.localNotification.repeatInterval);
-    XCTAssertEqual(self.notification.body, self.localNotification.alertBody);
-    XCTAssertEqual(self.notification.actionLabel, self.localNotification.alertAction);
-    XCTAssertEqual(self.notification.hasAction, self.localNotification.hasAction);
-    XCTAssertEqual(self.notification.numberAnnotation, self.localNotification.applicationIconBadgeNumber);
-    XCTAssertEqualObjects(self.notification.userInfo, self.localNotification.userInfo);
-    XCTAssertEqual(self.notification.fireDate, self.localNotification.fireDate);
+    XCTAssertEqual((JKCalendarUnit)self.localNotification.repeatInterval, self.notification.repeatInterval);
+    XCTAssertEqual(self.localNotification.alertBody, self.notification.body);
+    XCTAssertEqual(self.localNotification.alertAction, self.notification.actionLabel);
+    XCTAssertEqual(self.localNotification.hasAction, self.notification.hasAction);
+    XCTAssertEqual(self.localNotification.applicationIconBadgeNumber, self.notification.numberAnnotation);
+    XCTAssertEqualObjects(self.localNotification.userInfo, self.notification.userInfo);
+    XCTAssertEqual(self.localNotification.fireDate, self.notification.fireDate);
     XCTAssertEqual(self.localNotification.timeZone, [NSTimeZone defaultTimeZone]);
     XCTAssertEqual(self.localNotification.alertLaunchImage, self.notification.launchImage);
+    XCTAssertEqual(self.localNotification.category, self.notification.category);
 
     if ([self.localNotification respondsToSelector:@selector(alertTitle)]) {
         XCTAssertEqual(self.localNotification.alertTitle, self.notification.title);

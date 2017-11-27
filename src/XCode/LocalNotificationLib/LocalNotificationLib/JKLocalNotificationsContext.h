@@ -33,6 +33,7 @@
 
 @property (nonatomic, readonly) NSString *notificationCode;
 @property (nonatomic, readonly) NSData *notificationData;
+@property (nonatomic, readonly) NSString *notificationAction;
 @property (nonatomic, readonly) JKLocalNotificationSettings *settings;
 
 #ifdef SAMPLE

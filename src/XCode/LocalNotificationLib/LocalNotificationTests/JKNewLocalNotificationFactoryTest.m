@@ -15,9 +15,10 @@
 #import "JKNewLocalNotificationManager.h"
 #import "JKLegacyLocalNotificationManager.h"
 #import "JKNewNotificationListener.h"
+#import "JKNewCategoryBuilder.h"
 
 @interface JKLegacyLocalNotificationFactory ()
-@property (nonatomic, retain) JKLegacyLocalNotificationFactory *factory;
+@property (nonatomic, strong) JKLegacyLocalNotificationFactory *factory;
 @end
 
 @interface JKNewLocalNotificationFactoryTest : JKNewTestCase
@@ -51,24 +52,26 @@
 }
 
 - (void)testNotificationCenter {
-    XCTAssertEqual(self.subject.notificationCenter, self.notificationCenterMock);
+    XCTAssertEqual([self.subject.notificationCenter class], [UNUserNotificationCenter class]);
 }
 
-- (void)testCreateListener {
-    JKNotificationListener *listener = [self.subject createListener];
+- (void)testListener {
+    JKNotificationListener *listener = [self.subject listener];
     XCTAssertEqual([listener class], [JKNewNotificationListener class]);
 }
 
 - (void)testApplication {
-    id appMock = OCMClassMock([UIApplication class]);
-    OCMStub([appMock sharedApplication]).andReturn(appMock);
-    XCTAssertEqual(self.subject.application, appMock);
-    [appMock stopMocking];
+    XCTAssertEqual([self.subject.application class], [UIApplication class]);
 }
 
 - (void)testCreateRequestBuilder {
     JKNotificationRequestBuilder *listener = [self.subject createRequestBuilder];
     XCTAssertEqual([listener class], [JKNotificationRequestBuilder class]);
+}
+
+- (void)testCreateCategoryBuilder {
+    JKNewCategoryBuilder *listener = [self.subject createCategoryBuilder];
+    XCTAssertEqual([listener class], [JKNewCategoryBuilder class]);
 }
 
 @end
