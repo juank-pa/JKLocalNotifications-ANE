@@ -17,6 +17,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({LocalNotificationManager.class, PendingIntent.class})
+@PrepareForTest({LocalNotificationManager.class, PendingIntent.class, LocalNotificationTimeInterval.class})
 public class LocalNotificationManagerTest {
     @Mock
     private Context context;
@@ -100,8 +101,15 @@ public class LocalNotificationManagerTest {
                 .thenReturn(pendingIntent);
 
         LocalNotification notification = getNotification();
-
+        notification.repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
         getSubject().notify(notification);
+
+        verify(alarmManager).setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                notification.fireDate.getTime(),
+                notification.getRepeatIntervalMilliseconds(),
+                pendingIntent
+        );
     }
 
     @Test

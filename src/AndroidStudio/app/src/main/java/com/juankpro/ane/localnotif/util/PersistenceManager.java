@@ -9,9 +9,9 @@ import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
 import com.juankpro.ane.localnotif.serialization.IDeserializable;
 import com.juankpro.ane.localnotif.serialization.ISerializable;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -66,20 +66,11 @@ public class PersistenceManager {
         editor.commit();
     }
 
-    private JSONObject readEntry(String category, String entryId) {
+    private JSONObject readEntry(String category, String entryId) throws JSONException {
         final SharedPreferences prefs = getPreferences(category);
         String serializedSetting = prefs.getString(entryId, null);
-        JSONObject categoryObject = null;
-
         if (serializedSetting == null) return null;
-
-        try {
-            categoryObject = new JSONObject(serializedSetting);
-        }
-        catch (Throwable e) {
-            e.printStackTrace();
-        }
-        return categoryObject;
+        return new JSONObject(serializedSetting);
     }
 
     private SharedPreferences getPreferences(String category) {
@@ -99,8 +90,11 @@ public class PersistenceManager {
     private <T extends IDeserializable> T readObject(String category, String identifier, Class<T> objClass) {
         T object = null;
         try {
-            object = objClass.newInstance();
-            object.deserialize(readEntry(category, identifier));
+            JSONObject jsonObject = readEntry(category, identifier);
+            if (jsonObject != null) {
+                object = objClass.newInstance();
+                object.deserialize(jsonObject);
+            }
         }
         catch (Throwable e) {
             e.printStackTrace();

@@ -22,16 +22,20 @@ public class AlarmRestoreOnBoot extends BroadcastReceiver {
         final Set<String> notificationIds = persistenceManager.readNotificationKeys();
 
         final LocalNotificationManager manager = new LocalNotificationManager(context);
-        Date curDate = new Date();
+        Date now = new Date();
 
         for (String notificationId : notificationIds) {
             try {
                 LocalNotification notification = persistenceManager.readNotification(notificationId);
+                if (notification == null) continue;
 
-                if (notification.fireDate.getTime() >= curDate.getTime()) {
+                notification.reschedule();
+
+                if (notification.fireDate.getTime() >= now.getTime()) {
                     manager.notify(notification);
-                } else {
-                    manager.cancel(notification.code);
+                }
+                else {
+                    persistenceManager.removeNotification(notification.code);
                 }
             }
             catch (Exception e) {

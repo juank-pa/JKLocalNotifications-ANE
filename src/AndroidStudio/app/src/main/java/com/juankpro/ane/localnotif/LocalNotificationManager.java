@@ -29,8 +29,7 @@ class LocalNotificationManager {
                 localNotification.code.hashCode(),
                 getIntent(localNotification),
                 PendingIntent.FLAG_CANCEL_CURRENT);
-        long repeatInterval = new LocalNotificationTimeInterval(localNotification.repeatInterval)
-                .toMilliseconds();
+        long repeatInterval = localNotification.getRepeatIntervalMilliseconds();
 
         AlarmManager am = getAlarmManager();
 

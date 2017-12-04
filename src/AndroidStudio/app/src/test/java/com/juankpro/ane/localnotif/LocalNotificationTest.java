@@ -327,4 +327,55 @@ public class LocalNotificationTest {
             verify(jsonObject, never()).accumulate("actionData", 127);
         } catch (Throwable e) { e.printStackTrace(); }
     }
+
+    @Test
+    public void action_getRepeatIntervalMilliseconds_returnsTimeInMilliseconds() {
+        LocalNotificationTimeInterval intervalMock = mock(LocalNotificationTimeInterval.class);
+        try {
+            PowerMockito.whenNew(LocalNotificationTimeInterval.class)
+                    .withArguments(10)
+                    .thenReturn(intervalMock);
+        } catch (Throwable e) { e.printStackTrace(); }
+        when(intervalMock.toMilliseconds()).thenReturn(20000L);
+
+        getSubject().repeatInterval = 10;
+        assertEquals(getSubject().getRepeatIntervalMilliseconds(), 20000L);
+    }
+
+    @Test
+    public void action_reschedule_leavesFireDateIntact_ifRepeatIntervalIsZeroAndFiresInThePast() {
+        Date baseDate = new Date(new Date().getTime() - 65000);
+        getSubject().fireDate = baseDate;
+        getSubject().repeatInterval = 0;
+        assertSame(baseDate, getSubject().fireDate);
+    }
+
+    @Test
+    public void action_reschedule_leavesFireDateIntact_ifRepeatIntervalIsZeroAndFiresInTheFuture() {
+        Date baseDate = new Date(new Date().getTime() + 65000);
+        getSubject().fireDate = baseDate;
+        getSubject().repeatInterval = 0;
+        assertSame(baseDate, getSubject().fireDate);
+    }
+
+    @Test
+    public void action_reschedule_reschedules_ifRepeatIntervalIsNotZeroAndFiresInThePast() {
+        Date baseDate = new Date(new Date().getTime() - 65000);
+        getSubject().fireDate = baseDate;
+        getSubject().repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
+        getSubject().reschedule();
+        assertEquals(
+                baseDate.getTime() + 120000,
+                getSubject().fireDate.getTime()
+        );
+    }
+
+    @Test
+    public void action_reschedule_leavesFireDateIntact_ifRepeatIntervalIsNotZeroAndFiresInTheFuture() {
+        Date baseDate = new Date(new Date().getTime() + 65000);
+        getSubject().fireDate = baseDate;
+        getSubject().repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
+        assertSame(baseDate, getSubject().fireDate);
+    }
+
 }

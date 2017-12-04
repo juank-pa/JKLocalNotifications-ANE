@@ -56,6 +56,25 @@ public class LocalNotification implements ISerializable, IDeserializable {
     public String activityClassName = "";
     public String category = "";
 
+    public long getRepeatIntervalMilliseconds() {
+        return new LocalNotificationTimeInterval(repeatInterval)
+                .toMilliseconds();
+    }
+
+    private Date getNextDate() {
+        long interval = getRepeatIntervalMilliseconds();
+        Date now = new Date();
+        if (interval == 0 || fireDate.getTime() >= now.getTime()) return fireDate;
+
+        long elapsedTime = now.getTime() - fireDate.getTime();
+        long triggerCount = (long)Math.ceil(elapsedTime / (double)interval);
+        return new Date(fireDate.getTime() + interval * triggerCount);
+    }
+
+    public void reschedule() {
+        fireDate = getNextDate();
+    }
+
     public LocalNotification() {
         this(null);
     }

@@ -113,10 +113,20 @@ public class PersistenceManagerTest {
     }
 
     @Test
-    public void manager_readNotification_readANotification_whenJsonInvalid() {
+    public void manager_readNotification_returnsNull_whenJsonInvalid() {
         setupReadObjectThrowingException(notificationPrefs, "code");
         LocalNotification notification = getSubject().readNotification("MyCode");
-        assertEquals("", notification.code);
+        assertNull(notification);
+    }
+
+
+    @Test
+    public void manager_readNotification_returnsNull_whenEntryNotfound() {
+        setupReadObject(categoryPrefs, "identifier");
+        when(categoryPrefs.getString("MyCode", null)).thenReturn(null);
+
+        LocalNotificationCategory category = getSubject().readCategory("MyCode");
+        assertNull(category);
     }
 
     @Test
@@ -179,9 +189,18 @@ public class PersistenceManagerTest {
     }
 
     @Test
-    public void manager_readCategory_readACategory_whenJsonInvalid() {
+    public void manager_readCategory_returnsNull_whenJsonInvalid() {
         setupReadObjectThrowingException(categoryPrefs, "identifier");
         LocalNotificationCategory category = getSubject().readCategory("MyCode");
-        assertEquals("", category.identifier);
+        assertNull(category);
+    }
+
+    @Test
+    public void manager_readCategory_returnsNull_whenEntryNotfound() {
+        setupReadObject(categoryPrefs, "identifier");
+        when(categoryPrefs.getString("MyCode", null)).thenReturn(null);
+
+        LocalNotificationCategory category = getSubject().readCategory("MyCode");
+        assertNull(category);
     }
 }
