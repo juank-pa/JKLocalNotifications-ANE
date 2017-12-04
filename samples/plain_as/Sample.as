@@ -35,6 +35,7 @@
 
     private function resizeHandler(event:Event):void {
       stage.removeEventListener(Event.RESIZE, resizeHandler);
+      initApp();
       printMessage("Resized");
     }
 
