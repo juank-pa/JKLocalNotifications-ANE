@@ -40,7 +40,7 @@
 
 - (void)assertActions:(NSArray <UNNotificationAction *> *)results basedOnActions:(NSArray <JKLocalNotificationAction *> *)actions {
     XCTAssertEqual(results.count, actions.count);
-    for (int i = results.count - 1; i >= 0; i--) {
+    for (int i = (int)results.count - 1; i >= 0; i--) {
         [self assertAction:results[i] basedOnAction:actions[i]];
     }
 }

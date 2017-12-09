@@ -93,7 +93,7 @@
     UNNotificationResponse *responseMock = self.notificationResponse;
     NSDictionary *userInfo = responseMock.notification.request.content.userInfo;
     id savedDelegateMock = OCMPartialMock([StubCenterDelegate new]);
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     OCMReject([savedDelegateMock userNotificationCenter:[OCMArg any]
                          didReceiveNotificationResponse:[OCMArg any]
@@ -115,7 +115,7 @@
 - (void)testDidReceiveNotificationDispatchesIfOriginalDelegateCallsCompleteHandler {
     UNNotificationResponse *responseMock = self.notificationResponse;
     NSDictionary *userInfo = responseMock.notification.request.content.userInfo;
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     OCMExpect([self.notificationCenterDelegateMock userNotificationCenter:self.notificationCenterMock
                                            didReceiveNotificationResponse:responseMock
@@ -136,7 +136,7 @@
 
 - (void)testDidReceiveNotificationDoesNotDispatchIfOriginalDelegateDoesNotCallBlock {
     UNNotificationResponse *responseMock = self.notificationResponse;
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     OCMExpect([self.notificationCenterDelegateMock userNotificationCenter:self.notificationCenterMock
                                            didReceiveNotificationResponse:responseMock
@@ -158,7 +158,7 @@
     UNNotificationResponse *responseMock = self.notificationResponse;
     NSDictionary *userInfo = responseMock.notification.request.content.userInfo;
     id savedDelegateMock = OCMPartialMock([StubCenterDelegate new]);
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     self.subject.dispatcher = self.dispatcherMock;
     self.subject.originalDelegate = savedDelegateMock;

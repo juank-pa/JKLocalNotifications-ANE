@@ -52,6 +52,9 @@
     [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:notification.userInfo];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
+
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler {
     if ([self.originalDelegate respondsToSelector:@selector(application:handleActionWithIdentifier:forLocalNotification:completionHandler:)]) {
         [self.originalDelegate application:application handleActionWithIdentifier:identifier forLocalNotification:notification completionHandler:^{
@@ -72,5 +75,7 @@
     }
     [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier userInfo:notification.userInfo completionHandler:completionHandler];
 }
+
+#pragma clang diagnostic pop
 
 @end

@@ -52,7 +52,7 @@ FREObject ADEPGetSelectedSettings(FREContext ctx, void* funcData, uint32_t argc,
 FREObject ADEPGetSelectedNotificationCode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
 FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
 FREObject ADEPGetSelectedNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-void resetEvent();
+void resetEvent(void);
 
 @interface StubCenterDelegate: NSObject<UNUserNotificationCenterDelegate>
 @end

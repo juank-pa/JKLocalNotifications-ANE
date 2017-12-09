@@ -175,7 +175,7 @@
 - (void)testHandleActionDispatchesWhenOriginalDelegateNotImplemented {
     UILocalNotification *notification = self.notification;
     id savedDelegateMock = OCMPartialMock([StubAppDelegate new]);
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     OCMReject([savedDelegateMock application:[OCMArg any]
                   handleActionWithIdentifier:[OCMArg any]
@@ -198,7 +198,7 @@
 
 - (void)testHandleActionDispatchesIfOriginalDelegateCallsCompleteHandler {
     UILocalNotification *notification = self.notification;
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     OCMExpect([self.appDelegateMock application:self.appMock
                      handleActionWithIdentifier:@"actionId"
@@ -221,7 +221,7 @@
 
 - (void)testHandleActionDoesNotDispatchIfOriginalDelegateDoesNotCallBlock {
     UILocalNotification *notification = self.notification;
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     OCMExpect([self.appDelegateMock application:self.appMock
                      handleActionWithIdentifier:@"actionId"
@@ -245,7 +245,7 @@
 - (void)testHandleActionCanDispatchMoreThanOnce {
     UILocalNotification *notification = self.notification;
     id savedDelegateMock = OCMPartialMock([StubAppDelegate new]);
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     self.subject.dispatcher = self.dispatcherMock;
     self.subject.originalDelegate = savedDelegateMock;
@@ -271,7 +271,7 @@
     UILocalNotification *notification = self.notification;
     NSDictionary *response = @{};
     id savedDelegateMock = OCMPartialMock([StubAppDelegate new]);
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     OCMReject([savedDelegateMock application:[OCMArg any]
                   handleActionWithIdentifier:[OCMArg any]
@@ -297,7 +297,7 @@
 - (void)testHandleActionWithResponseDispatchesIfOriginalDelegateCallsCompleteHandler {
     UILocalNotification *notification = self.notification;
     NSDictionary *response = @{};
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     OCMExpect([self.appDelegateMock application:self.appMock
                      handleActionWithIdentifier:@"actionId"
@@ -323,7 +323,7 @@
 - (void)testHandleActionWithResponseDoesNotDispatchIfOriginalDelegateDoesNotCallBlock {
     UILocalNotification *notification = self.notification;
     NSDictionary *response = @{};
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     OCMExpect([self.appDelegateMock application:self.appMock
                      handleActionWithIdentifier:@"actionId"
@@ -350,7 +350,7 @@
     UILocalNotification *notification = self.notification;
     NSDictionary *response = @{};
     id savedDelegateMock = OCMPartialMock([StubAppDelegate new]);
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
 
     self.subject.dispatcher = self.dispatcherMock;
     self.subject.originalDelegate = savedDelegateMock;

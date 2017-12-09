@@ -53,7 +53,7 @@
     XCTAssertNil(self.listener.notificationAction);
 
     __block BOOL called = NO;
-    void (^testBlock)() = ^{
+    void (^testBlock)(void) = ^{
         called = YES;
     };
 
@@ -115,7 +115,7 @@
 
 - (void)testDispatchDidReceiveNotificationWithUserInfoCallsBlock {
     __block BOOL called = NO;
-    void (^testBlock)() = ^{
+    void (^testBlock)(void) = ^{
         called = YES;
     };
 
@@ -130,7 +130,7 @@
 - (void)testDispatchDidReceiveNotificationWithUserInfoCallsBlockevenIfDelegateNotImplemented {
     id delegateMock = OCMPartialMock([ListenerDelegate new]);
     __block BOOL called = NO;
-    void (^testBlock)() = ^{
+    void (^testBlock)(void) = ^{
         called = YES;
     };
 
@@ -171,7 +171,7 @@
 
 - (void)testDispatchDidReceiveNotificationWithUserInfoCompletionHandler {
     id subject = OCMPartialMock(self.subject);
-    void (^testBlock)() = ^{};
+    void (^testBlock)(void) = ^{};
     NSDictionary *userInfo = @{};
 
     OCMExpect([subject dispatchDidReceiveNotificationWithActionId:nil

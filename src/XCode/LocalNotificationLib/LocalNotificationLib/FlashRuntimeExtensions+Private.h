@@ -25,7 +25,7 @@ extern "C" {
 // this was a standard application start-up. Otherwise, the application 
 // was started based on a notification presented to the user.
 //
-NSDictionary* FRPE_getApplicationLaunchOptions();
+NSDictionary* FRPE_getApplicationLaunchOptions(void);
 
 #if __cplusplus
 }

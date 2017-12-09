@@ -37,7 +37,7 @@
     [self handleNotification:notification withCompletionHandler:completionHandler];
 }
 
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
     if ([self.originalDelegate respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:)]) {
         [self.originalDelegate userNotificationCenter:center didReceiveNotificationResponse:response withCompletionHandler:^{
             [self handleResponse:response withCompletionHandler:completionHandler];
@@ -59,7 +59,7 @@
     }];
 }
 
-- (void)handleResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+- (void)handleResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
     NSDictionary *userInfo = response.notification.request.content.userInfo;
     [self.dispatcher dispatchDidReceiveNotificationWithActionId:[self actionIdentifierFromResponse:response]
                                             userInfo:userInfo

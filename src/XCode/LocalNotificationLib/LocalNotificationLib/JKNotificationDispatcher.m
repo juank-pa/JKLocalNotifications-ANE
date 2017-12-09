@@ -32,7 +32,7 @@
     self.listener.notificationAction = actionId;
 }
 
-- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo completionHandler:(void(^)())completionHandler {
+- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo completionHandler:(void(^)(void))completionHandler {
     [self dispatchDidReceiveNotificationWithActionId:nil userInfo:userInfo completionHandler:completionHandler];
 }
 
@@ -44,7 +44,7 @@
     [self dispatchDidReceiveNotificationWithActionId:actionId userInfo:userInfo completionHandler:NULL];
 }
 
-- (void)dispatchDidReceiveNotificationWithActionId:(NSString *)actionId userInfo:(NSDictionary *)userInfo completionHandler:(void(^)())completionHandler {
+- (void)dispatchDidReceiveNotificationWithActionId:(NSString *)actionId userInfo:(NSDictionary *)userInfo completionHandler:(void(^)(void))completionHandler {
     if(!userInfo) { return; }
     self.listener.notificationCode = userInfo[JK_NOTIFICATION_CODE_KEY];
     self.listener.notificationData = userInfo[JK_NOTIFICATION_DATA_KEY];
