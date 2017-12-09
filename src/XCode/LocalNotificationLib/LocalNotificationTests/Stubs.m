@@ -28,6 +28,7 @@
     uint32_t freObjectBoolArgument;
 
     FREObject freObjectString = "string";
+    FREObject freObjectArray = "array";
     FREObject freObjectNumber = "number";
     FREObject freObjectBoolean = "boolean";
     FREObject freObjectNull = "null";
@@ -94,6 +95,9 @@
     FREResult FREGetObjectType( FREObject object, FREObjectType *objectType ) {
         if (object == freObjectString) {
             *objectType = FRE_TYPE_STRING;
+        }
+        if (object == freObjectArray) {
+            *objectType = FRE_TYPE_ARRAY;
         }
         else if (object == freObjectNumber) {
             *objectType = FRE_TYPE_NUMBER;
@@ -499,6 +503,7 @@
                                 FREObject  arrayOrVector,
                                 uint32_t*  length
                                 ) {
+        *length = 2;
         return FRE_OK;
     }
     
@@ -543,6 +548,7 @@
                                    uint32_t   index        ,
                                    FREObject* value
                                    ) {
+        *value = index == 0? freObjectString : freObjectArray;
         return result(arrayOrVector);
     }
     

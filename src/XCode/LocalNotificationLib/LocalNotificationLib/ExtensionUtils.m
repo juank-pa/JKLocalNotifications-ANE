@@ -18,6 +18,7 @@
 
 
 #import "ExtensionUtils.h"
+#import "JKDecoder.h"
 
 @implementation ExtensionUtils
 
@@ -190,6 +191,33 @@
 
     FREReleaseByteArray(freObject);
     return data;
+}
+
++ (NSArray *)getArrayFromFREObject:(FREObject)freObject withDecoder:(id<JKDecoder>)decoder {
+    NSMutableArray *array = [NSMutableArray array];
+
+    FREObjectType freObjectType = FRE_TYPE_NULL;
+    FREGetObjectType(freObject, &freObjectType);
+
+    assert(freObjectType == FRE_TYPE_ARRAY || freObjectType == FRE_TYPE_VECTOR);
+
+    if (freObjectType == FRE_TYPE_ARRAY || freObjectType == FRE_TYPE_VECTOR) {
+        uint32_t arrayLength = 0;
+        FREResult freResult = FREGetArrayLength(freObject, &arrayLength);
+
+        if (freResult == FRE_OK) {
+            for (int i = 0; i < arrayLength; i++) {
+                FREObject arrayItemObject = NULL;
+                FREResult freItemResult = FREGetArrayElementAt(freObject, i, &arrayItemObject);
+
+                if (freItemResult == FRE_OK) {
+                    [array addObject:[decoder decodeObject:arrayItemObject]];
+                }
+            }
+        }
+    }
+
+    return [array copy];
 }
 
 + (FREObject)getFREObjectFromData:(NSData *)data {

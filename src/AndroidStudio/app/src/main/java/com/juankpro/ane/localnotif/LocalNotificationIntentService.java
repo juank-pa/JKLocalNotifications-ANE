@@ -4,6 +4,9 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 
+import com.juankpro.ane.localnotif.util.ApplicationStatus;
+import com.juankpro.ane.localnotif.util.Logger;
+
 /**
  * Created by Juank on 10/21/17.
  */
@@ -16,18 +19,20 @@ public class LocalNotificationIntentService extends IntentService {
     @Override
     public final void onHandleIntent(Intent intent) {
         Context context = getApplicationContext();
+        sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         tryEventDispatch(intent);
 
-        if(!ApplicationStatus.getInForeground()) bringActivityToForeground(context, intent);
-
         logStatus(intent);
+        if(!ApplicationStatus.getInForeground()) bringActivityToForeground(context, intent);
     }
 
-    private boolean tryEventDispatch(Intent intent) {
+    private void tryEventDispatch(Intent intent) {
         String code = intent.getStringExtra(Constants.NOTIFICATION_CODE_KEY);
         byte[] data = intent.getByteArrayExtra(Constants.ACTION_DATA_KEY);
-        return new LocalNotificationEventDispatcher(code, data).dispatchWhenActive();
+        String actionId = intent.getStringExtra(Constants.ACTION_ID_KEY);
+        Logger.log("LocalNotificationIntentService::tryEventDispatch actionId: " + actionId);
+        new LocalNotificationEventDispatcher(code, data, actionId).dispatchWhenActive();
     }
 
     private void bringActivityToForeground(Context context, Intent intent) {

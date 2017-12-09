@@ -16,6 +16,7 @@ class LocalNotificationCache {
 
     private String notificationCode;
     private byte[] notificationData;
+    private String actionId;
 
     private boolean updated = false;
 
@@ -24,14 +25,17 @@ class LocalNotificationCache {
     String getNotificationCode() {
         return notificationCode;
     }
-
     byte[] getNotificationData() {
         return notificationData;
     }
+    String getActionId() {
+        return actionId;
+    }
 
-    void setData(String notificationCode, byte[] data) {
+    void setData(String notificationCode, byte[] data, String actionId) {
         this.notificationCode = notificationCode;
         this.notificationData = data;
+        this.actionId = actionId;
         updated = true;
     }
 

@@ -18,16 +18,16 @@
     return [[JKLegacyLocalNotificationAuthorizer alloc] initWithFactory:self];;
 }
 
-- (JKNotificationListener *)createListener {
-    return [[JKLegacyNotificationListener alloc] initWithFactory:self];
+- (JKNotificationListener *)listener {
+    return JKLegacyNotificationListener.sharedListener;
 }
 
 - (JKLocalNotificationManager *)createManager {
     return [[JKLegacyLocalNotificationManager alloc] initWithFactory:self];
 }
 
-- (UIUserNotificationSettings *)createSettingsForTypes:(UIUserNotificationType)types {
-    return [UIUserNotificationSettings settingsForTypes:types categories:nil];
+- (JKLegacyNotificationSettingsBuilder *)createSettingsBuilder {
+    return [JKLegacyNotificationSettingsBuilder new];
 }
 
 - (JKNotificationBuilder *)createNotificationBuilder {

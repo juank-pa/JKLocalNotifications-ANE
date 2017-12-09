@@ -28,6 +28,7 @@ extern double freObjectDoubleArgument;
 extern uint32_t freObjectBoolArgument;
 
 extern FREObject freObjectString;
+extern FREObject freObjectArray;
 extern FREObject freObjectNumber;
 extern FREObject freObjectBoolean;
 extern FREObject freObjectNull;
@@ -50,7 +51,8 @@ FREObject ADEPSetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t
 FREObject ADEPGetSelectedSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
 FREObject ADEPGetSelectedNotificationCode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
 FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-void resetEvent();
+FREObject ADEPGetSelectedNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+void resetEvent(void);
 
 @interface StubCenterDelegate: NSObject<UNUserNotificationCenterDelegate>
 @end
@@ -62,7 +64,7 @@ void resetEvent();
 @interface StubNotificationCenter: UNUserNotificationCenter
 @end
 
-@interface StubNewFactory : JKNewLocalNotificationFactory
+@interface StubNewFactory : JKNotificationFactory
 @property (nonatomic, strong, readwrite) UNUserNotificationCenter *notificationCenter;
 @end
 

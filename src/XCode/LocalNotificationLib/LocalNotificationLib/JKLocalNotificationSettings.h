@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <UserNotifications/UserNotifications.h>
+#import "JKLocalNotificationCategory.h"
 
 typedef NS_OPTIONS(NSUInteger, JKLocalNotificationType) {
     JKLocalNotificationTypeNone    = 0,      // the application may not present any UI upon a notification being received
@@ -27,4 +28,5 @@ typedef NS_OPTIONS(NSUInteger, JKLocalNotificationType) {
 @property (nonatomic, readonly) JKLocalNotificationType types;
 @property (nonatomic, readonly) UIUserNotificationType notificationTypes;
 @property (nonatomic, readonly) UNAuthorizationOptions authorizationOptions;
+@property (nonatomic, strong) NSArray<JKLocalNotificationCategory *> *categories;
 @end

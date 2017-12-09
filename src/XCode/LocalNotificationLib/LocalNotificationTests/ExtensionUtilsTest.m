@@ -161,4 +161,18 @@
     [utilsMock stopMocking];
 }
 
+- (void)testGetArrayFromFREObject {
+    NSString *hello = @"Hello";
+    NSString *world = @"World";
+    id decoderMock = OCMProtocolMock(@protocol(JKDecoder));
+    OCMStub([decoderMock decodeObject:freObjectString]).andReturn(hello);
+    OCMStub([decoderMock decodeObject:freObjectArray]).andReturn(world);
+
+    NSArray *res = [ExtensionUtils getArrayFromFREObject:freObjectArray withDecoder:decoderMock];
+
+    XCTAssertEqual(res.count, 2);
+    XCTAssertEqual(res[0], hello);
+    XCTAssertEqual(res[1], world);
+}
+
 @end

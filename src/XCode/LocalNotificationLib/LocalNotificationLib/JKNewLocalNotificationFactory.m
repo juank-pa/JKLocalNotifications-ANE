@@ -18,20 +18,20 @@
     return [[JKNewLocalNotificationAuthorizer alloc] initWithFactory:self];
 }
 
-- (JKNotificationListener *)createListener {
-    return [[JKNewNotificationListener alloc] initWithFactory:self];
+- (JKNotificationListener *)listener {
+    return [JKNewNotificationListener sharedListener];
 }
 
 - (JKLocalNotificationManager *)createManager {
     return [[JKLegacyLocalNotificationManager alloc] initWithFactory:[JKLegacyLocalNotificationFactory new]];
 }
 
-- (UNUserNotificationCenter *)notificationCenter {
-    return [UNUserNotificationCenter currentNotificationCenter];
-}
-
 - (JKNotificationRequestBuilder *)createRequestBuilder {
     return [JKNotificationRequestBuilder new];
+}
+
+- (JKNewCategoryBuilder *)createCategoryBuilder {
+    return [JKNewCategoryBuilder new];
 }
 
 @end

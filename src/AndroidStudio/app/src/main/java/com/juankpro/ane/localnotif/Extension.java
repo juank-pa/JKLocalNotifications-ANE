@@ -20,7 +20,9 @@ package com.juankpro.ane.localnotif;
 
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREExtension;
+import com.juankpro.ane.localnotif.util.Logger;
 
+@SuppressWarnings("unused")
 public class Extension implements FREExtension {
     @Override
     public FREContext createContext(String extId) {

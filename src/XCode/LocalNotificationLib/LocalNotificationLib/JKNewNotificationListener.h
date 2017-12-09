@@ -2,17 +2,13 @@
 //  JKNewNotificationListener.h
 //  LocalNotificationLib
 //
-//  Created by Juan Carlos Pazmino on 9/30/17.
-//
+//  Created by Juan Carlos Pazmino on 12/1/17.
+//  Copyright © 2017 Juank. All rights reserved.
 //
 
+#import <UserNotifications/UserNotifications.h>
 #import "JKNotificationListener.h"
 
-@class JKNewLocalNotificationFactory;
-
 @interface JKNewNotificationListener : JKNotificationListener
-+ (instancetype) __unavailable new;
-- (instancetype) __unavailable init;
-
-- (instancetype)initWithFactory:(JKNewLocalNotificationFactory *)factory NS_DESIGNATED_INITIALIZER;
+@property (nonatomic, strong) id<UNUserNotificationCenterDelegate>originalDelegate;
 @end

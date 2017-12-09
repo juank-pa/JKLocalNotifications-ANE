@@ -48,15 +48,16 @@ package {
       return;
     }
 
+    /*
+    TODO: re-enable when you discover how to remove deprecation warnings.
     public function testNeedsSubscription():void {
       CONFIG::device {
-        CONFIG::iphone {
-          assertTrue("Is supported on device", NotificationManager.needsSubscription);
-          return;
-        }
+        assertTrue("Is supported on device", NotificationManager.needsSubscription);
+        return;
       }
       assertFalse("Is supported on device", NotificationManager.needsSubscription);
     }
+    */
 
     public function testInstantiation():void {
       CONFIG::device {
@@ -167,10 +168,12 @@ package {
       mockContext.expects("call").withArgs("checkForNotificationAction").noReturn();
       mockContext.expects("call").withArgs("getSelectedNotificationData").willReturn(byteArray);
       mockContext.expects("call").withArgs("getSelectedNotificationCode").willReturn("MyCode");
+      mockContext.expects("call").withArgs("getSelectedNotificationAction").willReturn("ActionId");
 
       manager.addEventListener(NotificationEvent.NOTIFICATION_ACTION, function(event:NotificationEvent):void {
         assertEqualsArrays(testObject, event.actionData);
         assertEquals("MyCode", event.notificationCode);
+        assertEquals("ActionId", event.notificationAction);
       });
 
       mockContext.dispatchEvent(new StatusEvent(StatusEvent.STATUS, false, false, "notificationSelected"));
@@ -197,17 +200,14 @@ package {
       assertFalse("Should not call context", mockContext.success());
     }
 
-    public function testSubscribe():void
-    {
-      mockContext.expects("call").withArgs("registerSettings", 3).noReturn();
+    public function testSubscribe():void {
       var options:LocalNotifierSubscribeOptions = new LocalNotifierSubscribeOptions();
       options.notificationStyles = Vector.<String>([NotificationStyle.SOUND, NotificationStyle.BADGE]);
+      mockContext.expects("call").withArgs("registerSettings", options).noReturn();
       manager.subscribe(options);
       CONFIG::device {
-        CONFIG::iphone {
-          assertTrue(mockContext.errorMessage(), mockContext.success());
-          return;
-        }
+        assertTrue(mockContext.errorMessage(), mockContext.success());
+        return;
       }
       assertFalse("Should not call context", mockContext.success());
     }

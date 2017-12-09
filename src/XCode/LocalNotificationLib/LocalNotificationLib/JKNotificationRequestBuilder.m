@@ -27,6 +27,7 @@
     content.sound = [self soundForNotification:notification];
     content.launchImageName = notification.launchImage;
     content.userInfo = notification.userInfo;
+    content.categoryIdentifier = notification.category;
 
     UNNotificationTrigger *trigger = [[JKTriggerBuilder builder] buildFromDate:notification.fireDate
                                                                 repeatInterval:notification.repeatInterval];

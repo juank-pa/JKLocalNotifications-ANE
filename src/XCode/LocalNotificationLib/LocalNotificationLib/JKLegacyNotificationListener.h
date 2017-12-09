@@ -2,17 +2,13 @@
 //  JKLegacyNotificationListener.h
 //  LocalNotificationLib
 //
-//  Created by Juan Carlos Pazmino on 7/20/17.
-//
+//  Created by Juan Carlos Pazmiño on 11/29/17.
+//  Copyright © 2017 Juank. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import "JKNotificationListener.h"
 
-@class JKLegacyLocalNotificationFactory;
-
 @interface JKLegacyNotificationListener : JKNotificationListener
-+ (instancetype) __unavailable new;
-- (instancetype) __unavailable init;
-
-- (instancetype)initWithFactory:(JKLegacyLocalNotificationFactory *)factory NS_DESIGNATED_INITIALIZER;
+@property (nonatomic, strong) id<UIApplicationDelegate>originalDelegate;
 @end

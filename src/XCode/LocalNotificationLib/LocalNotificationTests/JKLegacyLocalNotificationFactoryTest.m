@@ -53,22 +53,22 @@
     XCTAssertEqual(((JKLegacyLocalNotificationManager *)manager).factory, self.subject);
 }
 
-- (void)testCreateListener {
-    JKNotificationListener *listener = [self.subject createListener];
+- (void)testListener {
+    JKNotificationListener *listener = [self.subject listener];
     XCTAssertEqual([listener class], [JKLegacyNotificationListener class]);
-    XCTAssertEqual(((JKLegacyNotificationListener *)listener).factory, self.subject);
 }
 
 - (void)testApplication {
-    id appMock = OCMClassMock([UIApplication class]);
-    OCMStub([appMock sharedApplication]).andReturn(appMock);
-    XCTAssertEqual(self.subject.application, appMock);
-    [appMock stopMocking];
+    XCTAssertEqual([self.subject.application class], [UIApplication class]);
 }
 
-- (void)testCreateSettingsForTypes {
-    UIUserNotificationSettings *settings = [self.subject createSettingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeAlert];
-    XCTAssertEqual(settings.types, UIUserNotificationTypeBadge | UIUserNotificationTypeAlert);
+- (void)testNotificationCenter {
+    XCTAssertNil(self.subject.notificationCenter);
+}
+
+- (void)testCreateSettingsBuilder {
+    JKLegacyNotificationSettingsBuilder *builder = [self.subject createSettingsBuilder];
+    XCTAssertEqual([builder class], [JKLegacyNotificationSettingsBuilder class]);
 }
 
 - (void)testCreateLocalNotificationFromNotification {

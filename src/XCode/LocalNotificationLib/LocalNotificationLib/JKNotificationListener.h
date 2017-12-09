@@ -6,23 +6,29 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "JKDelegateProxy.h"
 
 @class JKNotificationFactory;
 @class JKNotificationListener;
+@class JKNotificationDispatcher;
 
 @protocol JKNotificationListenerDelegate<NSObject>
 @optional
 - (void)didReceiveNotificationDataForNotificationListener:(JKNotificationListener *)listener;
+- (void)notificationListener:(JKNotificationListener *)listener didRegisterUserNotificationSettings:(UIUserNotificationSettings *)settings;
 @end
 
 @interface JKNotificationListener : JKDelegateProxy
-+ (instancetype) __unavailable new;
-- (instancetype) __unavailable init;
+@property (nonatomic, readonly, copy) NSString *notificationCode;
+@property (nonatomic, readonly, copy) NSData *notificationData;
+@property (nonatomic, readonly, copy) NSString *notificationAction;
 
-@property (nonatomic, readonly) NSString *notificationCode;
-@property (nonatomic, readonly) NSData *notificationData;
 @property (nonatomic, weak) id<JKNotificationListenerDelegate> delegate;
+@property (nonatomic, strong) id originalDelegate;
+@property (nonatomic, readonly) JKNotificationDispatcher *dispatcher;
+
++ (instancetype)sharedListener;
+- (instancetype)setupWithOriginalDelegate:(id)originalDelegate;
 - (void)checkForNotificationAction;
 @end

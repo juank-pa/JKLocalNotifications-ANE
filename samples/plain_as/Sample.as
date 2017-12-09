@@ -39,17 +39,46 @@
       printMessage("Resized");
     }
 
+    private function createAction(icon:String, identifier:String, title:String):NotificationAction {
+      var action:NotificationAction = new NotificationAction();
+      action.identifier = identifier;
+      action.title = title;
+      action.icon = icon;
+      return action;
+    }
+
+    private function createCategory(identifier:String, actions:Vector.<NotificationAction>):NotificationCategory {
+      var category:NotificationCategory = new NotificationCategory();
+      category.identifier = identifier;
+      category.actions = actions;
+      return category;
+    }
+
+    private function createCategories():Vector.<NotificationCategory> {
+      return Vector.<NotificationCategory>([
+        createCategory(
+          "category",
+          Vector.<NotificationAction>([
+            createAction(NotificationIconType.DOCUMENT, "okAction", "OK"),
+            createAction(NotificationIconType.ALERT, "cancelAction", "Cancel"),
+            createAction(NotificationIconType.FLAG, "resetAction", "Reset"),
+            createAction(NotificationIconType.INFO, "alertAction", "Alert")
+          ])
+        )
+      ]);
+    }
+
     private function initApp():void {
       if (NotificationManager.isSupported) {
         notificationManager = new NotificationManager();
 
-        if (NotificationManager.needsSubscription) {
-          var options:LocalNotifierSubscribeOptions = new LocalNotifierSubscribeOptions();
-          options.notificationStyles = NotificationManager.supportedNotificationStyles;
-          notificationManager.addEventListener(NotificationEvent.SETTINGS_SUBSCRIBED,
-                                               settingsSubscribedHandler);
-          notificationManager.subscribe(options);
-        }
+        var options:LocalNotifierSubscribeOptions =
+          new LocalNotifierSubscribeOptions(createCategories());
+        options.notificationStyles = NotificationManager.supportedNotificationStyles;
+
+        notificationManager.addEventListener(NotificationEvent.SETTINGS_SUBSCRIBED,
+                                              settingsSubscribedHandler);
+        notificationManager.subscribe(options);
       }
 
       initUI();
@@ -116,6 +145,7 @@
           notification.tickerText = "test ticker ";
           notification.priority = NotificationPriority.HIGH;
           notification.showInForeground = true;
+          notification.category = "category";
 
           notificationManager.notifyUser(NOTIFICATION_CODE, notification);
           printNotification('Posted Message', notification);
@@ -153,7 +183,8 @@
 
     private function notificationActionHandler(event:NotificationEvent):void {
       printMessage("Code: " + event.notificationCode +
-        "\nSample Data: {" + event.actionData.sampleData + "}",
+        "\nSample Data: {" + event.actionData.sampleData + "}" +
+        "\nAction: " + event.notificationAction,
         "Received notification");
     }
 

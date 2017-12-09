@@ -1,5 +1,8 @@
 package com.juankpro.ane.localnotif;
 
+import com.juankpro.ane.localnotif.util.ApplicationStatus;
+
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -9,25 +12,23 @@ import static org.junit.Assert.assertTrue;
  */
 
 public class ApplicationStatusTest {
-    private void setup() {
+    @Before
+    public void setup() {
         ApplicationStatus.reset();
     }
 
     @Test
     public void applicationStatus_initializedAsActive() {
-        setup();
         assertFalse(ApplicationStatus.getActive());
     }
 
     @Test
     public void applicationStatus_initializedAsInBackground() {
-        setup();
         assertFalse(ApplicationStatus.getInForeground());
     }
 
     @Test
     public void applicationStatus_settingInForeground_activatesAlso() {
-        setup();
         ApplicationStatus.setInForeground(true);
         assertTrue(ApplicationStatus.getInForeground());
         assertTrue(ApplicationStatus.getActive());
@@ -35,7 +36,6 @@ public class ApplicationStatusTest {
 
     @Test
     public void applicationStatus_settingInBackgroundFirstTime_doesNothing() {
-        setup();
         ApplicationStatus.setInForeground(false);
         assertFalse(ApplicationStatus.getActive());
         assertFalse(ApplicationStatus.getInForeground());
@@ -43,7 +43,6 @@ public class ApplicationStatusTest {
 
     @Test
     public void applicationStatus_settingInBackground_whenInForeground_doesNotAffectActive() {
-        setup();
         ApplicationStatus.setInForeground(true);
         ApplicationStatus.setInForeground(false);
         assertTrue(ApplicationStatus.getActive());
@@ -52,7 +51,6 @@ public class ApplicationStatusTest {
 
     @Test
     public void applicationStatus_reset_resetsToFalse() {
-        setup();
         ApplicationStatus.setInForeground(true);
         assertTrue(ApplicationStatus.getActive());
         assertTrue(ApplicationStatus.getInForeground());

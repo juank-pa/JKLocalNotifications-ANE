@@ -10,6 +10,8 @@
 #import "JKLocalNotificationsContext.h"
 #import "JKLocalNotification.h"
 #import "JKNotificationFactory.h"
+#import "JKLocalNotificationCategory.h"
+#import "JKLocalNotificationAction.h"
 #import "JKLocalNotificationSettings.h"
 #import "FlashRuntimeExtensions+Private.h"
 
@@ -51,6 +53,7 @@
     //notification.repeatInterval = NSSecondCalendarUnit;
     notification.playSound = YES;
     notification.showInForeground = YES;
+    notification.category = @"CategoryX";
     
     [self.context notify:notification];
 }
@@ -70,11 +73,32 @@
     [self printMessage:@"After Delegate"];
 
     JKLocalNotificationSettings *settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes: UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert];
+
+    JKLocalNotificationAction *action1 = [JKLocalNotificationAction new];
+    action1.identifier = @"okAction";
+    action1.title = @"OK";
+
+    JKLocalNotificationAction *action2 = [JKLocalNotificationAction new];
+    action2.identifier = @"cancelAction";
+    action2.title = @"Cancel";
+
+    JKLocalNotificationAction *action3 = [JKLocalNotificationAction new];
+    action3.identifier = @"test1Action";
+    action3.title = @"Test1";
+
+    JKLocalNotificationAction *action4 = [JKLocalNotificationAction new];
+    action4.identifier = @"test2Action";
+    action4.title = @"Test2";
+
+    JKLocalNotificationCategory *category = [JKLocalNotificationCategory new];
+    category.identifier = @"CategoryX";
+    category.actions = @[action1, action2, action3, action4];
+
+    settings.categories = @[category];
+
     [self.context authorizeWithSettings:settings];
 
-    if([UNUserNotificationCenter class] == nil) {
-        [self.context checkForNotificationAction];
-    }
+    [self.context checkForNotificationAction];
 }
 
 - (void)printMessage:(NSString*)message {
@@ -87,7 +111,8 @@
 }
 
 - (void)localNotificationContext:(JKLocalNotificationsContext *)context didReceiveNotificationFromListener:(JKNotificationListener *)listener {
-    [self printMessage:listener.notificationCode title:@"Local Notification"];
+    NSString *string = [NSString stringWithFormat:@"%@\n%@", listener.notificationCode, listener.notificationAction];
+    [self printMessage:string title:@"Local Notification"];
 }
 
 - (void)localNotificationContext:(JKLocalNotificationsContext *)context didRegisterSettings:(JKLocalNotificationSettings *)settings {

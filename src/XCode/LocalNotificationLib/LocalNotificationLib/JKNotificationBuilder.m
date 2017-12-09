@@ -25,6 +25,7 @@
     localNotification.applicationIconBadgeNumber = notification.numberAnnotation;
     localNotification.userInfo = notification.userInfo;
     localNotification.alertLaunchImage = notification.launchImage;
+    localNotification.category = notification.category;
 
     if ([localNotification respondsToSelector:@selector(setAlertTitle:)]) {
         localNotification.alertTitle = notification.title;

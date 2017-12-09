@@ -6,6 +6,7 @@
 //
 //
 
+#import <UserNotifications/UserNotifications.h>
 #import <UIKit/UIKit.h>
 #import "JKAuthorizer.h"
 #import "JKNotificationListener.h"
@@ -13,11 +14,13 @@
 
 @interface JKNotificationFactory : NSObject
 + (instancetype)factory;
++ (BOOL)isNewAPI;
 
 - (id<JKAuthorizer>)createAuthorizer;
-- (JKNotificationListener *)createListener;
 - (JKLocalNotificationManager *)createManager;
 - (NSDictionary *)fetchUserInfo:(JKLocalNotification *)notification;
 
+@property (nonatomic, readonly) UNUserNotificationCenter *notificationCenter;
+@property (nonatomic, readonly) JKNotificationListener *listener;
 @property (nonatomic, readonly) UIApplication *application;
 @end
