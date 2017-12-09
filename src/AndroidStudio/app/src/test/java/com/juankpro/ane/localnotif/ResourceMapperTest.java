@@ -1,7 +1,9 @@
 package com.juankpro.ane.localnotif;
 
 import com.adobe.fre.FREContext;
+import com.juankpro.ane.localnotif.util.ResourceMapper;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
@@ -23,14 +25,14 @@ public class ResourceMapperTest {
         return subject;
     }
 
-    private void setup() {
+    @Before
+    public void setup() {
         MockitoAnnotations.initMocks(this);
         when(context.getResourceId(ArgumentMatchers.anyString())).thenReturn(10);
     }
 
     @Test
     public void resourceMapper_getResourceId_mapsResourceStringToId() {
-        setup();
         assertEquals(10, (int)getSubject().getResourceIdFor("any_id", context));
         verify(context).getResourceId("drawable.any_id");
     }

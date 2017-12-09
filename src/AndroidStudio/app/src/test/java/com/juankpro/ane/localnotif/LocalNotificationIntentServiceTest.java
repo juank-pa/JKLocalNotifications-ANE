@@ -3,6 +3,9 @@ package com.juankpro.ane.localnotif;
 import android.content.Context;
 import android.content.Intent;
 
+import com.juankpro.ane.localnotif.util.ApplicationStatus;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -23,12 +26,14 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({LocalNotificationIntentService.class,ApplicationStatus.class})
+@PrepareForTest({LocalNotificationIntentService.class, ApplicationStatus.class})
 public class LocalNotificationIntentServiceTest {
     @Mock
     private Context context;
     @Mock
     private Intent intent;
+    @Mock
+    private Intent closeIntent;
     @Mock
     private LocalNotificationEventDispatcher dispatcher;
 
@@ -42,42 +47,51 @@ public class LocalNotificationIntentServiceTest {
         return subject;
     }
 
-    private void setup() {
+    @Before
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
         when(intent.getStringExtra(Constants.NOTIFICATION_CODE_KEY)).thenReturn("KeyCode");
         when(intent.getByteArrayExtra(Constants.ACTION_DATA_KEY)).thenReturn(data);
+        when(intent.getStringExtra(Constants.ACTION_ID_KEY)).thenReturn("ActionId");
 
         try {
-            PowerMockito.whenNew(LocalNotificationEventDispatcher.class).withArguments("KeyCode", data)
+            PowerMockito.whenNew(LocalNotificationEventDispatcher.class)
+                    .withArguments("KeyCode", data, "ActionId")
                     .thenReturn(dispatcher);
             PowerMockito.whenNew(Intent.class).withNoArguments()
                     .thenReturn(intent);
+            PowerMockito.whenNew(Intent.class).withArguments(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+                    .thenReturn(closeIntent);
         } catch(Exception e) { e.printStackTrace(); }
 
         doReturn(context).when(getSubject()).getApplicationContext();
+        PowerMockito.doNothing().when(getSubject()).sendBroadcast(closeIntent);
 
         PowerMockito.mockStatic(ApplicationStatus.class);
         when(ApplicationStatus.getInForeground()).thenReturn(true);
     }
 
     @Test
+    public void intentService_onHandleIntent_closesDialogs() {
+        getSubject().onHandleIntent(intent);
+        verify(getSubject()).sendBroadcast(closeIntent);
+    }
+
+    @Test
     public void intentService_onHandleIntent_triesToDispatchEventToBackground() {
-        setup();
         getSubject().onHandleIntent(intent);
         verify(dispatcher).dispatchWhenActive();
     }
 
     @Test
     public void intentService_onHandleIntent_doesNotStartActivityWhenInForeground() {
-        setup();
         subject.onHandleIntent(intent);
         verify(context, never()).startActivity(any(Intent.class));
     }
 
     @Test
     public void intentService_onHandleIntent_startsActivityWhenNotInForeground() {
-        setup();
         when(ApplicationStatus.getInForeground()).thenReturn(false);
         when(intent.getStringExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY)).thenReturn("MainActivityClass");
 

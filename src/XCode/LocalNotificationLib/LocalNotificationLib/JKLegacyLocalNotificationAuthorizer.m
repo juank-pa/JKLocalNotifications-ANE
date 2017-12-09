@@ -8,39 +8,37 @@
 
 #import "JKLegacyLocalNotificationAuthorizer.h"
 #import "Constants.h"
+#import "JKLegacyNotificationListener.h"
 #import "JKLocalNotificationSettings.h"
 #import "JKLegacyLocalNotificationFactory.h"
+#import "JKLegacyNotificationSettingsBuilder.h"
 
-@interface JKLegacyLocalNotificationAuthorizer ()<UIApplicationDelegate>
-@property (nonatomic, strong) id savedDelegate;
+@interface JKLegacyLocalNotificationAuthorizer ()<JKNotificationListenerDelegate>
 @property (nonatomic, weak) JKLegacyLocalNotificationFactory *factory;
+@property (nonatomic, readwrite, strong) JKLocalNotificationSettings *settings;
 @end
 
 @implementation JKLegacyLocalNotificationAuthorizer
 
 - (instancetype)initWithFactory:(JKLegacyLocalNotificationFactory *)factory {
-    if (self = [super initWithTarget:factory.application.delegate]) {
+    if (self = [super init]) {
         _factory = factory;
-        _factory.application.delegate = self;
+        _factory.listener.delegate = self;
     }
     return self;
 }
 
-@dynamic savedDelegate;
 @synthesize settings = _settings;
 @synthesize delegate = _delegate;
 
-- (void)dealloc {
-    self.factory.application.delegate = self.savedDelegate;
-}
-
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(nonnull UIUserNotificationSettings *)notificationSettings {
-    _settings = [JKLocalNotificationSettings settingsWithUserNotificationTypes:notificationSettings.types];
+- (void)notificationListener:(JKNotificationListener *)listener didRegisterUserNotificationSettings:(UIUserNotificationSettings *)settings {
+    self.settings = [JKLocalNotificationSettings settingsWithUserNotificationTypes:settings.types];
     [self.delegate notificationAuthorizer:self didAuthorizeWithSettings:self.settings];
 }
 
 - (void)requestAuthorizationWithSettings:(JKLocalNotificationSettings *)settings {
-    [self.factory.application registerUserNotificationSettings:[self.factory createSettingsForTypes:settings.notificationTypes]];
+    JKLegacyNotificationSettingsBuilder *builder = [self.factory createSettingsBuilder];
+    [self.factory.application registerUserNotificationSettings:[builder buildFromSettings:settings]];
 }
 
 @end

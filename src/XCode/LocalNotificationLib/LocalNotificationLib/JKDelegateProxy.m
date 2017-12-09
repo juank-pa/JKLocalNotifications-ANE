@@ -9,24 +9,24 @@
 #import "JKDelegateProxy.h"
 
 @interface JKDelegateProxy ()
-@property (nonatomic, strong) id savedDelegate;
+@property (nonatomic, strong) id originalDelegate;
 @end
 
 @implementation JKDelegateProxy
 
 - (instancetype)initWithTarget:(id)target {
     if (self = [super init]) {
-        _savedDelegate = target;
+        _originalDelegate = target;
     }
     return self;
 }
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
-    return [self.class instancesRespondToSelector:aSelector] || [self.savedDelegate respondsToSelector:aSelector];
+    return [self.class instancesRespondToSelector:aSelector] || [self.originalDelegate respondsToSelector:aSelector];
 }
 
 - (id)forwardingTargetForSelector:(SEL)aSelector {
-    return self.savedDelegate;
+    return self.originalDelegate;
 }
 
 @end

@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+@SuppressWarnings("ConstantConditions")
 public class AssetProvider extends ContentProvider {
     public AssetProvider() {
     }
@@ -54,6 +55,7 @@ public class AssetProvider extends ContentProvider {
         return new AssetFileDescriptor(ParcelFileDescriptor.open(cacheFile, ParcelFileDescriptor.MODE_READ_ONLY), 0, -1);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public AssetFileDescriptor openAssetFile(final Uri uri, final String mode) throws FileNotFoundException {
         final String assetPath = uri.getLastPathSegment();

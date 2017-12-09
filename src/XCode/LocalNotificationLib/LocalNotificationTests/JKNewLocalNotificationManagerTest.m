@@ -22,13 +22,13 @@
 @end
 
 @interface JKNewLocalNotificationManagerTest : JKNewTestCase
-@property (nonatomic, retain) JKNewLocalNotificationManager *subject;
-@property (nonatomic, retain) JKLocalNotification *notification;
+@property (nonatomic, strong) JKNewLocalNotificationManager *subject;
+@property (nonatomic, strong) JKLocalNotification *notification;
 
-@property (nonatomic, retain) id notificationCenterMock;
-@property (nonatomic, retain) id notificationRequestMock;
-@property (nonatomic, retain) id factoryMock;
-@property (nonatomic, retain) id notificationRequestBuilder;
+@property (nonatomic, strong) id notificationCenterMock;
+@property (nonatomic, strong) id notificationRequestMock;
+@property (nonatomic, strong) id factoryMock;
+@property (nonatomic, strong) id notificationRequestBuilder;
 
 @end
 

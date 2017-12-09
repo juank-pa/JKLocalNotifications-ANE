@@ -19,6 +19,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FlashRuntimeExtensions.h"
+#import "JKDecoder.h"
 
 @interface ExtensionUtils : NSObject 
 
@@ -42,6 +43,8 @@
 + (BOOL)getBoolFromFREObject:(FREObject)freObject;
 + (UIColor *)getColorFromFREObject:(FREObject)freObject;
 + (NSData *)getDataFromFREObject:(FREObject)freObject;
++ (NSArray *)getArrayFromFREObject:(FREObject)freObject withDecoder:(id<JKDecoder>)decoder;
+
 #endif
 
 @end

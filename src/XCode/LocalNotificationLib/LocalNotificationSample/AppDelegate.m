@@ -11,17 +11,11 @@
 #import "ViewController.h"
 #import "FlashRuntimeExtensions+Private.h"
 
-NSDictionary *FRPE_getApplicationLaunchOptions()
-{
-    return [[UIApplication sharedApplication].delegate performSelector:@selector(options)];
-}
-
 @implementation AppDelegate
 
 @synthesize window = _window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.options = launchOptions;
     return YES;
 }
 

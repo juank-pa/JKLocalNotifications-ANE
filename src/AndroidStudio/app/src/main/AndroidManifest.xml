@@ -16,7 +16,7 @@
             android:name=".AssetProvider"
             android:authorities="com.juankpro.ane.localnotif.provider"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="false" />
         <service android:name="com.juankpro.ane.localnotif.LocalNotificationIntentService"/>
         <receiver android:name="com.juankpro.ane.localnotif.AlarmIntentService" />
         <receiver android:name="com.juankpro.ane.localnotif.AlarmRestoreOnBoot" >

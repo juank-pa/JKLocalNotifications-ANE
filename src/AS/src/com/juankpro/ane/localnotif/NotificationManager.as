@@ -5,15 +5,35 @@
   import flash.utils.*;
   import flash.desktop.*
 
+  /** 
+  * Dispatched when the notification has proccessed a call to <code>subscribe</code>. 
+  * Because Android doesn't need subscription before sending any notification
+  * this event always dispatches successfully allowing all kinds of notification types.
+  * @eventType com.juankpro.ane.localnotif.NotificationEvent.SETTINGS_SUBSCRIBED
+  * @see #subscribe()
+  */ 
+  [Event(name="settingsSubscribed", type="com.juankpro.ane.localnotif.NotificationEvent")]
+
+  /** 
+  * Dispatched when the user has interacted with the notification by tapping it or any
+  * of the notification action buttons. 
+  * @eventType com.juankpro.ane.localnotif.NotificationEvent.NOTIFICATION_ACTION
+  * @see #subscribe()
+  */ 
+  [Event(name="notificationAction", type="com.juankpro.ane.localnotif.NotificationEvent")]
+  
   /**
    * A class to notify the user of events that happen through notifications; it is used in conjunction
    * with the <code>Notification</code> class. If you want to listen to system notifications,
    * you must register to the <code>NotificationEvent.NOTIFICATION_ACTION</code> event.
-   * <p>iOS devices need to register for notifications prior to sending them so you need to read the
-   * <code>needsSubscription</code> to determine this condition.</p>
+   * <p>iOS devices need to register for notifications prior to sending them.</p>
+   * <p>Android devices don't need to register before sending notifications unless they define custom
+   * action buttons. There is not any harm on registering for notifications on Android devices even if
+   * it doesn't define any custom actions. Android will still dispatch the <code>NotificationEvent.SETTINGS_SUBSCRIBED</code> event.</p>
    * <p>If subscription is needed then use the <code>subscribe</code> method to perform the subscription.</p>
    * <p>Supported OS: Android, iOS</p>
    * @see com.juankpro.ane.localnotif.Notification
+   * @see com.juankpro.ane.localnotif.NotificationAction
    * @see com.juankpro.ane.localnotif.NotificationEvent
    * @see #needsSubscription
    * @see #subscribe()
@@ -31,7 +51,8 @@
 
     /**
      * Determines whether notifications are available for this platform or not.
-     * <p>Supported OS: All</p>
+     * Returns true only on mobile devices.
+     * <p>Supported OS: Android, iOS</p>
      */
     public static function get isSupported():Boolean {
       CONFIG::device {
@@ -41,9 +62,8 @@
     }
 
     /**
-     * A list of supported notification styles. Even though this property can be accessed
-     * on any device it applies to iOS devices only.
-     * <p>Supported OS: All</p>
+     * A list of supported notification styles.
+     * <p>Supported OS: Android, iOS</p>
      * @see #subscribe()
      */
     public static const supportedNotificationStyles:Vector.<String> =
@@ -53,18 +73,21 @@
           NotificationStyle.ALERT]);
 
     /**
-     * Determines whether you need to subscribe to the notifications prior to using them.
-     * This property returns true only on iOS devices.
-     * <p>Supported OS: All</p>
+     * Previous versions returned true on iOS devices only. Currently, because Android devices 
+     * may also need to register custom actions, this property returns true for all mobile devices.
+     * Legacy code using this property will still work properly because Android devices will always dispatch
+     * the <code>Event.SETTINGS_SUBSCRIBED</code> event successfully while subscribing, but for practical
+     * cases you should not use it anymore and depend only on <code>isSupported</code>.
+     * <p>Supported OS: Android, iOS</p>
      * @see #subscribe()
+     * @see #isSupported
      */
+    [Deprecated("isSupported")]
     public static function get needsSubscription():Boolean {
-      CONFIG::device {
-        CONFIG::iphone {
+        CONFIG::device {
           return true;
         }
-      }
-      return false;
+        return false;
     }
 
     /**
@@ -140,11 +163,7 @@
     }
 
     /**
-     * Fires the specified notification. On Android this will place the notification
-     * in the notification area, accessible by sliding down the drawer. iOS handles notifications
-     * slightly differently: the notification banner will only be displayed while the application is
-     * not in the foreground. When in the foreground only the <code>NotificationEvent.NOTIFICATION_ACTION</code>
-     * event will trigger.
+     * Fires the notification with the specified behavior.
      * <p>Supported OS: Android, iOS</p>
      * @param code An identifier for this notification that is unique to the application.
      * The code can later be used to cancel the notification using the cancel method.
@@ -211,24 +230,24 @@
     }
 
     /**
-     * Subscribes to local notifications as part of the process needed
-     * for iOS applications.
-     * <p>You have to subscribe prior to attempting to send
-     * notifications otherwise the application will raise exceptions.
-     * Once you call this method you can register to the
+     * Subscribes to receive local notifications. There is no harm in subscribing
+     * on iOS and Android even if the Android version does not implement custom actions.
+     * <p>On iOS you have to subscribe prior to attempting to send
+     * notifications otherwise the application will raise exceptions.</p>
+     * <p>Anroid devices will always respond to a subscription positively for all notification types.</p>
+     * <p>Once you call this method you can register to the
      * <code>NotificationEvent.SETTINGS_SUBSCRIBED</code> event that will
      * acknowledge your subscription and will also report the notification
      * types the user has accepted to receive.</p>
-     * <p>Supported OS: iOS</p>
+     * <p>Supported OS: Android, iOS</p>
      * @param options A <code>LocalNotifierSubscribeOptions</code> instance specifying the
      * subscription options.
-     * @see #needsSubscription
+     * @see com.juankpro.ane.localnotif.NotificationCategory
+     * @see com.juankpro.ane.localnotif.NotificationAction
      */
     public function subscribe(options:LocalNotifierSubscribeOptions):void {
       CONFIG::device {
-        CONFIG::iphone {
-          _extensionContext.call("registerSettings", options.notificationStyleFlags);
-        }
+        _extensionContext.call("registerSettings", options);
       }
     }
 
@@ -253,7 +272,7 @@
     }
 
     private function createAndDispatchEvent(event:String, handler:Function):void {
-      var notificationEvent:NotificationEvent = new NotificationEvent(event, true, false);
+      var notificationEvent:NotificationEvent = new NotificationEvent(event);
       handler(notificationEvent);
       dispatchEvent(notificationEvent);
     }
@@ -272,6 +291,7 @@
             catch (e:Error){}
 
             notification.notificationCode = String(_extensionContext.call("getSelectedNotificationCode"));
+            notification.notificationAction = String(_extensionContext.call("getSelectedNotificationAction"));
           }
         );
       }

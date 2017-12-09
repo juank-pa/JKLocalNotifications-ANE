@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "JKNotificationFactory.h"
 #import "JKNotificationBuilder.h"
+#import "JKLegacyNotificationSettingsBuilder.h"
 
 @interface JKLegacyLocalNotificationFactory : JKNotificationFactory
-- (UIUserNotificationSettings *)createSettingsForTypes:(UIUserNotificationType)types;
+- (JKLegacyNotificationSettingsBuilder *)createSettingsBuilder;
 - (JKNotificationBuilder *)createNotificationBuilder;
 @end
