@@ -36,7 +36,7 @@ package com.juankpro.ane.localnotif {
      *                   notification, otherwise you can omit this parameter.
      */
     public function LocalNotifierSubscribeOptions(categories:Vector.<NotificationCategory> = null):void {
-      this.categories = categories || new Vector.<NotificationCategory>;
+      this.categories = categories || new Vector.<NotificationCategory>();
     }
 
     /**
