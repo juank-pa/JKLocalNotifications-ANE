@@ -2,44 +2,33 @@
 //  JKNewNotificationListener.m
 //  LocalNotificationLib
 //
-//  Created by Juan Carlos Pazmino on 9/30/17.
-//
+//  Created by Juan Carlos Pazmino on 12/1/17.
+//  Copyright © 2017 Juank. All rights reserved.
 //
 
-#import <UserNotifications/UserNotifications.h>
 #import "JKNewNotificationListener.h"
-#import "JKNewLocalNotificationFactory.h"
 #import "JKNotificationDispatcher.h"
+#import "JKNotificationFactory.h"
 #import "Constants.h"
 
-@interface JKNotificationListener ()<UNUserNotificationCenterDelegate>
-@property (nonatomic, strong) id savedDelegate;
-- (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler;
-@end
+@interface JKNewNotificationListener ()<UNUserNotificationCenterDelegate>
 
-@interface JKNewNotificationListener ()
-@property (nonatomic, strong) JKNewLocalNotificationFactory *factory;
 @end
 
 @implementation JKNewNotificationListener
 
-@dynamic savedDelegate;
-
-- (instancetype)initWithFactory:(JKNewLocalNotificationFactory *)factory {
-    if (self = [super initWithTarget:factory.notificationCenter.delegate]) {
-        _factory = factory;
-        _factory.notificationCenter.delegate = self;
-    }
-    return self;
++ (void)load {
+    UNUserNotificationCenter *center = JKNotificationFactory.factory.notificationCenter;
+    if (!center) return;
+    id<UNUserNotificationCenterDelegate> originalDelegate = center.delegate;
+    center.delegate = [[self sharedListener] setupWithOriginalDelegate:originalDelegate];
 }
 
-- (void)dealloc {
-    self.factory.notificationCenter.delegate = self.savedDelegate;
-}
+@dynamic originalDelegate;
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    if ([self.savedDelegate respondsToSelector:@selector(userNotificationCenter:willPresentNotification:withCompletionHandler:)]) {
-        [self.savedDelegate userNotificationCenter:center willPresentNotification:notification withCompletionHandler:^(UNNotificationPresentationOptions options){
+    if ([self.originalDelegate respondsToSelector:@selector(userNotificationCenter:willPresentNotification:withCompletionHandler:)]) {
+        [self.originalDelegate userNotificationCenter:center willPresentNotification:notification withCompletionHandler:^(UNNotificationPresentationOptions options) {
             [self handleNotification:notification withCompletionHandler:completionHandler];
         }];
         return;
@@ -48,9 +37,9 @@
     [self handleNotification:notification withCompletionHandler:completionHandler];
 }
 
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
-    if ([self.savedDelegate respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:)]) {
-        [self.savedDelegate userNotificationCenter:center didReceiveNotificationResponse:response withCompletionHandler:^{
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
+    if ([self.originalDelegate respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:)]) {
+        [self.originalDelegate userNotificationCenter:center didReceiveNotificationResponse:response withCompletionHandler:^{
             [self handleResponse:response withCompletionHandler:completionHandler];
         }];
         return;
@@ -65,14 +54,24 @@
         completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
         return;
     }
-    [self dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:^{
+    [self.dispatcher dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:^{
         completionHandler(UNNotificationPresentationOptionNone);
     }];
 }
 
-- (void)handleResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+- (void)handleResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
     NSDictionary *userInfo = response.notification.request.content.userInfo;
-    [self dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:completionHandler];
+    [self.dispatcher dispatchDidReceiveNotificationWithActionId:[self actionIdentifierFromResponse:response]
+                                            userInfo:userInfo
+                                   completionHandler:completionHandler];
+}
+
+- (NSString *)actionIdentifierFromResponse:(UNNotificationResponse *)response {
+    if([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier] ||
+       [response.actionIdentifier isEqualToString:UNNotificationDismissActionIdentifier]) {
+        return nil;
+    }
+    return response.actionIdentifier;
 }
 
 @end

@@ -21,14 +21,14 @@
 @end
 
 @interface JKLegacyLocalNotificationManagerTest : JKLegacyTestCase
-@property (nonatomic, retain) JKLegacyLocalNotificationManager *subject;
-@property (nonatomic, retain) JKLocalNotification *notification;
+@property (nonatomic, strong) JKLegacyLocalNotificationManager *subject;
+@property (nonatomic, strong) JKLocalNotification *notification;
 
-@property (nonatomic, retain) id appMock;
-@property (nonatomic, retain) id archiverMock;
-@property (nonatomic, retain) id factoryMock;
-@property (nonatomic, retain) id notificationBuilderMock;
-@property (nonatomic, retain) id localNotificationMock;
+@property (nonatomic, strong) id appMock;
+@property (nonatomic, strong) id archiverMock;
+@property (nonatomic, strong) id factoryMock;
+@property (nonatomic, strong) id notificationBuilderMock;
+@property (nonatomic, strong) id localNotificationMock;
 
 @property (nonatomic, readonly) NSString *archivePath;
 @end

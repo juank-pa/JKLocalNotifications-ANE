@@ -26,6 +26,7 @@
 @property(nonatomic, readonly) NSDictionary *userInfo;
 @property(nonatomic, copy) NSString *launchImage;
 @property(nonatomic, assign) BOOL showInForeground;
+@property(nonatomic, copy) NSString *category;
 
 @end
 

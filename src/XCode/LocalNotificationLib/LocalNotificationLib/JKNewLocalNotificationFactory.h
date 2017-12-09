@@ -9,8 +9,9 @@
 #import <UserNotifications/UserNotifications.h>
 #import "JKNotificationFactory.h"
 #import "JKNotificationRequestBuilder.h"
+#import "JKNewCategoryBuilder.h"
 
 @interface JKNewLocalNotificationFactory : JKNotificationFactory
-@property (nonatomic, readonly) UNUserNotificationCenter *notificationCenter;
+- (JKNewCategoryBuilder *)createCategoryBuilder;
 - (JKNotificationRequestBuilder *)createRequestBuilder;
 @end

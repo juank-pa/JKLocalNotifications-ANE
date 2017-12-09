@@ -7,6 +7,7 @@
   Android 5.0 (API level 21) and later devices.
 * Notifications can also show in the foreground. When notifications display in the foreground
   no event is dispatched.
+* You add custom action buttons to notifications to perform different tasks when tapped.
 
 ### Version 1.0.7
 * Fixed a bug that prevented a notification from triggering if the app was not currently

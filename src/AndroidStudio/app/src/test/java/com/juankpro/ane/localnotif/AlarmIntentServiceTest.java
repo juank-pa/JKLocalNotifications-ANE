@@ -6,6 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.juankpro.ane.localnotif.factory.NotificationFactory;
+import com.juankpro.ane.localnotif.factory.NotificationPendingIntentFactory;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -36,7 +40,7 @@ public class AlarmIntentServiceTest {
     @Mock
     private Intent intent;
     @Mock
-    private NotificationIntentFactory intentFactory;
+    private NotificationPendingIntentFactory intentFactory;
     @Mock
     private NotificationFactory notificationFactory;
     @Mock
@@ -54,7 +58,8 @@ public class AlarmIntentServiceTest {
         return subject;
     }
 
-    private void setup() {
+    @Before
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
         when(intent.getExtras()).thenReturn(bundle);
@@ -63,7 +68,8 @@ public class AlarmIntentServiceTest {
         when(bundle.getByteArray(Constants.ACTION_DATA_KEY)).thenReturn(data);
 
         try {
-            PowerMockito.whenNew(LocalNotificationEventDispatcher.class).withArguments("KeyCode", data)
+            PowerMockito.whenNew(LocalNotificationEventDispatcher.class)
+                    .withArguments("KeyCode", data, null)
                     .thenReturn(dispatcher);
         } catch(Exception e) { e.printStackTrace(); }
 
@@ -72,7 +78,6 @@ public class AlarmIntentServiceTest {
 
     @Test
     public void intentService_onReceiveWhenAppIsInForeground_andNormalNotification_doesNotDisplayNotification() {
-        setup();
         when(dispatcher.dispatchWhenInForeground()).thenReturn(true);
         getSubject().onReceive(context, intent);
 
@@ -81,7 +86,7 @@ public class AlarmIntentServiceTest {
 
     private void mockNotificationDisplay() {
         try {
-            PowerMockito.whenNew(NotificationIntentFactory.class).withArguments(context, bundle)
+            PowerMockito.whenNew(NotificationPendingIntentFactory.class).withArguments(context, bundle)
                     .thenReturn(intentFactory);
 
             PowerMockito.whenNew(NotificationFactory.class).withArguments(context, bundle)
@@ -93,7 +98,6 @@ public class AlarmIntentServiceTest {
 
     @Test
     public void intentService_onReceiveWhenAppIsNotInForeground_andNormalNotification_displaysNotification() {
-        setup();
         when(dispatcher.dispatchWhenInForeground()).thenReturn(false);
 
         mockNotificationDisplay();
@@ -105,7 +109,6 @@ public class AlarmIntentServiceTest {
 
     @Test
     public void intentService_onReceiveWhenNotificationShowsInForeground_displaysNotification() {
-        setup();
         when(bundle.getBoolean(Constants.SHOW_IN_FOREGROUND)).thenReturn(true);
 
         mockNotificationDisplay();

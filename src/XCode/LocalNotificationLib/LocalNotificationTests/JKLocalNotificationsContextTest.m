@@ -49,7 +49,7 @@
     self.factoryMock = OCMClassMock([JKNotificationFactory class]);
 
     self.listenerMock = OCMClassMock([JKNotificationListener class]);
-    OCMStub([self.factoryMock createListener]).andReturn(self.listenerMock);
+    OCMStub([self.factoryMock listener]).andReturn(self.listenerMock);
 
     self.authorizerMock = OCMProtocolMock(@protocol(JKAuthorizer));
     OCMStub([self.factoryMock createAuthorizer]).andReturn(self.authorizerMock);
@@ -150,6 +150,12 @@
     XCTAssertEqual(self.subject.notificationData, data);
 }
 
+- (void)testNotificationAction {
+    NSString *actionId = @"ActionId";
+    OCMStub([self.listenerMock notificationAction]).andReturn(actionId);
+    XCTAssertEqual(self.subject.notificationAction, actionId);
+}
+
 - (void)testSettings {
     JKLocalNotificationSettings *settings = [JKLocalNotificationSettings new];
     OCMStub([self.authorizerMock settings]).andReturn(settings);
@@ -192,7 +198,8 @@
     const FRENamedFunction *functions = NULL;
     uint32_t functionsToSet = [self.subject initExtensionFunctions:&functions];
 
-    XCTAssertEqual(functionsToSet, 10);
+    int funcCount = 11;
+    XCTAssertEqual(functionsToSet, funcCount);
 
     FRENamedFunction expectedFunctions[] = {
         {
@@ -244,10 +251,15 @@
             (const uint8_t*)"getSelectedSettings",
             NULL,
             &ADEPGetSelectedSettings
+        },
+        {
+            (const uint8_t*)"getSelectedNotificationAction",
+            NULL,
+            &ADEPGetSelectedNotificationAction
         }
     };
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < funcCount; i++) {
         XCTAssertEqual(strcmp((char *)functions[i].name, (char *)expectedFunctions[i].name), 0);
         XCTAssertEqual(functions[i].functionData, expectedFunctions[i].functionData);
         XCTAssertEqual(functions[i].function, expectedFunctions[i].function);

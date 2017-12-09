@@ -11,7 +11,7 @@
 
 @class JKLegacyLocalNotificationFactory;
 
-@interface JKLegacyLocalNotificationAuthorizer : JKDelegateProxy<JKAuthorizer>
+@interface JKLegacyLocalNotificationAuthorizer : NSObject<JKAuthorizer>
 + (instancetype) __unavailable new;
 - (instancetype) __unavailable init;
 

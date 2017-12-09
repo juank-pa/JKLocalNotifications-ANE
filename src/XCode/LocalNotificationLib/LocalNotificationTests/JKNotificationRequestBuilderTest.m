@@ -32,6 +32,7 @@
     self.notification.numberAnnotation = 10;
     self.notification.notificationCode = @"code123";
     self.notification.launchImage = @"launchImage";
+    self.notification.category = @"Category1";
 
     self.subject = [JKNotificationRequestBuilder new];
 }
@@ -47,6 +48,7 @@
     XCTAssertEqualObjects(@(self.notification.numberAnnotation), self.notificationRequest.content.badge);
     XCTAssertEqualObjects(self.notification.userInfo, self.notificationRequest.content.userInfo);
     XCTAssertEqual(self.notification.launchImage, self.notificationRequest.content.launchImageName);
+    XCTAssertEqualObjects(self.notification.category, self.notificationRequest.content.categoryIdentifier);
 }
 
 - (void)testBuildNotification {

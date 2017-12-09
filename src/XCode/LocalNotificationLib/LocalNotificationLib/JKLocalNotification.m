@@ -29,6 +29,7 @@
         _fireDate = nil;
         _soundName = nil;
         _showInForeground = NO;
+        _category = nil;
     }
     return self;
 }
