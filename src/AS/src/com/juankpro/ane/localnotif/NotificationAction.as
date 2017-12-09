@@ -31,7 +31,6 @@ package com.juankpro.ane.localnotif {
      * <p>Supported OS: Android</p>
      * @default NotificationIconType.ALERT
      * @see com.juankpro.ane.localnotif.NotificationIconType
-     * <p>Supported OS: Android</p>
      */
     public var icon:String = NotificationIconType.ALERT;
 
