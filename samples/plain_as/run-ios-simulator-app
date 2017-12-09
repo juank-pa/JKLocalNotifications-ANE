@@ -4,7 +4,6 @@ set -e
 source ../../bin/config/config.sh
 
 export AIR_IOS_SIMULATOR_DEVICE="iPhone 5s"
-export AIR_IOS_SIMULATOR="10.3.1"
 
 source prepare_ios
 
