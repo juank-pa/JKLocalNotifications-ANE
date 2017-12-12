@@ -1,7 +1,6 @@
 package com.juankpro.ane.localnotif.decoder;
 
 import com.adobe.fre.FREContext;
-import com.adobe.fre.FREObject;
 import com.juankpro.ane.localnotif.category.LocalNotificationAction;
 
 /**
@@ -9,8 +8,15 @@ import com.juankpro.ane.localnotif.category.LocalNotificationAction;
  */
 
 public class LocalNotificationActionDecoder extends FREDecoder<LocalNotificationAction> {
+    private boolean allowBackgroundActions;
+
     public LocalNotificationActionDecoder(FREContext context) {
+        this(context, true);
+    }
+
+    public LocalNotificationActionDecoder(FREContext context, boolean allowBackgroundActions) {
         super(context);
+        this.allowBackgroundActions = allowBackgroundActions;
     }
 
     @Override
@@ -19,6 +25,8 @@ public class LocalNotificationActionDecoder extends FREDecoder<LocalNotification
         localNotificationAction.identifier = decodeString("identifier", localNotificationAction.identifier);
         localNotificationAction.title = decodeString("title", localNotificationAction.title);
         localNotificationAction.icon = decodeResourceId("icon");
+        localNotificationAction.isBackground = allowBackgroundActions &&
+                decodeBoolean("isBackground", false);
         return localNotificationAction;
     }
 }

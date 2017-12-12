@@ -3,7 +3,6 @@ package com.juankpro.ane.localnotif.decoder;
 import com.adobe.fre.FREContext;
 import com.juankpro.ane.localnotif.LocalNotificationSettings;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
-import com.juankpro.ane.localnotif.util.Logger;
 
 /**
  * Created by juank on 11/24/2017.
@@ -16,13 +15,14 @@ public class LocalNotificationSettingsDecoder extends FREDecoder<LocalNotificati
 
     @Override
     protected LocalNotificationSettings decode() {
+        boolean allowBackgroundActions = decodeBoolean("allowAndroidBackgroundNotificationActions", false);
         LocalNotificationSettings localNotificationSettings = new LocalNotificationSettings();
         localNotificationSettings.categories =
-                decodeArray("categories", getCategoryDecoder(), LocalNotificationCategory.class);
+                decodeArray("categories", getCategoryDecoder(allowBackgroundActions), LocalNotificationCategory.class);
         return localNotificationSettings;
     }
 
-    private LocalNotificationCategoryDecoder getCategoryDecoder() {
-        return new LocalNotificationCategoryDecoder(getContext());
+    private LocalNotificationCategoryDecoder getCategoryDecoder(boolean allowBackgroundActions) {
+        return new LocalNotificationCategoryDecoder(getContext(), allowBackgroundActions);
     }
 }

@@ -50,6 +50,15 @@ public class ApplicationStatusTest {
     }
 
     @Test
+    public void applicationStatus_activates_activatesApplication() {
+        assertFalse(ApplicationStatus.getActive());
+        assertFalse(ApplicationStatus.getInForeground());
+        ApplicationStatus.activate();
+        assertTrue(ApplicationStatus.getActive());
+        assertFalse(ApplicationStatus.getInForeground());
+    }
+
+    @Test
     public void applicationStatus_reset_resetsToFalse() {
         ApplicationStatus.setInForeground(true);
         assertTrue(ApplicationStatus.getActive());
