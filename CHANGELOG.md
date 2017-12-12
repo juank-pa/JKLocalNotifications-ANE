@@ -1,3 +1,7 @@
+### Unreleased
+* Fixed a bug that prevented a notification from triggering if the app was not currently
+  running and the event listener was registered after registering some other event listeners.
+
 ### Version 1.0.6
 * Fixed a bug that made notification events to trigger only once During the application
   lifetime.

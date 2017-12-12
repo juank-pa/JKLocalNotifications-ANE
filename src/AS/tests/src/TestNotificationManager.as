@@ -143,13 +143,19 @@ package {
       assertFalse("Should not call context", mockContext.success());
     }
 
-    public function testAddEventListener():void {
+    public function testAddEventListenerForNotificationActionEvent():void {
       mockContext.expects("call").withArgs("checkForNotificationAction").noReturn();
-      manager.addEventListener("anyEvent", function():void {})
+      manager.addEventListener(NotificationEvent.NOTIFICATION_ACTION, function():void {})
       CONFIG::device {
         assertTrue(mockContext.errorMessage(), mockContext.success());
         return;
       }
+      assertFalse("Should not call context", mockContext.success());
+    }
+
+    public function testAddEventListenerForAnyOtherEvent():void {
+      mockContext.expects("call").withArgs("checkForNotificationAction").noReturn();
+      manager.addEventListener("anyEvent", function():void {})
       assertFalse("Should not call context", mockContext.success());
     }
 
@@ -176,7 +182,7 @@ package {
     }
 
     public function testStatusEventSettingsSubscribed():void {
-      mockContext.expects("call").withArgs("checkForNotificationAction").noReturn();
+      mockContext.expects("call").withArgs("checkForNotificationAction").times(0);
       mockContext.expects("call").withArgs("getSelectedSettings").willReturn(5);
 
       manager.addEventListener(NotificationEvent.SETTINGS_SUBSCRIBED, function(event:NotificationEvent):void {
