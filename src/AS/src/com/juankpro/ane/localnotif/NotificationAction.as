@@ -17,7 +17,7 @@ package com.juankpro.ane.localnotif {
     public var identifier:String;
 
     /**
-     * The action button title. It defines the label to use for the button.
+     * The action button title. It defines the label for the button.
      * <p>Supported OS: Android, iOS</p>
      */
     public var title:String;
@@ -33,6 +33,24 @@ package com.juankpro.ane.localnotif {
      * @see com.juankpro.ane.localnotif.NotificationIconType
      */
     public var icon:String = NotificationIconType.ALERT;
+
+    /**
+     * Determines whether the action will open the application and bring it to the front or if
+     * it will just leave it in the background. In both cases the <code>NotificationEvent.NOTIFICATION_ACTION</code>
+     * will still trigger.
+     * <p>This feature is disabled by default on Android devices because the OS can only support
+     * this partially. If the application is in the background then it will stay in the background
+     * when the action is triggered but if the application was not running, either because the user closed it
+     * or the operating system shut it down, then there is no way to make the application stay
+     * in the background when opening it due to the lack of access to the Activity managed by AIR
+     * at application creation time.</p>
+     * <p>If you are OK with this limitation you can force background actions in Android by calling
+     * the <code>LocalNotifierSubscribeOptions.allowAndroidBackgroundNotificationActions</code> method.</p>
+     * <p>Supported OS: Android(partially), iOS</p>
+     * @default false
+     * @see com.juankpro.ane.localnotif.LocalNotifierSubscribeOptions#allowAndroidBackgroundNotificationActions
+     */
+    public var isBackground:Boolean = false;
 
     /**
      * Constructor

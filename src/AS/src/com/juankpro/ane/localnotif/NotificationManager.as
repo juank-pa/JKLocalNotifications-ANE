@@ -28,7 +28,7 @@
    * you must register to the <code>NotificationEvent.NOTIFICATION_ACTION</code> event.
    * <p>iOS devices need to register for notifications prior to sending them.</p>
    * <p>Android devices don't need to register before sending notifications unless they define custom
-   * action buttons. There is not any harm on registering for notifications on Android devices even if
+   * action buttons. There is not any harm in registering for notifications on Android devices even if
    * it doesn't define any custom actions. Android will still dispatch the <code>NotificationEvent.SETTINGS_SUBSCRIBED</code> event.</p>
    * <p>If subscription is needed then use the <code>subscribe</code> method to perform the subscription.</p>
    * <p>Supported OS: Android, iOS</p>
@@ -77,7 +77,7 @@
      * may also need to register custom actions, this property returns true for all mobile devices.
      * Legacy code using this property will still work properly because Android devices will always dispatch
      * the <code>Event.SETTINGS_SUBSCRIBED</code> event successfully while subscribing, but for practical
-     * cases you should not use it anymore and depend only on <code>isSupported</code>.
+     * cases, you should not use it anymore and depend only on <code>isSupported</code>.
      * <p>Supported OS: Android, iOS</p>
      * @see #subscribe()
      * @see #isSupported
@@ -231,10 +231,10 @@
 
     /**
      * Subscribes to receive local notifications. There is no harm in subscribing
-     * on iOS and Android even if the Android version does not implement custom actions.
-     * <p>On iOS you have to subscribe prior to attempting to send
+     * to notifications on iOS and Android even if the Android version does not implement custom actions.
+     * <p>On iOS, you have to subscribe prior to attempting to send
      * notifications otherwise the application will raise exceptions.</p>
-     * <p>Anroid devices will always respond to a subscription positively for all notification types.</p>
+     * <p>Android devices will always respond to a subscription positively for all notification types.</p>
      * <p>Once you call this method you can register to the
      * <code>NotificationEvent.SETTINGS_SUBSCRIBED</code> event that will
      * acknowledge your subscription and will also report the notification
