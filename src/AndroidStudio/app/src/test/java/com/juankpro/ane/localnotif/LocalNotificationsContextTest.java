@@ -30,6 +30,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -174,6 +175,18 @@ public class LocalNotificationsContextTest {
 
         callFunction("checkForNotificationAction");
         verify(getSubject(), never()).dispatchStatusEventAsync("notificationSelected", "status");
+    }
+
+    @Test
+    public void context_functions_checkForNotificationAction_dispatchesOnlyOnce() {
+        byte data[] = {};
+        LocalNotificationCache.getInstance().reset();
+        LocalNotificationCache.getInstance().setData("MyCode", data, "actionId");
+
+        callFunction("checkForNotificationAction");
+        callFunction("checkForNotificationAction");
+
+        verify(getSubject(), times(1)).dispatchStatusEventAsync("notificationSelected", "status");
     }
 
     @Test
