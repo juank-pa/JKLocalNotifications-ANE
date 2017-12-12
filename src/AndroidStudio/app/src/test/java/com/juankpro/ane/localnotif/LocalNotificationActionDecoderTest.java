@@ -15,6 +15,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -31,8 +33,12 @@ public class LocalNotificationActionDecoderTest {
     private LocalNotificationActionDecoder subject;
 
     private LocalNotificationActionDecoder getSubject() {
+        return getSubject(true);
+    }
+
+    private LocalNotificationActionDecoder getSubject(boolean allowBackgroundActions) {
         if (subject == null) {
-            subject = new LocalNotificationActionDecoder(freContext);
+            subject = new LocalNotificationActionDecoder(freContext, allowBackgroundActions);
         }
         return subject;
     }
@@ -53,5 +59,19 @@ public class LocalNotificationActionDecoderTest {
     public void decoder_decode_decodesIdentifier() {
         when(ExtensionUtils.getStringProperty(freObject, "identifier", "")).thenReturn("MyId");
         assertEquals("MyId", getSubject().decodeObject(freObject).identifier);
+    }
+
+    @Test
+    public void decoder_decode_decodesIsBackground() {
+        assertFalse(getSubject().decodeObject(freObject).isBackground);
+        when(ExtensionUtils.getBooleanProperty(freObject, "isBackground", false)).thenReturn(true);
+        assertTrue(getSubject().decodeObject(freObject).isBackground);
+    }
+
+    @Test
+    public void decoder_decode_setsIsBackgroundToFalseIfNoBackgroundActionsAllowed() {
+        assertFalse(getSubject(false).decodeObject(freObject).isBackground);
+        when(ExtensionUtils.getBooleanProperty(freObject, "isBackground", false)).thenReturn(true);
+        assertFalse(getSubject().decodeObject(freObject).isBackground);
     }
 }

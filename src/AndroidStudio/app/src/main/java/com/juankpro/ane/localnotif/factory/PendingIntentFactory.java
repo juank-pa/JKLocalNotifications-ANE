@@ -8,5 +8,5 @@ import android.app.PendingIntent;
 
 public interface PendingIntentFactory {
     PendingIntent createPendingIntent();
-    PendingIntent createPendingIntent(String actionId);
+    PendingIntent createPendingIntent(String actionId, boolean backgroundMode);
 }

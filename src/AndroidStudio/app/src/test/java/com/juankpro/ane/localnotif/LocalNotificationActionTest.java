@@ -13,7 +13,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -44,14 +46,19 @@ public class LocalNotificationActionTest {
     }
 
     private LocalNotificationAction getSubject() {
-        return getSubject(null, null);
+        return getSubject(null, null, false);
     }
 
     private LocalNotificationAction getSubject(String identifier, String title) {
+        return getSubject(identifier, title, false);
+    }
+
+    private LocalNotificationAction getSubject(String identifier, String title, boolean isBackground) {
         if (subject == null) {
             subject = new LocalNotificationAction();
             if (identifier != null) subject.identifier = identifier;
             if (title != null) subject.title = title;
+            subject.isBackground = isBackground;
         }
         return subject;
     }
@@ -66,6 +73,15 @@ public class LocalNotificationActionTest {
         assertEquals("MyId", getSubject().identifier);
     }
 
+    @Test
+    public void action_deserialize_deserializesIsBackgroundFromJsonObject() {
+        getSubject().deserialize(jsonObject);
+        assertFalse(getSubject().isBackground);
+
+        when(jsonObject.optBoolean("isBackground", false)).thenReturn(true);
+        getSubject().deserialize(jsonObject);
+        assertTrue(getSubject().isBackground);
+    }
 
     @Test
     public void action_deserialize_doesNothingIfJsonObjectIsNull() {
@@ -74,13 +90,28 @@ public class LocalNotificationActionTest {
         assertEquals("", getSubject().identifier);
     }
 
-
     @Test
     public void action_serialize_serializesAction() {
         try {
             assertSame(jsonObject, getSubject("MyId", "MyTitle").serialize());
             verify(jsonObject).putOpt("identifier", "MyId");
             verify(jsonObject).putOpt("title", "MyTitle");
+        } catch (Throwable e) { e.printStackTrace(); }
+    }
+
+    @Test
+    public void action_serialize_serializesIsBackground() {
+        try {
+            assertSame(jsonObject, getSubject("MyId", "MyTitle", true).serialize());
+            verify(jsonObject).putOpt("isBackground", true);
+        } catch (Throwable e) { e.printStackTrace(); }
+    }
+
+    @Test
+    public void action_serialize_serializesIsNotBackground() {
+        try {
+            assertSame(jsonObject, getSubject("MyId", "MyTitle", false).serialize());
+            verify(jsonObject).putOpt("isBackground", false);
         } catch (Throwable e) { e.printStackTrace(); }
     }
 

@@ -14,7 +14,7 @@ package com.juankpro.ane.localnotif {
      */
     function call(...args):*;
     /**
-     * Disposes the native context.
+     * Disposes of the native context.
      */
     function dispose():void;
   }

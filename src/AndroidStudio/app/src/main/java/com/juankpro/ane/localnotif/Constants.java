@@ -19,6 +19,7 @@ public class Constants {
     public static final String NOTIFICATION_CODE_KEY = "com.juankpro.ane.localnotif.notificationCodeKey";
     public static final String ACTION_DATA_KEY = "com.juankpro.ane.localnotif.actionDataKey";
     public static final String ACTION_ID_KEY = "NOTIF_ACTION_ID";
+    public static final String BACKGROUND_MODE_ID_KEY = "NOTIF_BACKGROUND_MODE_ID";
 
     public static final String ICON_RESOURCE = "NOTIF_ICON_RESOURCE";
     public static final String TITLE = "NOTIF_TITLE";

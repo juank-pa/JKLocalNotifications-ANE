@@ -1,7 +1,6 @@
 package com.juankpro.ane.localnotif.factory;
 
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -68,7 +67,7 @@ public class NotificationFactory {
                         "NotificationFactory::buildActions Action: " +
                                 action.icon + ", " + action.title + ", " + action.identifier
                 );
-                builder.addAction(action.icon, action.title, intentFactory.createPendingIntent(action.identifier));
+                builder.addAction(action.icon, action.title, intentFactory.createPendingIntent(action.identifier, action.isBackground));
             }
         }
     }
