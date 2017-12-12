@@ -62,8 +62,7 @@ class LocalNotificationManager {
         final PendingIntent pendingIntent = PendingIntent.getBroadcast(androidContext, localNotification.code.hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
         final AlarmManager am = getAlarmManager();
 
-        NotificationTimeInterval interval = new NotificationTimeInterval(localNotification.repeatInterval);
-        long repeatInterval = interval.toMilliseconds();
+        long repeatInterval = localNotification.getRepeatIntervalMilliseconds();
 
         if (repeatInterval != 0) {
             am.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime, repeatInterval, pendingIntent);

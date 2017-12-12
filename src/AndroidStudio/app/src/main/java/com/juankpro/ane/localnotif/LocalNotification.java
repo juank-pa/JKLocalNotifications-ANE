@@ -48,13 +48,32 @@ class LocalNotification {
 
     String activityClassName = "";
 
+    public long getRepeatIntervalMilliseconds() {
+        return new NotificationTimeInterval(repeatInterval)
+                .toMilliseconds();
+    }
+
+    private Date getNextDate() {
+        long interval = getRepeatIntervalMilliseconds();
+        Date now = new Date();
+        if (interval == 0 || fireDate.getTime() >= now.getTime()) return fireDate;
+
+        long elapsedTime = now.getTime() - fireDate.getTime();
+        long triggerCount = (long)Math.ceil(elapsedTime / (double)interval);
+        return new Date(fireDate.getTime() + interval * triggerCount);
+
+    }
+
+    public void reschedule() {
+        fireDate = getNextDate();
+    }
+
     /**
      * The activityClassName parameter can be null if you expect to call deserialize to retrieve it afterward.
      */
     LocalNotification(String activityClassName) {
         this.activityClassName = activityClassName;
     }
-
 
     void serialize(SharedPreferences prefs) {
         Editor editor = prefs.edit();

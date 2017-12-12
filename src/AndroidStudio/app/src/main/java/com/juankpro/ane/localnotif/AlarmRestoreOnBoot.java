@@ -34,11 +34,12 @@ public class AlarmRestoreOnBoot extends BroadcastReceiver {
                 Logger.log("Class name:" + context.getClass().getName());
 
                 notification.deserialize(alarmSettings, alarmId);
+                notification.reschedule();
 
                 if (notification.fireDate.getTime() >= curDate.getTime()) {
                     manager.notify(notification);
                 } else {
-                    manager.cancel(notification.code);
+                    manager.unpersistNotification(notification.code);
                 }
             } catch (Exception e) {
                 Logger.log("AlarmRestoreOnBoot: Error while restoring alarm details after reboot: " + e.toString());
