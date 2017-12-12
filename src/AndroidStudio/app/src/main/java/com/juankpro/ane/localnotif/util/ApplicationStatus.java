@@ -19,6 +19,10 @@ public class ApplicationStatus {
         instance.moveToBackground();
     }
 
+    public static void activate() {
+        instance.active = true;
+    }
+
     private boolean active = false;
     private boolean inForeground = false;
 

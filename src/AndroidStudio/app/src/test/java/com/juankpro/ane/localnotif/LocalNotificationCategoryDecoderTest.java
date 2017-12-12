@@ -34,8 +34,12 @@ public class LocalNotificationCategoryDecoderTest {
     private LocalNotificationCategoryDecoder subject;
 
     private LocalNotificationCategoryDecoder getSubject() {
+        return getSubject(true);
+    }
+
+    private LocalNotificationCategoryDecoder getSubject(boolean allowBackgroundActions) {
         if (subject == null) {
-            subject = new LocalNotificationCategoryDecoder(freContext);
+            subject = new LocalNotificationCategoryDecoder(freContext, allowBackgroundActions);
         }
         return subject;
     }
@@ -53,14 +57,14 @@ public class LocalNotificationCategoryDecoderTest {
     }
 
     @Test
-    public void decoder_decode_decodesTitle() {
+    public void decoder_decode_decodesActions_whenBackgroundActionsAreAllowed() {
         LocalNotificationAction action = new LocalNotificationAction();
         LocalNotificationAction[] actions = new LocalNotificationAction[]{action};
-        LocalNotificationActionDecoder decoder = new LocalNotificationActionDecoder(freContext);
+        LocalNotificationActionDecoder decoder = new LocalNotificationActionDecoder(freContext, true);
 
         try {
             PowerMockito.whenNew(LocalNotificationActionDecoder.class)
-                    .withArguments(freContext)
+                    .withArguments(freContext, true)
                     .thenReturn(decoder);
         } catch (Throwable e) { e.printStackTrace(); }
 
@@ -68,5 +72,22 @@ public class LocalNotificationCategoryDecoderTest {
                 .thenReturn(actions);
 
         assertSame(actions, getSubject().decodeObject(freObject).actions);
+    }
+
+    @Test
+    public void decoder_decode_decodesActions_whenBackgroundActionsAreNotAllowed() {
+        LocalNotificationAction[] actions = new LocalNotificationAction[0];
+        LocalNotificationActionDecoder decoder = new LocalNotificationActionDecoder(freContext, false);
+
+        try {
+            PowerMockito.whenNew(LocalNotificationActionDecoder.class)
+                    .withArguments(freContext, false)
+                    .thenReturn(decoder);
+        } catch (Throwable e) { e.printStackTrace(); }
+
+        when(ExtensionUtils.getArrayProperty(freContext, freObject, "actions", decoder, LocalNotificationAction.class))
+                .thenReturn(actions);
+
+        assertSame(actions, getSubject(false).decodeObject(freObject).actions);
     }
 }

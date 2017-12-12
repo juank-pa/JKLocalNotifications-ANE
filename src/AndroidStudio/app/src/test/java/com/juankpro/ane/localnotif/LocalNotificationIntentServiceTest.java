@@ -69,6 +69,7 @@ public class LocalNotificationIntentServiceTest {
         PowerMockito.doNothing().when(getSubject()).sendBroadcast(closeIntent);
 
         PowerMockito.mockStatic(ApplicationStatus.class);
+        when(ApplicationStatus.getActive()).thenReturn(true);
         when(ApplicationStatus.getInForeground()).thenReturn(true);
     }
 
@@ -85,19 +86,64 @@ public class LocalNotificationIntentServiceTest {
     }
 
     @Test
-    public void intentService_onHandleIntent_doesNotStartActivityWhenInForeground() {
+    public void intentService_onHandleIntent_doesNotStartForegroundActivityWhenInForeground() {
+        when(intent.getBooleanExtra(Constants.BACKGROUND_MODE_ID_KEY, false)).thenReturn(false);
         subject.onHandleIntent(intent);
         verify(context, never()).startActivity(any(Intent.class));
     }
 
     @Test
-    public void intentService_onHandleIntent_startsActivityWhenNotInForeground() {
+    public void intentService_onHandleIntent_startsForegroundActivityWhenNotInForeground_andNotActive() {
+        when(ApplicationStatus.getActive()).thenReturn(false);
         when(ApplicationStatus.getInForeground()).thenReturn(false);
         when(intent.getStringExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY)).thenReturn("MainActivityClass");
 
         subject.onHandleIntent(intent);
         verify(intent).setClassName(context, "MainActivityClass");
         verify(intent).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        verify(intent).putExtra(Constants.BACKGROUND_MODE_ID_KEY, false);
+        verify(context).startActivity(intent);
+    }
+
+    @Test
+    public void intentService_onHandleIntent_startsForegroundActivityWhenNotInForeground_andActive() {
+        when(ApplicationStatus.getInForeground()).thenReturn(false);
+        when(intent.getStringExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY)).thenReturn("MainActivityClass");
+
+        subject.onHandleIntent(intent);
+        verify(intent).setClassName(context, "MainActivityClass");
+        verify(intent).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        verify(intent).putExtra(Constants.BACKGROUND_MODE_ID_KEY, false);
+        verify(context).startActivity(intent);
+    }
+
+    @Test
+    public void intentService_onHandleIntent_doesNotStartBackgroundActivityWhenInForeground() {
+        when(intent.getBooleanExtra(Constants.BACKGROUND_MODE_ID_KEY, false)).thenReturn(true);
+        subject.onHandleIntent(intent);
+        verify(context, never()).startActivity(any(Intent.class));
+    }
+
+    @Test
+    public void intentService_onHandleIntent_doesNotStartBackgroundActivityWhenNotInForeground_andActive() {
+        when(ApplicationStatus.getInForeground()).thenReturn(false);
+        when(intent.getBooleanExtra(Constants.BACKGROUND_MODE_ID_KEY, false)).thenReturn(true);
+        subject.onHandleIntent(intent);
+        verify(context, never()).startActivity(any(Intent.class));
+    }
+
+    @Test
+    public void intentService_onHandleIntent_startsBackgroundActivityWhenNotInForeground_andNotActive() {
+        when(ApplicationStatus.getActive()).thenReturn(false);
+        when(ApplicationStatus.getInForeground()).thenReturn(false);
+        when(intent.getBooleanExtra(Constants.BACKGROUND_MODE_ID_KEY, false)).thenReturn(true);
+        when(intent.getStringExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY)).thenReturn("MainActivityClass");
+
+        subject.onHandleIntent(intent);
+
+        verify(intent).setClassName(context, "MainActivityClass");
+        verify(intent).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        verify(intent).putExtra(Constants.BACKGROUND_MODE_ID_KEY, true);
         verify(context).startActivity(intent);
     }
 }
