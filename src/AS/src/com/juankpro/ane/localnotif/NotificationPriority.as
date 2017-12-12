@@ -1,7 +1,7 @@
 package com.juankpro.ane.localnotif {
 	/**
 	 * A class of constants representing the amount of presence given to the notification
-     * on Android devices. Use this constants for the <code>priority</code> property of
+     * on Android devices. Use these constants for the <code>priority</code> property of
      * the <code>Notification</code> class.
 	 * <p>Supported OS: Android</p>
      * @see com.juankpro.ane.localnotif.Notification#priority
