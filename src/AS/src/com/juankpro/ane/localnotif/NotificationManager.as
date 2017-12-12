@@ -106,6 +106,9 @@
         if(_disposed) return;
 
         _extensionContext.addEventListener(StatusEvent.STATUS, onStatusEventReceived);
+
+        if(type != NotificationEvent.NOTIFICATION_ACTION) return;
+
         _extensionContext.call("checkForNotificationAction");
       }
     }

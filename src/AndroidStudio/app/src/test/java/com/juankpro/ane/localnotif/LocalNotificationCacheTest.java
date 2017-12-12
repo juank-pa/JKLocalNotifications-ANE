@@ -60,6 +60,7 @@ public class LocalNotificationCacheTest {
         previousCache.setData("My Code", new byte[]{0});
 
         assertSame(previousCache, LocalNotificationCache.getInstance());
+        assertTrue(previousCache.wasUpdated());
 
         LocalNotificationCache.clear();
 
