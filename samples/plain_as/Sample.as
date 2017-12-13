@@ -60,8 +60,8 @@
         createCategory(
           "category",
           Vector.<NotificationAction>([
-            createAction(NotificationIconType.DOCUMENT, "okAction", "OK"),
-            createAction(NotificationIconType.ALERT, "cancelAction", "Cancel", true),
+            createAction(NotificationIconType.DOCUMENT, "okAction", "OK", true),
+            createAction(NotificationIconType.ALERT, "cancelAction", "Cancel"),
             createAction(NotificationIconType.FLAG, "resetAction", "Reset"),
             createAction(NotificationIconType.INFO, "alertAction", "Alert")
           ])

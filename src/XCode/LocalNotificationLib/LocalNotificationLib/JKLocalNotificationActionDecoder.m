@@ -15,6 +15,7 @@
     JKLocalNotificationAction *action = [JKLocalNotificationAction new];
     action.identifier = [self decodeStringProperty:@"identifier" withDefault:nil];
     action.title = [self decodeStringProperty:@"title" withDefault:nil];
+    action.background = [self decodeBoolProperty:@"isBackground" withDefault:false];
     return action;
 }
 

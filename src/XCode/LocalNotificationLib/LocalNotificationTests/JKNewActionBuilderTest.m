@@ -35,7 +35,6 @@
 - (void)assertAction:(UNNotificationAction *)result basedOnAction:(JKLocalNotificationAction *)action {
     XCTAssertEqualObjects(result.title, action.title);
     XCTAssertEqualObjects(result.identifier, action.identifier);
-    XCTAssertEqual(result.options, UNNotificationActionOptionForeground);
 }
 
 - (void)assertActions:(NSArray <UNNotificationAction *> *)results basedOnActions:(NSArray <JKLocalNotificationAction *> *)actions {
@@ -45,10 +44,22 @@
     }
 }
 
-- (void)testBuildFromAction {
+- (void)testBuildFromNonBackgroundAction {
     JKLocalNotificationAction *action = [self actionWithIdentifier:@"actionId" title:@"Action"];
+    action.background = NO;
 
-    [self assertAction:[self.subject buildFromAction:action] basedOnAction:action];
+    UNNotificationAction *result = [self.subject buildFromAction:action];
+    XCTAssertEqual(result.options, UNNotificationActionOptionForeground);
+    [self assertAction:result basedOnAction:action];
+}
+
+- (void)testBuildFromBackgroundAction {
+    JKLocalNotificationAction *action = [self actionWithIdentifier:@"actionId" title:@"Action"];
+    action.background = YES;
+
+    UNNotificationAction *result = [self.subject buildFromAction:action];
+    XCTAssertEqual(result.options, UNNotificationActionOptionNone);
+    [self assertAction:result basedOnAction:action];
 }
 
 - (void)testBuildFromActions {

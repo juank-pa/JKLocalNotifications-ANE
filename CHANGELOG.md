@@ -8,6 +8,7 @@
 * Notifications can also show in the foreground. When notifications display in the foreground
   no event is dispatched.
 * You add custom action buttons to notifications to perform different tasks when tapped.
+* Actions can open the application in the background. Android devices support this only partially.
 
 ### Unreleased
 * Fixed a bug that prevented a notification from triggering if the app was not currently

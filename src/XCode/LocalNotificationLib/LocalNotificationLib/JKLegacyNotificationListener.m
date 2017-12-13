@@ -29,7 +29,7 @@
     UIApplication *app = JKNotificationFactory.factory.application;
     id<UIApplicationDelegate> originalDelegate = app.delegate;
     app.delegate = [[self sharedListener] setupWithOriginalDelegate:originalDelegate];
-    [[self sharedListener] didFinishLaunchingWithOptions:notification.userInfo];
+    [self.sharedListener didFinishLaunchingWithOptions:notification.userInfo];
 }
 
 @dynamic originalDelegate;
@@ -43,6 +43,7 @@
     if ([self.originalDelegate respondsToSelector:@selector(application:didRegisterUserNotificationSettings:)]) {
         [self.originalDelegate application:application didRegisterUserNotificationSettings:notificationSettings];
     }
+    [self.authorizationDelegate notificationListener:self didRegisterUserNotificationSettings:notificationSettings];
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {

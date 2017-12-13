@@ -90,8 +90,6 @@
     OCMStub([subject sharedListener]).andReturn(subject);
     OCMStub([subject dispatcher]).andReturn(self.dispatcherMock);
 
-    UIApplicationLaunchOptionsLocalNotificationKey;
-
     OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithUserInfo:userInfo]);
 
     [self sendLaunchNotificationWithUserInfo:userInfo];
@@ -273,11 +271,6 @@
     id savedDelegateMock = OCMPartialMock([StubAppDelegate new]);
     void (^testBlock)(void) = ^{};
 
-    OCMReject([savedDelegateMock application:[OCMArg any]
-                  handleActionWithIdentifier:[OCMArg any]
-                        forLocalNotification:[OCMArg any]
-                            withResponseInfo:[OCMArg any]
-                           completionHandler:[OCMArg any]]);
     OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                                      userInfo:notification.userInfo
                                                             completionHandler:testBlock]);
@@ -387,6 +380,36 @@
 
 - (void)testCheckForNotificationActionOnlyOnce {
     [[self sharedTests] checkForNotificationActionOnlyOnce];
+}
+
+- (void)testDidRegisterUserNotificationSettingsDelegatesIfImplemented {
+    UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge;
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types
+                                                                             categories:nil];
+
+    OCMExpect([self.appDelegateMock application:self.appMock
+            didRegisterUserNotificationSettings:settings]);
+
+    self.subject.originalDelegate = self.appDelegateMock;
+    [self.subject application:self.appMock didRegisterUserNotificationSettings:settings];
+
+    OCMVerifyAll(self.appDelegateMock);
+}
+
+- (void)testDidRegisterUserNotificationSettingsDelegatesToAuthorizationListener {
+    UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge;
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types
+                                                                             categories:nil];
+
+    id authorizationDelegateMock = OCMProtocolMock(@protocol(JKNotificationAuthorizationListenerDelegate));
+    self.subject.authorizationDelegate = authorizationDelegateMock;
+
+    OCMExpect([authorizationDelegateMock notificationListener:self.subject
+                          didRegisterUserNotificationSettings:settings]);
+
+    [self.subject application:self.appMock didRegisterUserNotificationSettings:settings];
+
+    OCMVerifyAll(self.dispatcherMock);
 }
 
 @end
