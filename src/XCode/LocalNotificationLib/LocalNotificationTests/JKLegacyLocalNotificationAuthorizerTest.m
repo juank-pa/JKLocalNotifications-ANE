@@ -9,16 +9,17 @@
 #import <UIKit/UIKit.h>
 #import <OCMock/OCMock.h>
 #import "JKLegacyTestCase.h"
+#import "JKLegacyNotificationListener.h"
 #import "JKLegacyLocalNotificationAuthorizer.h"
 #import "JKLegacyLocalNotificationFactory.h"
 #import "JKLocalNotificationSettings.h"
 #import "Constants.h"
 #import "Stubs.h"
 
-@interface JKLegacyLocalNotificationAuthorizer (Test)<JKNotificationListenerDelegate>
+@interface JKLegacyLocalNotificationAuthorizer (Test)<JKNotificationAuthorizationListenerDelegate>
 @end
 
-@interface JKLegacyNotificationAuthorizerTest : JKLegacyTestCase
+@interface JKLocalLegacyNotificationAuthorizerTest : JKLegacyTestCase
 @property (nonatomic, strong) JKLegacyLocalNotificationAuthorizer *subject;
 @property (nonatomic, strong) JKLocalNotificationSettings *settings;
 @property (nonatomic, strong) id factoryMock;
@@ -26,14 +27,14 @@
 @property (nonatomic, strong) id listenerMock;
 @end
 
-@implementation JKLegacyNotificationAuthorizerTest
+@implementation JKLocalLegacyNotificationAuthorizerTest
 
 - (void)setUp {
     [super setUp];
 
     self.settings = [JKLocalNotificationSettings settingsWithLocalNotificationTypes:JKLocalNotificationTypeAlert | JKLocalNotificationTypeBadge];
 
-    self.listenerMock = OCMClassMock([JKNotificationListener class]);
+    self.listenerMock = OCMClassMock([JKLegacyNotificationListener class]);
     self.appMock = OCMClassMock([UIApplication class]);
 
     self.factoryMock = OCMClassMock([JKLegacyLocalNotificationFactory class]);
@@ -49,7 +50,7 @@
 
 - (void)testInitialization {
     JKLegacyLocalNotificationAuthorizer *subject = [JKLegacyLocalNotificationAuthorizer alloc];
-    OCMExpect([self.listenerMock setDelegate:subject]);
+    OCMExpect([self.listenerMock setAuthorizationDelegate:subject]);
     [subject initWithFactory:self.factoryMock];
     OCMVerifyAll(self.listenerMock);
 }

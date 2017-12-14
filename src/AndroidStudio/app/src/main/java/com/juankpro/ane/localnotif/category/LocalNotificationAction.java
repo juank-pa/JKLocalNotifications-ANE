@@ -14,6 +14,7 @@ public class LocalNotificationAction implements IDeserializable, ISerializable {
     public String identifier = "";
     public String title = "";
     public int icon = 0;
+    public boolean isBackground = false;
 
     public JSONObject serialize() {
         JSONObject jsonObject = new JSONObject();
@@ -21,6 +22,7 @@ public class LocalNotificationAction implements IDeserializable, ISerializable {
             jsonObject.putOpt("identifier", identifier);
             jsonObject.putOpt("title", title);
             jsonObject.putOpt("icon", icon);
+            jsonObject.putOpt("isBackground", isBackground);
         } catch (Exception e) {
             Logger.log("LocalNotification::serialize Exception");
         }
@@ -32,6 +34,7 @@ public class LocalNotificationAction implements IDeserializable, ISerializable {
             this.identifier = jsonObject.optString("identifier", "");
             this.title = jsonObject.optString("title", "");
             this.icon = jsonObject.optInt("icon", 0);
+            this.isBackground = jsonObject.optBoolean("isBackground", false);
         }
     }
 }

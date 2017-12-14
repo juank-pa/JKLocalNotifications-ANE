@@ -21,7 +21,12 @@
     UIMutableUserNotificationAction *nativeAction = [UIMutableUserNotificationAction new];
     nativeAction.identifier = action.identifier;
     nativeAction.title = action.title;
+    nativeAction.activationMode = [self activationModeForBackground:action.isBackground];
     return nativeAction;
+}
+
+- (UIUserNotificationActivationMode)activationModeForBackground:(BOOL)isBackground {
+    return isBackground? UIUserNotificationActivationModeBackground : UIUserNotificationActivationModeForeground;
 }
 
 @end

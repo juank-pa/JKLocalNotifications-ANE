@@ -1,6 +1,6 @@
 package com.juankpro.ane.localnotif {
 	/**
-	 * A class of constants representing the different repeat inetrvals available to use with the
+	 * A class of constants representing the different repeat intervals available to use with the
    * repeatInterval property of the Notification class.
 	 * <p>Supported OS: iOS, Android</p>
 	 * @see com.juankpro.ane.localnotif.Notification#repeatInterval
@@ -44,7 +44,7 @@ package com.juankpro.ane.localnotif {
 		 */
 		public static const WEEK_CALENDAR_UNIT:uint = 1 << 13;
 		/**
-		 * Represents a week day ordinal repeat interval e.g. repeat every second Monday every month
+		 * Represents a weekday ordinal repeat interval e.g. repeat every second Monday every month
 		 * <p>Supported OS: iOS</p>
 		 */
 		public static const WEEKDAY_ORDINAL_CALENDAR_UNIT:uint = 1 << 10;

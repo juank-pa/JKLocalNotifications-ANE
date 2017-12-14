@@ -36,7 +36,7 @@
     public var notificationAction:String = null;
 
     /**
-     * The settings accepted by the user after subsription request.
+     * The settings accepted by the user after subscription request.
      * Android doesn't need a subscription to send notifications, thus all notification
      * types are always accepted.
      * <p>Supported OS: Android, iOS</p>
@@ -49,8 +49,8 @@
      * <p>The properties of the event object have the following values:</p> 
      * <table class="innertable"> 
      * <tr><th>Property</th><th>Value</th></tr>
-     * <tr><td>actionData</td><td>The data sent along the notification.</td></tr>
-     * <tr><td>notificationAction</td><td>The action taken by the user with the notification. If the user taps the notification body this value will be null.</td></tr>
+     * <tr><td>actionData</td><td>The data sent along with the notification.</td></tr>
+     * <tr><td>notificationAction</td><td>The action that was taken by the user with the notification. If the user taps the notification body this value will be null.</td></tr>
      * <tr><td>notificationCode</td><td>The code of the notification used when it was sent.</td></tr>
      * </table>
      * <p>Supported OS: Android, iOS</p>

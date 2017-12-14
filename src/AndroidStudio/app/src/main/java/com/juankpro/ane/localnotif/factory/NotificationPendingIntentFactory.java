@@ -22,19 +22,19 @@ public class NotificationPendingIntentFactory implements PendingIntentFactory {
     }
 
     public PendingIntent createPendingIntent() {
-        return createPendingIntent(null);
+        return createPendingIntent(null, false);
     }
 
 
-    public PendingIntent createPendingIntent(String actionId) {
+    public PendingIntent createPendingIntent(String actionId, boolean backgroundMode) {
         return PendingIntent.getService(
                 context,
                 intentHashCode(actionId),
-                buildActionIntent(actionId),
+                buildActionIntent(actionId, backgroundMode),
                 PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
-    private Intent buildActionIntent(String actionId) {
+    private Intent buildActionIntent(String actionId, boolean backgroundMode) {
         final Intent intent = new Intent();
         String activityClassName = bundle.getString(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY);
 
@@ -47,6 +47,7 @@ public class NotificationPendingIntentFactory implements PendingIntentFactory {
 
         if (actionId != null) {
             intent.putExtra(Constants.ACTION_ID_KEY, actionId);
+            intent.putExtra(Constants.BACKGROUND_MODE_ID_KEY, backgroundMode);
             Logger.log("NotificationPendingIntentFactory::buildActionIntent Action id: " + actionId);
         }
         return intent;

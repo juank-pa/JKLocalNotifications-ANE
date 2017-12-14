@@ -39,11 +39,12 @@
       printMessage("Resized");
     }
 
-    private function createAction(icon:String, identifier:String, title:String):NotificationAction {
+    private function createAction(icon:String, identifier:String, title:String, isBackground:Boolean = false):NotificationAction {
       var action:NotificationAction = new NotificationAction();
       action.identifier = identifier;
       action.title = title;
       action.icon = icon;
+      action.isBackground = isBackground;
       return action;
     }
 
@@ -59,7 +60,7 @@
         createCategory(
           "category",
           Vector.<NotificationAction>([
-            createAction(NotificationIconType.DOCUMENT, "okAction", "OK"),
+            createAction(NotificationIconType.DOCUMENT, "okAction", "OK", true),
             createAction(NotificationIconType.ALERT, "cancelAction", "Cancel"),
             createAction(NotificationIconType.FLAG, "resetAction", "Reset"),
             createAction(NotificationIconType.INFO, "alertAction", "Alert")
@@ -75,6 +76,7 @@
         var options:LocalNotifierSubscribeOptions =
           new LocalNotifierSubscribeOptions(createCategories());
         options.notificationStyles = NotificationManager.supportedNotificationStyles;
+        options.allowAndroidBackgroundNotificationActions = true;
 
         notificationManager.addEventListener(NotificationEvent.SETTINGS_SUBSCRIBED,
                                               settingsSubscribedHandler);

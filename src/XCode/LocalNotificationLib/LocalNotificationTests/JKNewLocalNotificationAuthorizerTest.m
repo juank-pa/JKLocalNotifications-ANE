@@ -19,7 +19,7 @@
 @property (nonatomic, strong) id savedDelegate;
 @end
 
-@interface JKNewNotificationAuthorizerTest : JKNewTestCase
+@interface JKNewLocalNotificationAuthorizerTest : JKNewTestCase
 @property (nonatomic, strong) JKNewLocalNotificationAuthorizer *subject;
 @property (nonatomic, strong) JKLocalNotificationSettings *settings;
 @property (nonatomic, strong) id notificationCenterMock;
@@ -27,7 +27,7 @@
 @property (nonatomic, strong) id factoryMock;
 @end
 
-@implementation JKNewNotificationAuthorizerTest
+@implementation JKNewLocalNotificationAuthorizerTest
 
 - (void)setUp {
     [super setUp];
