@@ -38,7 +38,6 @@
     if ([result respondsToSelector:@selector(behavior)]) {
         XCTAssertEqual(result.behavior, UIUserNotificationActionBehaviorDefault);
     }
-    XCTAssertEqual(result.activationMode, UIUserNotificationActivationModeForeground);
     XCTAssertFalse(result.authenticationRequired);
 }
 
@@ -49,10 +48,22 @@
     }
 }
 
-- (void)testBuildFromAction {
+- (void)testBuildFromNonBackgroundAction {
     JKLocalNotificationAction *action = [self actionWithIdentifier:@"actionId" title:@"Action"];
+    action.background = NO;
 
-    [self assertAction:[self.subject buildFromAction:action] basedOnAction:action];
+    UIUserNotificationAction *result = [self.subject buildFromAction:action];
+    XCTAssertEqual(result.activationMode, UIUserNotificationActivationModeForeground);
+    [self assertAction:result basedOnAction:action];
+}
+
+- (void)testBuildFromBackgroundAction {
+    JKLocalNotificationAction *action = [self actionWithIdentifier:@"actionId" title:@"Action"];
+    action.background = YES;
+
+    UIUserNotificationAction *result = [self.subject buildFromAction:action];
+    XCTAssertEqual(result.activationMode, UIUserNotificationActivationModeBackground);
+    [self assertAction:result basedOnAction:action];
 }
 
 - (void)testBuildFromActions {

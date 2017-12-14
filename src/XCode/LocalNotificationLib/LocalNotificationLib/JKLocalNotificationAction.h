@@ -11,4 +11,5 @@
 @interface JKLocalNotificationAction : NSObject
 @property (nonatomic, copy) NSString *identifier;
 @property (nonatomic, copy) NSString *title;
+@property (nonatomic, assign, getter=isBackground) BOOL background;
 @end

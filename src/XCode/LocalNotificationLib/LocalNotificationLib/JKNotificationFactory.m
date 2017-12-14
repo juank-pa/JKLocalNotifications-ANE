@@ -18,7 +18,6 @@
 @implementation JKNotificationFactory
 #ifdef TEST
 id _appMock;
-id _centerMock;
 #endif
 
 + (BOOL)isNewAPI {
@@ -56,15 +55,7 @@ id _centerMock;
 }
 
 - (UNUserNotificationCenter *)notificationCenter {
-    if(!self.class.isNewAPI) return nil;
-#ifdef TEST
-    if (!_centerMock) {
-        _centerMock = OCMClassMock([UNUserNotificationCenter class]);
-    }
-    return _centerMock;
-#else
-    return [UNUserNotificationCenter currentNotificationCenter];
-#endif
+    return nil;
 }
 
 - (NSDictionary *)fetchUserInfo:(JKLocalNotification *)notification {

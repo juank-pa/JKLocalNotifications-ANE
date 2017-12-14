@@ -13,7 +13,7 @@
 #import "JKLegacyLocalNotificationFactory.h"
 #import "JKLegacyNotificationSettingsBuilder.h"
 
-@interface JKLegacyLocalNotificationAuthorizer ()<JKNotificationListenerDelegate>
+@interface JKLegacyLocalNotificationAuthorizer ()<JKNotificationAuthorizationListenerDelegate>
 @property (nonatomic, weak) JKLegacyLocalNotificationFactory *factory;
 @property (nonatomic, readwrite, strong) JKLocalNotificationSettings *settings;
 @end
@@ -23,7 +23,7 @@
 - (instancetype)initWithFactory:(JKLegacyLocalNotificationFactory *)factory {
     if (self = [super init]) {
         _factory = factory;
-        _factory.listener.delegate = self;
+        ((JKLegacyNotificationListener *)_factory.listener).authorizationDelegate = self;
     }
     return self;
 }

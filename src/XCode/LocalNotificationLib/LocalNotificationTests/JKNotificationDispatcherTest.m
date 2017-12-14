@@ -10,17 +10,11 @@
 #import <OCMock/OCMock.h>
 #import "Constants.h"
 #import "Stubs.h"
-#import "JKNotificationListener.h"
+#import "JKLegacyNotificationListener.h"
 #import "JKNotificationDispatcher.h"
 
 @interface JKNotificationListener (Test)
 @property (nonatomic, readwrite, strong) NSDictionary *userInfo;
-@end
-
-@interface ListenerDelegate : NSObject<JKNotificationListenerDelegate>
-@end
-
-@implementation ListenerDelegate
 @end
 
 @interface JKNotificationDispatcherTest : XCTestCase
@@ -101,18 +95,6 @@
     OCMVerifyAll(self.delegateMock);
 }
 
-- (void)testDispatchDidReceiveNotificationWithUserInfoDoesNotDelegateIfNotImplemented {
-    id delegateMock = OCMPartialMock([ListenerDelegate new]);
-    self.listener.delegate = delegateMock;
-
-    OCMReject([delegateMock didReceiveNotificationDataForNotificationListener:self.listener]);
-    [self.subject dispatchDidReceiveNotificationWithActionId:@"actionId"
-                                                    userInfo:@{ }
-                                           completionHandler:NULL];
-
-    OCMVerifyAll(self.delegateMock);
-}
-
 - (void)testDispatchDidReceiveNotificationWithUserInfoCallsBlock {
     __block BOOL called = NO;
     void (^testBlock)(void) = ^{
@@ -127,14 +109,13 @@
     OCMVerifyAll(self.delegateMock);
 }
 
-- (void)testDispatchDidReceiveNotificationWithUserInfoCallsBlockevenIfDelegateNotImplemented {
-    id delegateMock = OCMPartialMock([ListenerDelegate new]);
+- (void)testDispatchDidReceiveNotificationWithUserInfoCallsBlockevenIfNoDelegate {
     __block BOOL called = NO;
     void (^testBlock)(void) = ^{
         called = YES;
     };
 
-    self.listener.delegate = delegateMock;
+    self.listener.delegate = nil;
     [self.subject dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                     userInfo:@{ }
                                            completionHandler:testBlock];

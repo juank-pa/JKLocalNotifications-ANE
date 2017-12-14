@@ -18,9 +18,9 @@ package com.juankpro.ane.localnotif {
         public var identifier:String;
 
         /**
-         * The action list for the category. This actions define the properties of the action
+         * The action list for the category. These actions define the properties of the action
          * buttons to be shown for the notification. A maximum of four buttons will be visible
-         * in the device screen depending on the operating system and device resolution.
+         * on the device screen depending on the operating system and device resolution.
          * <p>iOS 8 and previous versions show only the first two buttons in the
          * notification. Only notifications set to be shown as alerts show all four buttons
          * but this can only be set by the device user manually.</p>

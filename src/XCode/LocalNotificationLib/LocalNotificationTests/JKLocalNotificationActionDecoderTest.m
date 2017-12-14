@@ -21,7 +21,7 @@
 
 @implementation JKLocalNotificationActionDecoderTest
 {
-    int actionContext;
+    int actionContext, isBackgroundContext;
 }
 
 - (void)setUp {
@@ -44,6 +44,7 @@
     // Property access
     OCMStub([self.utilsMock getProperty:@"identifier" fromObject:&actionContext]).andReturn((void *)&identifierContext);
     OCMStub([self.utilsMock getProperty:@"title" fromObject:&actionContext]).andReturn((void *)&titleContext);
+    OCMStub([self.utilsMock getProperty:@"isBackground" fromObject:&actionContext]).andReturn(NULL);
 
 
     // Value fetch
@@ -52,6 +53,38 @@
 
     OCMExpect([actionMock setIdentifier:@"MyId"]);
     OCMExpect([actionMock setTitle:@"Title"]);
+
+    XCTAssertEqual([self.subject decodeObject:(void *)&actionContext], actionMock);
+
+    OCMVerifyAll(actionMock);
+
+    [actionMock stopMocking];
+}
+
+- (void)testDecodeIsBackground {
+    id actionMock = OCMClassMock([JKLocalNotificationAction class]);
+    OCMStub([actionMock new]).andReturn(actionMock);
+
+    OCMStub([self.utilsMock getProperty:@"isBackground" fromObject:&actionContext]).andReturn((void *)&isBackgroundContext);
+    OCMStub([self.utilsMock getBoolFromFREObject:&isBackgroundContext]).andReturn(true);
+
+    OCMExpect([(JKLocalNotificationAction *)actionMock setBackground:true]);
+
+    XCTAssertEqual([self.subject decodeObject:(void *)&actionContext], actionMock);
+
+    OCMVerifyAll(actionMock);
+
+    [actionMock stopMocking];
+}
+
+- (void)testDecodeIsNotBackground {
+    id actionMock = OCMClassMock([JKLocalNotificationAction class]);
+    OCMStub([actionMock new]).andReturn(actionMock);
+
+    OCMStub([self.utilsMock getProperty:@"isBackground" fromObject:&actionContext]).andReturn((void *)&isBackgroundContext);
+    OCMStub([self.utilsMock getBoolFromFREObject:&isBackgroundContext]).andReturn(false);
+
+    OCMExpect([(JKLocalNotificationAction *)actionMock setBackground:false]);
 
     XCTAssertEqual([self.subject decodeObject:(void *)&actionContext], actionMock);
 

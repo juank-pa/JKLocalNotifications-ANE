@@ -6,7 +6,7 @@ package com.juankpro.ane.localnotif {
    * while subscribing before trying to attempt sending any notification.
    * Android devices need a subscription only if they intend to use custom action
    * buttons in the notification, but there is no harm in subscribing for notifications
-   * even if this is not the case, because Android OS will always dispatch the
+   * even if this is not the case because Android OS will always dispatch the
    * <code>Event.SETTINGS_SUBSCRIBED</code> event successfully.
    * <p>Supported OS: Android, iOS</p>
    * @see com.juankpro.ane.localnotif.NotificationManager#subscribe()
@@ -14,7 +14,7 @@ package com.juankpro.ane.localnotif {
   public class LocalNotifierSubscribeOptions {
     /**
      * The notification styles the application is requesting to the operating system.
-     * Values for this property can be obtained from <code>flash.notifications.NotificationStyle</code>
+     * Values for this property can be obtained from <code>flash.notifications.NotificationStyle</code>.
      * <p>Supported OS: Android, iOS</p>
      */
     public var notificationStyles:Vector.<String> = new Vector.<String>();
@@ -30,10 +30,19 @@ package com.juankpro.ane.localnotif {
     public var categories:Vector.<NotificationCategory>;
 
     /**
+     * Android cannot fully implement background notifications due to AIR architecture
+     * limitations. If you accept this limitations you can set this property to true.
+     * <p>To read more about this see <code>NotificationAction.isBackground</code></p>
+     * <p>Supported OS: Android</p>
+     * @see com.juankpro.ane.localnotif.NotificationAction#isBackground
+     */
+    public var allowAndroidBackgroundNotificationActions:Boolean = false;
+
+    /**
      * Constructor.
-     * @param categories The categories to register along their respective actions.
+     * @param categories The categories to register along with their respective actions.
      *                   Categories are only needed if you want to show custom action buttons in the
-     *                   notification, otherwise you can omit this parameter.
+     *                   notification, otherwise, you can omit this parameter.
      */
     public function LocalNotifierSubscribeOptions(categories:Vector.<NotificationCategory> = null):void {
       this.categories = categories || new Vector.<NotificationCategory>();

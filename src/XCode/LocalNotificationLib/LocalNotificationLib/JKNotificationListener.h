@@ -14,9 +14,7 @@
 @class JKNotificationDispatcher;
 
 @protocol JKNotificationListenerDelegate<NSObject>
-@optional
 - (void)didReceiveNotificationDataForNotificationListener:(JKNotificationListener *)listener;
-- (void)notificationListener:(JKNotificationListener *)listener didRegisterUserNotificationSettings:(UIUserNotificationSettings *)settings;
 @end
 
 @interface JKNotificationListener : JKDelegateProxy

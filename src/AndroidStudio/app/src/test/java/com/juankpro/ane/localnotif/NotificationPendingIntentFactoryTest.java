@@ -83,12 +83,28 @@ public class NotificationPendingIntentFactoryTest {
         when(PendingIntent.getService(context, "MyCodeActionId".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
                 .thenReturn(pendingIntent);
 
-        assertSame(pendingIntent, getSubject().createPendingIntent("ActionId"));
+        assertSame(pendingIntent, getSubject().createPendingIntent("ActionId", false));
 
         verify(intent).setClassName(context, Constants.NOTIFICATION_INTENT_SERVICE);
         verify(intent).putExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY, "ActivityClassName");
         verify(intent).putExtra(Constants.NOTIFICATION_CODE_KEY, "MyCode");
         verify(intent).putExtra(Constants.ACTION_DATA_KEY, bytes);
         verify(intent).putExtra(Constants.ACTION_ID_KEY, "ActionId");
+        verify(intent).putExtra(Constants.BACKGROUND_MODE_ID_KEY, false);
+    }
+
+    @Test
+    public void factory_createPendingIntent_createsPendingIntentFoBackgroundAction() {
+        when(PendingIntent.getService(context, "MyCodeActionId".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
+                .thenReturn(pendingIntent);
+
+        assertSame(pendingIntent, getSubject().createPendingIntent("ActionId", true));
+
+        verify(intent).setClassName(context, Constants.NOTIFICATION_INTENT_SERVICE);
+        verify(intent).putExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY, "ActivityClassName");
+        verify(intent).putExtra(Constants.NOTIFICATION_CODE_KEY, "MyCode");
+        verify(intent).putExtra(Constants.ACTION_DATA_KEY, bytes);
+        verify(intent).putExtra(Constants.ACTION_ID_KEY, "ActionId");
+        verify(intent).putExtra(Constants.BACKGROUND_MODE_ID_KEY, true);
     }
 }

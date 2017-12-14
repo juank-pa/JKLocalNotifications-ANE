@@ -50,7 +50,7 @@
     self.listener.notificationData = userInfo[JK_NOTIFICATION_DATA_KEY];
     self.listener.notificationAction = actionId;
 
-    if ([self.listener.delegate respondsToSelector:@selector(didReceiveNotificationDataForNotificationListener:)]) {
+    if (self.listener.delegate) {
         [self.listener.delegate didReceiveNotificationDataForNotificationListener:self.listener];
     }
     else {
