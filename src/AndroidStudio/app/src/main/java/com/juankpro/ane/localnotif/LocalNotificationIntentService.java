@@ -67,4 +67,3 @@ public class LocalNotificationIntentService extends IntentService {
         Logger.log("LocalNotificationIntentService::onHandleIntent Intent: " + intent.toString());
     }
 }
-

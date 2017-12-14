@@ -132,21 +132,7 @@ public class NotificationFactoryTest {
         verify(builder).setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS);
         verify(builder, never()).setSound(any(Uri.class));
     }
-
-    @Test
-    public void factory_create_createsWithCustomSound() {
-        when(bundle.getBoolean(Constants.PLAY_SOUND)).thenReturn(true);
-        when(bundle.getString(Constants.SOUND_NAME)).thenReturn("sound.mp3");
-
-        Uri uri = mock(Uri.class);
-        PowerMockito.mockStatic(Uri.class);
-        when(Uri.parse("content://com.juankpro.ane.localnotif.provider/sound.mp3")).thenReturn(uri);
-
-        getSubject().create(intentFactory);
-        verify(builder).setDefaults(Notification.DEFAULT_LIGHTS);
-        verify(builder).setSound(uri);
-    }
-
+    
     @Test
     public void factory_create_createsWithDefaultVibration() {
         when(bundle.getBoolean(Constants.VIBRATE)).thenReturn(true);

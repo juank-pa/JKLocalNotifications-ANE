@@ -12,12 +12,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application>
-        <provider
-            android:name=".AssetProvider"
-            android:authorities="com.juankpro.ane.localnotif.provider"
-            android:enabled="true"
-            android:exported="false" />
         <service android:name="com.juankpro.ane.localnotif.LocalNotificationIntentService"/>
+        <service android:name="com.juankpro.ane.localnotif.util.PlayAudio"/>
         <receiver android:name="com.juankpro.ane.localnotif.AlarmIntentService" />
         <receiver android:name="com.juankpro.ane.localnotif.AlarmRestoreOnBoot" >
             <intent-filter>
