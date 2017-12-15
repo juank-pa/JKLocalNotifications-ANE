@@ -1,6 +1,8 @@
-### Unreleased
+### Version 1.0.7
 * Fixed a bug that prevented a notification from triggering if the app was not currently
   running and the event listener was registered after registering some other event listeners.
+* Fixed a bug preventing Android to reschedule repeating notifications that started in the
+  past after a system reboot.
 
 ### Version 1.0.6
 * Fixed a bug that made notification events to trigger only once During the application
