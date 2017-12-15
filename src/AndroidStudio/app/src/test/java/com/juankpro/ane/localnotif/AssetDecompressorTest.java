@@ -6,6 +6,10 @@ import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 
+import com.juankpro.ane.localnotif.util.AssetDecompressor;
+
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,20 +25,17 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import static org.junit.Assert.*;
-
 /**
- * Created by Juank on 11/12/17.
+ * Created by juancarlospazmino on 12/14/17.
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({AssetProvider.class,ParcelFileDescriptor.class})
-public class AssetProviderTest {
+@PrepareForTest({AssetDecompressor.class,ParcelFileDescriptor.class})
+public class AssetDecompressorTest {
     @Mock
     private Context context;
     @Mock
@@ -46,11 +47,10 @@ public class AssetProviderTest {
     @Mock
     private AssetFileDescriptor fileDescriptor;
 
-    private AssetProvider subject;
-
-    private AssetProvider getSubject() {
+    private AssetDecompressor subject;
+    private AssetDecompressor getSubject() {
         if (subject == null) {
-            subject = spy(new AssetProvider());
+            subject = spy(new AssetDecompressor(context));
         }
         return subject;
     }
@@ -58,10 +58,6 @@ public class AssetProviderTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-
-        when(uri.getLastPathSegment()).thenReturn("sound.mp3");
-
-        doReturn(context).when(getSubject()).getContext();
         when(context.getCacheDir()).thenReturn(file);
 
         try {
@@ -77,13 +73,13 @@ public class AssetProviderTest {
     }
 
     @Test(expected = Test.None.class)
-    public void provider_openAsset_whenFileIsAlreadyCached() throws FileNotFoundException {
+    public void provider_openAsset_whenFileIsAlreadyCached_usesCache() throws FileNotFoundException {
         when(file.exists()).thenReturn(true);
-        assertSame(fileDescriptor, getSubject().openAssetFile(uri, "mode"));
+        assertSame(fileDescriptor, getSubject().decompress("sound.mp3"));
     }
 
     @Test(expected = Test.None.class)
-    public void provider_openAsset_whenFileNotCached() throws FileNotFoundException {
+    public void provider_openAsset_whenFileNotCached_decompresses() throws FileNotFoundException {
         when(file.exists()).thenReturn(false);
         when(file.getParentFile()).thenReturn(file);
 
@@ -99,13 +95,15 @@ public class AssetProviderTest {
             PowerMockito.whenNew(FileOutputStream.class).withArguments(file, false).thenReturn(outputStream);
         } catch (Exception e) { e.printStackTrace(); }
 
-        assertSame(fileDescriptor, getSubject().openAssetFile(uri, "mode"));
+        assertSame(fileDescriptor, getSubject().decompress("sound.mp3"));
     }
 
-    @Test(expected = FileNotFoundException.class)
-    public void provider_openAsset_whenAnyExceptionIsThrown() throws FileNotFoundException {
+    @Test
+    public void provider_openAsset_whenAnyExceptionIsThrownReturnsNull() {
         when(file.exists()).thenReturn(true);
-        when(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)).thenThrow(Exception.class);
-        getSubject().openAssetFile(uri, "mode");
+        try {
+            when(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)).thenThrow(Exception.class);
+        } catch (Exception e) { e.printStackTrace(); }
+        assertNull(getSubject().decompress("sound.mp3"));
     }
 }

@@ -1,13 +1,8 @@
 package com.juankpro.ane.localnotif;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.juankpro.ane.localnotif.factory.NotificationFactory;
-import com.juankpro.ane.localnotif.factory.NotificationPendingIntentFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +13,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,15 +32,10 @@ public class AlarmIntentServiceTest {
     @Mock
     private Intent intent;
     @Mock
-    private NotificationPendingIntentFactory intentFactory;
+    private LocalNotificationEventDispatcher eventDispatcher;
     @Mock
-    private NotificationFactory notificationFactory;
-    @Mock
-    private NotificationManager notificationManager;
-    @Mock
-    private LocalNotificationEventDispatcher dispatcher;
+    private NotificationDispatcher notificationDispatcher;
     private byte[] data = new byte[]{};
-    private Notification notification = new Notification();
     private AlarmIntentService subject;
 
     private AlarmIntentService getSubject() {
@@ -70,52 +57,47 @@ public class AlarmIntentServiceTest {
         try {
             PowerMockito.whenNew(LocalNotificationEventDispatcher.class)
                     .withArguments("KeyCode", data, null)
-                    .thenReturn(dispatcher);
+                    .thenReturn(eventDispatcher);
         } catch(Exception e) { e.printStackTrace(); }
-
-        when(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager);
     }
 
     @Test
-    public void intentService_onReceiveWhenAppIsInForeground_andNormalNotification_doesNotDisplayNotification() {
-        when(dispatcher.dispatchWhenInForeground()).thenReturn(true);
+    public void intentService_onReceiveWhenAppIsInForeground_andNormalNotification_doesNotDispatchNotification() {
+        when(eventDispatcher.dispatchWhenInForeground()).thenReturn(true);
         getSubject().onReceive(context, intent);
 
-        verify(notificationManager, never()).notify(anyString(), anyInt(), any(Notification.class));
+        verify(notificationDispatcher, never()).dispatch();
     }
 
-    private void mockNotificationDisplay() {
+    private void mockNotificationDispatch() {
         try {
-            PowerMockito.whenNew(NotificationPendingIntentFactory.class).withArguments(context, bundle)
-                    .thenReturn(intentFactory);
-
-            PowerMockito.whenNew(NotificationFactory.class).withArguments(context, bundle)
-                    .thenReturn(notificationFactory);
+            PowerMockito.whenNew(NotificationDispatcher.class).withArguments(context, bundle)
+                    .thenReturn(notificationDispatcher);
         } catch(Exception e) { e.printStackTrace(); }
-        when(notificationFactory.create(intentFactory)).thenReturn(notification);
     }
 
 
     @Test
-    public void intentService_onReceiveWhenAppIsNotInForeground_andNormalNotification_displaysNotification() {
-        when(dispatcher.dispatchWhenInForeground()).thenReturn(false);
+    public void intentService_onReceiveWhenAppIsNotInForeground_andNormalNotification_dispatchesNotification() {
+        when(eventDispatcher.dispatchWhenInForeground()).thenReturn(false);
 
-        mockNotificationDisplay();
+        mockNotificationDispatch();
 
         getSubject().onReceive(context, intent);
 
-        verify(notificationManager).notify("KeyCode", Constants.STANDARD_NOTIFICATION_ID, notification);
+        verify(notificationDispatcher).dispatch();
     }
 
     @Test
-    public void intentService_onReceiveWhenNotificationShowsInForeground_displaysNotification() {
+    public void intentService_onReceiveWhenNotificationShowsInForeground_dispatchesNotification() {
+        when(eventDispatcher.dispatchWhenInForeground()).thenReturn(true);
         when(bundle.getBoolean(Constants.SHOW_IN_FOREGROUND)).thenReturn(true);
 
-        mockNotificationDisplay();
+        mockNotificationDispatch();
 
         getSubject().onReceive(context, intent);
 
-        verify(notificationManager).notify("KeyCode", Constants.STANDARD_NOTIFICATION_ID, notification);
-        verify(dispatcher, never()).dispatchWhenInForeground();
+        verify(notificationDispatcher).dispatch();
+        verify(eventDispatcher, never()).dispatchWhenInForeground();
     }
 }
