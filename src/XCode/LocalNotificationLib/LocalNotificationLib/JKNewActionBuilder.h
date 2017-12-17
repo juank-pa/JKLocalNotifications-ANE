@@ -8,8 +8,10 @@
 
 #import <UserNotifications/UserNotifications.h>
 #import "JKLocalNotificationAction.h"
+#import "JKActionBuilder.h"
 
-@interface JKNewActionBuilder : NSObject
+@interface JKNewActionBuilder : NSObject<JKActionBuilder>
++ (NSArray <UNNotificationAction *> *)buildFromActions:(NSArray <JKLocalNotificationAction *> *)actions;
 - (UNNotificationAction *)buildFromAction:(JKLocalNotificationAction *)action;
-- (NSArray <UNNotificationAction *> *)buildFromActions:(NSArray <JKLocalNotificationAction *> *)actions;
+- (UNNotificationActionOptions)optionForBackgroundMode:(BOOL)isBackground;
 @end

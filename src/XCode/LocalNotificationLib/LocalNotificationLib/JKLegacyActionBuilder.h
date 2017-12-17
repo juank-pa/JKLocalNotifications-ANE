@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "JKLocalNotificationAction.h"
+#import "JKActionBuilder.h"
 
-@interface JKLegacyActionBuilder : NSObject
-- (NSArray <UIUserNotificationAction *> *)buildFromActions:(NSArray <JKLocalNotificationAction *> *)actions;
+@interface JKLegacyActionBuilder : NSObject<JKActionBuilder>
++ (NSArray <UIUserNotificationAction *> *)buildFromActions:(NSArray <JKLocalNotificationAction *> *)actions;
 - (UIUserNotificationAction *)buildFromAction:(JKLocalNotificationAction *)action;
 @end

@@ -16,5 +16,6 @@
 - (NSDate *)decodeDateProperty:(NSString *)property withDefault:(NSDate *)defaultValue;
 - (NSData *)decodeDataProperty:(NSString *)property withDefault:(NSData *)defaultValue;
 - (NSArray *)decodeArrayProperty:(NSString *)property withDecoder:(id<JKDecoder>)decoder;
+- (BOOL)hasProperty:(NSString *)property;
 @property (nonatomic, readonly) FREObject freObject;
 @end

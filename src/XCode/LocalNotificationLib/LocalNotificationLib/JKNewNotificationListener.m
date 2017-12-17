@@ -62,8 +62,14 @@
 - (void)handleResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
     NSDictionary *userInfo = response.notification.request.content.userInfo;
     [self.dispatcher dispatchDidReceiveNotificationWithActionId:[self actionIdentifierFromResponse:response]
-                                            userInfo:userInfo
-                                   completionHandler:completionHandler];
+                                                       userInfo:userInfo
+                                                       response:[self userResponseFromResponse:response]
+                                              completionHandler:completionHandler];
+}
+
+- (NSString *)userResponseFromResponse:(UNNotificationResponse *)response {
+    if (![response isKindOfClass:[UNTextInputNotificationResponse class]]) return nil;
+    return ((UNTextInputNotificationResponse *)response).userText;
 }
 
 - (NSString *)actionIdentifierFromResponse:(UNNotificationResponse *)response {

@@ -21,6 +21,7 @@
 @property (nonatomic, readonly, copy) NSString *notificationCode;
 @property (nonatomic, readonly, copy) NSData *notificationData;
 @property (nonatomic, readonly, copy) NSString *notificationAction;
+@property (nonatomic, readonly, copy) NSString *userResponse;
 
 @property (nonatomic, weak) id<JKNotificationListenerDelegate> delegate;
 @property (nonatomic, strong) id originalDelegate;

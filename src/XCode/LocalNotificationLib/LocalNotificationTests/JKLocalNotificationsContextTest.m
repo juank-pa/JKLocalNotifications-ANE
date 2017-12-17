@@ -17,6 +17,7 @@
 #import "JKLocalNotificationSettings.h"
 #import "JKNotificationFactory.h"
 #import "Constants.h"
+#import "macros.h"
 
 @interface JKLocalNotificationsContext (Tests)<JKAuthorizerDelegate, JKNotificationListenerDelegate>
 - (void)notify:(JKLocalNotification*)localNotification;
@@ -156,6 +157,12 @@
     XCTAssertEqual(self.subject.notificationAction, actionId);
 }
 
+- (void)testNotificationUserResponse {
+    NSString *userResponse = @"User Response";
+    OCMStub([self.listenerMock userResponse]).andReturn(userResponse);
+    XCTAssertEqual(self.subject.notificationUserResponse, userResponse);
+}
+
 - (void)testSettings {
     JKLocalNotificationSettings *settings = [JKLocalNotificationSettings new];
     OCMStub([self.authorizerMock settings]).andReturn(settings);
@@ -194,78 +201,40 @@
     XCTAssertEqual((char *)sentEventLevel, JK_NOTIFICATION_STATUS_KEY);
 }
 
+- (void)testMapFunctionMacro {
+    FRENamedFunction namedFunction = MAP_FUNCTION(notify);
+    XCTAssertEqual(strcmp((char *)namedFunction.name, "notify"), 0);
+    XCTAssertEqual(namedFunction.functionData, NULL);
+    XCTAssertEqual(namedFunction.function, &JKLN_notify);
+}
+
 - (void)testInitExtensionFunctions {
     const FRENamedFunction *functions = NULL;
     uint32_t functionsToSet = [self.subject initExtensionFunctions:&functions];
 
-    int funcCount = 11;
-    XCTAssertEqual(functionsToSet, funcCount);
-
     FRENamedFunction expectedFunctions[] = {
-        {
-            (const uint8_t*)"notify",
-            NULL,
-            &ADEPNotify
-        },
-        {
-            (const uint8_t*)"cancel",
-            NULL,
-            &ADEPCancel
-        },
-        {
-            (const uint8_t*)"cancelAll",
-            NULL,
-            &ADEPCancelAll
-        },
-        {
-            (const uint8_t*)"checkForNotificationAction",
-            NULL,
-            &ADEPCheckForNotificationAction
-        },
-        {
-            (const uint8_t*)"getSelectedNotificationCode",
-            NULL,
-            &ADEPGetSelectedNotificationCode
-        },
-        {
-            (const uint8_t*)"getSelectedNotificationData",
-            NULL,
-            &ADEPGetSelectedNotificationData
-        },
-        {
-            (const uint8_t*)"setApplicationBadgeNumber",
-            NULL,
-            &ADEPSetApplicationBadgeNumber
-        },
-        {
-            (const uint8_t*)"getApplicationBadgeNumber",
-            NULL,
-            &ADEPGetApplicationBadgeNumber
-        },
-        {
-            (const uint8_t*)"registerSettings",
-            NULL,
-            &ADEPRegisterSettings
-        },
-        {
-            (const uint8_t*)"getSelectedSettings",
-            NULL,
-            &ADEPGetSelectedSettings
-        },
-        {
-            (const uint8_t*)"getSelectedNotificationAction",
-            NULL,
-            &ADEPGetSelectedNotificationAction
-        }
+        MAP_FUNCTION(notify),
+        MAP_FUNCTION(cancel),
+        MAP_FUNCTION(cancelAll),
+        MAP_FUNCTION(checkForNotificationAction),
+        MAP_FUNCTION(getSelectedNotificationCode),
+        MAP_FUNCTION(getSelectedNotificationData),
+        MAP_FUNCTION(getSelectedNotificationAction),
+        MAP_FUNCTION(getSelectedNotificationUserResponse),
+        MAP_FUNCTION(setApplicationBadgeNumber),
+        MAP_FUNCTION(getApplicationBadgeNumber),
+        MAP_FUNCTION(registerSettings),
+        MAP_FUNCTION(getSelectedSettings)
     };
+
+    int funcCount = sizeof(expectedFunctions) / sizeof(FRENamedFunction);
+    XCTAssertEqual(functionsToSet, funcCount);
 
     for(int i = 0; i < funcCount; i++) {
         XCTAssertEqual(strcmp((char *)functions[i].name, (char *)expectedFunctions[i].name), 0);
         XCTAssertEqual(functions[i].functionData, expectedFunctions[i].functionData);
         XCTAssertEqual(functions[i].function, expectedFunctions[i].function);
     }
-
-    free((void *)functions);
 }
 
 @end

@@ -11,4 +11,5 @@
 @property (nonatomic, readwrite) NSData *notificationData;
 @property (nonatomic, readwrite) NSString *notificationAction;
 @property (nonatomic, readwrite) NSDictionary *userInfo;
+@property (nonatomic, readwrite) NSString *userResponse;
 @end

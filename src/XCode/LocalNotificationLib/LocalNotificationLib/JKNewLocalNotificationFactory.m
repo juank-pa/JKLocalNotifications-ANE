@@ -51,4 +51,12 @@ id _centerMock;
 #endif
 }
 
+- (JKNewActionBuilder *)createActionBuilder {
+    return [JKNewActionBuilder new];
+}
+
+- (JKNewTextInputActionBuilder *)createTextInputActionBuilder {
+    return [JKNewTextInputActionBuilder new];
+}
+
 @end

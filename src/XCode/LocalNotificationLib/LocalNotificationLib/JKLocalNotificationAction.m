@@ -7,7 +7,12 @@
 //
 
 #import "JKLocalNotificationAction.h"
+#import "JKLegacyActionBuilder.h"
+#import "JKNewActionBuilder.h"
+#import "JKNotificationFactory.h"
 
 @implementation JKLocalNotificationAction
-
+- (id<JKActionBuilder>)builder {
+    return [[JKNotificationFactory factory] createActionBuilder];
+}
 @end

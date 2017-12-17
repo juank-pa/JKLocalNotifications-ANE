@@ -10,8 +10,11 @@
 #import "JKNotificationFactory.h"
 #import "JKNotificationRequestBuilder.h"
 #import "JKNewCategoryBuilder.h"
+#import "JKNewTextInputActionBuilder.h"
 
 @interface JKNewLocalNotificationFactory : JKNotificationFactory
 - (JKNewCategoryBuilder *)createCategoryBuilder;
 - (JKNotificationRequestBuilder *)createRequestBuilder;
+- (JKNewActionBuilder *)createActionBuilder;
+- (JKNewTextInputActionBuilder *)createTextInputActionBuilder;
 @end

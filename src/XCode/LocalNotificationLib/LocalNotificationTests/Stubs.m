@@ -303,6 +303,9 @@
                                    ) {
         freObjectArgument = object;
         propertyName = (uint8_t *)propName;
+        if (strcmp((char *)propName, "invalidProperty") == 0) {
+            return FRE_NO_SUCH_NAME;
+        }
         *propValue = freObjectString;
         return result(object);
     }

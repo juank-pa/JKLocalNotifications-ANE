@@ -11,7 +11,7 @@
 #import "JKLocalNotification.h"
 #import "JKNotificationFactory.h"
 #import "JKLocalNotificationCategory.h"
-#import "JKLocalNotificationAction.h"
+#import "JKTextInputLocalNotificationAction.h"
 #import "JKLocalNotificationSettings.h"
 #import "FlashRuntimeExtensions+Private.h"
 
@@ -78,9 +78,12 @@
     action1.identifier = @"okAction";
     action1.title = @"OK";
 
-    JKLocalNotificationAction *action2 = [JKLocalNotificationAction new];
+    JKTextInputLocalNotificationAction *action2 = [JKTextInputLocalNotificationAction new];
     action2.identifier = @"cancelAction";
     action2.title = @"Cancel";
+    action2.background = YES;
+    action2.textInputPlaceholder = @"What's up...";
+    action2.textInputButtonTitle = @"Fight!";
 
     JKLocalNotificationAction *action3 = [JKLocalNotificationAction new];
     action3.identifier = @"test1Action";
@@ -111,7 +114,7 @@
 }
 
 - (void)localNotificationContext:(JKLocalNotificationsContext *)context didReceiveNotificationFromListener:(JKNotificationListener *)listener {
-    NSString *string = [NSString stringWithFormat:@"%@\n%@", listener.notificationCode, listener.notificationAction];
+    NSString *string = [NSString stringWithFormat:@"%@\n%@\n%@", listener.notificationCode, listener.notificationAction, listener.userResponse];
     [self printMessage:string title:@"Local Notification"];
 }
 

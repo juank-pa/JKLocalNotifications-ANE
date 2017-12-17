@@ -20,6 +20,7 @@
 @property (nonatomic, readwrite) JKNotificationDispatcher *dispatcher;
 @property (nonatomic, readwrite) NSString *notificationAction;
 @property (nonatomic, readwrite) NSDictionary *userInfo;
+@property (nonatomic, readwrite) NSString *userResponse;
 @end
 
 @interface JKNotificationDispatcher (Test)
@@ -75,8 +76,7 @@
     return [self notificationResponseWithInfo:@{}];
 }
 
-- (UNNotificationResponse *)notificationResponseWithInfo:(NSDictionary *)userInfo {
-    id responseMock = OCMClassMock([UNNotificationResponse class]);
+- (UNNotificationResponse *)setupResponse:(id)responseMock withInfo:(NSDictionary *)userInfo {
     id notificationMock = OCMClassMock([UNNotification class]);
 
     UNMutableNotificationContent *content = [UNMutableNotificationContent new];
@@ -86,6 +86,24 @@
     OCMStub([responseMock actionIdentifier]).andReturn(@"actionId");
     OCMStub([responseMock notification]).andReturn(notificationMock);
     OCMStub([notificationMock request]).andReturn(request);
+
+    return responseMock;
+}
+
+- (UNNotificationResponse *)notificationResponseWithInfo:(NSDictionary *)userInfo {
+    id responseMock = OCMClassMock([UNNotificationResponse class]);
+    return [self setupResponse:responseMock withInfo:userInfo];
+    return responseMock;
+}
+
+- (UNNotificationResponse *)notificationTextInputResponse {
+    return [self notificationTextInputResponseWithInfo:@{}];
+}
+
+- (UNNotificationResponse *)notificationTextInputResponseWithInfo:(NSDictionary *)userInfo {
+    id responseMock = OCMClassMock([UNTextInputNotificationResponse class]);
+    [self setupResponse:responseMock withInfo:userInfo];
+    OCMStub([responseMock userText]).andReturn(@"Response");
     return responseMock;
 }
 
@@ -100,6 +118,7 @@
                                   withCompletionHandler:[OCMArg any]]);
     OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                                      userInfo:userInfo
+                                                                     response:nil
                                                             completionHandler:testBlock]);
 
     self.subject.dispatcher = self.dispatcherMock;
@@ -122,6 +141,7 @@
                                                     withCompletionHandler:[OCMArg invokeBlock]]);
     OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                                      userInfo:userInfo
+                                                                     response:nil
                                                             completionHandler:testBlock]);
 
     self.subject.dispatcher = self.dispatcherMock;
@@ -143,6 +163,7 @@
                                                     withCompletionHandler:testBlock]);
     OCMReject([self.dispatcherMock dispatchDidReceiveNotificationWithActionId:[OCMArg any]
                                                                      userInfo:[OCMArg any]
+                                                                     response:[OCMArg any]
                                                             completionHandler:[OCMArg any]]);
 
     self.subject.dispatcher = self.dispatcherMock;
@@ -152,6 +173,30 @@
                    withCompletionHandler:testBlock];
 
     OCMVerifyAll(self.dispatcherMock);
+}
+
+- (void)testDidReceiveNotificationDispatchesWithResponseWhenResponseIstextInputAction {
+    UNNotificationResponse *responseMock = self.notificationTextInputResponse;
+    NSDictionary *userInfo = responseMock.notification.request.content.userInfo;
+    id savedDelegateMock = OCMPartialMock([StubCenterDelegate new]);
+    void (^testBlock)(void) = ^{};
+
+    OCMReject([savedDelegateMock userNotificationCenter:[OCMArg any]
+                         didReceiveNotificationResponse:[OCMArg any]
+                                  withCompletionHandler:[OCMArg any]]);
+    OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithActionId:@"actionId"
+                                                                     userInfo:userInfo
+                                                                     response:@"Response"
+                                                            completionHandler:testBlock]);
+
+    self.subject.dispatcher = self.dispatcherMock;
+    self.subject.originalDelegate = savedDelegateMock;
+    [self.subject userNotificationCenter:self.notificationCenterMock
+          didReceiveNotificationResponse:responseMock
+                   withCompletionHandler:testBlock];
+
+    OCMVerifyAll(self.dispatcherMock);
+    OCMVerifyAll(savedDelegateMock);
 }
 
 - (void)testDidReceiveNotificationCanDispatchMoreThanOnce {
@@ -169,6 +214,7 @@
 
     OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                                      userInfo:userInfo
+                                                                     response:nil
                                                             completionHandler:testBlock]);
 
     [self.subject userNotificationCenter:self.notificationCenterMock

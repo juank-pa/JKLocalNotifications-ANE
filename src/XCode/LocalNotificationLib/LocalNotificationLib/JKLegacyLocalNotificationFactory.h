@@ -10,8 +10,11 @@
 #import "JKNotificationFactory.h"
 #import "JKNotificationBuilder.h"
 #import "JKLegacyNotificationSettingsBuilder.h"
+#import "JKLegacyTextInputActionBuilder.h"
 
 @interface JKLegacyLocalNotificationFactory : JKNotificationFactory
 - (JKLegacyNotificationSettingsBuilder *)createSettingsBuilder;
 - (JKNotificationBuilder *)createNotificationBuilder;
+- (JKLegacyActionBuilder *)createActionBuilder;
+- (JKLegacyTextInputActionBuilder *)createTextInputActionBuilder;
 @end

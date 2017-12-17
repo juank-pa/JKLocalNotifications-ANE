@@ -18,6 +18,9 @@
 
 - (id<JKAuthorizer>)createAuthorizer;
 - (JKLocalNotificationManager *)createManager;
+- (id)createActionBuilder;
+- (id)createTextInputActionBuilder;
+
 - (NSDictionary *)fetchUserInfo:(JKLocalNotification *)notification;
 
 @property (nonatomic, readonly) UNUserNotificationCenter *notificationCenter;

@@ -24,6 +24,10 @@
     return nil;
 }
 
+- (BOOL)hasProperty:(NSString *)property {
+    return [ExtensionUtils freObject:self.freObject hasProperty:property];
+}
+
 - (FREObject)propertyValueObject:(NSString *)property {
     return [ExtensionUtils getProperty:property fromObject:self.freObject];
 }

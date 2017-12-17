@@ -13,8 +13,8 @@
 - (instancetype) __unavailable init;
 + (instancetype)dispatcherWithListener:(JKNotificationListener *)listener;
 - (instancetype)initWithListener:(JKNotificationListener *)listener;
+- (void)dispatchDidReceiveNotificationWithActionId:(NSString *)actionId userInfo:(NSDictionary *)userInfo response:(NSString *)response completionHandler:(void(^)(void))completionHandler;
 - (void)dispatchDidReceiveNotificationWithActionId:(NSString *)actionId userInfo:(NSDictionary *)userInfo completionHandler:(void(^)(void))completionHandler;
-- (void)dispatchDidReceiveNotificationWithActionId:(NSString *)actionId userInfo:(NSDictionary *)userInfo;
 - (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo completionHandler:(void(^)(void))completionHandler;
 - (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo;
 @end

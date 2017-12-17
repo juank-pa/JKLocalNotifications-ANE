@@ -13,6 +13,7 @@
 #import "JKLegacyLocalNotificationManager.h"
 #import "JKLegacyNotificationListener.h"
 #import "JKNotificationBuilder.h"
+#import "JKActionBuilder.h"
 
 @interface JKLegacyLocalNotificationAuthorizer (Test)
 @property (nonatomic, strong) JKLegacyLocalNotificationFactory *factory;
@@ -74,6 +75,16 @@
 - (void)testCreateLocalNotificationFromNotification {
     JKNotificationBuilder *builder = [self.subject createNotificationBuilder];
     XCTAssertEqual([builder class], [JKNotificationBuilder class]);
+}
+
+- (void)testCreateActionBuilder {
+    id<JKActionBuilder> builder = [self.subject createActionBuilder];
+    XCTAssertEqual([builder class], [JKLegacyActionBuilder class]);
+}
+
+- (void)testCreateTextInputActionBuilder {
+    id<JKActionBuilder> builder = [self.subject createTextInputActionBuilder];
+    XCTAssertEqual([builder class], [JKLegacyTextInputActionBuilder class]);
 }
 
 @end

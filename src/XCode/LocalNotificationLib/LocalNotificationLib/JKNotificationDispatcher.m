@@ -27,9 +27,8 @@
     return self;
 }
 
-- (void)storeActionId:(NSString *)actionId withUserInfo:(NSDictionary *)userInfo {
+- (void)storeUserInfo:(NSDictionary *)userInfo {
     self.listener.userInfo = userInfo;
-    self.listener.notificationAction = actionId;
 }
 
 - (void)dispatchDidReceiveNotificationWithUserInfo:(NSDictionary *)userInfo completionHandler:(void(^)(void))completionHandler {
@@ -40,21 +39,22 @@
     [self dispatchDidReceiveNotificationWithUserInfo:userInfo completionHandler:NULL];
 }
 
-- (void)dispatchDidReceiveNotificationWithActionId:(NSString *)actionId userInfo:(NSDictionary *)userInfo {
-    [self dispatchDidReceiveNotificationWithActionId:actionId userInfo:userInfo completionHandler:NULL];
+- (void)dispatchDidReceiveNotificationWithActionId:(NSString *)actionId userInfo:(NSDictionary *)userInfo completionHandler:(void(^)(void))completionHandler {
+    [self dispatchDidReceiveNotificationWithActionId:actionId userInfo:userInfo response:nil completionHandler:completionHandler];
 }
 
-- (void)dispatchDidReceiveNotificationWithActionId:(NSString *)actionId userInfo:(NSDictionary *)userInfo completionHandler:(void(^)(void))completionHandler {
+- (void)dispatchDidReceiveNotificationWithActionId:(NSString *)actionId userInfo:(NSDictionary *)userInfo response:(NSString *)response completionHandler:(void(^)(void))completionHandler {
     if(!userInfo) { return; }
     self.listener.notificationCode = userInfo[JK_NOTIFICATION_CODE_KEY];
     self.listener.notificationData = userInfo[JK_NOTIFICATION_DATA_KEY];
     self.listener.notificationAction = actionId;
+    self.listener.userResponse = response;
 
     if (self.listener.delegate) {
         [self.listener.delegate didReceiveNotificationDataForNotificationListener:self.listener];
     }
     else {
-        [self storeActionId:actionId withUserInfo:userInfo];
+        [self storeUserInfo:userInfo];
     }
     if (completionHandler) completionHandler();
 }

@@ -8,19 +8,20 @@
 
 #import "JKNewActionBuilder.h"
 #import "NSArray+HigherOrder.h"
+#import "JKTextInputLocalNotificationAction.h"
 
 @implementation JKNewActionBuilder
+
++ (NSArray <UNNotificationAction *> *)buildFromActions:(NSArray <JKLocalNotificationAction *> *)actions {
+    return [actions map:^UNNotificationAction *(JKLocalNotificationAction *action) {
+        return [action.builder buildFromAction:action];
+    }];
+}
 
 - (UNNotificationAction *)buildFromAction:(JKLocalNotificationAction *)action {
     return [UNNotificationAction actionWithIdentifier:action.identifier
                                                 title:action.title
                                               options:[self optionForBackgroundMode:action.isBackground]];
-}
-
-- (NSArray <UNNotificationAction *> *)buildFromActions:(NSArray <JKLocalNotificationAction *> *)actions {
-    return [actions map:^UNNotificationAction *(JKLocalNotificationAction *action) {
-        return [self buildFromAction:action];
-    }];
 }
 
 - (UNNotificationActionOptions)optionForBackgroundMode:(BOOL)isBackground {
