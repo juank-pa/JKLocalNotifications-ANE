@@ -35,7 +35,7 @@
      * @default NotificationAlertPolicy.EACH_NOTIFICATION
      * @see com.juankpro.ane.localnotif.NotificationAlertPolicy
      */
-    public var alertPolicy:String;
+    public var alertPolicy:String = NotificationAlertPolicy.EACH_NOTIFICATION;
 
     /**
      * The body text of the notification.
@@ -77,7 +77,7 @@
      * @default NotificationIconType.ALERT
      * @see com.juankpro.ane.localnotif.NotificationIconType
      */
-    public var iconType:String;
+    public var iconType:String = NotificationIconType.ALERT;
 
     /**
      * On Android, this will display the specified number on the notification icon that appears
@@ -203,14 +203,5 @@
      * @see com.juankpro.ane.localnotif.NotificationCategory
      */
     public var category:String;
-
-    /**
-     * Initializes the notification.
-     * <p>Supported OS: Android, iOS</p>
-     */
-    public function Notification() {
-      alertPolicy = NotificationAlertPolicy.EACH_NOTIFICATION;
-      iconType = NotificationIconType.ALERT;
-    }
   }
 }

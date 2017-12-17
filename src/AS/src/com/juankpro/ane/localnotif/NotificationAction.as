@@ -6,7 +6,7 @@ package com.juankpro.ane.localnotif {
    * <p>Supported OS: Android, iOS</p>
    * @see com.juankpro.ane.localnotif.NotificationManager#subscribe()
    */
-  final public class NotificationAction extends Object {
+  public class NotificationAction extends Object {
     /**
      * The action identifier.
      * <p>This identifier will be sent to the <code>Event.NOTIFICATION_ACTION</code> event
@@ -51,10 +51,5 @@ package com.juankpro.ane.localnotif {
      * @see com.juankpro.ane.localnotif.LocalNotifierSubscribeOptions#allowAndroidBackgroundNotificationActions
      */
     public var isBackground:Boolean = false;
-
-    /**
-     * Constructor
-     */
-    public function NotificationAction() { }
   }
 }

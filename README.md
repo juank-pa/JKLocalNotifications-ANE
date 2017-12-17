@@ -86,7 +86,7 @@ ANE work.
 
 ## Adding Android custom icons HACK
 There is a way to add custom icons to the Android notifications but only through a hack.
-Referencing a packaged bitmap directly is possible only on Android API level 24 (Nougat) and later.
+Referencing a packaged bitmap directly is possible only on Android 7.0 API level 24 (Nougat) and later.
 This will have forced the ANE to support level 24 and later versions and I'm always trying to
 support 95-99% of the currently existing devices.
 

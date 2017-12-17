@@ -31,10 +31,5 @@ package com.juankpro.ane.localnotif {
          * @see com.juankpro.ane.localnotif.NotificationAction
          */
         public var actions:Vector.<NotificationAction>;
-
-        /**
-         * Constructor
-         */
-        public function NotificationCategory() { }
   }
 }

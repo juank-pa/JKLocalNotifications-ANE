@@ -36,6 +36,15 @@
     public var notificationAction:String = null;
 
     /**
+     * The user response entered in the input text field for 
+     * <code>InputTextNotificationAction</code> actions.
+     * <p>Supported OS: Android, iOS</p>
+     * @default null
+     * @see com.juankpro.ane.localnotif.TextInputNotificationAction
+     */
+    public var notificationUserResponse:String = null;
+
+    /**
      * The settings accepted by the user after subscription request.
      * Android doesn't need a subscription to send notifications, thus all notification
      * types are always accepted.
@@ -52,6 +61,7 @@
      * <tr><td>actionData</td><td>The data sent along with the notification.</td></tr>
      * <tr><td>notificationAction</td><td>The action that was taken by the user with the notification. If the user taps the notification body this value will be null.</td></tr>
      * <tr><td>notificationCode</td><td>The code of the notification used when it was sent.</td></tr>
+     * <tr><td>notificationUserResponse</td><td>The user input for <code>TextInputNotificationAction</code> actions.</td></tr>
      * </table>
      * <p>Supported OS: Android, iOS</p>
      * @eventType notificationAction
@@ -78,18 +88,19 @@
      * @param data The data sent along the notification.
      * @param action The action taken by the user with the notification.
      */
-    public function NotificationEvent(type:String, code:String = null, data:Object = null, action:String = null) {
+    public function NotificationEvent(type:String, code:String = null, data:Object = null, action:String = null, userResponse:String = null) {
       super(type, true, false);
       this.notificationCode = code;
       this.actionData = data;
       this.notificationAction = action;
+      this.notificationUserResponse = userResponse;
     }
 
     /**
      * @private
      */
     override public function clone() : Event {
-      return new NotificationEvent(type, this.notificationCode, this.actionData, this.notificationAction);
+      return new NotificationEvent(type, this.notificationCode, this.actionData, this.notificationAction, this.notificationUserResponse);
     }
 
     /**
