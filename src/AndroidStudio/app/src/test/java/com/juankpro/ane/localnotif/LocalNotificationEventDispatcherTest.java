@@ -26,10 +26,11 @@ public class LocalNotificationEventDispatcherTest {
     private String code = "My Code";
     private byte[] data = new byte[]{0};
     private String actionId = "ActionId";
+    private String userResponse = "User Response";
 
     private LocalNotificationEventDispatcher getSubject() {
         if (subject == null) {
-            subject = new LocalNotificationEventDispatcher(code, data, actionId);
+            subject = new LocalNotificationEventDispatcher(code, data, actionId, userResponse);
         }
         return subject;
     }
@@ -48,6 +49,7 @@ public class LocalNotificationEventDispatcherTest {
         assertEquals(code, LocalNotificationCache.getInstance().getNotificationCode());
         assertEquals(data, LocalNotificationCache.getInstance().getNotificationData());
         assertEquals(actionId, LocalNotificationCache.getInstance().getActionId());
+        assertEquals(userResponse, LocalNotificationCache.getInstance().getUserResponse());
         assertTrue(LocalNotificationCache.getInstance().wasUpdated());
     }
 

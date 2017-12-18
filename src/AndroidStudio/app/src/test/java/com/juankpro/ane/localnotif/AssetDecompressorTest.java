@@ -3,7 +3,6 @@ package com.juankpro.ane.localnotif;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
-import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 
 import com.juankpro.ane.localnotif.util.AssetDecompressor;
@@ -41,8 +40,6 @@ public class AssetDecompressorTest {
     @Mock
     private File file;
     @Mock
-    private Uri uri;
-    @Mock
     private ParcelFileDescriptor parcel;
     @Mock
     private AssetFileDescriptor fileDescriptor;
@@ -73,13 +70,13 @@ public class AssetDecompressorTest {
     }
 
     @Test(expected = Test.None.class)
-    public void provider_openAsset_whenFileIsAlreadyCached_usesCache() throws FileNotFoundException {
+    public void decompressor_decompress_whenFileIsAlreadyCached_usesCache() throws FileNotFoundException {
         when(file.exists()).thenReturn(true);
         assertSame(fileDescriptor, getSubject().decompress("sound.mp3"));
     }
 
     @Test(expected = Test.None.class)
-    public void provider_openAsset_whenFileNotCached_decompresses() throws FileNotFoundException {
+    public void decompressor_decompress_whenFileNotCached_decompresses() throws FileNotFoundException {
         when(file.exists()).thenReturn(false);
         when(file.getParentFile()).thenReturn(file);
 
@@ -99,7 +96,7 @@ public class AssetDecompressorTest {
     }
 
     @Test
-    public void provider_openAsset_whenAnyExceptionIsThrownReturnsNull() {
+    public void decompressor_decompress_whenAnyExceptionIsThrownReturnsNull() {
         when(file.exists()).thenReturn(true);
         try {
             when(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)).thenThrow(Exception.class);

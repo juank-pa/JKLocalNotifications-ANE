@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import com.juankpro.ane.localnotif.category.LocalNotificationAction;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategoryManager;
+import com.juankpro.ane.localnotif.factory.NotificationActionFactory;
 import com.juankpro.ane.localnotif.factory.NotificationFactory;
 import com.juankpro.ane.localnotif.factory.NotificationPendingIntentFactory;
 
@@ -23,7 +24,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,6 +51,11 @@ public class NotificationFactoryTest {
     private NotificationCompat.BigTextStyle textStyle;
     @Mock
     private LocalNotificationCategoryManager categoryManager;
+    @Mock
+    private NotificationActionFactory actionFactory;
+    @Mock
+    private NotificationCompat.Action nativeAction;
+    private LocalNotificationCategory category = new LocalNotificationCategory();
     private Notification notification = new Notification();
     private NotificationFactory subject;
 
@@ -200,37 +205,21 @@ public class NotificationFactoryTest {
         action.title = "Remove";
         action.identifier = "removeAction";
 
-        LocalNotificationCategory category = new LocalNotificationCategory();
-        category.actions = new LocalNotificationAction[]{action};
-        PendingIntent actionPendingIntent = mock(PendingIntent.class);
-        when(intentFactory.createPendingIntent("removeAction", false)).thenReturn(actionPendingIntent);
+        try {
+            PowerMockito.whenNew(NotificationActionFactory.class)
+                    .withArguments(intentFactory)
+                    .thenReturn(actionFactory);
+        }
+        catch (Throwable e) { e.printStackTrace(); }
 
+        category.actions = new LocalNotificationAction[]{action};
+
+        when(actionFactory.create(action)).thenReturn(nativeAction);
         when(bundle.getString(Constants.CATEGORY)).thenReturn("MyCategory");
         when(categoryManager.readCategory("MyCategory")).thenReturn(category);
 
         getSubject().create(intentFactory);
 
-        verify(builder).addAction(action.icon, action.title, actionPendingIntent);
-    }
-
-    @Test
-    public void factory_create_withBackgroundActionButtons() {
-        LocalNotificationAction action = new LocalNotificationAction();
-        action.icon = 200;
-        action.title = "Remove";
-        action.identifier = "removeAction";
-        action.isBackground = true;
-
-        LocalNotificationCategory category = new LocalNotificationCategory();
-        category.actions = new LocalNotificationAction[]{action};
-        PendingIntent actionPendingIntent = mock(PendingIntent.class);
-        when(intentFactory.createPendingIntent("removeAction", true)).thenReturn(actionPendingIntent);
-
-        when(bundle.getString(Constants.CATEGORY)).thenReturn("MyCategory");
-        when(categoryManager.readCategory("MyCategory")).thenReturn(category);
-
-        getSubject().create(intentFactory);
-
-        verify(builder).addAction(action.icon, action.title, actionPendingIntent);
+        verify(builder).addAction(nativeAction);
     }
 }

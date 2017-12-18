@@ -19,6 +19,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.FileDescriptor;
+import java.io.IOException;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -83,7 +84,7 @@ public class PlayAudioTest {
         try {
             inOrder.verify(mediaPlayer).setDataSource(fileDescriptor);
             inOrder.verify(assetFileDescriptor).close();
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (IOException e) { e.printStackTrace(); }
         verify(mediaPlayer).setOnPreparedListener(getSubject());
         verify(mediaPlayer).setOnCompletionListener(getSubject());
     }

@@ -217,10 +217,12 @@ public class LocalNotificationTest {
             when(jsonArray.getInt(1)).thenThrow(mock(JSONException.class));
 
             getSubject().deserialize(jsonObject);
+        } catch (Throwable e) { e.printStackTrace(); }
 
-            assertArrayEquals(new byte[]{101, 0}, getSubject().actionData);
+        assertArrayEquals(new byte[]{101, 0}, getSubject().actionData);
+        getSubject().actionData = null;
 
-            getSubject().actionData = null;
+        try {
             when(jsonObject.getJSONArray("actionData")).thenThrow(mock(JSONException.class));
         } catch (Throwable e) { e.printStackTrace(); }
 
@@ -246,7 +248,7 @@ public class LocalNotificationTest {
             verify(jsonObject).putOpt("activityClassName", "ClassName2");
             verify(jsonObject).putOpt("priority", 1);
             verify(jsonObject).putOpt("category", "Category2");
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -255,7 +257,7 @@ public class LocalNotificationTest {
             getSubject().playSound = true;
             assertSame(jsonObject, getSubject().serialize());
             verify(jsonObject).putOpt("playSound", true);
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -264,7 +266,7 @@ public class LocalNotificationTest {
             getSubject().vibrate = true;
             assertSame(jsonObject, getSubject().serialize());
             verify(jsonObject).putOpt("vibrate", true);
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -273,7 +275,7 @@ public class LocalNotificationTest {
             getSubject().cancelOnSelect = true;
             assertSame(jsonObject, getSubject().serialize());
             verify(jsonObject).putOpt("cancelOnSelect", true);
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -282,7 +284,7 @@ public class LocalNotificationTest {
             getSubject().ongoing = true;
             assertSame(jsonObject, getSubject().serialize());
             verify(jsonObject).putOpt("ongoing", true);
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -291,7 +293,7 @@ public class LocalNotificationTest {
             getSubject().hasAction = true;
             assertSame(jsonObject, getSubject().serialize());
             verify(jsonObject).putOpt("hasAction", true);
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -300,7 +302,7 @@ public class LocalNotificationTest {
             getSubject().showInForeground = true;
             assertSame(jsonObject, getSubject().serialize());
             verify(jsonObject).putOpt("showInForeground", true);
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -312,7 +314,7 @@ public class LocalNotificationTest {
 
             verify(jsonObject).accumulate("actionData", 102);
             verify(jsonObject).accumulate("actionData", 127);
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -325,7 +327,7 @@ public class LocalNotificationTest {
 
             verify(jsonObject).accumulate("actionData", 102);
             verify(jsonObject, never()).accumulate("actionData", 127);
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test

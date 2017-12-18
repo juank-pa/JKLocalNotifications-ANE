@@ -15,7 +15,6 @@ import com.juankpro.ane.localnotif.Constants;
 public class PlayAudio extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     public int onStartCommand(Intent intent, int flags, int startId){
         String soundName = intent.getStringExtra(Constants.SOUND_NAME);
-        Logger.log("Attempting to play " + soundName);
         playSound(soundName);
         return Service.START_NOT_STICKY;
     }
@@ -41,12 +40,10 @@ public class PlayAudio extends Service implements MediaPlayer.OnPreparedListener
     }
 
     public void onPrepared(MediaPlayer mediaPlayer) {
-        Logger.log("Playing");
         mediaPlayer.start();
     }
 
     public void onCompletion(MediaPlayer mediaPlayer) {
-        Logger.log("Completed");
         mediaPlayer.stop();
         mediaPlayer.release();
         stopSelf();

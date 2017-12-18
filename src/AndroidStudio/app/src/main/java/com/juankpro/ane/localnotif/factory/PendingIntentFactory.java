@@ -8,5 +8,6 @@ import android.app.PendingIntent;
 
 public interface PendingIntentFactory {
     PendingIntent createPendingIntent();
-    PendingIntent createPendingIntent(String actionId, boolean backgroundMode);
+    PendingIntent createActionPendingIntent(String actionId, boolean backgroundMode);
+    PendingIntent createTextInputActionPendingIntent(String actionId, boolean backgroundMode);
 }

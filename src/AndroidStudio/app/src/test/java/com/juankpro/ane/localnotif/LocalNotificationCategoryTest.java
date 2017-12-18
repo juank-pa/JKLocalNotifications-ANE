@@ -109,7 +109,7 @@ public class LocalNotificationCategoryTest {
         try {
             verify(jsonObject).putOpt("identifier", "MyId");
             verify(jsonObject).putOpt("actions", jsonArray);
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -120,6 +120,6 @@ public class LocalNotificationCategoryTest {
             assertSame(jsonObject, getSubject("MyId", actions).serialize());
             verify(jsonObject).putOpt("identifier", "MyId");
             verify(jsonObject, never()).putOpt(eq("actions"), any(LocalNotificationAction[].class));
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 }

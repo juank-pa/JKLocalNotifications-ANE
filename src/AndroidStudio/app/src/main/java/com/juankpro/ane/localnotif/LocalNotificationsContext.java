@@ -15,7 +15,6 @@ import com.juankpro.ane.localnotif.decoder.LocalNotificationSettingsDecoder;
 import com.juankpro.ane.localnotif.fre.ExtensionUtils;
 import com.juankpro.ane.localnotif.fre.FunctionHelper;
 import com.juankpro.ane.localnotif.util.ApplicationStatus;
-import com.juankpro.ane.localnotif.util.Logger;
 import com.juankpro.ane.localnotif.util.PersistenceManager;
 
 /**
@@ -98,6 +97,13 @@ class LocalNotificationsContext extends FREContext {
             @Override
             public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
                 return getSelectedNotificationAction();
+            }
+        });
+
+        functionMap.put("getSelectedNotificationUserResponse", new FunctionHelper() {
+            @Override
+            public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
+                return getSelectedNotificationUserResponse();
             }
         });
 
@@ -189,22 +195,22 @@ class LocalNotificationsContext extends FREContext {
 
     private void checkForNotificationAction() {
         if (LocalNotificationCache.getInstance().wasUpdated()) dispatchNotificationSelectedEvent();
-        Logger.log("LocalNotificationsContext checking for notification");
     }
 
     private FREObject getSelectedNotificationCode() throws Exception {
-        Logger.log("LocalNotificationsContext::getSelectedNotificationCode code: " + LocalNotificationCache.getInstance().getNotificationCode());
         return FREObject.newObject(LocalNotificationCache.getInstance().getNotificationCode());
     }
 
     private FREObject getSelectedNotificationData() {
-        Logger.log("LocalNotificationsContext::getSelectedNotificationData byte array: " + new String(LocalNotificationCache.getInstance().getNotificationData()));
         return ExtensionUtils.getFreObject(LocalNotificationCache.getInstance().getNotificationData());
     }
 
     private FREObject getSelectedNotificationAction() throws Exception {
-        Logger.log("LocalNotificationsContext::getSelectedNotificationAction action: " + LocalNotificationCache.getInstance().getActionId());
         return FREObject.newObject(LocalNotificationCache.getInstance().getActionId());
+    }
+
+    private FREObject getSelectedNotificationUserResponse() throws Exception {
+        return FREObject.newObject(LocalNotificationCache.getInstance().getUserResponse());
     }
 
     private void sendNotification(FREContext context, FREObject[] passedArgs) {

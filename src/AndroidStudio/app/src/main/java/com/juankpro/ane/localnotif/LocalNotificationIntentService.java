@@ -1,7 +1,6 @@
 package com.juankpro.ane.localnotif;
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 
 import com.juankpro.ane.localnotif.util.ApplicationStatus;
@@ -18,19 +17,20 @@ public class LocalNotificationIntentService extends IntentService {
 
     @Override
     public final void onHandleIntent(Intent intent) {
-        Context context = getApplicationContext();
-        boolean backgroundMode = intent.getBooleanExtra(Constants.BACKGROUND_MODE_ID_KEY, false);
+        boolean backgroundMode = intent.getBooleanExtra(Constants.BACKGROUND_MODE_KEY, false);
 
         sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         tryEventDispatch(intent);
 
+        handleResponse(intent);
+
         logStatus(intent);
         if(backgroundMode) {
-            if (!ApplicationStatus.getActive()) openActivityInBackground(context, intent);
+            if (!ApplicationStatus.getActive()) openActivity(intent);
         }
         else if (!ApplicationStatus.getInForeground()) {
-            openActivityInForeground(context, intent);
+            openActivity(intent);
         }
     }
 
@@ -38,24 +38,22 @@ public class LocalNotificationIntentService extends IntentService {
         String code = intent.getStringExtra(Constants.NOTIFICATION_CODE_KEY);
         byte[] data = intent.getByteArrayExtra(Constants.ACTION_DATA_KEY);
         String actionId = intent.getStringExtra(Constants.ACTION_ID_KEY);
-        Logger.log("LocalNotificationIntentService::tryEventDispatch actionId: " + actionId);
-        new LocalNotificationEventDispatcher(code, data, actionId).dispatchWhenActive();
+        String userResponse = intent.getStringExtra(Constants.USER_RESPONSE_KEY);
+        Logger.log("LocalNotificationIntentService trying event dispatch");
+        new LocalNotificationEventDispatcher(code, data, actionId, userResponse).dispatchWhenActive();
     }
 
-    private void openActivity(Context context, Intent intent, boolean backgroundMode) {
+    private void handleResponse(Intent intent) {
+        String userResponse = intent.getStringExtra(Constants.USER_RESPONSE_KEY);
+        if (userResponse == null) return;
+        new NotificationDispatcher(getApplicationContext(), intent.getExtras()).dispatch();
+    }
+
+    private void openActivity(Intent intent) {
         Intent newIntent = new Intent();
-        newIntent.setClassName(context, intent.getStringExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY));
-        newIntent.putExtra(Constants.BACKGROUND_MODE_ID_KEY, backgroundMode);
+        newIntent.setClassName(getApplicationContext(), intent.getStringExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY));
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(newIntent);
-    }
-
-    private void openActivityInBackground(Context context, Intent intent) {
-        openActivity(context, intent, true);
-    }
-
-    private void openActivityInForeground(Context context, Intent intent) {
-        openActivity(context, intent, false);
+        getApplicationContext().startActivity(newIntent);
     }
 
     private void logStatus(Intent intent) {

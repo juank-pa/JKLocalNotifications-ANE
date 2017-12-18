@@ -10,7 +10,6 @@ import com.juankpro.ane.localnotif.SoundSettings;
 import com.juankpro.ane.localnotif.category.LocalNotificationAction;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategoryManager;
-import com.juankpro.ane.localnotif.util.Logger;
 
 /**
  * Created by Juank on 11/9/17.
@@ -30,6 +29,7 @@ public class NotificationFactory {
     public Notification create(PendingIntentFactory intentFactory) {
         buildCommon();
         buildActions(intentFactory);
+        buildDefaultAction(intentFactory);
         buildMiscellaneous();
         return builder.build();
     }
@@ -56,22 +56,18 @@ public class NotificationFactory {
     }
 
     private void buildActions(PendingIntentFactory intentFactory) {
-        String categoryName = bundle.getString(Constants.CATEGORY);
-        LocalNotificationCategoryManager categoryManager = new LocalNotificationCategoryManager(context);
-        LocalNotificationCategory category = categoryManager.readCategory(categoryName);
-
+        LocalNotificationCategory category = getCategory();
         if (category != null) {
-            Logger.log("NotificationFactory::buildActions Category id: " + category.identifier);
+            NotificationActionFactory actionFactory = new NotificationActionFactory(intentFactory);
             for (LocalNotificationAction action : category.actions) {
-                Logger.log(
-                        "NotificationFactory::buildActions Action: " +
-                                action.icon + ", " + action.title + ", " + action.identifier
-                );
-                builder.addAction(action.icon, action.title, intentFactory.createPendingIntent(action.identifier, action.isBackground));
+                builder.addAction(actionFactory.create(action));
             }
         }
+    }
 
-        buildDefaultAction(intentFactory);
+    private LocalNotificationCategory getCategory() {
+        String categoryName = bundle.getString(Constants.CATEGORY);
+        return new LocalNotificationCategoryManager(context).readCategory(categoryName);
     }
 
     private void buildDefaultAction(PendingIntentFactory intentFactory) {

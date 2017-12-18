@@ -117,7 +117,7 @@ public class LocalNotificationsContextTest {
         PowerMockito.mockStatic(FREObject.class);
         try {
             when(FREObject.newObject(7)).thenReturn(freObject);
-        } catch (Throwable e) {}
+        } catch (Throwable e) { e.printStackTrace(); }
         assertSame(freObject, callFunction("getSelectedSettings"));
     }
 
@@ -160,10 +160,23 @@ public class LocalNotificationsContextTest {
     }
 
     @Test
+    public void context_functions_getSelectedUserResponse() {
+        PowerMockito.mockStatic(LocalNotificationCache.class);
+        PowerMockito.mockStatic(FREObject.class);
+        when(LocalNotificationCache.getInstance()).thenReturn(cache);
+        when(cache.getUserResponse()).thenReturn("User Response");
+
+        try { when(FREObject.newObject("User Response")).thenReturn(freObject); }
+        catch (Throwable e) {  e.printStackTrace(); }
+
+        assertSame(freObject, callFunction("getSelectedNotificationUserResponse"));
+    }
+
+    @Test
     public void context_functions_checkForNotificationAction_whenCacheWasUpdated() {
         byte data[] = {};
         LocalNotificationCache.getInstance().reset();
-        LocalNotificationCache.getInstance().setData("MyCode", data, "actionId");
+        LocalNotificationCache.getInstance().setData("MyCode", data, "actionId", "User Response");
 
         callFunction("checkForNotificationAction");
         verify(getSubject()).dispatchStatusEventAsync("notificationSelected", "status");
@@ -181,7 +194,7 @@ public class LocalNotificationsContextTest {
     public void context_functions_checkForNotificationAction_dispatchesOnlyOnce() {
         byte data[] = {};
         LocalNotificationCache.getInstance().reset();
-        LocalNotificationCache.getInstance().setData("MyCode", data, "actionId");
+        LocalNotificationCache.getInstance().setData("MyCode", data, "actionId", "User Response");
 
         callFunction("checkForNotificationAction");
         callFunction("checkForNotificationAction");

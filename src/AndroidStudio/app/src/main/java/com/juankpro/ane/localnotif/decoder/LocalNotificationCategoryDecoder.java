@@ -11,10 +11,6 @@ import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
 public class LocalNotificationCategoryDecoder extends FREDecoder<LocalNotificationCategory> {
     private boolean allowBackgroundActions;
 
-    public LocalNotificationCategoryDecoder(FREContext context) {
-        this(context, true);
-    }
-
     public LocalNotificationCategoryDecoder(FREContext context, boolean allowBackgroundActions) {
         super(context);
         this.allowBackgroundActions = allowBackgroundActions;

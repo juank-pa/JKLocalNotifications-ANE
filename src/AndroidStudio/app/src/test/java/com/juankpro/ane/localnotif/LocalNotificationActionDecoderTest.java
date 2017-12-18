@@ -62,6 +62,12 @@ public class LocalNotificationActionDecoderTest {
     }
 
     @Test
+    public void decoder_decode_decodesTextInputPlaceholder() {
+        when(ExtensionUtils.getStringProperty(freObject, "textInputPlaceholder", null)).thenReturn("Placeholder");
+        assertEquals("Placeholder", getSubject().decodeObject(freObject).textInputPlaceholder);
+    }
+
+    @Test
     public void decoder_decode_decodesIsBackground() {
         assertFalse(getSubject().decodeObject(freObject).isBackground);
         when(ExtensionUtils.getBooleanProperty(freObject, "isBackground", false)).thenReturn(true);
