@@ -20,6 +20,7 @@ public class ArrayDecoder<A> extends FREDecoder<A[]> {
         this.aClass = aClass;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected A[] decode() {
         FREArray freArray = (FREArray)getObject();
@@ -35,6 +36,6 @@ public class ArrayDecoder<A> extends FREDecoder<A[]> {
             array = null;
             Logger.log("FREDecoder::decodeArray Could not decode array " + e);
         }
-        return (A[])(array == null? (A[])Array.newInstance(aClass, 0) : array);
+        return (array == null? (A[])Array.newInstance(aClass, 0) : array);
     }
 }

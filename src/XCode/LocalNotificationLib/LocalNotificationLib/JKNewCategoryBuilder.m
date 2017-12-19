@@ -21,7 +21,7 @@
 
 - (UNNotificationCategory *)buildFromCategory:(JKLocalNotificationCategory *)category {
     return [UNNotificationCategory categoryWithIdentifier:category.identifier
-                                                  actions:[[JKNewActionBuilder new] buildFromActions:category.actions]
+                                                  actions:[JKNewActionBuilder buildFromActions:category.actions]
                                         intentIdentifiers:[NSArray array]
                                                   options:UNNotificationCategoryOptionNone];
 }

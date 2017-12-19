@@ -56,6 +56,7 @@ public class LocalNotification implements ISerializable, IDeserializable {
     public String activityClassName = "";
     public String category = "";
 
+    @SuppressWarnings("WeakerAccess")
     public long getRepeatIntervalMilliseconds() {
         return new LocalNotificationTimeInterval(repeatInterval)
                 .toMilliseconds();
@@ -71,6 +72,7 @@ public class LocalNotification implements ISerializable, IDeserializable {
         return new Date(fireDate.getTime() + interval * triggerCount);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void reschedule() {
         fireDate = getNextDate();
     }

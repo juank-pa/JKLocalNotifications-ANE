@@ -5,7 +5,7 @@ package com.juankpro.ane.localnotif;
  */
 
 public class Constants {
-    public static final int STANDARD_NOTIFICATION_ID = 0;
+    static final int STANDARD_NOTIFICATION_ID = 0;
     private static final String ANE_NAME = "JK_ANE_LocalNotification";
 
     public static final String NOTIFICATION_CONFIG = ANE_NAME + "_NOTIF";
@@ -19,7 +19,8 @@ public class Constants {
     public static final String NOTIFICATION_CODE_KEY = "com.juankpro.ane.localnotif.notificationCodeKey";
     public static final String ACTION_DATA_KEY = "com.juankpro.ane.localnotif.actionDataKey";
     public static final String ACTION_ID_KEY = "NOTIF_ACTION_ID";
-    public static final String BACKGROUND_MODE_ID_KEY = "NOTIF_BACKGROUND_MODE_ID";
+    public static final String BACKGROUND_MODE_KEY = "NOTIF_BACKGROUND_MODE";
+    public static final String USER_RESPONSE_KEY = "NOTIF_USER_RESPONSE";
 
     public static final String ICON_RESOURCE = "NOTIF_ICON_RESOURCE";
     public static final String TITLE = "NOTIF_TITLE";

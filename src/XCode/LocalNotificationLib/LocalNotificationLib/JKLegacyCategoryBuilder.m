@@ -20,7 +20,7 @@
 
 - (UIUserNotificationCategory *)buildFromCategory:(JKLocalNotificationCategory *)category {
     UIMutableUserNotificationCategory *nativeCategory = [UIMutableUserNotificationCategory new];
-    NSArray<UIUserNotificationAction *> *actions = [[JKLegacyActionBuilder new] buildFromActions:category.actions];
+    NSArray<UIUserNotificationAction *> *actions = [JKLegacyActionBuilder buildFromActions:category.actions];
 
     nativeCategory.identifier = category.identifier;
     [nativeCategory setActions:actions forContext:UIUserNotificationActionContextDefault];

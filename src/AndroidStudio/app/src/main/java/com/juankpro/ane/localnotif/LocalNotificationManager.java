@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import com.juankpro.ane.localnotif.factory.NotificationRequestIntentFactory;
 import com.juankpro.ane.localnotif.util.Logger;
 import com.juankpro.ane.localnotif.util.PersistenceManager;
 
@@ -16,9 +17,11 @@ import com.juankpro.ane.localnotif.util.PersistenceManager;
 class LocalNotificationManager {
     private Context context;
     private NotificationManager notificationManager;
+    private NotificationRequestIntentFactory intentFactory;
 
     LocalNotificationManager(Context context) {
         this.context = context;
+        intentFactory = new NotificationRequestIntentFactory(context);
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
@@ -27,7 +30,7 @@ class LocalNotificationManager {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
                 localNotification.code.hashCode(),
-                getIntent(localNotification),
+                intentFactory.createIntent(localNotification),
                 PendingIntent.FLAG_CANCEL_CURRENT);
         long repeatInterval = localNotification.getRepeatIntervalMilliseconds();
 
@@ -71,33 +74,5 @@ class LocalNotificationManager {
         notificationManager.cancelAll();
     }
 
-    private Intent getIntent(LocalNotification localNotification) {
-        final Intent intent = new Intent(context, AlarmIntentService.class);
-
-        intent.setAction(localNotification.code);
-        intent.putExtra(Constants.TITLE, localNotification.title);
-        intent.putExtra(Constants.BODY, localNotification.body);
-        intent.putExtra(Constants.TICKER_TEXT, localNotification.tickerText);
-        intent.putExtra(Constants.NOTIFICATION_CODE_KEY, localNotification.code);
-        intent.putExtra(Constants.ICON_RESOURCE, localNotification.iconResourceId);
-        intent.putExtra(Constants.NUMBER_ANNOTATION, localNotification.numberAnnotation);
-        intent.putExtra(Constants.PLAY_SOUND, localNotification.playSound);
-        intent.putExtra(Constants.SOUND_NAME, localNotification.soundName);
-        intent.putExtra(Constants.VIBRATE, localNotification.vibrate);
-        intent.putExtra(Constants.CANCEL_ON_SELECT, localNotification.cancelOnSelect);
-        intent.putExtra(Constants.ON_GOING, localNotification.ongoing);
-        intent.putExtra(Constants.ALERT_POLICY, localNotification.alertPolicy);
-        intent.putExtra(Constants.HAS_ACTION, localNotification.hasAction);
-        intent.putExtra(Constants.ACTION_DATA_KEY, localNotification.actionData);
-        intent.putExtra(Constants.PRIORITY, localNotification.priority);
-        intent.putExtra(Constants.SHOW_IN_FOREGROUND, localNotification.showInForeground);
-        intent.putExtra(Constants.CATEGORY, localNotification.category);
-
-        if (localNotification.hasAction) {
-            intent.putExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY, localNotification.activityClassName);
-        }
-
-        return intent;
-    }
 }
 

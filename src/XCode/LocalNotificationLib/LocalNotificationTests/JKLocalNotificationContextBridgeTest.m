@@ -64,7 +64,7 @@ FREObject args[] = {&context, &context};
 
     OCMExpect([jkNotificationsContext notify:notification]);
 
-    ADEPNotify(&context, NULL, 2, args);
+    JKLN_notify(&context, NULL, 2, args);
     OCMVerifyAll((id)jkNotificationsContext);
 
     [notificationDecoderMock stopMocking];
@@ -73,13 +73,13 @@ FREObject args[] = {&context, &context};
 - (void)testCancel {
     OCMStub([self.utilsMock getStringFromFREObject:&context]).andReturn(@"My String");
     OCMExpect([jkNotificationsContext cancel:@"My String"]);
-    ADEPCancel(&context, NULL, 0, args);
+    JKLN_cancel(&context, NULL, 0, args);
     OCMVerifyAll((id)jkNotificationsContext);
 }
 
 - (void)testCancelAll {
     OCMExpect([jkNotificationsContext cancelAll]);
-    ADEPCancelAll(&context, NULL, 0, args);
+    JKLN_cancelAll(&context, NULL, 0, args);
     OCMVerifyAll((id)jkNotificationsContext);
 }
 
@@ -95,7 +95,7 @@ FREObject args[] = {&context, &context};
 
     OCMExpect([jkNotificationsContext authorizeWithSettings:notificationSettings]);
 
-    ADEPRegisterSettings(&context, NULL, 2, args);
+    JKLN_registerSettings(&context, NULL, 2, args);
     OCMVerifyAll((id)jkNotificationsContext);
 
     [notificationSettingsDecoderMock stopMocking];
@@ -103,7 +103,7 @@ FREObject args[] = {&context, &context};
 
 - (void)testCheckForNotificationAction {
     OCMExpect([jkNotificationsContext checkForNotificationAction]);
-    ADEPCheckForNotificationAction(&context, NULL, 0, args);
+    JKLN_checkForNotificationAction(&context, NULL, 0, args);
     OCMVerifyAll((id)jkNotificationsContext);
 }
 
@@ -116,7 +116,7 @@ FREObject args[] = {&context, &context};
 
     OCMStub([self.utilsMock getFREObjectFromInt:badgeNum]).andReturn((FREObject)&badgeNum);
 
-    FREObject ret = ADEPGetApplicationBadgeNumber(&context, NULL, 0, args);
+    FREObject ret = JKLN_getApplicationBadgeNumber(&context, NULL, 0, args);
     XCTAssertEqual(ret, &badgeNum);
     XCTAssertEqual(*(int *)ret, 6);
     OCMVerifyAll(appMock);
@@ -134,7 +134,7 @@ FREObject args[] = {&context, &context};
     OCMStub([self.utilsMock getIntFromFREObject:&context])
         .andReturn(badgeNum);
 
-    ADEPSetApplicationBadgeNumber(&context, NULL, 0, args);
+    JKLN_setApplicationBadgeNumber(&context, NULL, 0, args);
     OCMVerifyAll(appMock);
 
     [appMock stopMocking];
@@ -147,7 +147,7 @@ FREObject args[] = {&context, &context};
     OCMExpect([jkNotificationsContext settings]).andReturn(settings);
     OCMStub([self.utilsMock getFREObjectFromUInt:types]).andReturn((FREObject)&types);
 
-    FREObject ret = ADEPGetSelectedSettings(&context, NULL, 0, args);
+    FREObject ret = JKLN_getSelectedSettings(&context, NULL, 0, args);
     XCTAssertEqual(ret, &types);
     XCTAssertEqual(*(int *)ret, JKLocalNotificationTypeSound | JKLocalNotificationTypeBadge);
     OCMVerifyAll((id)jkNotificationsContext);
@@ -160,7 +160,7 @@ FREObject args[] = {&context, &context};
     OCMExpect([jkNotificationsContext notificationCode]).andReturn(code);
     OCMStub([self.utilsMock getFREObjectFromString:code]).andReturn((FREObject)codeStr);
 
-    FREObject ret = ADEPGetSelectedNotificationCode(&context, NULL, 0, args);
+    FREObject ret = JKLN_getSelectedNotificationCode(&context, NULL, 0, args);
     XCTAssertEqual((void *)codeStr, ret);
     OCMVerifyAll((id)jkNotificationsContext);
 }
@@ -172,20 +172,32 @@ FREObject args[] = {&context, &context};
     OCMExpect([jkNotificationsContext notificationData]).andReturn(data);
     OCMStub([self.utilsMock getFREObjectFromData:data]).andReturn((FREObject)rawData);
 
-    FREObject ret = ADEPGetSelectedNotificationData(&context, NULL, 0, args);
+    FREObject ret = JKLN_getSelectedNotificationData(&context, NULL, 0, args);
     XCTAssertEqual((void *)rawData, ret);
     OCMVerifyAll((id)jkNotificationsContext);
 }
 
 - (void)testGetSelectedNotificationAction {
-    char actionStr[] = "Code";
+    char actionStr[] = "action";
     NSString *actionId = @"ActionId";
 
     OCMExpect([jkNotificationsContext notificationAction]).andReturn(actionId);
     OCMStub([self.utilsMock getFREObjectFromString:actionId]).andReturn((FREObject)actionStr);
 
-    FREObject ret = ADEPGetSelectedNotificationAction(&context, NULL, 0, args);
+    FREObject ret = JKLN_getSelectedNotificationAction(&context, NULL, 0, args);
     XCTAssertEqual((void *)actionStr, ret);
+    OCMVerifyAll((id)jkNotificationsContext);
+}
+
+- (void)testGetSelectedNotificationUserResponse {
+    char responseStr[] = "response";
+    NSString *response = @"User Response";
+
+    OCMExpect([jkNotificationsContext notificationUserResponse]).andReturn(response);
+    OCMStub([self.utilsMock getFREObjectFromString:response]).andReturn((FREObject)responseStr);
+
+    FREObject ret = JKLN_getSelectedNotificationUserResponse(&context, NULL, 0, args);
+    XCTAssertEqual((void *)responseStr, ret);
     OCMVerifyAll((id)jkNotificationsContext);
 }
 

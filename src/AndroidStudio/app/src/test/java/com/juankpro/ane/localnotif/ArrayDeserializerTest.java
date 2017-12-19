@@ -67,13 +67,16 @@ public class ArrayDeserializerTest {
 
     @Test
     public void deserializer_deserializesIntoEmptyArrayIfAnExceptionIsThrown() {
+        DeserializableTest[] result = null;
+
         try {
             when(jsonArray.length()).thenReturn(2);
             when(jsonArray.getJSONObject(0)).thenThrow(JSONException.class);
-            DeserializableTest[] result = deserialize(null);
-            assert (result != null);
-            assertEquals(0, result.length);
+            result = deserialize(null);
         } catch (Throwable e) { e.printStackTrace(); }
+
+        assert (result != null);
+        assertEquals(0, result.length);
     }
 }
 

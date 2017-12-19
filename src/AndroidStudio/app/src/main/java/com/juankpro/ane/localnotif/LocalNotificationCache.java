@@ -17,6 +17,7 @@ class LocalNotificationCache {
     private String notificationCode;
     private byte[] notificationData;
     private String actionId;
+    private String userResponse;
 
     private boolean updated = false;
 
@@ -31,11 +32,15 @@ class LocalNotificationCache {
     String getActionId() {
         return actionId;
     }
+    String getUserResponse() {
+        return userResponse;
+    }
 
-    void setData(String notificationCode, byte[] data, String actionId) {
+    void setData(String notificationCode, byte[] data, String actionId, String userResponse) {
         this.notificationCode = notificationCode;
         this.notificationData = data;
         this.actionId = actionId;
+        this.userResponse = userResponse;
         updated = true;
     }
 

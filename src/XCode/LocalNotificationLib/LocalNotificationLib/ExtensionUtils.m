@@ -39,6 +39,13 @@
     return contextID;
 }
 
++ (BOOL)freObject:(FREObject)freObject hasProperty:(NSString *)name {
+    const uint8_t *propertyName = (const uint8_t *)[name cStringUsingEncoding:NSUTF8StringEncoding];
+    FREObject propertyValue = NULL;
+    FREResult freReturnCode = FREGetObjectProperty(freObject, propertyName, &propertyValue, nil);
+    return freReturnCode != FRE_NO_SUCH_NAME;
+}
+
 + (FREObject)getProperty:(NSString *)name fromObject:(FREObject)freObject {
     const uint8_t *propertyName = (const uint8_t *)[name cStringUsingEncoding:NSUTF8StringEncoding];
     FREObject propertyValue = NULL;

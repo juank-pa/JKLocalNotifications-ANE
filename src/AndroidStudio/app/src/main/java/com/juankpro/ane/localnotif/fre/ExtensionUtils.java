@@ -88,6 +88,7 @@ public class ExtensionUtils {
      * @param defaultValue This will be returned if the specified propertyName does not exist or is null in the supplied freObject.
      * @return The int value of the specified property if it exists or is not null, otherwise defaultValue will be returned.
      */
+    @SuppressWarnings("WeakerAccess")
     public static double getDoubleProperty(FREObject freObject, String propertyName, double defaultValue) {
         try {
             FREObject propertyObject = freObject.getProperty(propertyName);
@@ -118,35 +119,40 @@ public class ExtensionUtils {
     }
 
     public static byte[] getBytesProperty(FREObject freObject, String propertyName, byte[] defaultValue) {
+        FREByteArray byteArray = null;
+
         try {
-            FREByteArray byteArray = (FREByteArray) freObject.getProperty(propertyName);
+            byteArray = (FREByteArray) freObject.getProperty(propertyName);
             if (byteArray != null) {
                 byteArray.acquire();
                 ByteBuffer byteBuffer = byteArray.getBytes();
                 byteArray.release();
 
-                byte[] property = new byte[byteBuffer.limit()];
-                byteBuffer.get(property);
-                return property;
+                byte[] value = new byte[byteBuffer.limit()];
+                byteBuffer.get(value);
+                return value;
             }
-        } catch (Throwable e) { e.printStackTrace(); }
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+            try { if (byteArray != null) byteArray.release(); }
+            catch(Throwable ei) { ei.printStackTrace(); }
+        }
 
         return defaultValue;
     }
 
     public static FREObject getFreObject(byte[] data) {
-        FREObject byteArray = null;
-
         try {
-            byteArray = FREObject.newObject("flash.utils.ByteArray", null);
+            FREObject byteArray = FREObject.newObject("flash.utils.ByteArray", null);
             for (byte aByte : data) {
-                FREObject arguments[] = new FREObject[1];
-                arguments[0] = FREObject.newObject(aByte);
+                FREObject arguments[] = new FREObject[] { FREObject.newObject(aByte) };
                 byteArray.callMethod("writeByte", arguments);
             }
+            return byteArray;
         } catch (Throwable e) { e.printStackTrace(); }
 
-        return byteArray;
+        return null;
     }
 
     public static <D> D[] getArrayProperty(FREContext freContext, FREObject freObject, String propertyName, IDecoder<D> decoder, Class<D>aClass) {

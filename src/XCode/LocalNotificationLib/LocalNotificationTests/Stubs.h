@@ -40,18 +40,19 @@ extern FREObject byteArrayReleased;
 extern const uint8_t* sentEventCode;
 extern const uint8_t* sentEventLevel;
 
-FREObject ADEPCreateManager(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-FREObject ADEPCancel(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-FREObject ADEPCancelAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-FREObject ADEPRegisterSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-FREObject ADEPCheckForNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-FREObject ADEPGetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-FREObject ADEPSetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-FREObject ADEPGetSelectedSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-FREObject ADEPGetSelectedNotificationCode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
-FREObject ADEPGetSelectedNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_createManager(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_notify(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_cancel(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_cancelAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_registerSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_checkForNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_getApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_setApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_getSelectedSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_getSelectedNotificationCode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_getSelectedNotificationData(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_getSelectedNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
+FREObject JKLN_getSelectedNotificationUserResponse(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]);
 void resetEvent(void);
 
 @interface StubCenterDelegate: NSObject<UNUserNotificationCenterDelegate>

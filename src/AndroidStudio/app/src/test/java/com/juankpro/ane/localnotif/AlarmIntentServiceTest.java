@@ -56,7 +56,7 @@ public class AlarmIntentServiceTest {
 
         try {
             PowerMockito.whenNew(LocalNotificationEventDispatcher.class)
-                    .withArguments("KeyCode", data, null)
+                    .withArguments("KeyCode", (Object) data)
                     .thenReturn(eventDispatcher);
         } catch(Exception e) { e.printStackTrace(); }
     }

@@ -1,5 +1,7 @@
 package com.juankpro.ane.localnotif;
 
+import android.os.Build;
+
 import com.juankpro.ane.localnotif.category.LocalNotificationAction;
 
 import org.json.JSONException;
@@ -12,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertSame;
@@ -28,7 +31,7 @@ import static junit.framework.Assert.assertEquals;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({LocalNotificationAction.class})
+@PrepareForTest({LocalNotificationAction.class,Build.VERSION.class})
 public class LocalNotificationActionTest {
     @Mock
     private JSONObject jsonObject;
@@ -39,6 +42,7 @@ public class LocalNotificationActionTest {
         MockitoAnnotations.initMocks(true);
         when(jsonObject.optString("identifier", "")).thenReturn("MyId");
         when(jsonObject.optString("title", "")).thenReturn("Title");
+        when(jsonObject.optString("textInputPlaceholder")).thenReturn("Placeholder");
 
         try {
             PowerMockito.whenNew(JSONObject.class).withNoArguments().thenReturn(jsonObject);
@@ -49,6 +53,7 @@ public class LocalNotificationActionTest {
         return getSubject(null, null, false);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private LocalNotificationAction getSubject(String identifier, String title) {
         return getSubject(identifier, title, false);
     }
@@ -71,6 +76,7 @@ public class LocalNotificationActionTest {
         getSubject().deserialize(jsonObject);
         assertEquals("Title", getSubject().title);
         assertEquals("MyId", getSubject().identifier);
+        assertEquals("Placeholder", getSubject().textInputPlaceholder);
     }
 
     @Test
@@ -96,7 +102,19 @@ public class LocalNotificationActionTest {
             assertSame(jsonObject, getSubject("MyId", "MyTitle").serialize());
             verify(jsonObject).putOpt("identifier", "MyId");
             verify(jsonObject).putOpt("title", "MyTitle");
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
+    }
+
+    @Test
+    public void action_serialize_serializesTextInputPlaceHolder() {
+        try {
+            getSubject("MyId", "MyTitle").textInputPlaceholder = "Placeholder";
+
+            assertSame(jsonObject, getSubject().serialize());
+            verify(jsonObject).putOpt("identifier", "MyId");
+            verify(jsonObject).putOpt("title", "MyTitle");
+            verify(jsonObject).putOpt("textInputPlaceholder", "Placeholder");
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -104,7 +122,7 @@ public class LocalNotificationActionTest {
         try {
             assertSame(jsonObject, getSubject("MyId", "MyTitle", true).serialize());
             verify(jsonObject).putOpt("isBackground", true);
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -112,7 +130,7 @@ public class LocalNotificationActionTest {
         try {
             assertSame(jsonObject, getSubject("MyId", "MyTitle", false).serialize());
             verify(jsonObject).putOpt("isBackground", false);
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     @Test
@@ -123,6 +141,34 @@ public class LocalNotificationActionTest {
             assertSame(jsonObject, getSubject("MyId", "MyTitle").serialize());
             verify(jsonObject).putOpt("identifier", "MyId");
             verify(jsonObject, never()).putOpt(eq("title"), anyString());
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (JSONException e) { e.printStackTrace(); }
+    }
+
+    @Test
+    public void action_isTextInput_returnsTrueIfPlaceholderIsPresent() {
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.N);
+        getSubject().textInputPlaceholder = "Placeholder";
+        assertTrue(getSubject().isTextInput());
+    }
+
+    @Test
+    public void action_isTextInput_returnsFalseIfPlaceholderIsNull() {
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.N);
+        getSubject().textInputPlaceholder = null;
+        assertFalse(getSubject().isTextInput());
+    }
+
+    @Test
+    public void action_isTextInput_returnsFalseIfPlaceholderIsEmpty() {
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.N);
+        getSubject().textInputPlaceholder = "";
+        assertFalse(getSubject().isTextInput());
+    }
+
+    @Test
+    public void action_isTextInput_returnsFalseForVersionsLessThanNougat() {
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.N - 1);
+        getSubject().textInputPlaceholder = "Placeholder";
+        assertFalse(getSubject().isTextInput());
     }
 }

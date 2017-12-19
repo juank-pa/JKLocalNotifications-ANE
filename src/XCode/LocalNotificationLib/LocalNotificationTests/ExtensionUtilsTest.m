@@ -49,6 +49,16 @@
     XCTAssertEqual((__bridge id)nativeContext, contextData);
 }
 
+- (void)testHasPropertyForValidProperty {
+    NSString *propName = @"validProperty";
+    XCTAssertTrue([ExtensionUtils freObject:freObjectBoolean hasProperty:propName]);
+}
+
+- (void)testHasPropertyForInvalidProperty {
+    NSString *propName = @"invalidProperty";
+    XCTAssertFalse([ExtensionUtils freObject:freObjectBoolean hasProperty:propName]);
+}
+
 - (void)testGetPropertyFromObject {
     NSString *propName = @"propName";
     FREObject result = [ExtensionUtils getProperty:propName fromObject:freObjectBoolean];

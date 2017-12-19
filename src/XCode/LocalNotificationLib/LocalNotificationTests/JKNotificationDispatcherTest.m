@@ -32,7 +32,7 @@
     self.listener.delegate = self.delegateMock;
 
     self.subject = [[JKNotificationDispatcher alloc] initWithListener:self.listener];
-    [self.subject dispatchDidReceiveNotificationWithActionId:nil userInfo:@{}];
+    [self.subject dispatchDidReceiveNotificationWithUserInfo:@{}];
 }
 
 - (void)tearDown {
@@ -55,6 +55,7 @@
 
     [self.subject dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                     userInfo:nil
+                                                    response:@"Response"
                                            completionHandler:testBlock];
 
     XCTAssertFalse(called);
@@ -71,22 +72,26 @@
                                };
     [self.subject dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                     userInfo:userInfo
+                                                    response:@"Response"
                                            completionHandler:NULL];
 
     XCTAssertEqual(self.listener.notificationCode, @"MyCode");
     XCTAssertEqual(self.listener.notificationData, data);
     XCTAssertEqual(self.listener.notificationAction, @"actionId");
+    XCTAssertEqual(self.listener.userResponse, @"Response");
 
     [self.subject dispatchDidReceiveNotificationWithActionId:nil
                                                     userInfo:userInfo
+                                                    response:nil
                                            completionHandler:NULL];
 
     XCTAssertEqual(self.listener.notificationCode, @"MyCode");
     XCTAssertEqual(self.listener.notificationData, data);
     XCTAssertNil(self.listener.notificationAction);
+    XCTAssertNil(self.listener.userResponse);
 }
 
-- (void)testDispatchDidReceiveNotificationWithUserInfoDelegatesIfImplemented {
+- (void)testDispatchDidReceiveNotificationWithUserInfoDelegatesIfDelegateIsNotNil {
     OCMExpect([self.delegateMock didReceiveNotificationDataForNotificationListener:self.listener]);
     [self.subject dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                     userInfo:@{ }
@@ -109,7 +114,7 @@
     OCMVerifyAll(self.delegateMock);
 }
 
-- (void)testDispatchDidReceiveNotificationWithUserInfoCallsBlockevenIfNoDelegate {
+- (void)testDispatchDidReceiveNotificationWithUserInfoCallsBlockEvenIfNoDelegate {
     __block BOOL called = NO;
     void (^testBlock)(void) = ^{
         called = YES;
@@ -131,6 +136,7 @@
     self.listener.delegate = nil;
     [self.subject dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                     userInfo:userInfo
+                                                    response:@"Response"
                                            completionHandler:NULL];
 
     XCTAssertEqual(self.listener.userInfo, userInfo);
@@ -143,6 +149,7 @@
 
     OCMExpect([subject dispatchDidReceiveNotificationWithActionId:nil
                                                          userInfo:userInfo
+                                                         response:nil
                                                 completionHandler:NULL]);
 
     [self.subject dispatchDidReceiveNotificationWithUserInfo:userInfo];
@@ -157,6 +164,7 @@
 
     OCMExpect([subject dispatchDidReceiveNotificationWithActionId:nil
                                                          userInfo:userInfo
+                                                         response:nil
                                                 completionHandler:testBlock]);
 
     [self.subject dispatchDidReceiveNotificationWithUserInfo:userInfo
@@ -165,17 +173,19 @@
     OCMVerifyAll(subject);
 }
 
-
-- (void)testDispatchDidReceiveNotificationWithActionIdUserInfo {
+- (void)testDispatchDidReceiveNotificationWithActionIdUserInfoCompletionHandler {
     id subject = OCMPartialMock(self.subject);
+    void (^testBlock)(void) = ^{};
     NSDictionary *userInfo = @{};
 
-    OCMExpect([subject dispatchDidReceiveNotificationWithActionId:@"actionId"
+    OCMExpect([subject dispatchDidReceiveNotificationWithActionId:@"ActionId"
                                                          userInfo:userInfo
-                                                completionHandler:NULL]);
+                                                         response:nil
+                                                completionHandler:testBlock]);
 
-    [self.subject dispatchDidReceiveNotificationWithActionId:@"actionId"
-                                                    userInfo:userInfo];
+    [self.subject dispatchDidReceiveNotificationWithActionId:@"ActionId"
+                                                    userInfo:userInfo
+                                           completionHandler:testBlock];
 
     OCMVerifyAll(subject);
 }

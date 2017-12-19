@@ -34,4 +34,12 @@
     return [JKNotificationBuilder new];
 }
 
+- (JKLegacyActionBuilder *)createActionBuilder {
+    return [JKLegacyActionBuilder new];
+}
+
+- (JKLegacyTextInputActionBuilder *)createTextInputActionBuilder {
+    return [JKLegacyTextInputActionBuilder new];
+}
+
 @end

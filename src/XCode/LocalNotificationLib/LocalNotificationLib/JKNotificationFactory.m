@@ -58,6 +58,14 @@ id _appMock;
     return nil;
 }
 
+- (id)createActionBuilder {
+    return nil;
+}
+
+- (id)createTextInputActionBuilder {
+    return nil;
+}
+
 - (NSDictionary *)fetchUserInfo:(JKLocalNotification *)notification {
     NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithCapacity:2];
     infoDict[JK_NOTIFICATION_CODE_KEY] = notification.notificationCode;

@@ -33,7 +33,7 @@ public class AlarmIntentService extends BroadcastReceiver {
     private boolean tryEventDispatch(Bundle bundle) {
         String code = bundle.getString(Constants.NOTIFICATION_CODE_KEY);
         byte[] data = bundle.getByteArray(Constants.ACTION_DATA_KEY);
-        return new LocalNotificationEventDispatcher(code, data, null).dispatchWhenInForeground();
+        return new LocalNotificationEventDispatcher(code, data).dispatchWhenInForeground();
     }
 }
 

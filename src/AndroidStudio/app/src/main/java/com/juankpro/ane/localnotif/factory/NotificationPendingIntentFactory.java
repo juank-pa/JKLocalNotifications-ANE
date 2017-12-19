@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.juankpro.ane.localnotif.Constants;
-import com.juankpro.ane.localnotif.util.Logger;
+import com.juankpro.ane.localnotif.TextInputActionIntentService;
 
 /**
  * Created by jpazmino on 11/10/17.
@@ -22,34 +22,45 @@ public class NotificationPendingIntentFactory implements PendingIntentFactory {
     }
 
     public PendingIntent createPendingIntent() {
-        return createPendingIntent(null, false);
+        return createActionPendingIntent(null, false);
     }
 
-
-    public PendingIntent createPendingIntent(String actionId, boolean backgroundMode) {
+    public PendingIntent createActionPendingIntent(String actionId, boolean backgroundMode) {
         return PendingIntent.getService(
                 context,
                 intentHashCode(actionId),
                 buildActionIntent(actionId, backgroundMode),
-                PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public PendingIntent createTextInputActionPendingIntent(String actionId, boolean backgroundMode) {
+        return PendingIntent.getBroadcast(
+                context,
+                intentHashCode(actionId),
+                buildTextInputActionIntent(actionId, backgroundMode),
+                PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private Intent buildTextInputActionIntent(String actionId, boolean backgroundMode) {
+        return buildIntent(actionId, backgroundMode)
+                .setClass(context, TextInputActionIntentService.class);
     }
 
     private Intent buildActionIntent(String actionId, boolean backgroundMode) {
+        return buildIntent(actionId, backgroundMode)
+                .setClassName(context, Constants.NOTIFICATION_INTENT_SERVICE);
+    }
+
+    private Intent buildIntent(String actionId, boolean backgroundMode) {
         final Intent intent = new Intent();
         String activityClassName = bundle.getString(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY);
 
-        intent.setClassName(context, Constants.NOTIFICATION_INTENT_SERVICE);
         intent.putExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY, activityClassName);
-
         intent.putExtra(Constants.NOTIFICATION_CODE_KEY, bundle.getString(Constants.NOTIFICATION_CODE_KEY));
         intent.putExtra(Constants.ACTION_DATA_KEY, bundle.getByteArray(Constants.ACTION_DATA_KEY));
-        Logger.log("NotificationPendingIntentFactory::buildActionIntent Activity Class Name: " + activityClassName);
+        intent.putExtra(Constants.BACKGROUND_MODE_KEY, backgroundMode);
+        if (actionId != null) intent.putExtra(Constants.ACTION_ID_KEY, actionId);
 
-        if (actionId != null) {
-            intent.putExtra(Constants.ACTION_ID_KEY, actionId);
-            intent.putExtra(Constants.BACKGROUND_MODE_ID_KEY, backgroundMode);
-            Logger.log("NotificationPendingIntentFactory::buildActionIntent Action id: " + actionId);
-        }
         return intent;
     }
 

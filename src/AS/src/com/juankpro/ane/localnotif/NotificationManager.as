@@ -292,6 +292,7 @@
 
             notification.notificationCode = String(_extensionContext.call("getSelectedNotificationCode"));
             notification.notificationAction = String(_extensionContext.call("getSelectedNotificationAction"));
+            notification.notificationUserResponse = String(_extensionContext.call("getSelectedNotificationUserResponse"));
           }
         );
       }

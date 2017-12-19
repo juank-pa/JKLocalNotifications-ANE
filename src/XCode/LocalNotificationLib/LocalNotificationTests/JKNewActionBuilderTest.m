@@ -6,6 +6,7 @@
 //
 //
 
+#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 #import "JKNewTestCase.h"
 #import "JKNewActionBuilder.h"
@@ -37,13 +38,6 @@
     XCTAssertEqualObjects(result.identifier, action.identifier);
 }
 
-- (void)assertActions:(NSArray <UNNotificationAction *> *)results basedOnActions:(NSArray <JKLocalNotificationAction *> *)actions {
-    XCTAssertEqual(results.count, actions.count);
-    for (int i = (int)results.count - 1; i >= 0; i--) {
-        [self assertAction:results[i] basedOnAction:actions[i]];
-    }
-}
-
 - (void)testBuildFromNonBackgroundAction {
     JKLocalNotificationAction *action = [self actionWithIdentifier:@"actionId" title:@"Action"];
     action.background = NO;
@@ -63,11 +57,27 @@
 }
 
 - (void)testBuildFromActions {
-    JKLocalNotificationAction *action1 = [self actionWithIdentifier:@"actionId1" title:@"Action 1"];
-    JKLocalNotificationAction *action2 = [self actionWithIdentifier:@"actionId2" title:@"Action 2"];
-    NSArray *actions = @[action1, action2];
+    id action1 = OCMClassMock([JKLocalNotificationAction class]);
+    id action2 = OCMClassMock([JKLocalNotificationAction class]);
 
-    [self assertActions:[self.subject buildFromActions:actions] basedOnActions:actions];
+    id builder1 = OCMClassMock([JKNewActionBuilder class]);
+    id builder2 = OCMClassMock([JKNewActionBuilder class]);
+
+    id nativeAction1 = OCMClassMock([UNNotificationAction class]);
+    id nativeAction2 = OCMClassMock([UNNotificationAction class]);
+
+    OCMStub([action1 builder]).andReturn(builder1);
+    OCMStub([action2 builder]).andReturn(builder2);
+
+    OCMStub([builder1 buildFromAction:action1]).andReturn(nativeAction1);
+    OCMStub([builder2 buildFromAction:action2]).andReturn(nativeAction2);
+
+    NSArray *actions = @[action1, action2];
+    NSArray *expectedActions = @[nativeAction1, nativeAction2];
+
+    NSArray<UNNotificationAction *> *result = [JKNewActionBuilder buildFromActions:actions];
+
+    XCTAssertEqualObjects(result, expectedActions);
 }
 
 @end

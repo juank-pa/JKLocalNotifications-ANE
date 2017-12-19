@@ -266,13 +266,16 @@
 }
 
 - (void)testHandleActionWithResponseDispatchesWhenOriginalDelegateNotImplemented {
+    if (![UIUserNotificationAction instancesRespondToSelector:@selector(behavior)]) return;
+
     UILocalNotification *notification = self.notification;
-    NSDictionary *response = @{};
+    NSDictionary *response = @{ UIUserNotificationActionResponseTypedTextKey: @"Response"};
     id savedDelegateMock = OCMPartialMock([StubAppDelegate new]);
     void (^testBlock)(void) = ^{};
 
     OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                                      userInfo:notification.userInfo
+                                                                     response:@"Response"
                                                             completionHandler:testBlock]);
 
     self.subject.dispatcher = self.dispatcherMock;
@@ -288,8 +291,10 @@
 }
 
 - (void)testHandleActionWithResponseDispatchesIfOriginalDelegateCallsCompleteHandler {
+    if (![UIUserNotificationAction instancesRespondToSelector:@selector(behavior)]) return;
+
     UILocalNotification *notification = self.notification;
-    NSDictionary *response = @{};
+    NSDictionary *response = @{ UIUserNotificationActionResponseTypedTextKey: @"Response"};
     void (^testBlock)(void) = ^{};
 
     OCMExpect([self.appDelegateMock application:self.appMock
@@ -299,6 +304,7 @@
                               completionHandler:[OCMArg invokeBlock]]);
     OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                                      userInfo:notification.userInfo
+                                                                     response:@"Response"
                                                             completionHandler:testBlock]);
 
     self.subject.dispatcher = self.dispatcherMock;
@@ -314,8 +320,10 @@
 }
 
 - (void)testHandleActionWithResponseDoesNotDispatchIfOriginalDelegateDoesNotCallBlock {
+    if (![UIUserNotificationAction instancesRespondToSelector:@selector(behavior)]) return;
+
     UILocalNotification *notification = self.notification;
-    NSDictionary *response = @{};
+    NSDictionary *response = @{ UIUserNotificationActionResponseTypedTextKey: @"Response"};
     void (^testBlock)(void) = ^{};
 
     OCMExpect([self.appDelegateMock application:self.appMock
@@ -325,6 +333,7 @@
                               completionHandler:[OCMArg any]]);
     OCMReject([self.dispatcherMock dispatchDidReceiveNotificationWithActionId:[OCMArg any]
                                                                      userInfo:[OCMArg any]
+                                                                     response:[OCMArg any]
                                                             completionHandler:[OCMArg any]]);
 
     self.subject.dispatcher = self.dispatcherMock;
@@ -340,8 +349,10 @@
 }
 
 - (void)testHandleActionWithResponseCanDispatchMoreThanOnce {
+    if (![UIUserNotificationAction instancesRespondToSelector:@selector(behavior)]) return;
+
     UILocalNotification *notification = self.notification;
-    NSDictionary *response = @{};
+    NSDictionary *response = @{ UIUserNotificationActionResponseTypedTextKey: @"Response"};
     id savedDelegateMock = OCMPartialMock([StubAppDelegate new]);
     void (^testBlock)(void) = ^{};
 
@@ -352,9 +363,9 @@
          forLocalNotification:notification
             completionHandler:testBlock];
 
-
     OCMExpect([self.dispatcherMock dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                                      userInfo:notification.userInfo
+                                                                     response:@"Response"
                                                             completionHandler:testBlock]);
 
     [self.subject application:self.appMock

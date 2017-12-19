@@ -169,11 +169,13 @@ package {
       mockContext.expects("call").withArgs("getSelectedNotificationData").willReturn(byteArray);
       mockContext.expects("call").withArgs("getSelectedNotificationCode").willReturn("MyCode");
       mockContext.expects("call").withArgs("getSelectedNotificationAction").willReturn("ActionId");
+      mockContext.expects("call").withArgs("getSelectedNotificationUserResponse").willReturn("response");
 
       manager.addEventListener(NotificationEvent.NOTIFICATION_ACTION, function(event:NotificationEvent):void {
         assertEqualsArrays(testObject, event.actionData);
         assertEquals("MyCode", event.notificationCode);
         assertEquals("ActionId", event.notificationAction);
+        assertEquals("response", event.notificationUserResponse);
       });
 
       mockContext.dispatchEvent(new StatusEvent(StatusEvent.STATUS, false, false, "notificationSelected"));

@@ -16,6 +16,7 @@
 @interface JKNotificationListener (Test)
 @property (nonatomic, readwrite) JKNotificationDispatcher *dispatcher;
 @property (nonatomic, readwrite) NSString *notificationAction;
+@property (nonatomic, readwrite) NSString *userResponse;
 @property (nonatomic, readwrite) NSDictionary *userInfo;
 @end
 
@@ -38,9 +39,11 @@
     NSDictionary *userInfo = @{};
     OCMExpect([self.dispatcher dispatchDidReceiveNotificationWithActionId:@"actionId"
                                                                  userInfo:userInfo
+                                                                 response:@"Response"
                                                         completionHandler:[OCMArg any]]);
 
     self.subject.notificationAction = @"actionId";
+    self.subject.userResponse = @"Response";
     self.subject.dispatcher = self.dispatcher;
     self.subject.userInfo = userInfo;
     [self.subject checkForNotificationAction];
@@ -50,10 +53,12 @@
 
 - (void)checkForNotificationActionDoesNotDispatchIfUserInfoIsNil {
     OCMReject([self.dispatcher dispatchDidReceiveNotificationWithActionId:[OCMArg any]
-                                                                     userInfo:[OCMArg any]
-                                                            completionHandler:[OCMArg any]]);
+                                                                 userInfo:[OCMArg any]
+                                                                 response:[OCMArg any]
+                                                        completionHandler:[OCMArg any]]);
 
     self.subject.notificationAction = @"actionId";
+    self.subject.userResponse = @"Response";
     self.subject.dispatcher = self.dispatcher;
     self.subject.userInfo = nil;
     [self.subject checkForNotificationAction];
@@ -63,15 +68,17 @@
 
 - (void)checkForNotificationActionOnlyOnce {
     OCMStub([self.dispatcher dispatchDidReceiveNotificationWithActionId:[OCMArg any]
-                                                                   userInfo:[OCMArg any]
-                                                          completionHandler:[OCMArg invokeBlock]]);
+                                                               userInfo:[OCMArg any]
+                                                               response:[OCMArg any]
+                                                      completionHandler:[OCMArg invokeBlock]]);
 
     self.subject.dispatcher = self.dispatcher;
     self.subject.userInfo = @{};
     [self.subject checkForNotificationAction];
     OCMReject([self.dispatcher dispatchDidReceiveNotificationWithActionId:[OCMArg any]
-                                                                     userInfo:[OCMArg any]
-                                                            completionHandler:[OCMArg any]]);
+                                                                 userInfo:[OCMArg any]
+                                                                 response:[OCMArg any]
+                                                        completionHandler:[OCMArg any]]);
 
     [self.subject checkForNotificationAction];
 

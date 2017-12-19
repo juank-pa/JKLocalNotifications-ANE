@@ -2,6 +2,7 @@ package com.juankpro.ane.localnotif;
 
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREObject;
+import com.adobe.fre.FREWrongThreadException;
 import com.juankpro.ane.localnotif.fre.FunctionHelper;
 
 import org.junit.Before;
@@ -74,9 +75,13 @@ public class FunctionHelperTest {
     public void helper_call_forwardsErrorToANEIfErrorThrown() {
         try {
             when(FREObject.newObject(anyString())).thenReturn(freResultObject);
-            assertSame(freResultObject, getSubject("My Error").call(freContext, freArgs));
+        } catch (Throwable e) { e.printStackTrace(); }
+
+        assertSame(freResultObject, getSubject("My Error").call(freContext, freArgs));
+
+        try {
             verifyStatic(FREObject.class);
             FREObject.newObject("Exception! java.lang.Exception: My Error");
-        } catch (Throwable e) { e.printStackTrace(); }
+        } catch (FREWrongThreadException e) { e.printStackTrace(); }
     }
 }

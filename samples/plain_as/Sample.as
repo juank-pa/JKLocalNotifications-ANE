@@ -39,8 +39,18 @@
       printMessage("Resized");
     }
 
+    private function createTextInputAction(icon:String, identifier:String, title:String, buttonTitle:String, placeholder:String, isBackground:Boolean = false):TextInputNotificationAction {
+      var action:TextInputNotificationAction = setupAction(new TextInputNotificationAction(), icon, identifier, title, isBackground) as TextInputNotificationAction;
+      action.textInputButtonTitle = buttonTitle;
+      action.textInputPlaceholder = placeholder;
+      return action;
+    }
+
     private function createAction(icon:String, identifier:String, title:String, isBackground:Boolean = false):NotificationAction {
-      var action:NotificationAction = new NotificationAction();
+      return setupAction(new NotificationAction(), icon, identifier, title, isBackground);
+    }
+
+    private function setupAction(action:NotificationAction, icon:String, identifier:String, title:String, isBackground:Boolean = false):NotificationAction {
       action.identifier = identifier;
       action.title = title;
       action.icon = icon;
@@ -61,7 +71,7 @@
           "category",
           Vector.<NotificationAction>([
             createAction(NotificationIconType.DOCUMENT, "okAction", "OK", true),
-            createAction(NotificationIconType.ALERT, "cancelAction", "Cancel"),
+            createTextInputAction(NotificationIconType.ALERT, "cancelAction", "Cancel", "Fight!", "Ready..."),
             createAction(NotificationIconType.FLAG, "resetAction", "Reset"),
             createAction(NotificationIconType.INFO, "alertAction", "Alert")
           ])
@@ -186,7 +196,8 @@
     private function notificationActionHandler(event:NotificationEvent):void {
       printMessage("Code: " + event.notificationCode +
         "\nSample Data: {" + event.actionData.sampleData + "}" +
-        "\nAction: " + event.notificationAction,
+        "\nAction: " + event.notificationAction +
+        "\nUser Response: " + event.notificationUserResponse,
         "Received notification");
     }
 

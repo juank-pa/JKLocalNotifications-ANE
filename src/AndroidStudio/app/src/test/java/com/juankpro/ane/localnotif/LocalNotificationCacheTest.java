@@ -25,22 +25,23 @@ public class LocalNotificationCacheTest {
     @Test
     public void notificationCache_setDataForSelectedNotification() {
         byte[] data = {0};
-        getSubject().setData("My Code", data, "ActionId");
+        getSubject().setData("My Code", data, "ActionId", "UserResponse");
         assertEquals("My Code", getSubject().getNotificationCode());
         assertEquals(data, getSubject().getNotificationData());
         assertEquals("ActionId", getSubject().getActionId());
+        assertEquals("UserResponse", getSubject().getUserResponse());
     }
 
     @Test
     public void notificationCache_settingData_marksCacheAsUpdated() {
         assertFalse(getSubject().wasUpdated());
-        getSubject().setData("My Code", new byte[]{0}, "ActionId");
+        getSubject().setData("My Code", new byte[]{0}, "ActionId", "UserResponse");
         assertTrue(getSubject().wasUpdated());
     }
 
     @Test
     public void notificationCache_reset_marksCacheAsNotUpdated() {
-        getSubject().setData("My Code", new byte[]{0}, "ActionId");
+        getSubject().setData("My Code", new byte[]{0}, "ActionId", "UserResponse");
         assertTrue(getSubject().wasUpdated());
 
         getSubject().reset();
@@ -51,7 +52,7 @@ public class LocalNotificationCacheTest {
     @Test
     public void notificationCache_reset_leavesDataUntouched() {
         byte[] data = {0};
-        getSubject().setData("My Code", data, "ActionId");
+        getSubject().setData("My Code", data, "ActionId", "UserResponse");
         assertTrue(getSubject().wasUpdated());
 
         getSubject().reset();
@@ -59,12 +60,13 @@ public class LocalNotificationCacheTest {
         assertEquals("My Code", getSubject().getNotificationCode());
         assertEquals(data, getSubject().getNotificationData());
         assertEquals("ActionId", getSubject().getActionId());
+        assertEquals("UserResponse", getSubject().getUserResponse());
     }
 
     @Test
     public void notificationCache_clear_createsANewInstance() {
         LocalNotificationCache previousCache = LocalNotificationCache.getInstance();
-        previousCache.setData("My Code", new byte[]{0}, "ActionId");
+        previousCache.setData("My Code", new byte[]{0}, "ActionId", "UserResponse");
 
         assertSame(previousCache, LocalNotificationCache.getInstance());
         assertTrue(previousCache.wasUpdated());
@@ -75,6 +77,7 @@ public class LocalNotificationCacheTest {
         assertNotSame(previousCache, newCache);
         assertNull(newCache.getNotificationCode());
         assertNull(newCache.getNotificationData());
+        assertNull(newCache.getUserResponse());
         assertFalse(newCache.wasUpdated());
     }
 }

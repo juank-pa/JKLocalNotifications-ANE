@@ -59,22 +59,33 @@
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler {
     if ([self.originalDelegate respondsToSelector:@selector(application:handleActionWithIdentifier:forLocalNotification:completionHandler:)]) {
         [self.originalDelegate application:application handleActionWithIdentifier:identifier forLocalNotification:notification completionHandler:^{
-            [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier userInfo:notification.userInfo completionHandler:completionHandler];
+            [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier
+                                                               userInfo:notification.userInfo
+                                                      completionHandler:completionHandler];
         }];
         return;
     }
 
-    [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier userInfo:notification.userInfo completionHandler:completionHandler];
+    [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier
+                                                       userInfo:notification.userInfo
+                                              completionHandler:completionHandler];
 }
 
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification withResponseInfo:(NSDictionary *)responseInfo completionHandler:(void (^)())completionHandler {
+    NSString *response = responseInfo? responseInfo[UIUserNotificationActionResponseTypedTextKey] : nil;
     if ([self.originalDelegate respondsToSelector:@selector(application:handleActionWithIdentifier:forLocalNotification:withResponseInfo:completionHandler:)]) {
         [self.originalDelegate application:application handleActionWithIdentifier:identifier forLocalNotification:notification withResponseInfo:responseInfo completionHandler:^{
-            [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier userInfo:notification.userInfo completionHandler:completionHandler];
+            [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier
+                                                               userInfo:notification.userInfo
+                                                               response:response
+                                                      completionHandler:completionHandler];
         }];
         return;
     }
-    [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier userInfo:notification.userInfo completionHandler:completionHandler];
+    [self.dispatcher dispatchDidReceiveNotificationWithActionId:identifier
+                                                       userInfo:notification.userInfo
+                                                       response:response
+                                              completionHandler:completionHandler];
 }
 
 #pragma clang diagnostic pop

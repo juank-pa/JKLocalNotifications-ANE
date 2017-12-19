@@ -8,18 +8,23 @@
         android:minSdkVersion="16"
         android:targetSdkVersion="24" />
 
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application>
-        <service android:name="com.juankpro.ane.localnotif.LocalNotificationIntentService"/>
-        <service android:name="com.juankpro.ane.localnotif.util.PlayAudio"/>
-        <receiver android:name="com.juankpro.ane.localnotif.AlarmIntentService" />
-        <receiver android:name="com.juankpro.ane.localnotif.AlarmRestoreOnBoot" >
+        <service android:name=".LocalNotificationIntentService" />
+        <service android:name=".util.PlayAudio" />
+
+        <receiver android:name=".AlarmIntentService" />
+        <receiver android:name=".AlarmRestoreOnBoot">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".TextInputActionIntentService"></receiver>
     </application>
 
 </manifest>

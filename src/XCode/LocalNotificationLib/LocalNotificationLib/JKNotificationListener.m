@@ -41,7 +41,7 @@
 
 - (void)checkForNotificationAction {
     if (self.userInfo == nil) return;
-    [self.dispatcher dispatchDidReceiveNotificationWithActionId:self.notificationAction userInfo:self.userInfo completionHandler:^{
+    [self.dispatcher dispatchDidReceiveNotificationWithActionId:self.notificationAction userInfo:self.userInfo response:self.userResponse completionHandler:^{
         self.userInfo = nil;
     }];
 }

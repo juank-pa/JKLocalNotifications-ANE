@@ -66,6 +66,23 @@
 		875260021FCDBB3A00C0E9E2 /* JKLegacyActionBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 875260001FCDBB3A00C0E9E2 /* JKLegacyActionBuilder.m */; };
 		875260031FCDBB3A00C0E9E2 /* JKLegacyActionBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 875260001FCDBB3A00C0E9E2 /* JKLegacyActionBuilder.m */; };
 		875260041FCDBB3A00C0E9E2 /* JKLegacyActionBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 875260001FCDBB3A00C0E9E2 /* JKLegacyActionBuilder.m */; };
+		AC9C06481FE44DEC002FB63F /* JKTextInputLocalNotificationAction.h in Headers */ = {isa = PBXBuildFile; fileRef = AC9C06461FE44DEC002FB63F /* JKTextInputLocalNotificationAction.h */; };
+		AC9C06491FE44DEC002FB63F /* JKTextInputLocalNotificationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C06471FE44DEC002FB63F /* JKTextInputLocalNotificationAction.m */; };
+		AC9C064A1FE44DEC002FB63F /* JKTextInputLocalNotificationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C06471FE44DEC002FB63F /* JKTextInputLocalNotificationAction.m */; };
+		AC9C064B1FE44DEC002FB63F /* JKTextInputLocalNotificationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C06471FE44DEC002FB63F /* JKTextInputLocalNotificationAction.m */; };
+		AC9C064E1FE465F5002FB63F /* JKNewTextInputActionBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = AC9C064C1FE465F5002FB63F /* JKNewTextInputActionBuilder.h */; };
+		AC9C064F1FE465F5002FB63F /* JKNewTextInputActionBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C064D1FE465F5002FB63F /* JKNewTextInputActionBuilder.m */; };
+		AC9C06501FE465F5002FB63F /* JKNewTextInputActionBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C064D1FE465F5002FB63F /* JKNewTextInputActionBuilder.m */; };
+		AC9C06511FE465F5002FB63F /* JKNewTextInputActionBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C064D1FE465F5002FB63F /* JKNewTextInputActionBuilder.m */; };
+		AC9C06541FE46673002FB63F /* JKLegacyTextInputActionBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = AC9C06521FE46673002FB63F /* JKLegacyTextInputActionBuilder.h */; };
+		AC9C06551FE46673002FB63F /* JKLegacyTextInputActionBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C06531FE46673002FB63F /* JKLegacyTextInputActionBuilder.m */; };
+		AC9C06561FE46673002FB63F /* JKLegacyTextInputActionBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C06531FE46673002FB63F /* JKLegacyTextInputActionBuilder.m */; };
+		AC9C06571FE46673002FB63F /* JKLegacyTextInputActionBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C06531FE46673002FB63F /* JKLegacyTextInputActionBuilder.m */; };
+		AC9C065B1FE5CB2C002FB63F /* JKActionBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = AC9C065A1FE5CB2C002FB63F /* JKActionBuilder.h */; };
+		AC9C065D1FE5CFB7002FB63F /* JKLocalNotificationActionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C065C1FE5CFB7002FB63F /* JKLocalNotificationActionTest.m */; };
+		AC9C065F1FE5D410002FB63F /* JKTextInputLocalNotificationActionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C065E1FE5D410002FB63F /* JKTextInputLocalNotificationActionTest.m */; };
+		AC9C06611FE607C6002FB63F /* JKLegacyTextInputActionBuilderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C06601FE607C6002FB63F /* JKLegacyTextInputActionBuilderTest.m */; };
+		AC9C06631FE615D9002FB63F /* JKNewTextInputActionBuilderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9C06621FE615D9002FB63F /* JKNewTextInputActionBuilderTest.m */; };
 		AD233FD51FCD05FD00F755B8 /* NSArray+HigherOrder.h in Headers */ = {isa = PBXBuildFile; fileRef = AD233FD31FCD05FD00F755B8 /* NSArray+HigherOrder.h */; };
 		AD233FD61FCD05FD00F755B8 /* NSArray+HigherOrder.m in Sources */ = {isa = PBXBuildFile; fileRef = AD233FD41FCD05FD00F755B8 /* NSArray+HigherOrder.m */; };
 		AD233FD71FCD05FD00F755B8 /* NSArray+HigherOrder.m in Sources */ = {isa = PBXBuildFile; fileRef = AD233FD41FCD05FD00F755B8 /* NSArray+HigherOrder.m */; };
@@ -256,6 +273,18 @@
 		87525FFA1FCDBABF00C0E9E2 /* JKLegacyCategoryBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKLegacyCategoryBuilder.m; sourceTree = "<group>"; };
 		87525FFF1FCDBB3A00C0E9E2 /* JKLegacyActionBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKLegacyActionBuilder.h; sourceTree = "<group>"; };
 		875260001FCDBB3A00C0E9E2 /* JKLegacyActionBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKLegacyActionBuilder.m; sourceTree = "<group>"; };
+		AC9C06461FE44DEC002FB63F /* JKTextInputLocalNotificationAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JKTextInputLocalNotificationAction.h; sourceTree = "<group>"; };
+		AC9C06471FE44DEC002FB63F /* JKTextInputLocalNotificationAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKTextInputLocalNotificationAction.m; sourceTree = "<group>"; };
+		AC9C064C1FE465F5002FB63F /* JKNewTextInputActionBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JKNewTextInputActionBuilder.h; sourceTree = "<group>"; };
+		AC9C064D1FE465F5002FB63F /* JKNewTextInputActionBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKNewTextInputActionBuilder.m; sourceTree = "<group>"; };
+		AC9C06521FE46673002FB63F /* JKLegacyTextInputActionBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JKLegacyTextInputActionBuilder.h; sourceTree = "<group>"; };
+		AC9C06531FE46673002FB63F /* JKLegacyTextInputActionBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKLegacyTextInputActionBuilder.m; sourceTree = "<group>"; };
+		AC9C06581FE5B926002FB63F /* macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = macros.h; sourceTree = "<group>"; };
+		AC9C065A1FE5CB2C002FB63F /* JKActionBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JKActionBuilder.h; sourceTree = "<group>"; };
+		AC9C065C1FE5CFB7002FB63F /* JKLocalNotificationActionTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKLocalNotificationActionTest.m; sourceTree = "<group>"; };
+		AC9C065E1FE5D410002FB63F /* JKTextInputLocalNotificationActionTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKTextInputLocalNotificationActionTest.m; sourceTree = "<group>"; };
+		AC9C06601FE607C6002FB63F /* JKLegacyTextInputActionBuilderTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKLegacyTextInputActionBuilderTest.m; sourceTree = "<group>"; };
+		AC9C06621FE615D9002FB63F /* JKNewTextInputActionBuilderTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKNewTextInputActionBuilderTest.m; sourceTree = "<group>"; };
 		AD233FD31FCD05FD00F755B8 /* NSArray+HigherOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+HigherOrder.h"; sourceTree = "<group>"; };
 		AD233FD41FCD05FD00F755B8 /* NSArray+HigherOrder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+HigherOrder.m"; sourceTree = "<group>"; };
 		AD233FDE1FCD801300F755B8 /* JKLocalNotificationActionDecoderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKLocalNotificationActionDecoderTest.m; sourceTree = "<group>"; };
@@ -412,6 +441,7 @@
 		7D7659DB14CC8741001B2405 /* LocalNotificationLib */ = {
 			isa = PBXGroup;
 			children = (
+				AC9C06581FE5B926002FB63F /* macros.h */,
 				AD233FD31FCD05FD00F755B8 /* NSArray+HigherOrder.h */,
 				AD233FD41FCD05FD00F755B8 /* NSArray+HigherOrder.m */,
 				7DB6C3381576B9A200EB395C /* ExtensionUtils.h */,
@@ -507,6 +537,17 @@
 				87525FDE1FCCBCDF00C0E9E2 /* JKLocalNotificationCategory.m */,
 				87525FE21FCCBCF400C0E9E2 /* JKLocalNotificationAction.h */,
 				87525FE31FCCBCF400C0E9E2 /* JKLocalNotificationAction.m */,
+				AC9C06461FE44DEC002FB63F /* JKTextInputLocalNotificationAction.h */,
+				AC9C06471FE44DEC002FB63F /* JKTextInputLocalNotificationAction.m */,
+			);
+			name = category;
+			sourceTree = "<group>";
+		};
+		AC9C06591FE5C71D002FB63F /* category */ = {
+			isa = PBXGroup;
+			children = (
+				AC9C065C1FE5CFB7002FB63F /* JKLocalNotificationActionTest.m */,
+				AC9C065E1FE5D410002FB63F /* JKTextInputLocalNotificationActionTest.m */,
 			);
 			name = category;
 			sourceTree = "<group>";
@@ -514,16 +555,21 @@
 		AD233FE81FCD8ACE00F755B8 /* category */ = {
 			isa = PBXGroup;
 			children = (
+				AC9C065A1FE5CB2C002FB63F /* JKActionBuilder.h */,
 				AD233FE91FCD8C5200F755B8 /* JKLegacyNotificationSettingsBuilder.h */,
 				AD233FEA1FCD8C5200F755B8 /* JKLegacyNotificationSettingsBuilder.m */,
 				87525FF91FCDBABF00C0E9E2 /* JKLegacyCategoryBuilder.h */,
 				87525FFA1FCDBABF00C0E9E2 /* JKLegacyCategoryBuilder.m */,
 				87525FFF1FCDBB3A00C0E9E2 /* JKLegacyActionBuilder.h */,
 				875260001FCDBB3A00C0E9E2 /* JKLegacyActionBuilder.m */,
+				AC9C06521FE46673002FB63F /* JKLegacyTextInputActionBuilder.h */,
+				AC9C06531FE46673002FB63F /* JKLegacyTextInputActionBuilder.m */,
 				AD233FE21FCD8AC500F755B8 /* JKNewCategoryBuilder.h */,
 				AD233FE31FCD8AC500F755B8 /* JKNewCategoryBuilder.m */,
 				87525FF31FCDB93E00C0E9E2 /* JKNewActionBuilder.h */,
 				87525FF41FCDB93E00C0E9E2 /* JKNewActionBuilder.m */,
+				AC9C064C1FE465F5002FB63F /* JKNewTextInputActionBuilder.h */,
+				AC9C064D1FE465F5002FB63F /* JKNewTextInputActionBuilder.m */,
 			);
 			name = category;
 			sourceTree = "<group>";
@@ -602,9 +648,11 @@
 				AD9BCBF41F90560D0099503C /* JKNotificationRequestBuilderTest.m */,
 				AD379F0B1F92721C00CEA327 /* JKTriggerBuilderTest.m */,
 				AD23400E1FD4355100F755B8 /* JKLegacyActionBuilderTest.m */,
+				AC9C06601FE607C6002FB63F /* JKLegacyTextInputActionBuilderTest.m */,
 				AD2340101FD43DC100F755B8 /* JKLegacyCategoryBuilderTest.m */,
 				AD2340121FD444C000F755B8 /* JKLegacyNotificationSettingsBuilderTest.m */,
 				AD2340141FD44C1B00F755B8 /* JKNewActionBuilderTest.m */,
+				AC9C06621FE615D9002FB63F /* JKNewTextInputActionBuilderTest.m */,
 				AD2340161FD44D0B00F755B8 /* JKNewCategoryBuilderTest.m */,
 			);
 			name = builders;
@@ -720,12 +768,13 @@
 				ADEE69671F825B1800CD7FE7 /* JKLocalNotificationSettingsTest.m */,
 				AD9BCBE81F8F82000099503C /* JKLocalNotificationTest.m */,
 				AD233FEF1FCE397E00F755B8 /* NSArray+HigherOrderTest.m */,
+				AC9C06591FE5C71D002FB63F /* category */,
 				87525FD71FCC7C3500C0E9E2 /* decoder */,
-				AD9BCBEC1F8F89A40099503C /* factory */,
-				AD9BCBEF1F8F8A180099503C /* context */,
 				AD9BCBED1F8F89E40099503C /* manager */,
-				AD9BCBEE1F8F8A030099503C /* authorizer */,
+				AD9BCBEF1F8F8A180099503C /* context */,
 				AD9BCBF11F8F8A670099503C /* listener */,
+				AD9BCBEE1F8F8A030099503C /* authorizer */,
+				AD9BCBEC1F8F89A40099503C /* factory */,
 				AD9BCBF01F8F8A540099503C /* builders */,
 				ADF7BB531F223BD600045B97 /* Info.plist */,
 			);
@@ -743,6 +792,7 @@
 				87525FDF1FCCBCDF00C0E9E2 /* JKLocalNotificationCategory.h in Headers */,
 				87525FE41FCCBCF400C0E9E2 /* JKLocalNotificationAction.h in Headers */,
 				ADF7BB471F21607B00045B97 /* JKLegacyNotificationListener.h in Headers */,
+				AC9C065B1FE5CB2C002FB63F /* JKActionBuilder.h in Headers */,
 				AD233FEB1FCD8C5200F755B8 /* JKLegacyNotificationSettingsBuilder.h in Headers */,
 				AD9BCBDC1F8F06290099503C /* JKNotificationBuilder.h in Headers */,
 				ADEE69361F80911500CD7FE7 /* JKLegacyLocalNotificationFactory.h in Headers */,
@@ -759,6 +809,7 @@
 				7D765A5214CD38A5001B2405 /* JKNewLocalNotificationManager.h in Headers */,
 				875260011FCDBB3A00C0E9E2 /* JKLegacyActionBuilder.h in Headers */,
 				AD233FE41FCD8AC500F755B8 /* JKNewCategoryBuilder.h in Headers */,
+				AC9C06481FE44DEC002FB63F /* JKTextInputLocalNotificationAction.h in Headers */,
 				87525FD41FCC7AC100C0E9E2 /* JKLocalNotificationSettingsDecoder.h in Headers */,
 				ADEE69191F80638600CD7FE7 /* JKNewNotificationListener.h in Headers */,
 				AD2340061FD21A4B00F755B8 /* JKNotificationDispatcher.h in Headers */,
@@ -770,11 +821,13 @@
 				7D2C346E151B5CD800809144 /* JKLocalNotification.h in Headers */,
 				ADEE69711F83B2F100CD7FE7 /* JKDelegateProxy.h in Headers */,
 				7DB6C33B1576B9A200EB395C /* ExtensionUtils.h in Headers */,
+				AC9C06541FE46673002FB63F /* JKLegacyTextInputActionBuilder.h in Headers */,
 				87525FCA1FCC5E4F00C0E9E2 /* JKLocalNotificationDecoder.h in Headers */,
 				ADEE69531F81208E00CD7FE7 /* JKLocalNotificationManager.h in Headers */,
 				ADEE693C1F8092C100CD7FE7 /* JKAuthorizer.h in Headers */,
 				ADEE695F1F81BD0B00CD7FE7 /* JKCalendarUnit.h in Headers */,
 				87525FFB1FCDBABF00C0E9E2 /* JKLegacyCategoryBuilder.h in Headers */,
+				AC9C064E1FE465F5002FB63F /* JKNewTextInputActionBuilder.h in Headers */,
 				7DB6C33D1576B9A200EB395C /* FlashRuntimeExtensions.h in Headers */,
 				ADEE69461F80A0DE00CD7FE7 /* JKNotificationListener.h in Headers */,
 				87525FF01FCCCDC400C0E9E2 /* JKLocalNotificationActionDecoder.h in Headers */,
@@ -897,10 +950,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC9C06491FE44DEC002FB63F /* JKTextInputLocalNotificationAction.m in Sources */,
 				7D7659E014CC8741001B2405 /* LocalNotificationLib.m in Sources */,
 				ADEE69401F80950500CD7FE7 /* JKLegacyLocalNotificationAuthorizer.m in Sources */,
 				ADEE69721F83B2F100CD7FE7 /* JKDelegateProxy.m in Sources */,
 				ADEE69241F8079EE00CD7FE7 /* JKLocalNotificationSettings.m in Sources */,
+				AC9C064F1FE465F5002FB63F /* JKNewTextInputActionBuilder.m in Sources */,
 				AD233FD61FCD05FD00F755B8 /* NSArray+HigherOrder.m in Sources */,
 				AD233FEC1FCD8C5200F755B8 /* JKLegacyNotificationSettingsBuilder.m in Sources */,
 				87525FF11FCCCDC400C0E9E2 /* JKLocalNotificationActionDecoder.m in Sources */,
@@ -930,6 +985,7 @@
 				ADEE691E1F8078EA00CD7FE7 /* JKNewLocalNotificationAuthorizer.m in Sources */,
 				AD9BCBE51F8F7AAB0099503C /* JKNotificationRequestBuilder.m in Sources */,
 				7DB6C33C1576B9A200EB395C /* ExtensionUtils.m in Sources */,
+				AC9C06551FE46673002FB63F /* JKLegacyTextInputActionBuilder.m in Sources */,
 				AD9BCBDD1F8F06290099503C /* JKNotificationBuilder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -943,10 +999,12 @@
 				ADEE69251F8079EE00CD7FE7 /* JKLocalNotificationSettings.m in Sources */,
 				AD9BCBE71F8F7B660099503C /* JKNotificationRequestBuilder.m in Sources */,
 				87525FF71FCDB9C500C0E9E2 /* JKNewActionBuilder.m in Sources */,
+				AC9C06501FE465F5002FB63F /* JKNewTextInputActionBuilder.m in Sources */,
 				AD2340091FD21CC900F755B8 /* JKNotificationDispatcher.m in Sources */,
 				AD9BCBE11F8F0DB60099503C /* JKNotificationBuilder.m in Sources */,
 				AD233FD81FCD0C8D00F755B8 /* JKLocalNotificationCategory.m in Sources */,
 				7DF0E926151CAECB0050D94B /* main.m in Sources */,
+				AC9C064A1FE44DEC002FB63F /* JKTextInputLocalNotificationAction.m in Sources */,
 				7DF0E92A151CAECB0050D94B /* AppDelegate.m in Sources */,
 				ADEE694F1F81206600CD7FE7 /* JKLegacyLocalNotificationManager.m in Sources */,
 				7DF0E92D151CAECB0050D94B /* ViewController.m in Sources */,
@@ -966,6 +1024,7 @@
 				ADEE69411F80950500CD7FE7 /* JKLegacyLocalNotificationAuthorizer.m in Sources */,
 				ADF7BB4A1F22364400045B97 /* JKLegacyNotificationListener.m in Sources */,
 				ADEE69481F80A0DE00CD7FE7 /* JKNotificationListener.m in Sources */,
+				AC9C06561FE46673002FB63F /* JKLegacyTextInputActionBuilder.m in Sources */,
 				ADEE69321F8090FC00CD7FE7 /* JKNewLocalNotificationFactory.m in Sources */,
 				87525FFE1FCDBAE200C0E9E2 /* JKLegacyCategoryBuilder.m in Sources */,
 				AD233FE61FCD8AC500F755B8 /* JKNewCategoryBuilder.m in Sources */,
@@ -998,10 +1057,12 @@
 				AD791B801F2279C40012D327 /* JKLocalNotificationsContextTest.m in Sources */,
 				AD9BCBC01F8C1C2C0099503C /* JKNotificationFactoryTest.m in Sources */,
 				AD791B821F22EA730012D327 /* JKLocalNotificationContextBridgeTest.m in Sources */,
+				AC9C065F1FE5D410002FB63F /* JKTextInputLocalNotificationActionTest.m in Sources */,
 				87525FF21FCCCDC400C0E9E2 /* JKLocalNotificationActionDecoder.m in Sources */,
 				AD9BCBC31F8C29AB0099503C /* JKLegacyTestCase.m in Sources */,
 				87525FEB1FCCBE8200C0E9E2 /* JKLocalNotificationCategoryDecoder.m in Sources */,
 				87525FDB1FCCAB9F00C0E9E2 /* JKLocalNotificationSettingsDecoderTest.m in Sources */,
+				AC9C06611FE607C6002FB63F /* JKLegacyTextInputActionBuilderTest.m in Sources */,
 				ADEE69331F8090FC00CD7FE7 /* JKNewLocalNotificationFactory.m in Sources */,
 				ADEE69391F80911500CD7FE7 /* JKLegacyLocalNotificationFactory.m in Sources */,
 				AD2340111FD43DC100F755B8 /* JKLegacyCategoryBuilderTest.m in Sources */,
@@ -1025,13 +1086,18 @@
 				AD233FD71FCD05FD00F755B8 /* NSArray+HigherOrder.m in Sources */,
 				AD233FDF1FCD801300F755B8 /* JKLocalNotificationActionDecoderTest.m in Sources */,
 				AD9BCBE61F8F7B650099503C /* JKNotificationRequestBuilder.m in Sources */,
+				AC9C06511FE465F5002FB63F /* JKNewTextInputActionBuilder.m in Sources */,
+				AC9C06571FE46673002FB63F /* JKLegacyTextInputActionBuilder.m in Sources */,
 				AD2340171FD44D0B00F755B8 /* JKNewCategoryBuilderTest.m in Sources */,
 				AD9BCBDF1F8F08EA0099503C /* JKNotificationBuilderTest.m in Sources */,
 				87525FD11FCC5E8500C0E9E2 /* JKFREDecoder.m in Sources */,
 				AD791B7E1F2276BB0012D327 /* DeallocVerify.m in Sources */,
 				ADEE69561F81208E00CD7FE7 /* JKLocalNotificationManager.m in Sources */,
+				AC9C064B1FE44DEC002FB63F /* JKTextInputLocalNotificationAction.m in Sources */,
 				AD233FE71FCD8AC500F755B8 /* JKNewCategoryBuilder.m in Sources */,
 				AD9BCBD21F8DBF7E0099503C /* JKNewNotificationListenerTest.m in Sources */,
+				AC9C065D1FE5CFB7002FB63F /* JKLocalNotificationActionTest.m in Sources */,
+				AC9C06631FE615D9002FB63F /* JKNewTextInputActionBuilderTest.m in Sources */,
 				ADF7BB521F223BD500045B97 /* LocalNotificationLibTest.m in Sources */,
 				AD9BCBEB1F8F885C0099503C /* JKNewLocalNotificationFactoryTest.m in Sources */,
 				ADEE69421F80950500CD7FE7 /* JKLegacyLocalNotificationAuthorizer.m in Sources */,

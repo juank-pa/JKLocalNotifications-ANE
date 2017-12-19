@@ -74,4 +74,14 @@
     XCTAssertEqual([listener class], [JKNewCategoryBuilder class]);
 }
 
+- (void)testCreateActionBuilder {
+    id<JKActionBuilder> builder = [self.subject createActionBuilder];
+    XCTAssertEqual([builder class], [JKNewActionBuilder class]);
+}
+
+- (void)testCreateTextInputActionBuilder {
+    id<JKActionBuilder> builder = [self.subject createTextInputActionBuilder];
+    XCTAssertEqual([builder class], [JKNewTextInputActionBuilder class]);
+}
+
 @end

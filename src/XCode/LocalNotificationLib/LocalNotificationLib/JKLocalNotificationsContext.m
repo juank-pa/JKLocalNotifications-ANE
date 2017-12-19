@@ -22,6 +22,7 @@
 #import "JKLocalNotificationSettings.h"
 #import "JKLocalNotificationDecoder.h"
 #import "JKLocalNotificationSettingsDecoder.h"
+#import "macros.h"
 
 @interface JKLocalNotificationsContext()<JKAuthorizerDelegate, JKNotificationListenerDelegate>
 
@@ -102,6 +103,10 @@
     return self.listener.notificationAction;
 }
 
+- (NSString *)notificationUserResponse {
+    return self.listener.userResponse;
+}
+
 - (void)didReceiveNotificationDataForNotificationListener:(JKNotificationListener *)listener {
 #ifdef SAMPLE
     [NSOperationQueue.mainQueue addOperationWithBlock:^ {
@@ -128,11 +133,7 @@
 
 #ifndef SAMPLE
 
-FREObject ADEPCreateManager(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-    return NULL;
-}
-
-FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+DEFINE_ANE_FUNCTION(notify) {
     @autoreleasepool {
         JKLocalNotificationDecoder *decoder = [[JKLocalNotificationDecoder alloc]
                                                initWithFREObject:argv[0]];
@@ -142,8 +143,7 @@ FREObject ADEPNotify(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
     return NULL;
 }
 
-
-FREObject ADEPCancel(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+DEFINE_ANE_FUNCTION(cancel) {
     @autoreleasepool {
         NSString *notificationCode = [ExtensionUtils getStringFromFREObject:argv[0]];
         [jkNotificationsContext cancel:notificationCode];
@@ -151,16 +151,14 @@ FREObject ADEPCancel(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
     }
 }
 
-
-FREObject ADEPCancelAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+DEFINE_ANE_FUNCTION(cancelAll) {
     @autoreleasepool {
         [jkNotificationsContext cancelAll];
         return NULL;
     }
 }
 
-
-FREObject ADEPRegisterSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+DEFINE_ANE_FUNCTION(registerSettings) {
     @autoreleasepool {
         JKLocalNotificationSettings *settings = [[JKLocalNotificationSettingsDecoder new] decodeObject:argv[0]];
         [jkNotificationsContext authorizeWithSettings:settings];
@@ -168,22 +166,21 @@ FREObject ADEPRegisterSettings(FREContext ctx, void* funcData, uint32_t argc, FR
     }
 }
 
-
-FREObject ADEPCheckForNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+DEFINE_ANE_FUNCTION(checkForNotificationAction) {
     @autoreleasepool {
         [jkNotificationsContext checkForNotificationAction];
         return NULL;
     }
 }
 
-FREObject ADEPGetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+DEFINE_ANE_FUNCTION(getApplicationBadgeNumber) {
     @autoreleasepool {
         int32_t appBadgeNumber = (int32_t)[UIApplication sharedApplication].applicationIconBadgeNumber;
         return [ExtensionUtils getFREObjectFromInt:appBadgeNumber];
     }
 }
 
-FREObject ADEPSetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+DEFINE_ANE_FUNCTION(setApplicationBadgeNumber) {
     @autoreleasepool {
         int32_t appBadgeNumber = [ExtensionUtils getIntFromFREObject:argv[0]];
         [UIApplication sharedApplication].applicationIconBadgeNumber = appBadgeNumber;
@@ -191,21 +188,21 @@ FREObject ADEPSetApplicationBadgeNumber(FREContext ctx, void* funcData, uint32_t
     }
 }
 
-FREObject ADEPGetSelectedSettings(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+DEFINE_ANE_FUNCTION(getSelectedSettings) {
     @autoreleasepool {
         JKLocalNotificationSettings* settings = jkNotificationsContext.settings;
         return [ExtensionUtils getFREObjectFromUInt:(uint32_t)settings.types];
     }
 }
 
-FREObject ADEPGetSelectedNotificationCode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+DEFINE_ANE_FUNCTION(getSelectedNotificationCode) {
     @autoreleasepool {
         NSString* notificationCode = jkNotificationsContext.notificationCode;
         return [ExtensionUtils getFREObjectFromString:notificationCode];
     }
 }
 
-FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+DEFINE_ANE_FUNCTION(getSelectedNotificationData) {
     @autoreleasepool {
         NSData *notificationData = jkNotificationsContext.notificationData;
         if(!notificationData) return NULL;
@@ -213,10 +210,17 @@ FREObject ADEPGetSelectedNotificationData(FREContext ctx, void* funcData, uint32
     }
 }
 
-FREObject ADEPGetSelectedNotificationAction(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+DEFINE_ANE_FUNCTION(getSelectedNotificationAction) {
     @autoreleasepool {
         NSString* notificationAction = jkNotificationsContext.notificationAction;
         return [ExtensionUtils getFREObjectFromString:notificationAction];
+    }
+}
+
+DEFINE_ANE_FUNCTION(getSelectedNotificationUserResponse) {
+    @autoreleasepool {
+        NSString* notificationUserResponse = jkNotificationsContext.notificationUserResponse;
+        return [ExtensionUtils getFREObjectFromString:notificationUserResponse];
     }
 }
 
@@ -228,57 +232,23 @@ FREObject ADEPGetSelectedNotificationAction(FREContext ctx, void* funcData, uint
 #ifndef SAMPLE
 
 - (uint32_t)initExtensionFunctions:(const FRENamedFunction**)namedFunctions {
-    uint32_t numFunctions = 11;
-    
-    FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction)*numFunctions);  // TODO: Free this. 
-    
-    func[0].name = (const uint8_t*)"notify";
-    func[0].functionData = NULL;
-    func[0].function = &ADEPNotify;
-    
-    func[1].name = (const uint8_t*)"cancel";
-    func[1].functionData = NULL;
-    func[1].function = &ADEPCancel;
-    
-    func[2].name = (const uint8_t*)"cancelAll";
-    func[2].functionData = NULL;
-    func[2].function = &ADEPCancelAll;
-    
-    func[3].name = (const uint8_t*)"checkForNotificationAction";
-    func[3].functionData = NULL;
-    func[3].function = &ADEPCheckForNotificationAction;
-    
-    func[4].name = (const uint8_t*)"getSelectedNotificationCode";
-    func[4].functionData = NULL;
-    func[4].function = &ADEPGetSelectedNotificationCode;
+    static FRENamedFunction functions[] = {
+        MAP_FUNCTION(notify),
+        MAP_FUNCTION(cancel),
+        MAP_FUNCTION(cancelAll),
+        MAP_FUNCTION(checkForNotificationAction),
+        MAP_FUNCTION(getSelectedNotificationCode),
+        MAP_FUNCTION(getSelectedNotificationData),
+        MAP_FUNCTION(getSelectedNotificationAction),
+        MAP_FUNCTION(getSelectedNotificationUserResponse),
+        MAP_FUNCTION(setApplicationBadgeNumber),
+        MAP_FUNCTION(getApplicationBadgeNumber),
+        MAP_FUNCTION(registerSettings),
+        MAP_FUNCTION(getSelectedSettings)
+    };
 
-    func[5].name = (const uint8_t*)"getSelectedNotificationData";
-    func[5].functionData = NULL;
-    func[5].function = &ADEPGetSelectedNotificationData;
-    
-    func[6].name = (const uint8_t*)"setApplicationBadgeNumber";
-    func[6].functionData = NULL;
-    func[6].function = &ADEPSetApplicationBadgeNumber;
-    
-    func[7].name = (const uint8_t*)"getApplicationBadgeNumber";
-    func[7].functionData = NULL;
-    func[7].function = &ADEPGetApplicationBadgeNumber;
-    
-    func[8].name = (const uint8_t*)"registerSettings";
-    func[8].functionData = NULL;
-    func[8].function = &ADEPRegisterSettings;
-
-    func[9].name = (const uint8_t*)"getSelectedSettings";
-    func[9].functionData = NULL;
-    func[9].function = &ADEPGetSelectedSettings;
-
-    func[10].name = (const uint8_t*)"getSelectedNotificationAction";
-    func[10].functionData = NULL;
-    func[10].function = &ADEPGetSelectedNotificationAction;
-
-    *namedFunctions = func;
-    
-    return numFunctions;
+    *namedFunctions = functions;
+    return sizeof(functions) / sizeof(FRENamedFunction);
 }
 
 #endif

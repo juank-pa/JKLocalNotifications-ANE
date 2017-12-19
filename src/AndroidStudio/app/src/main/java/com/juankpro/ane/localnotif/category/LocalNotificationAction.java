@@ -1,5 +1,7 @@
 package com.juankpro.ane.localnotif.category;
 
+import android.os.Build;
+
 import com.juankpro.ane.localnotif.util.Logger;
 import com.juankpro.ane.localnotif.serialization.IDeserializable;
 import com.juankpro.ane.localnotif.serialization.ISerializable;
@@ -15,6 +17,13 @@ public class LocalNotificationAction implements IDeserializable, ISerializable {
     public String title = "";
     public int icon = 0;
     public boolean isBackground = false;
+    public String textInputPlaceholder;
+
+    public boolean isTextInput() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
+                textInputPlaceholder != null &&
+                !textInputPlaceholder.isEmpty();
+    }
 
     public JSONObject serialize() {
         JSONObject jsonObject = new JSONObject();
@@ -23,6 +32,7 @@ public class LocalNotificationAction implements IDeserializable, ISerializable {
             jsonObject.putOpt("title", title);
             jsonObject.putOpt("icon", icon);
             jsonObject.putOpt("isBackground", isBackground);
+            jsonObject.putOpt("textInputPlaceholder", textInputPlaceholder);
         } catch (Exception e) {
             Logger.log("LocalNotification::serialize Exception");
         }
@@ -35,6 +45,7 @@ public class LocalNotificationAction implements IDeserializable, ISerializable {
             this.title = jsonObject.optString("title", "");
             this.icon = jsonObject.optInt("icon", 0);
             this.isBackground = jsonObject.optBoolean("isBackground", false);
+            this.textInputPlaceholder = jsonObject.optString("textInputPlaceholder");
         }
     }
 }

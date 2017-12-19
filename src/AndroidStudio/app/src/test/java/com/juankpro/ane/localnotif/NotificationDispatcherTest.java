@@ -46,7 +46,6 @@ public class NotificationDispatcherTest {
     private NotificationPendingIntentFactory pendingIntentFactory;
     @Mock
     private Notification notification;
-    private String code = "testCode";
 
     private NotificationDispatcher subject;
     private NotificationDispatcher getSubject() {
@@ -57,6 +56,7 @@ public class NotificationDispatcherTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        String code = "testCode";
         when(bundle.getString(Constants.NOTIFICATION_CODE_KEY)).thenReturn(code);
         when(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager);
         when(notificationFactory.create(pendingIntentFactory)).thenReturn(notification);
@@ -75,7 +75,7 @@ public class NotificationDispatcherTest {
     }
 
     @Test
-    public void dispatcher_dispatch_WhenAppIsInForeground_andNormalNotification_doesNotDisplayNotification() {
+    public void dispatcher_dispatch_whenAppIsInForeground_andNormalNotification_doesNotDisplayNotification() {
         getSubject().dispatch();
         verify(notificationManager).notify("testCode", Constants.STANDARD_NOTIFICATION_ID, notification);
     }

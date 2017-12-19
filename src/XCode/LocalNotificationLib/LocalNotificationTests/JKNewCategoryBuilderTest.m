@@ -24,7 +24,6 @@
     self.subject = [JKNewCategoryBuilder new];
 
     self.actionBuilderMock = OCMClassMock([JKNewActionBuilder class]);
-    OCMStub([self.actionBuilderMock new]).andReturn(self.actionBuilderMock);
 }
 
 - (void)tearDown {

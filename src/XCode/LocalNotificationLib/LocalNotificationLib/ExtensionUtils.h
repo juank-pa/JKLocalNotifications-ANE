@@ -35,6 +35,7 @@
 + (FREObject)getFREObjectFromDouble:(double)objcDouble;
 + (FREObject)getFREObjectFromBool:(BOOL)objcBool;
 + (FREObject)getFREObjectFromData:(NSData *)data;
++ (BOOL)freObject:(FREObject)freObject hasProperty:(NSString *)name;
 
 + (NSString *)getStringFromFREObject:(FREObject)freObject;
 + (int32_t) getIntFromFREObject:(FREObject)freObject;
