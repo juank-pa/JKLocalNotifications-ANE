@@ -9,6 +9,7 @@
   no event is dispatched.
 * You add custom action buttons to notifications to perform different tasks when tapped.
 * Actions can open the application in the background. Android devices support this only partially.
+* Add support for text input actions to allow the user fill in data in the notification.
 
 ### Version 1.0.7
 * Fixed a bug that prevented a notification from triggering if the app was not currently

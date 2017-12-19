@@ -1,10 +1,10 @@
 package com.juankpro.ane.localnotif {
   /**
    * This class represents an action button that allows the user enter text in a text input
-   * before proceding to interact with the notification. This text can then be processed by
+   * before proceeding to interact with the notification. This text can then be processed by
    * the <code>NotificationEvent</code>.
    * <p>Text input notifications are supported since iOS 9.0 and Android 7.0 (API level 24).
-   * On previous OS versions text input actions will gracefully downgrade to normal actions.</p>
+   * On previous OS versions, text input actions will gracefully downgrade to normal actions.</p>
    * <p>All actions must be part of a category that must be registered at application
    * startup using <code>NotificationManager.subscribe</code>.</p>
    * <p>Supported OS: Android, iOS</p>
