@@ -30,13 +30,13 @@ public class PlayAudio extends Service implements MediaPlayer.OnPreparedListener
         try {
             mediaPlayer.setDataSource(audioFileDescriptor.getFileDescriptor());
             audioFileDescriptor.close();
+            mediaPlayer.setOnPreparedListener(this);
+            mediaPlayer.setOnCompletionListener(this);
+            mediaPlayer.prepareAsync();
         }
         catch (Throwable e) {
             e.printStackTrace();
         }
-        mediaPlayer.setOnPreparedListener(this);
-        mediaPlayer.setOnCompletionListener(this);
-        mediaPlayer.prepareAsync();
     }
 
     public void onPrepared(MediaPlayer mediaPlayer) {
