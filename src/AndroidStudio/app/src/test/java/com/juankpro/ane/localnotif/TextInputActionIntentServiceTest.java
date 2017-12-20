@@ -65,6 +65,7 @@ public class TextInputActionIntentServiceTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.N - 1);
 
         when(intent.getStringExtra(Constants.NOTIFICATION_CODE_KEY)).thenReturn("MyCode");
         when(intent.getExtras()).thenReturn(bundle);
