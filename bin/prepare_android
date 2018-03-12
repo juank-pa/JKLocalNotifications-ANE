@@ -4,7 +4,7 @@ PREPARE_SCRIPT_PATH="$(dirname "$0")"
 
 echo "****** ANDROID VERSION *******"
 
-mkdir -p $TEMP_PATH/app-debug
+mkdir -p $TEMP_PATH/localnotif-debug
 mkdir -p $TEMP_PATH/android
 mkdir -p $TEMP_PATH/android/res
 
@@ -15,12 +15,12 @@ mkdir -p $TEMP_PATH/android/res
 echo "****** Copying native library *******"
 
 # copy resources
-unzip -q $NATIVE_ANDROID_FOLDER/app/build/outputs/aar/app-debug.aar -d $TEMP_PATH/app-debug
-cp -R $TEMP_PATH/app-debug/res $TEMP_PATH/android
+unzip -q $NATIVE_ANDROID_FOLDER/localnotif/build/outputs/aar/localnotif-debug.aar -d $TEMP_PATH/localnotif-debug
+cp -R $TEMP_PATH/localnotif-debug/res $TEMP_PATH/android
 
-cp $TEMP_PATH/app-debug/classes.jar $TEMP_PATH/android/$JAR_NAME
-cp $NATIVE_ANDROID_FOLDER/app/libs/support-v4.jar $TEMP_PATH/android
-cp $NATIVE_ANDROID_FOLDER/app/libs/support-compat.jar $TEMP_PATH/android
+cp $TEMP_PATH/localnotif-debug/classes.jar $TEMP_PATH/android/$JAR_NAME
+cp $NATIVE_ANDROID_FOLDER/localnotif/libs/support-v4.jar $TEMP_PATH/android
+cp $NATIVE_ANDROID_FOLDER/localnotif/libs/support-compat.jar $TEMP_PATH/android
 
 if [ -d "$PREPARE_SCRIPT_PATH/res" ]; then
   cp -Rf $PREPARE_SCRIPT_PATH/res $TEMP_PATH/android

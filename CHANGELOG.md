@@ -1,3 +1,9 @@
+### Version 1.2.0
+* Background actions are now fully supported in Android.
+  You need to add `android:name="com.juankpro.ane.localnotif.Application"` to the Android
+  manifest `application` tag in your application XML file.
+* Added a native test Android application to allow visual tests.
+
 ### Version 1.1.0
 * You can now use a custom sound for notifications in Android.
 * Use the new `Notification.launchImage` property to replace the launch image used when the

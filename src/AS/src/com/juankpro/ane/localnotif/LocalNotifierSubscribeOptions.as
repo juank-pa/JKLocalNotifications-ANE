@@ -30,12 +30,14 @@ package com.juankpro.ane.localnotif {
     public var categories:Vector.<NotificationCategory>;
 
     /**
-     * Android cannot fully implement background notifications due to AIR architecture
-     * limitations. If you accept this limitations you can set this property to true.
-     * <p>To read more about this see <code>NotificationAction.isBackground</code></p>
+     * Previous ANE versions couldn't fully implement background notifications actions.
+     * <p>Since version 1.2.0 this is now possible and thus this property is deprecated.</p>
+     * <p>It was left here to prevent breaking existing code but might be removed in the future.
+     * Using it doesn't have any effect in the ANE behavior.</p>
      * <p>Supported OS: Android</p>
      * @see com.juankpro.ane.localnotif.NotificationAction#isBackground
      */
+    [Deprecated]
     public var allowAndroidBackgroundNotificationActions:Boolean = false;
 
     /**

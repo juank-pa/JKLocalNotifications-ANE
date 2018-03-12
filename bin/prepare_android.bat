@@ -3,7 +3,7 @@ set PREPARE_SCRIPT_PATH=%~dp0
 echo ****** ANDROID VERSION *******
 
 mkdir %TEMP_PATH%
-mkdir %TEMP_PATH%\app-debug
+mkdir %TEMP_PATH%\localnotif-debug
 mkdir %TEMP_PATH%\android
 
 echo ****** Copying native library *******
@@ -11,12 +11,12 @@ echo ****** Copying native library *******
 :: TODO: Try to automatize Android compilation
 ::jar cf %TEMP_PATH%\android\%JAR_NAME% -C .\%NATIVE_ANDROID_FOLDER%\bin .
 
-7za x -bso0 -r -o%TEMP_PATH%\app-debug %NATIVE_ANDROID_FOLDER%\app\build\outputs\aar\app-debug.aar
-xcopy /E /I /Q %TEMP_PATH%\app-debug\res %TEMP_PATH%\android\res
+7za x -bso0 -r -o%TEMP_PATH%\localnotif-debug %NATIVE_ANDROID_FOLDER%\localnotif\build\outputs\aar\localnotif-debug.aar
+xcopy /E /I /Q %TEMP_PATH%\localnotif-debug\res %TEMP_PATH%\android\res
 
-copy %TEMP_PATH%\app-debug\classes.jar %TEMP_PATH%\android\%JAR_NAME%
-copy %NATIVE_ANDROID_FOLDER%\app\libs\support-v4.jar %TEMP_PATH%\android
-copy %NATIVE_ANDROID_FOLDER%\app\libs\support-compat.jar %TEMP_PATH%\android
+copy %TEMP_PATH%\localnotif-debug\classes.jar %TEMP_PATH%\android\%JAR_NAME%
+copy %NATIVE_ANDROID_FOLDER%\localnotif\libs\support-v4.jar %TEMP_PATH%\android
+copy %NATIVE_ANDROID_FOLDER%\localnotif\libs\support-compat.jar %TEMP_PATH%\android
 
 xcopy /E /Q %PREPARE_SCRIPT_PATH%res %TEMP_PATH%\android\res
 

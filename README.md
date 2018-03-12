@@ -94,6 +94,42 @@ The hack is to simply open the ANE file with a compression app e.g. 7zip
 and modify or add icons at will. Thanks to [@subdan](https://github.com/subdan)
 for pointing this one out.
 
+## Background actions in Android
+Since v1.2, the ANE fully supports background actions in Android. To activate this feature you need
+to add `android:name="com.juankpro.ane.localnotif.Application"` to the Android manifest `application`
+tag in your application XML file. Failing to do this will make the ANE fallback to legacy behavior.
+
+The following sample shows the attribute along with all other manifest elements required for 
+the ANE to work:
+
+```xml
+<application xmlns="http://ns.adobe.com/air/application/26.0">
+  <!-- Other tags -->
+  <android>
+    <manifestAdditions><![CDATA[
+      <manifest android:installLocation="auto">
+        <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="24" />
+        <uses-permission android:name="android.permission.VIBRATE"/>
+        <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+        <application android:name="com.juankpro.ane.localnotif.Application">
+          <service android:name="com.juankpro.ane.localnotif.LocalNotificationIntentService"/>
+          <service android:name="com.juankpro.ane.localnotif.util.PlayAudio"/>
+          <receiver android:name="com.juankpro.ane.localnotif.AlarmIntentService" />
+          <receiver android:name="com.juankpro.ane.localnotif.AlarmRestoreOnBoot" >
+            <intent-filter>
+              <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+          </receiver>
+          <receiver android:name="com.juankpro.ane.localnotif.TextInputActionIntentService" />
+        </application>
+      </manifest>
+      ]]>
+    </manifestAdditions>
+  </android>
+  <!-- Other tags -->
+</application>
+```
+
 # The ActionScript 3.0 source code
 
 This is the AS3 source code of the ANE itself placed at the `src/AS` folder.

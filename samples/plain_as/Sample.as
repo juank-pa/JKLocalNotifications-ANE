@@ -86,7 +86,6 @@
         var options:LocalNotifierSubscribeOptions =
           new LocalNotifierSubscribeOptions(createCategories());
         options.notificationStyles = NotificationManager.supportedNotificationStyles;
-        options.allowAndroidBackgroundNotificationActions = true;
 
         notificationManager.addEventListener(NotificationEvent.SETTINGS_SUBSCRIBED,
                                               settingsSubscribedHandler);
