@@ -2,7 +2,9 @@
 * Background actions are now fully supported in Android.
   You need to add `android:name="com.juankpro.ane.localnotif.Application"` to the Android
   manifest `application` tag in your application XML file.
-* Added a native test Android application to allow visual tests.
+* Removed support and compat dependencies from the Android version, which greatly reduces the ANE
+  footprint size (from 1.5MB to 654KB) and eases ANE integration with other ANEs.
+* Added a native Android application to allow visual tests similar to what the iOS version has.
 
 ### Version 1.1.0
 * You can now use a custom sound for notifications in Android.
