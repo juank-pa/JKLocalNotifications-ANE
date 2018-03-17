@@ -38,7 +38,7 @@ package com.juankpro.ane.localnotif {
      * Determines whether the action will open the application and bring it to the front or if
      * it will just leave it in the background. In both cases the <code>NotificationEvent.NOTIFICATION_ACTION</code>
      * will still trigger.
-     * <p>Supported OS: Android(partially), iOS</p>
+     * <p>Supported OS: Android, iOS</p>
      * @default false
      */
     public var isBackground:Boolean = false;
