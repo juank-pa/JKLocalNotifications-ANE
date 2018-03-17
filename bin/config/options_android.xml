@@ -1,8 +1,9 @@
 <platform xmlns="http://ns.adobe.com/air/extension/26.0">
+  <!--
   <packagedDependencies>
-    <packagedDependency>support-v4.jar</packagedDependency>
-    <packagedDependency>support-compat.jar</packagedDependency>
+    <packagedDependency>classes.jar</packagedDependency>
   </packagedDependencies>
+  -->
   <packagedResources>
     <packagedResource>
       <packageName>com.juankpro.ane.localnotif</packageName>

@@ -4,13 +4,13 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 
 import com.juankpro.ane.localnotif.category.LocalNotificationAction;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategoryManager;
-import com.juankpro.ane.localnotif.factory.NotificationActionFactory;
+import com.juankpro.ane.localnotif.factory.NotificationActionBuilder;
 import com.juankpro.ane.localnotif.factory.NotificationFactory;
 import com.juankpro.ane.localnotif.factory.NotificationPendingIntentFactory;
 
@@ -22,6 +22,7 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.never;
@@ -35,26 +36,24 @@ import static org.junit.Assert.*;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({NotificationFactory.class, Uri.class})
+@PrepareForTest({NotificationFactory.class, Uri.class, Build.VERSION.class})
 public class NotificationFactoryTest {
     @Mock
     private Context context;
     @Mock
     private Bundle bundle;
     @Mock
-    private NotificationCompat.Builder builder;
+    private Notification.Builder builder;
     @Mock
     private PendingIntent pendingIntent;
     @Mock
     private NotificationPendingIntentFactory intentFactory;
     @Mock
-    private NotificationCompat.BigTextStyle textStyle;
+    private Notification.BigTextStyle textStyle;
     @Mock
     private LocalNotificationCategoryManager categoryManager;
     @Mock
-    private NotificationActionFactory actionFactory;
-    @Mock
-    private NotificationCompat.Action nativeAction;
+    private NotificationActionBuilder actionBuilder;
     private LocalNotificationCategory category = new LocalNotificationCategory();
     private Notification notification = new Notification();
     private NotificationFactory subject;
@@ -71,8 +70,9 @@ public class NotificationFactoryTest {
         MockitoAnnotations.initMocks(this);
 
         try {
-            PowerMockito.whenNew(NotificationCompat.Builder.class).withArguments(context).thenReturn(builder);
+            PowerMockito.whenNew(Notification.Builder.class).withArguments(context).thenReturn(builder);
             PowerMockito.whenNew(LocalNotificationCategoryManager.class).withArguments(context).thenReturn(categoryManager);
+            PowerMockito.whenNew(Notification.BigTextStyle.class).withNoArguments().thenReturn(textStyle);
         } catch(Exception e) { e.printStackTrace(); }
 
         when(bundle.getInt(Constants.NUMBER_ANNOTATION)).thenReturn(10);
@@ -89,11 +89,11 @@ public class NotificationFactoryTest {
         when(builder.setTicker(any(CharSequence.class))).thenReturn(builder);
         when(builder.setDefaults(anyInt())).thenReturn(builder);
         when(builder.setNumber(anyInt())).thenReturn(builder);
-        when(builder.setStyle(any(NotificationCompat.Style.class))).thenReturn(builder);
+        when(builder.setStyle(any(Notification.Style.class))).thenReturn(builder);
         when(builder.setOngoing(anyBoolean())).thenReturn(builder);
         when(builder.setAutoCancel(anyBoolean())).thenReturn(builder);
         when(builder.setOnlyAlertOnce(anyBoolean())).thenReturn(builder);
-        when(builder.setStyle(any(NotificationCompat.Style.class))).thenReturn(builder);
+        when(builder.setStyle(any(Notification.Style.class))).thenReturn(builder);
         when(builder.setPriority(anyInt())).thenReturn(builder);
         when(builder.build()).thenReturn(notification);
 
@@ -117,7 +117,7 @@ public class NotificationFactoryTest {
     @Test
     public void factory_create_createsWithBigTextLayout() {
         try {
-            PowerMockito.whenNew(NotificationCompat.BigTextStyle.class)
+            PowerMockito.whenNew(Notification.BigTextStyle.class)
                     .withNoArguments().thenReturn(textStyle);
         } catch(Exception e) { e.printStackTrace(); }
 
@@ -200,26 +200,27 @@ public class NotificationFactoryTest {
 
     @Test
     public void factory_create_withActionButtons() {
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT_WATCH);
+
         LocalNotificationAction action = new LocalNotificationAction();
         action.icon = 200;
         action.title = "Remove";
         action.identifier = "removeAction";
 
         try {
-            PowerMockito.whenNew(NotificationActionFactory.class)
-                    .withArguments(intentFactory)
-                    .thenReturn(actionFactory);
+            PowerMockito.whenNew(NotificationActionBuilder.class)
+                    .withArguments(intentFactory, builder)
+                    .thenReturn(actionBuilder);
         }
         catch (Throwable e) { e.printStackTrace(); }
 
         category.actions = new LocalNotificationAction[]{action};
 
-        when(actionFactory.create(action)).thenReturn(nativeAction);
         when(bundle.getString(Constants.CATEGORY)).thenReturn("MyCategory");
         when(categoryManager.readCategory("MyCategory")).thenReturn(category);
 
         getSubject().create(intentFactory);
 
-        verify(builder).addAction(nativeAction);
+        verify(actionBuilder).build(action);
     }
 }

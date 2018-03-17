@@ -2,7 +2,6 @@ package com.juankpro.ane.localnotif.decoder;
 
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREObject;
-import com.juankpro.ane.localnotif.category.LocalNotificationAction;
 import com.juankpro.ane.localnotif.fre.ExtensionUtils;
 import com.juankpro.ane.localnotif.util.ResourceMapper;
 

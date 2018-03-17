@@ -4,7 +4,7 @@ package com.juankpro.ane.localnotif;
  * Created by Juank on 10/21/17.
  */
 
-class LocalNotificationTimeInterval {
+public class LocalNotificationTimeInterval {
     /**
      * Represents a second in milliseconds
      */
@@ -45,35 +45,35 @@ class LocalNotificationTimeInterval {
     /**
      * Represents a year repeat interval
      */
-    final static int YEAR_CALENDAR_UNIT = 1 << 2;
+    public final static int YEAR_CALENDAR_UNIT = 1 << 2;
     /**
      * Represents a month repeat interval
      */
-    final static int MONTH_CALENDAR_UNIT = 1 << 3;
+    public final static int MONTH_CALENDAR_UNIT = 1 << 3;
     /**
      * Represents a day repeat interval
      */
-    final static int DAY_CALENDAR_UNIT = 1 << 4;
+    public final static int DAY_CALENDAR_UNIT = 1 << 4;
     /**
      * Represents an hour repeat interval
      */
-    final static int HOUR_CALENDAR_UNIT = 1 << 5;
+    public final static int HOUR_CALENDAR_UNIT = 1 << 5;
     /**
      * Represents a minute repeat interval
      */
-    final static int MINUTE_CALENDAR_UNIT = 1 << 6;
+    public final static int MINUTE_CALENDAR_UNIT = 1 << 6;
     /**
      * Represents a second repeat interval
      */
-    final static int SECOND_CALENDAR_UNIT = 1 << 7;
+    public final static int SECOND_CALENDAR_UNIT = 1 << 7;
     /**
      * Represents a week repeat interval
      */
-    final static int WEEK_CALENDAR_UNIT = 1 << 13;
+    public final static int WEEK_CALENDAR_UNIT = 1 << 13;
     /**
      * Represents a quarter year repeat interval
      */
-    final static int QUARTER_CALENDAR_UNIT = 1 << 11;
+    public final static int QUARTER_CALENDAR_UNIT = 1 << 11;
 
     static private long mapIntervalToMilliseconds(int interval) {
         switch (interval) {

@@ -51,7 +51,6 @@
     notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:5];
     notification.numberAnnotation = 2;
     //notification.repeatInterval = NSSecondCalendarUnit;
-    notification.playSound = YES;
     notification.showInForeground = YES;
     notification.category = @"CategoryX";
     
