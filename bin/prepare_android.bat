@@ -15,8 +15,6 @@ echo ****** Copying native library *******
 xcopy /E /I /Q %TEMP_PATH%\localnotif-debug\res %TEMP_PATH%\android\res
 
 copy %TEMP_PATH%\localnotif-debug\classes.jar %TEMP_PATH%\android\%JAR_NAME%
-copy %NATIVE_ANDROID_FOLDER%\localnotif\libs\support-v4.jar %TEMP_PATH%\android
-copy %NATIVE_ANDROID_FOLDER%\localnotif\libs\support-compat.jar %TEMP_PATH%\android
 
 xcopy /E /Q %PREPARE_SCRIPT_PATH%res %TEMP_PATH%\android\res
 

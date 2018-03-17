@@ -2,13 +2,10 @@ package com.adobe.fre;
 
 import android.app.Activity;
 
-import com.juankpro.ane.localnotif.util.Logger;
-
 import java.util.Map;
 
 public abstract class FREContext {
     private Activity activity;
-
     public FREContext() {
     }
 
@@ -26,8 +23,18 @@ public abstract class FREContext {
         return com.juankpro.ane.localnotif.R.drawable.ic_stat_notify_ln_alert;
     }
 
-    public void dispatchStatusEventAsync(String code, String level) {
-        Logger.log("dispatchStatusEventAsync("+code+","+level+")");
+    private String savedEventCode;
+
+    public void reset() {
+        savedEventCode = null;
+    }
+
+    public String getSavedEventCode() {
+        return savedEventCode;
+    }
+
+    public void dispatchStatusEventAsync(final String code, String level) {
+        savedEventCode = code;
     }
 
     public abstract void dispose();

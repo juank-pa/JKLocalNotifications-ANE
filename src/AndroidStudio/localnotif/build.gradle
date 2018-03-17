@@ -19,8 +19,6 @@ android {
 
 dependencies {
     compileOnly files('libs/FlashRuntimeExtensions.jar')
-    compileOnly files('libs/support-v4.jar')
-    compileOnly files('libs/support-compat.jar')
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.8.9'
     testImplementation files('libs/byte-buddy-1.6.14.jar')
@@ -32,6 +30,4 @@ dependencies {
     testImplementation files('libs/powermock-mockito2-1.7.1-full.jar')
     testImplementation files('libs/mockito-core-2.8.9.jar')
     testImplementation files('libs/FlashRuntimeExtensions.jar')
-    testImplementation files('libs/support-v4.jar')
-    testImplementation files('libs/support-compat.jar')
 }

@@ -13,8 +13,8 @@ package com.juankpro.ane.localnotif {
   public class TextInputNotificationAction extends NotificationAction {
       /**
        * This is the label used for the button next to the text input that the user
-       * taps to accept the entered text. Android devices show system icon instead and
-       * thus it ignores the button title.
+       * taps to accept the entered text. Android devices show a system provided button
+       * instead and thus it ignores the button title.
        * <p>Supported OS: iOS</p>
       */
       public var textInputButtonTitle:String;

@@ -2,8 +2,8 @@ package com.juankpro.ane.localnotif.factory;
 
 import android.app.Notification;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 
 import com.juankpro.ane.localnotif.Constants;
 import com.juankpro.ane.localnotif.SoundSettings;
@@ -18,12 +18,12 @@ import com.juankpro.ane.localnotif.category.LocalNotificationCategoryManager;
 public class NotificationFactory {
     private Context context;
     private Bundle bundle;
-    private NotificationCompat.Builder builder;
+    private Notification.Builder builder;
 
     public NotificationFactory(Context context, Bundle bundle) {
         this.context = context;
         this.bundle = bundle;
-        builder = new NotificationCompat.Builder(context);
+        builder = new Notification.Builder(context);
     }
 
     public Notification create(PendingIntentFactory intentFactory) {
@@ -42,7 +42,7 @@ public class NotificationFactory {
         String body = bundle.getString(Constants.BODY);
         int priority = bundle.getInt(Constants.PRIORITY);
 
-        NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle()
+        Notification.BigTextStyle style = new Notification.BigTextStyle()
                 .bigText(body);
         builder
                 .setSmallIcon(iconResource)
@@ -58,9 +58,9 @@ public class NotificationFactory {
     private void buildActions(PendingIntentFactory intentFactory) {
         LocalNotificationCategory category = getCategory();
         if (category != null) {
-            NotificationActionFactory actionFactory = new NotificationActionFactory(intentFactory);
+            NotificationActionBuilder actionBuilder = new NotificationActionBuilder(intentFactory, builder);
             for (LocalNotificationAction action : category.actions) {
-                builder.addAction(actionFactory.create(action));
+                actionBuilder.build(action);
             }
         }
     }

@@ -4,9 +4,9 @@ package com.juankpro.ane.localnotif;
  * Created by Juank on 10/22/17.
  */
 
-class LocalNotificationCache {
+public class LocalNotificationCache {
     private static LocalNotificationCache instance = new LocalNotificationCache();
-    static LocalNotificationCache getInstance() {
+    public static LocalNotificationCache getInstance() {
         return instance;
     }
 
@@ -23,16 +23,16 @@ class LocalNotificationCache {
 
     private LocalNotificationCache() {}
 
-    String getNotificationCode() {
+    public String getNotificationCode() {
         return notificationCode;
     }
-    byte[] getNotificationData() {
+    public byte[] getNotificationData() {
         return notificationData;
     }
-    String getActionId() {
+    public String getActionId() {
         return actionId;
     }
-    String getUserResponse() {
+    public String getUserResponse() {
         return userResponse;
     }
 

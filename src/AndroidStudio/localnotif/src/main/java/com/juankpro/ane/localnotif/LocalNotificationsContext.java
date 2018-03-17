@@ -21,10 +21,10 @@ import com.juankpro.ane.localnotif.util.PersistenceManager;
  * Created by Juank on 10/21/17.
  */
 
-class LocalNotificationsContext extends FREContext {
+public class LocalNotificationsContext extends FREContext {
     static final private String STATUS = "status";
-    static final private String NOTIFICATION_SELECTED = "notificationSelected";
-    static final private String SETTINGS_SUBSCRIBED = "settingsSubscribed";
+    static final public String NOTIFICATION_SELECTED = "notificationSelected";
+    static final public String SETTINGS_SUBSCRIBED = "settingsSubscribed";
 
     private static LocalNotificationsContext currentContext;
 
