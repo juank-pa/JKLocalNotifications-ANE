@@ -3,10 +3,9 @@
 [![Build Status](https://travis-ci.org/juank-pa/JKLocalNotifications-ANE.svg?branch=master)](https://travis-ci.org/juank-pa/JKLocalNotifications-ANE)
 
 This is a Native Extension based on the one exposed by
-[Daniel Koestler](https://www.adobe.com/devnet/author_bios/daniel_koestler.html). It fixes some issues
-and adds some other capabilities to the iOS side, like the ability to re-schedule
-local notifications in the future and the ability to update the application
-badge number at will.
+[Daniel Koestler](https://www.adobe.com/devnet/author_bios/daniel_koestler.html). 
+Throughout this time the ANE has added many improvements to the iOS and Android sides
+so that the ANE keeps up to date with new technology changes and features.
 
 **Important Note**
 The ANE binary is no longer packed with this repository only its source code. You
