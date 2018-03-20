@@ -11,7 +11,7 @@ so that the ANE keeps up to date with new technology changes and features.
 The ANE binary is no longer packed with this repository only its source code. You
 can download the latest compiled version from the Github repository
 [Releases](https://github.com/juank-pa/JKLocalNotifications-ANE/releases) page.
-Use the provided samples to learn more about its usage.
+Use the provided samples to learn more about its usage. Releases RSS feed <a href="https://github.com/juank-pa/JKLocalNotifications-ANE/releases.atom"><img src="http://icons.iconarchive.com/icons/tatice/cristal-intense/128/RSS-icon.png" width="16" height="16"></a>
 
 This LocalNotification ANE repository contains many different components:
 - The Java source code to allow notifications on Android devices (src/AndroidStudio).
