@@ -1,6 +1,7 @@
 package com.juankpro.ane.localnotif;
 
 import android.app.Notification;
+import android.net.Uri;
 import android.os.Bundle;
 
 /**
@@ -18,16 +19,21 @@ public class SoundSettings {
         return shouldPlaySound() && getSoundName() == null;
     }
 
-    boolean shouldPlayCustomSound() {
-        return shouldPlaySound() && getSoundName() != null;
-    }
-
     private boolean shouldPlaySound() {
         return bundle.getBoolean(Constants.PLAY_SOUND);
     }
 
-    String getSoundName() {
-        return bundle.getString(Constants.SOUND_NAME);
+    private String getSoundName() {
+        String soundName = bundle.getString(Constants.SOUND_NAME);
+        return soundName != null && soundName.length() > 0 && shouldPlaySound()? soundName : null;
+    }
+
+    public Uri getSoundUri() {
+        String soundName = getSoundName();
+        if (soundName == null) return null;
+
+        String soundPath = String.format("content://com.juankpro.ane.localnotif.notification_sound_provider/%s", soundName);
+        return Uri.parse(soundPath);
     }
 
     public int getSoundDefault() {

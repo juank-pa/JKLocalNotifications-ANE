@@ -16,7 +16,6 @@
 
     <application android:name=".Application">
         <service android:name=".LocalNotificationIntentService" />
-        <service android:name=".util.PlayAudio" />
 
         <receiver android:name=".AlarmIntentService" />
         <receiver android:name=".AlarmRestoreOnBoot">
@@ -24,7 +23,12 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".TextInputActionIntentService"></receiver>
+        <receiver android:name=".TextInputActionIntentService" />
+        <provider
+            android:name=".NotificationSoundProvider"
+            android:authorities="com.juankpro.ane.localnotif.notification_sound_provider"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>

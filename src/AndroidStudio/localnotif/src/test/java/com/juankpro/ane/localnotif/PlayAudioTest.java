@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 
-import com.juankpro.ane.localnotif.util.PlayAudio;
 import com.juankpro.ane.localnotif.util.AssetDecompressor;
 
 import org.junit.Before;

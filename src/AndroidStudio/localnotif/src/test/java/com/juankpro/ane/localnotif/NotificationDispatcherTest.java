@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import com.juankpro.ane.localnotif.factory.NotificationFactory;
 import com.juankpro.ane.localnotif.factory.NotificationPendingIntentFactory;
-import com.juankpro.ane.localnotif.util.PlayAudio;
 
 import org.junit.Before;
 import org.junit.Test;

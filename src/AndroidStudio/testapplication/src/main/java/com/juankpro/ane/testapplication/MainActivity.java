@@ -32,6 +32,8 @@ public class MainActivity extends Activity {
         context = new Extension().createContext("warningIcon");
         context.setActivity(this);
         functions = context.getFunctions();
+
+        callFunction("registerSettings", createSettings());
     }
 
     public void onResume() {
@@ -79,7 +81,7 @@ public class MainActivity extends Activity {
             Map<String, FREObject> notification = new HashMap<>();
             notification.put("fireDate", createDate());
             notification.put("playSound", getFREObject(true));
-            notification.put("soundName", getFREObject(""));
+            notification.put("soundName", getFREObject("fx05.wav"));
             notification.put("title", getFREObject("Title"));
             notification.put("body", getFREObject("Hello"));
             notification.put("iconType", getFREObject("icon"));
