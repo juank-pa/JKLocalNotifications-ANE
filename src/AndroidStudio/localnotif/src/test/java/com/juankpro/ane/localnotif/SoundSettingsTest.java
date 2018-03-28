@@ -1,25 +1,38 @@
 package com.juankpro.ane.localnotif;
 
 import android.app.Notification;
+import android.net.Uri;
 import android.os.Bundle;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
  * Created by juancarlospazmino on 12/14/17.
  */
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({
+        Uri.class,
+})
 public class SoundSettingsTest {
     @Mock
     private Bundle bundle;
+    @Mock
+    private Uri uri;
     private SoundSettings subject;
     private SoundSettings getSubject() {
         if (subject == null) { subject = new SoundSettings(bundle); }
@@ -29,36 +42,40 @@ public class SoundSettingsTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+
+        PowerMockito.mockStatic(Uri.class);
+        when(Uri.parse(anyString())).thenReturn(uri);
     }
 
     @Test
-    public void settings_getSoundName_returnsTheSoundName() {
-        when(bundle.getString(Constants.SOUND_NAME)).thenReturn("sound.mp3");
-        assertEquals("sound.mp3", getSubject().getSoundName());
-    }
-
-    @Test
-    public void settings_shouldPlayCustomSound_returnsTrueIfBundlePlaysSoundAndHasSoundName() {
+    public void settings_getSoundUri_returnsUriIfBundlePlaysSoundAndHasSoundName() {
         when(bundle.getString(Constants.SOUND_NAME)).thenReturn("sound.mp3");
         when(bundle.getBoolean(Constants.PLAY_SOUND)).thenReturn(true);
-        assertTrue(getSubject().shouldPlayCustomSound());
+        assertNotNull(getSubject().getSoundUri());
+
+        verifyStatic(Uri.class);
+        Uri.parse("content://com.juankpro.ane.localnotif.notification_sound_provider/sound.mp3");
     }
 
     @Test
-    public void settings_shouldPlayCustomSound_returnsFalseIfBundlePlaysSoundAndDoesNotHaveSoundName() {
+    public void settings_getSoundUri_returnsNullIfBundlePlaysSoundAndDoesNotHaveSoundName() {
         when(bundle.getBoolean(Constants.PLAY_SOUND)).thenReturn(true);
-        assertFalse(getSubject().shouldPlayCustomSound());
+        assertNull(getSubject().getSoundUri());
+
+        when(bundle.getString(Constants.SOUND_NAME)).thenReturn("");
+        when(bundle.getBoolean(Constants.PLAY_SOUND)).thenReturn(true);
+        assertNull(getSubject().getSoundUri());
     }
 
     @Test
-    public void settings_shouldPlayCustomSound_returnsFalseIfBundleDoesNotPlaySoundAndHasSoundName() {
+    public void settings_getSoundUri_returnsNullIfBundleDoesNotPlaySoundAndHasSoundName() {
         when(bundle.getString(Constants.SOUND_NAME)).thenReturn("sound.mp3");
-        assertFalse(getSubject().shouldPlayCustomSound());
+        assertNull(getSubject().getSoundUri());
     }
 
     @Test
-    public void settings_shouldPlayCustomSound_returnsFalseIfBundleDoesNotPlaySoundAndDoesNotHaveSoundName() {
-        assertFalse(getSubject().shouldPlayCustomSound());
+    public void settings_getSoundUri_returnsNullIfBundleDoesNotPlaySoundAndDoesNotHaveSoundName() {
+        assertNull(getSubject().getSoundUri());
     }
 
     @Test

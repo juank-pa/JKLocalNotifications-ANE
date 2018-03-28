@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.juankpro.ane.localnotif.factory.NotificationFactory;
@@ -45,6 +46,8 @@ public class NotificationDispatcherTest {
     private NotificationPendingIntentFactory pendingIntentFactory;
     @Mock
     private Notification notification;
+    @Mock
+    private Uri uri;
 
     private NotificationDispatcher subject;
     private NotificationDispatcher getSubject() {
@@ -77,34 +80,5 @@ public class NotificationDispatcherTest {
     public void dispatcher_dispatch_whenAppIsInForeground_andNormalNotification_doesNotDisplayNotification() {
         getSubject().dispatch();
         verify(notificationManager).notify("testCode", Constants.STANDARD_NOTIFICATION_ID, notification);
-    }
-
-    @Test
-    public void dispatcher_dispatch_doesNotPlaySoundIfCustomSoundShouldNotPlay() {
-        getSubject().dispatch();
-        verify(context, never()).startService(any(Intent.class));
-    }
-
-    @Test
-    public void dispatcher_dispatch_PlaysSoundIfCustomSoundShouldPlay() {
-        Intent intent = mock(Intent.class);
-        when(soundSettings.shouldPlayCustomSound()).thenReturn(true);
-        when(soundSettings.getSoundName()).thenReturn("sound.mp3");
-
-        try {
-            PowerMockito.whenNew(Intent.class)
-                    .withArguments(context, PlayAudio.class)
-                    .thenReturn(intent);
-            PowerMockito.whenNew(NotificationFactory.class)
-                    .withArguments(context, bundle)
-                    .thenReturn(notificationFactory);
-            PowerMockito.whenNew(NotificationPendingIntentFactory.class)
-                    .withArguments(context, bundle)
-                    .thenReturn(pendingIntentFactory);
-        } catch (Throwable e) { e.printStackTrace(); }
-
-        getSubject().dispatch();
-        verify(intent).putExtra(Constants.SOUND_NAME, "sound.mp3");
-        verify(context).startService(intent);
     }
 }

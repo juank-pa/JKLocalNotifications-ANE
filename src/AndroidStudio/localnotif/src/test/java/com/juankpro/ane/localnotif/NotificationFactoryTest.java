@@ -54,6 +54,8 @@ public class NotificationFactoryTest {
     private LocalNotificationCategoryManager categoryManager;
     @Mock
     private NotificationActionBuilder actionBuilder;
+    @Mock
+    private Uri uri;
     private LocalNotificationCategory category = new LocalNotificationCategory();
     private Notification notification = new Notification();
     private NotificationFactory subject;
@@ -94,10 +96,14 @@ public class NotificationFactoryTest {
         when(builder.setAutoCancel(anyBoolean())).thenReturn(builder);
         when(builder.setOnlyAlertOnce(anyBoolean())).thenReturn(builder);
         when(builder.setStyle(any(Notification.Style.class))).thenReturn(builder);
+        when(builder.setSound((Uri)any())).thenReturn(builder);
         when(builder.setPriority(anyInt())).thenReturn(builder);
         when(builder.build()).thenReturn(notification);
 
         when(textStyle.bigText(anyString())).thenReturn(textStyle);
+
+        PowerMockito.mockStatic(Uri.class);
+        when(Uri.parse(anyString())).thenReturn(uri);
 
         when(intentFactory.createPendingIntent()).thenReturn(pendingIntent);
     }
@@ -127,6 +133,15 @@ public class NotificationFactoryTest {
     }
 
     @Test
+    public void factory_create_createsWithCustomSound() {
+        when(bundle.getBoolean(Constants.PLAY_SOUND)).thenReturn(true);
+        when(bundle.getString(Constants.SOUND_NAME)).thenReturn("sound.mp3");
+
+        getSubject().create(intentFactory);
+        verify(builder).setSound(uri);
+    }
+
+    @Test
     public void factory_create_createsWithDefaultSound() {
         getSubject().create(intentFactory);
         verify(builder).setDefaults(Notification.DEFAULT_LIGHTS);
@@ -137,7 +152,7 @@ public class NotificationFactoryTest {
         verify(builder).setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS);
         verify(builder, never()).setSound(any(Uri.class));
     }
-    
+
     @Test
     public void factory_create_createsWithDefaultVibration() {
         when(bundle.getBoolean(Constants.VIBRATE)).thenReturn(true);
