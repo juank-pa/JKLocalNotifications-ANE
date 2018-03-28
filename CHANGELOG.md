@@ -1,3 +1,9 @@
+### Unreleased
+* [Breaking change] Fix custom sounds to prevent them triggering when notifications are disabled
+  or silenced by the user. For this to work the application XML must be updated by removing the
+  `PlayAudio` service and adding the `NotificationSoundProvider` content provider instead.
+  See README file.
+
 ### Version 1.2.0
 * Background actions are now fully supported in Android.
   You need to add `android:name="com.juankpro.ane.localnotif.Application"` to the Android

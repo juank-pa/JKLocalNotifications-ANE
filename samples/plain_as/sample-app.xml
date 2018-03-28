@@ -27,7 +27,6 @@
         <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
         <application android:name="com.juankpro.ane.localnotif.Application">
           <service android:name="com.juankpro.ane.localnotif.LocalNotificationIntentService"/>
-          <service android:name="com.juankpro.ane.localnotif.util.PlayAudio"/>
           <receiver android:name="com.juankpro.ane.localnotif.AlarmIntentService" />
           <receiver android:name="com.juankpro.ane.localnotif.AlarmRestoreOnBoot" >
             <intent-filter>
@@ -35,6 +34,11 @@
             </intent-filter>
           </receiver>
           <receiver android:name="com.juankpro.ane.localnotif.TextInputActionIntentService" />
+          <provider
+            android:name="com.juankpro.ane.localnotif.NotificationSoundProvider"
+            android:authorities="com.juankpro.ane.localnotif.notification_sound_provider"
+            android:enabled="true"
+            android:exported="true"/>
         </application>
       </manifest>
       ]]>
