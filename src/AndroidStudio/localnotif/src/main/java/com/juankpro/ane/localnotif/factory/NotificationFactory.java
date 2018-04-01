@@ -2,6 +2,7 @@ package com.juankpro.ane.localnotif.factory;
 
 import android.app.Notification;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -19,11 +20,13 @@ public class NotificationFactory {
     private Context context;
     private Bundle bundle;
     private Notification.Builder builder;
+    private SoundSettings soundSettings;
 
     public NotificationFactory(Context context, Bundle bundle) {
         this.context = context;
         this.bundle = bundle;
         builder = new Notification.Builder(context);
+        soundSettings = new SoundSettings(bundle);
     }
 
     public Notification create(PendingIntentFactory intentFactory) {
@@ -52,6 +55,7 @@ public class NotificationFactory {
                 .setDefaults(getDefaults())
                 .setNumber(numberAnnotation)
                 .setStyle(style)
+                .setSound(soundSettings.getSoundUri())
                 .setPriority(priority);
     }
 
