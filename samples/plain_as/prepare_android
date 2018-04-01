@@ -21,7 +21,7 @@ rm -rf $RES_PATH
 echo "***** ANDROID APP ******"
 echo "***** compiling SWF file *****"
 
-"$AMXML" -swf-version $AIR_VERSION \
+"$AMXML" -swf-version $SWF_VERSION \
   -define+=CONFIG::device,true \
   -define+=CONFIG::iphone,false \
   -define+=CONFIG::android,true \

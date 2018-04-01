@@ -15,7 +15,7 @@ mkdir -p $TEMP_PATH/default
 echo "****** Compiling AS3 library *******"
 
 "$ACOMPC" \
-    -swf-version $AIR_VERSION \
+    -swf-version $SWF_VERSION \
     -define+=CONFIG::device,false \
     -define+=CONFIG::iphone,false \
     -define+=CONFIG::android,false \

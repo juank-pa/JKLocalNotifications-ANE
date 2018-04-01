@@ -12,7 +12,7 @@ AMXML="$SDK_PATH/bin/amxmlc"
 
 # AS3 lib folder
 LIB_FOLDER=$CONFIG_SCRIPT_PATH/../../src/AS
-AIR_VERSION=37
+SWF_VERSION=37
 
 # ANDROID
 # path to android sdk
