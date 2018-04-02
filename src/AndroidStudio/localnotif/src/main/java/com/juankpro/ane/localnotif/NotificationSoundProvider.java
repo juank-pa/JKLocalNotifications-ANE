@@ -2,6 +2,8 @@ package com.juankpro.ane.localnotif;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.pm.ProviderInfo;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,6 +13,9 @@ import com.juankpro.ane.localnotif.util.AssetDecompressor;
 import java.io.FileNotFoundException;
 
 public class NotificationSoundProvider extends ContentProvider {
+    public static String AUTHORITY = "com.juankpro.ane.localnotif.notification_sound_provider";
+    public static String CONTENT_URI = "content://" + AUTHORITY;
+
     public NotificationSoundProvider() {
     }
 
@@ -44,6 +49,14 @@ public class NotificationSoundProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         return 0;
+    }
+
+    @Override
+    public void attachInfo(Context context, ProviderInfo info) {
+        super.attachInfo(context, info);
+
+        AUTHORITY = info.authority;
+        CONTENT_URI = "content://" + AUTHORITY;
     }
 
     @Override

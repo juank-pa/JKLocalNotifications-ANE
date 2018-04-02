@@ -121,7 +121,7 @@ the ANE to work:
           <receiver android:name="com.juankpro.ane.localnotif.TextInputActionIntentService" />
           <provider
             android:name="com.juankpro.ane.localnotif.NotificationSoundProvider"
-            android:authorities="com.juankpro.ane.localnotif.notification_sound_provider"
+            android:authorities="<your_authority>"
             android:enabled="true"
             android:exported="true"/>
 
@@ -133,6 +133,9 @@ the ANE to work:
   <!-- Other tags -->
 </application>
 ```
+
+**Note:** Replace `<your_authority>` with a unique string commonly qualified with your app package name.
+e.g. `com.my_domain.notif_sound_provider`.
 
 # The ActionScript 3.0 source code
 

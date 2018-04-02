@@ -36,7 +36,7 @@
           <receiver android:name="com.juankpro.ane.localnotif.TextInputActionIntentService" />
           <provider
             android:name="com.juankpro.ane.localnotif.NotificationSoundProvider"
-            android:authorities="com.juankpro.ane.localnotif.notification_sound_provider"
+            android:authorities="com.juankpro.sample.notification_sound_provider"
             android:enabled="true"
             android:exported="true"/>
         </application>
