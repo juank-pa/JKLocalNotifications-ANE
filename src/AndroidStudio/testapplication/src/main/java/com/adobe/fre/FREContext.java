@@ -2,6 +2,8 @@ package com.adobe.fre;
 
 import android.app.Activity;
 
+import com.juankpro.ane.testapplication.R;
+
 import java.util.Map;
 
 public abstract class FREContext {
@@ -20,7 +22,7 @@ public abstract class FREContext {
     }
 
     public int getResourceId(String resourceId) {
-        return com.juankpro.ane.localnotif.R.drawable.ic_stat_notify_ln_alert;
+        return R.drawable.ic_stat_notify_dog_icon;
     }
 
     private String savedEventCode;

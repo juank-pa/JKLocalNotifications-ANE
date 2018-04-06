@@ -30,13 +30,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static org.junit.Assert.*;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
  * Created by Juank on 11/9/17.
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({NotificationFactory.class, Uri.class, Build.VERSION.class})
+@PrepareForTest({NotificationFactory.class, Uri.class, Build.VERSION.class, NotificationSoundProvider.class})
 public class NotificationFactoryTest {
     @Mock
     private Context context;
@@ -102,8 +104,8 @@ public class NotificationFactoryTest {
 
         when(textStyle.bigText(anyString())).thenReturn(textStyle);
 
-        PowerMockito.mockStatic(Uri.class);
-        when(Uri.parse(anyString())).thenReturn(uri);
+        //PowerMockito.mockStatic(Uri.class);
+        //when(Uri.parse(anyString())).thenReturn(uri);
 
         when(intentFactory.createPendingIntent()).thenReturn(pendingIntent);
     }
@@ -134,8 +136,12 @@ public class NotificationFactoryTest {
 
     @Test
     public void factory_create_createsWithCustomSound() {
+        NotificationSoundProvider.CONTENT_URI = "content://simple.uri";
         when(bundle.getBoolean(Constants.PLAY_SOUND)).thenReturn(true);
         when(bundle.getString(Constants.SOUND_NAME)).thenReturn("sound.mp3");
+
+        PowerMockito.mockStatic(Uri.class);
+        when(Uri.parse("content://simple.uri/sound.mp3")).thenReturn(uri);
 
         getSubject().create(intentFactory);
         verify(builder).setSound(uri);
@@ -150,7 +156,7 @@ public class NotificationFactoryTest {
 
         getSubject().create(intentFactory);
         verify(builder).setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS);
-        verify(builder, never()).setSound(any(Uri.class));
+        verify(builder, times(2)).setSound(null);
     }
 
     @Test

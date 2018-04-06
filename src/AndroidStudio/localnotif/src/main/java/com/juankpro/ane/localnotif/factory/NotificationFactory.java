@@ -1,8 +1,8 @@
 package com.juankpro.ane.localnotif.factory;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -11,6 +11,7 @@ import com.juankpro.ane.localnotif.SoundSettings;
 import com.juankpro.ane.localnotif.category.LocalNotificationAction;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategoryManager;
+import com.juankpro.ane.localnotif.util.Logger;
 
 /**
  * Created by Juank on 11/9/17.
@@ -21,12 +22,30 @@ public class NotificationFactory {
     private Bundle bundle;
     private Notification.Builder builder;
     private SoundSettings soundSettings;
+    private LocalNotificationCategory category;
 
     public NotificationFactory(Context context, Bundle bundle) {
         this.context = context;
         this.bundle = bundle;
-        builder = new Notification.Builder(context);
         soundSettings = new SoundSettings(bundle);
+        category = getCategory();
+
+        if (category != null) {
+            Logger.log("Has category: " + category.identifier + "," + category.name);
+        }
+
+        if (shouldNotTargetChannel(category)) {
+            builder = new Notification.Builder(context);
+        }
+        else {
+            builder = new Notification.Builder(context, category.identifier);
+        }
+    }
+
+    private boolean shouldNotTargetChannel(LocalNotificationCategory category) {
+        return category == null || category.name == null ||
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.O ||
+                context.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.O;
     }
 
     public Notification create(PendingIntentFactory intentFactory) {
@@ -60,7 +79,6 @@ public class NotificationFactory {
     }
 
     private void buildActions(PendingIntentFactory intentFactory) {
-        LocalNotificationCategory category = getCategory();
         if (category != null) {
             NotificationActionBuilder actionBuilder = new NotificationActionBuilder(intentFactory, builder);
             for (LocalNotificationAction action : category.actions) {
@@ -81,7 +99,6 @@ public class NotificationFactory {
     }
 
     private int getDefaults() {
-        SoundSettings soundSettings = new SoundSettings(bundle);
         return soundSettings.getSoundDefault() |
                 getVibrateDefault() |
                 Notification.DEFAULT_LIGHTS;

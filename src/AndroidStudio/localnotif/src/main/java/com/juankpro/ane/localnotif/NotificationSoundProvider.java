@@ -16,6 +16,10 @@ public class NotificationSoundProvider extends ContentProvider {
     public static String AUTHORITY = "com.juankpro.ane.localnotif.notification_sound_provider";
     public static String CONTENT_URI = "content://" + AUTHORITY;
 
+    public static Uri getSoundUri(String soundName) {
+        return Uri.parse(CONTENT_URI + "/" + soundName);
+    }
+
     public NotificationSoundProvider() {
     }
 

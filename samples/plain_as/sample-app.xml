@@ -22,10 +22,10 @@
   <android>
     <manifestAdditions><![CDATA[
       <manifest android:installLocation="auto">
-        <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="24" />
+        <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="26" />
         <uses-permission android:name="android.permission.VIBRATE"/>
         <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-        <application android:name="com.juankpro.ane.localnotif.Application">
+        <application android:name="com.juankpro.ane.localnotif.Application" android:allowBackup="false" android:fullBackupContent="false">
           <service android:name="com.juankpro.ane.localnotif.LocalNotificationIntentService"/>
           <receiver android:name="com.juankpro.ane.localnotif.AlarmIntentService" />
           <receiver android:name="com.juankpro.ane.localnotif.AlarmRestoreOnBoot" >

@@ -76,6 +76,8 @@ public class MainActivity extends Activity {
         return FREArray.newArray(value);
     }
 
+    private String cat = "CategoryX";
+
     private FREObject createNotification() {
         try {
             Map<String, FREObject> notification = new HashMap<>();
@@ -89,7 +91,8 @@ public class MainActivity extends Activity {
             notification.put("cancelOnSelect", getFREObject(true));
             //notification.put("notification.repeatInterval", getFREObject(LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT));
             notification.put("showInForeground", getFREObject(true));
-            notification.put("category", getFREObject("CategoryX"));
+            notification.put("category", getFREObject(cat));
+            cat = cat.equals("CategoryX")? "CategoryY" : "CategoryX";
             return getFREObject(notification);
         }
         catch(Throwable e) {}
@@ -108,10 +111,16 @@ public class MainActivity extends Activity {
 
     private FREArray createCategories() {
         try {
-            Map<String, FREObject> notification = new HashMap<>();
-            notification.put("identifier", getFREObject("CategoryX"));
-            notification.put("actions", createActions());
-            return getFREArray(FREObject.newObject(notification));
+            Map<String, FREObject> category1 = new HashMap<>();
+            category1.put("identifier", getFREObject("CategoryX"));
+            category1.put("name", getFREObject("Test1"));
+            category1.put("actions", createActions());
+
+            Map<String, FREObject> category2 = new HashMap<>();
+            category2.put("identifier", getFREObject("CategoryY"));
+            category2.put("name", getFREObject("Test2"));
+
+            return getFREArray(FREObject.newObject(category1), FREObject.newObject(category2));
         }
         catch(Throwable e) {}
         return null;

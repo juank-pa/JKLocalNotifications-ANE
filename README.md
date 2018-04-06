@@ -135,7 +135,7 @@ the ANE to work:
 ```
 
 **Note:** Replace `<your_authority>` with a unique string commonly qualified with your app package name.
-e.g. `com.my_domain.notif_sound_provider`.
+e.g. `com.my_domain.notification_sound_provider`.
 
 # The ActionScript 3.0 source code
 

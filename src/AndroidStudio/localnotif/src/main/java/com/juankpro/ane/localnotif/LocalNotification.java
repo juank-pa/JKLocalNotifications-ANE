@@ -6,6 +6,7 @@ import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.os.Build;
 
@@ -49,7 +50,7 @@ public class LocalNotification implements ISerializable, IDeserializable {
     public Date fireDate = new Date();
     public int repeatInterval = 0;
 
-    public int priority;
+    public int priority = Notification.PRIORITY_DEFAULT;
 
     public  boolean showInForeground = false;
 
@@ -83,9 +84,6 @@ public class LocalNotification implements ISerializable, IDeserializable {
 
     public LocalNotification(String activityClassName) {
         this.activityClassName = activityClassName;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            priority = NotificationManager.IMPORTANCE_DEFAULT;
-        }
     }
 
     public JSONObject serialize() {

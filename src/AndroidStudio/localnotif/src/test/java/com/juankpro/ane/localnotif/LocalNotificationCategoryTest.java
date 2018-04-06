@@ -1,5 +1,8 @@
 package com.juankpro.ane.localnotif;
 
+import android.app.NotificationManager;
+import android.os.Build;
+
 import com.juankpro.ane.localnotif.category.LocalNotificationAction;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
 import com.juankpro.ane.localnotif.serialization.ArrayDeserializer;
@@ -16,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -31,7 +35,7 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({LocalNotificationCategory.class})
+@PrepareForTest({LocalNotificationCategory.class, Build.class})
 public class LocalNotificationCategoryTest {
     @Mock
     private JSONObject jsonObject;
@@ -70,6 +74,18 @@ public class LocalNotificationCategoryTest {
             if (actions != null) subject.actions = actions;
         }
         return subject;
+    }
+
+    @Test
+    public void action_defaultImportance_zeroPreviousToOreo() {
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.O - 1);
+        assertEquals(0, getSubject().importance);
+    }
+
+    @Test
+    public void action_defaultImportance_zeroForOreoAndLater() {
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.O);
+        assertEquals(NotificationManager.IMPORTANCE_DEFAULT, getSubject().importance);
     }
 
     @Test
