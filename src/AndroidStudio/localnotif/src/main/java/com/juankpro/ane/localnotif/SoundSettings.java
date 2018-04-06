@@ -19,7 +19,7 @@ public class SoundSettings {
     }
 
     boolean shouldPlayCustomSound() {
-        return shouldPlaySound() && getSoundName() != null;
+        return shouldPlaySound() && getSoundName() != null && getSoundName().length() > 0;
     }
 
     private boolean shouldPlaySound() {
