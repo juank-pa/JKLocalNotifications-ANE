@@ -4,6 +4,10 @@
   `PlayAudio` service and adding the `NotificationSoundProvider` content provider instead.
   See README file.
 
+### Version 1.2.1
+* Fix bug that prevented notifications from triggering when using the default sound for
+  the notification i.e. `Notification.soundName` was not set.
+
 ### Version 1.2.0
 * Background actions are now fully supported in Android.
   You need to add `android:name="com.juankpro.ane.localnotif.Application"` to the Android
