@@ -7,11 +7,15 @@ This is a Native Extension based on the one exposed by
 Throughout this time the ANE has added many improvements to the iOS and Android sides
 so that the ANE keeps up to date with new technology changes and features.
 
-**Important Note**
-The ANE binary is no longer packed with this repository only its source code. You
+**Important Notes**
+* The ANE binary is no longer packed with this repository only its source code. You
 can download the latest compiled version from the Github repository
-[Releases](https://github.com/juank-pa/JKLocalNotifications-ANE/releases) page.
-Use the provided samples to learn more about its usage. Releases RSS feed <a href="https://github.com/juank-pa/JKLocalNotifications-ANE/releases.atom"><img src="http://icons.iconarchive.com/icons/tatice/cristal-intense/128/RSS-icon.png" width="16" height="16"></a>
+[Releases](https://github.com/juank-pa/JKLocalNotifications-ANE/releases) page. Releases RSS feed
+<a href="https://github.com/juank-pa/JKLocalNotifications-ANE/releases.atom"><img src="http://icons.iconarchive.com/icons/tatice/cristal-intense/128/RSS-icon.png" width="16" height="16"></a>
+* Use the provided samples to learn more about its usage.
+* There is now a [Wiki](https://github.com/juank-pa/JKLocalNotifications-ANE/wiki) where
+  you'll find a migration guides for different ANE versions and, in the near future, other
+  interesting guides as well.
 
 This LocalNotification ANE repository contains many different components:
 - The Java source code to allow notifications on Android devices (src/AndroidStudio).

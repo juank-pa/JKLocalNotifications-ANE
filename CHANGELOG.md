@@ -1,8 +1,15 @@
 ### Unreleased
-* [Breaking change] Fix custom sounds to prevent them triggering when notifications are disabled
+* Fix custom sounds to prevent them triggering when notifications are disabled
   or silenced by the user. For this to work the application XML must be updated by removing the
   `PlayAudio` service and adding the `NotificationSoundProvider` content provider instead.
   See README file.
+* Add support for Android 8.0 (API level 26, Oreo) channels. The `NotificationChannel` now
+  represents Android channels and allow creating and managing channels on Android. On Android
+  Oreo the sound, importance and vibration are no longer determined by the Notification but
+  on the channel. The same happens in our ANE, so please setup these properties in both places
+  (`Notification` and `NotificationCategory`) to support new and old versions of the Android API.
+  If you haven't setup any categories or do not need them, the ANE will create a default one
+  before sending any notifications.
 
 ### Version 1.2.0
 * Background actions are now fully supported in Android.
