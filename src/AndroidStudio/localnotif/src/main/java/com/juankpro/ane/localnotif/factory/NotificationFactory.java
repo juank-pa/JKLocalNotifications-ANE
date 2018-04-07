@@ -1,7 +1,6 @@
 package com.juankpro.ane.localnotif.factory;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import com.juankpro.ane.localnotif.SoundSettings;
 import com.juankpro.ane.localnotif.category.LocalNotificationAction;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategoryManager;
-import com.juankpro.ane.localnotif.util.Logger;
 
 /**
  * Created by Juank on 11/9/17.
@@ -29,10 +27,6 @@ public class NotificationFactory {
         this.bundle = bundle;
         soundSettings = new SoundSettings(bundle);
         category = getCategory();
-
-        if (category != null) {
-            Logger.log("Has category: " + category.identifier + "," + category.name);
-        }
 
         if (shouldNotTargetChannel(category)) {
             builder = new Notification.Builder(context);

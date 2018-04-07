@@ -7,8 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Notification;
-import android.app.NotificationManager;
-import android.os.Build;
 
 import com.juankpro.ane.localnotif.serialization.IDeserializable;
 import com.juankpro.ane.localnotif.serialization.ISerializable;

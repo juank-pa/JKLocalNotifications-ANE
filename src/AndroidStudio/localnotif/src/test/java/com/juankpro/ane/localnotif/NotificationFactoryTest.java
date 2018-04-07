@@ -33,7 +33,6 @@ import static org.mockito.Mockito.when;
 import static org.junit.Assert.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
  * Created by Juank on 11/9/17.

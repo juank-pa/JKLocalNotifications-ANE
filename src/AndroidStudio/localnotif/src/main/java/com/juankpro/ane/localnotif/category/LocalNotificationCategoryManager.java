@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.os.Build;
 
 import com.juankpro.ane.localnotif.NotificationSoundProvider;
@@ -28,11 +27,9 @@ public class LocalNotificationCategoryManager {
     }
 
     public void registerCategories(LocalNotificationCategory[] categories) {
-        Logger.log("Attempt register");
         this.categories = new Hashtable<>();
         for(LocalNotificationCategory category:categories) {
             this.categories.put(category.identifier, category);
-            Logger.log("Category: " + category.identifier + "," + category.name + "," + String.valueOf(category.importance));
             createNotificationChannel(category);
         }
         persistenceManager.writeCategories(categories);
@@ -71,7 +68,6 @@ public class LocalNotificationCategoryManager {
 
     private void registerChannel(NotificationChannel channel) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
-        Logger.log("Registering channel");
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.createNotificationChannel(channel);

@@ -3,8 +3,6 @@ package com.juankpro.ane.localnotif;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import com.juankpro.ane.localnotif.factory.NotificationFactory;
@@ -19,9 +17,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -46,8 +41,6 @@ public class NotificationDispatcherTest {
     private NotificationPendingIntentFactory pendingIntentFactory;
     @Mock
     private Notification notification;
-    @Mock
-    private Uri uri;
 
     private NotificationDispatcher subject;
     private NotificationDispatcher getSubject() {
