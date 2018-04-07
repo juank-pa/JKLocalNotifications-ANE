@@ -82,6 +82,7 @@ public class LocalNotificationCategoryManagerTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.O - 1);
 
         try {
             PowerMockito.whenNew(PersistenceManager.class)
