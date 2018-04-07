@@ -30,17 +30,6 @@ package com.juankpro.ane.localnotif {
     public var categories:Vector.<NotificationCategory>;
 
     /**
-     * Previous ANE versions couldn't fully implement background notifications actions.
-     * <p>Since version 1.2.0 this is now possible and thus this property is deprecated.</p>
-     * <p>It was left here to prevent breaking existing code but might be removed in the future.
-     * Using it doesn't have any effect in the ANE behavior.</p>
-     * <p>Supported OS: Android</p>
-     * @see com.juankpro.ane.localnotif.NotificationAction#isBackground
-     */
-    [Deprecated]
-    public var allowAndroidBackgroundNotificationActions:Boolean = false;
-
-    /**
      * Constructor.
      * @param categories The categories to register along with their respective actions.
      *                   Categories are only needed if you want to show custom action buttons in the

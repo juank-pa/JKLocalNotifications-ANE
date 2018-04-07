@@ -86,24 +86,6 @@
           NotificationStyle.ALERT]);
 
     /**
-     * Previous versions returned true on iOS devices only. Currently, because Android devices 
-     * may also need to register custom actions, this property returns true for all mobile devices.
-     * Legacy code using this property will still work properly because Android devices will always dispatch
-     * the <code>Event.SETTINGS_SUBSCRIBED</code> event successfully while subscribing, but for practical
-     * cases, you should not use it anymore and depend only on <code>isSupported</code>.
-     * <p>Supported OS: Android, iOS</p>
-     * @see #subscribe()
-     * @see #isSupported
-     */
-    [Deprecated("isSupported")]
-    public static function get needsSubscription():Boolean {
-        CONFIG::device {
-          return true;
-        }
-        return false;
-    }
-
-    /**
      * Android 7.0 (API level 26) and higher can only send notification through notification channels. 
      * Notification categories translate to Android notification channels.
      * <p>If you haven't previously created any category because you didn't need any custom actions,
@@ -147,21 +129,9 @@
           var builder:* = contextBuilder || ExtensionContext;
           _extensionContext = builder.createExtensionContext("com.juankpro.ane.LocalNotification",
                                                              _contextType);
-          CONFIG::android {
-            NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, activateHandler, false, 0, true);
-            NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, deactivateHandler, false, 0, true);
-          }
         }
         _refCount++;
       }
-    }
-
-    CONFIG::device private function activateHandler(e:Event):void {
-      _extensionContext.call("activate");
-    }
-
-    CONFIG::device private function deactivateHandler(e:Event):void {
-      _extensionContext.call("deactivate");
     }
 
     /**

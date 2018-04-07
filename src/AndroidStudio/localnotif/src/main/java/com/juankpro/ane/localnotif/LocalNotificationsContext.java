@@ -15,7 +15,6 @@ import com.juankpro.ane.localnotif.decoder.LocalNotificationDecoder;
 import com.juankpro.ane.localnotif.decoder.LocalNotificationSettingsDecoder;
 import com.juankpro.ane.localnotif.fre.ExtensionUtils;
 import com.juankpro.ane.localnotif.fre.FunctionHelper;
-import com.juankpro.ane.localnotif.util.ApplicationStatus;
 import com.juankpro.ane.localnotif.util.PersistenceManager;
 
 /**
@@ -61,10 +60,6 @@ public class LocalNotificationsContext extends FREContext {
             categoryManager = new LocalNotificationCategoryManager(getApplicationContext());
         }
         return categoryManager;
-    }
-
-    private boolean isLegacyBehavior() {
-        return !getActivity().getApplication().getClass().getName().contains("com.juankpro.ane.localnotif");
     }
 
     @Override
@@ -136,22 +131,6 @@ public class LocalNotificationsContext extends FREContext {
             }
         });
 
-        functionMap.put("activate", new FunctionHelper() {
-            @Override
-            public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
-                setInForeground(true);
-                return null;
-            }
-        });
-
-        functionMap.put("deactivate", new FunctionHelper() {
-            @Override
-            public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
-                setInForeground(false);
-                return null;
-            }
-        });
-
         functionMap.put("registerDefaultCategory", new FunctionHelper() {
             @Override
             public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
@@ -175,14 +154,7 @@ public class LocalNotificationsContext extends FREContext {
             }
         });
 
-        setInForeground(true);
         return functionMap;
-    }
-
-    private void setInForeground(boolean status) {
-        if (isLegacyBehavior()) {
-            ApplicationStatus.setInForeground(status);
-        }
     }
 
     private void registerDefaultCategory(final FREContext context, FREObject object) {

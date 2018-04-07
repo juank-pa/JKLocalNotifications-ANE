@@ -48,17 +48,6 @@ package {
       return;
     }
 
-    /*
-    TODO: re-enable when you discover how to remove deprecation warnings.
-    public function testNeedsSubscription():void {
-      CONFIG::device {
-        assertTrue("Is supported on device", NotificationManager.needsSubscription);
-        return;
-      }
-      assertFalse("Is supported on device", NotificationManager.needsSubscription);
-    }
-    */
-
     public function testInstantiation():void {
       CONFIG::device {
         assertTrue(mockContextBuilder.errorMessage(), mockContextBuilder.success());
