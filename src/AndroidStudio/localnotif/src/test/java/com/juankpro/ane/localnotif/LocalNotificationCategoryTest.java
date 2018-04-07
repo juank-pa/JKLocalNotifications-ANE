@@ -52,6 +52,7 @@ public class LocalNotificationCategoryTest {
     public void setup() {
         MockitoAnnotations.initMocks(true);
         when(jsonObject.optString("identifier", "")).thenReturn("MyId");
+        when(jsonObject.optString("name", "")).thenReturn("My Name");
 
         actions = new LocalNotificationAction[]{new LocalNotificationAction()};
 
@@ -68,9 +69,14 @@ public class LocalNotificationCategoryTest {
     }
 
     private LocalNotificationCategory getSubject(String identifier, LocalNotificationAction[] actions) {
+        return getSubject(identifier, null, actions);
+    }
+
+    private LocalNotificationCategory getSubject(String identifier, String name, LocalNotificationAction[] actions) {
         if (subject == null) {
             subject = new LocalNotificationCategory();
             if (identifier != null) subject.identifier = identifier;
+            if (name != null) subject.name = name;
             if (actions != null) subject.actions = actions;
         }
         return subject;
@@ -96,10 +102,12 @@ public class LocalNotificationCategoryTest {
         } catch (Throwable e) { e.printStackTrace(); }
 
         assertEquals("", getSubject().identifier);
+        assertNull(getSubject().name);
         assertNull(getSubject().actions);
 
         getSubject().deserialize(jsonObject);
         assertEquals("MyId", getSubject().identifier);
+        assertEquals("My Name", getSubject().name);
         assertSame(actions, getSubject().actions);
     }
 
@@ -118,12 +126,13 @@ public class LocalNotificationCategoryTest {
     }
 
     @Test
-    public void action_serialize_serializesAction() {
+    public void action_serialize_serializesCategory() {
         when(arraySerializer.serialize(actions)).thenReturn(jsonArray);
 
-        assertSame(jsonObject, getSubject("MyId", actions).serialize());
+        assertSame(jsonObject, getSubject("MyId", "My Name", actions).serialize());
         try {
             verify(jsonObject).putOpt("identifier", "MyId");
+            verify(jsonObject).putOpt("name", "My Name");
             verify(jsonObject).putOpt("actions", jsonArray);
         } catch (JSONException e) { e.printStackTrace(); }
     }

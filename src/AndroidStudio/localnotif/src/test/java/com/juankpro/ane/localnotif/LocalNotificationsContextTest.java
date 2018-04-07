@@ -7,6 +7,7 @@ import com.adobe.fre.FREContext;
 import com.adobe.fre.FREObject;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategoryManager;
+import com.juankpro.ane.localnotif.decoder.LocalNotificationCategoryDecoder;
 import com.juankpro.ane.localnotif.decoder.LocalNotificationDecoder;
 import com.juankpro.ane.localnotif.decoder.LocalNotificationSettingsDecoder;
 import com.juankpro.ane.localnotif.fre.ExtensionUtils;
@@ -290,5 +291,26 @@ public class LocalNotificationsContextTest {
 
         verify(categoryManager).registerCategories(settings.categories);
         verify(getSubject()).dispatchStatusEventAsync("settingsSubscribed", "status");
+    }
+
+    @Test
+    public void context_functions_registerDefaultCategory() {
+        LocalNotificationCategoryDecoder decoder = mock(LocalNotificationCategoryDecoder.class);
+
+        try {
+            PowerMockito.whenNew(LocalNotificationCategoryDecoder.class)
+                    .withArguments(freContext)
+                    .thenReturn(decoder);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        LocalNotificationCategory category = new LocalNotificationCategory();
+        LocalNotificationCategory[] categories = new LocalNotificationCategory[]{ category };
+        when(decoder.decodeObject(arg1)).thenReturn(category);
+
+        callFunction("registerDefaultCategory");
+
+        verify(categoryManager).registerCategories(categories);
     }
 }

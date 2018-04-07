@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
@@ -54,6 +55,7 @@ public class LocalNotificationCategoryManagerTest {
     private NotificationManager notificationManager;
     @Mock
     private Uri uri;
+    private ApplicationInfo appInfo;
     private LocalNotificationCategoryManager subject;
 
     private LocalNotificationCategoryManager getSubject() {
@@ -150,6 +152,10 @@ public class LocalNotificationCategoryManagerTest {
         when(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager);
         doNothing().when(notificationManager).createNotificationChannel(channel);
 
+        appInfo = new ApplicationInfo();
+        appInfo.targetSdkVersion = Build.VERSION_CODES.O;
+        when(context.getApplicationInfo()).thenReturn(appInfo);
+
         mockStatic(NotificationSoundProvider.class);
         when(NotificationSoundProvider.getSoundUri(anyString())).thenReturn(uri);
         doNothing().when(channel).setSound(any(Uri.class), any(AudioAttributes.class));
@@ -176,7 +182,21 @@ public class LocalNotificationCategoryManagerTest {
     }
 
     @Test
-    public void manager_registerCategories_inOreoAndHigher_ifNameIsNull_doesNotCreatesNorRegistersChannel() {
+    public void manager_registerCategories_inOreoAndHigher_targetingLowerThanOreo_doesNotCreateNorRegisterChannel() {
+        setupOreo();
+        appInfo.targetSdkVersion = Build.VERSION_CODES.O - 1;
+
+        LocalNotificationCategory category = getCategories()[0];
+        getSubject().registerCategories(new LocalNotificationCategory[]{category});
+
+        try {
+            PowerMockito.verifyNew(NotificationChannel.class, never()).withArguments(anyString(), anyString(), anyInt());
+            verify(notificationManager, never()).createNotificationChannel(channel);
+        } catch (Throwable e) { e.printStackTrace(); }
+    }
+
+    @Test
+    public void manager_registerCategories_inOreoAndHigher_ifNameIsNull_doesNotCreatesNorRegisterChannel() {
         setupOreo();
 
         LocalNotificationCategory category = getCategories()[0];
