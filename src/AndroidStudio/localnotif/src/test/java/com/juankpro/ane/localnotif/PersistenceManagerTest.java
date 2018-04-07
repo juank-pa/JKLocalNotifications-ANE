@@ -122,10 +122,10 @@ public class PersistenceManagerTest {
 
     @Test
     public void manager_readNotification_returnsNull_whenEntryNotfound() {
-        setupReadObject(categoryPrefs, "identifier");
-        when(categoryPrefs.getString("MyCode", null)).thenReturn(null);
+        setupReadObject(notificationPrefs, "code");
+        when(notificationPrefs.getString("MyCode", null)).thenReturn(null);
 
-        LocalNotificationCategory category = getSubject().readCategory("MyCode");
+        LocalNotification category = getSubject().readNotification("MyCode");
         assertNull(category);
     }
 

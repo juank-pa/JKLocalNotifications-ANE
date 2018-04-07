@@ -112,27 +112,22 @@ public class NotificationFactoryTest {
         appInfo = new ApplicationInfo();
         when(context.getApplicationInfo()).thenReturn(appInfo);
 
-        //PowerMockito.mockStatic(Uri.class);
-        //when(Uri.parse(anyString())).thenReturn(uri);
-
         when(intentFactory.createPendingIntent()).thenReturn(pendingIntent);
     }
 
     @Test
-    public void factory_constructor_priorToOreo_initializesNotificationBuilderWithoutChannelId() {
+    public void factory_constructor_priorToOreo_initializesNotificationBuilderWithoutChannelId() throws Exception {
         Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.O - 1);
         when(bundle.getString(Constants.CATEGORY)).thenReturn("MyCategory");
         when(categoryManager.readCategory("MyCategory")).thenReturn(category);
         category.name = "My Name";
         appInfo.targetSdkVersion = Build.VERSION_CODES.O;
         getSubject();
-        try {
-            verifyNew(Notification.Builder.class).withArguments(context);
-        } catch(Throwable e) { e.printStackTrace(); }
+        verifyNew(Notification.Builder.class).withArguments(context);
     }
 
     @Test
-    public void factory_constructor_targetingLowerThanOreo_initializesNotificationBuilderWithoutChannelId() {
+    public void factory_constructor_targetingLowerThanOreo_initializesNotificationBuilderWithoutChannelId() throws Exception {
         Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.O);
         when(bundle.getString(Constants.CATEGORY)).thenReturn("MyCategory");
         when(categoryManager.readCategory("MyCategory")).thenReturn(category);
@@ -140,24 +135,20 @@ public class NotificationFactoryTest {
         appInfo.targetSdkVersion = Build.VERSION_CODES.O - 1;
         getSubject();
 
-        try {
-            verifyNew(Notification.Builder.class).withArguments(context);
-        } catch(Throwable e) { e.printStackTrace(); }
+        verifyNew(Notification.Builder.class).withArguments(context);
     }
 
     @Test
-    public void factory_constructor_withoutCategory_initializesNotificationBuilderWithoutChannelId() {
+    public void factory_constructor_withoutCategory_initializesNotificationBuilderWithoutChannelId() throws Exception {
         Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.O);
         appInfo.targetSdkVersion = Build.VERSION_CODES.O;
         getSubject();
 
-        try {
-            verifyNew(Notification.Builder.class).withArguments(context);
-        } catch(Throwable e) { e.printStackTrace(); }
+        verifyNew(Notification.Builder.class).withArguments(context);
     }
 
     @Test
-    public void factory_constructor_inOreoAndHigher_targetingOreo_withCategory_initializesNotificationBuilderWithChannelId() {
+    public void factory_constructor_inOreoAndHigher_targetingOreo_withCategory_initializesNotificationBuilderWithChannelId() throws Exception {
         Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.O);
         when(bundle.getString(Constants.CATEGORY)).thenReturn("MyCategory");
         when(categoryManager.readCategory("MyCategory")).thenReturn(category);
@@ -165,22 +156,18 @@ public class NotificationFactoryTest {
         appInfo.targetSdkVersion = Build.VERSION_CODES.O;
         getSubject();
 
-        try {
-            verifyNew(Notification.Builder.class).withArguments(context, category.identifier);
-        } catch(Throwable e) { e.printStackTrace(); }
+        verifyNew(Notification.Builder.class).withArguments(context, category.identifier);
     }
 
     @Test
-    public void factory_constructor_withUnnamedCategory_initializesNotificationBuilderWithoutChannelId() {
+    public void factory_constructor_withUnnamedCategory_initializesNotificationBuilderWithoutChannelId() throws Exception {
         Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.O);
         when(bundle.getString(Constants.CATEGORY)).thenReturn("MyCategory");
         when(categoryManager.readCategory("MyCategory")).thenReturn(category);
         appInfo.targetSdkVersion = Build.VERSION_CODES.O;
         getSubject();
 
-        try {
-            verifyNew(Notification.Builder.class).withArguments(context);
-        } catch(Throwable e) { e.printStackTrace(); }
+        verifyNew(Notification.Builder.class).withArguments(context);
     }
 
     @Test

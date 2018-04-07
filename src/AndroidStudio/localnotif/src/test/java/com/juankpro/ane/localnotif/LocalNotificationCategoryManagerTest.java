@@ -30,6 +30,7 @@ import static junit.framework.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.booleanThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -162,15 +163,13 @@ public class LocalNotificationCategoryManagerTest {
     }
 
     @Test
-    public void manager_registerCategories_inOreoAndHigher_createsAndRegistersChannel() {
+    public void manager_registerCategories_inOreoAndHigher_createsAndRegistersChannel() throws Exception {
         setupOreo();
 
         LocalNotificationCategory category = getCategories()[0];
         getSubject().registerCategories(new LocalNotificationCategory[]{category});
 
-        try {
-            PowerMockito.verifyNew(NotificationChannel.class).withArguments(category.identifier, category.name, category.importance);
-        } catch (Throwable e) { e.printStackTrace(); }
+        PowerMockito.verifyNew(NotificationChannel.class).withArguments(category.identifier, category.name, category.importance);
 
         verify(channel).setDescription(category.description);
         verify(channel).enableVibration(true);
@@ -182,31 +181,27 @@ public class LocalNotificationCategoryManagerTest {
     }
 
     @Test
-    public void manager_registerCategories_inOreoAndHigher_targetingLowerThanOreo_doesNotCreateNorRegisterChannel() {
+    public void manager_registerCategories_inOreoAndHigher_targetingLowerThanOreo_doesNotCreateNorRegisterChannel() throws Exception {
         setupOreo();
         appInfo.targetSdkVersion = Build.VERSION_CODES.O - 1;
 
         LocalNotificationCategory category = getCategories()[0];
         getSubject().registerCategories(new LocalNotificationCategory[]{category});
 
-        try {
-            PowerMockito.verifyNew(NotificationChannel.class, never()).withArguments(anyString(), anyString(), anyInt());
-            verify(notificationManager, never()).createNotificationChannel(channel);
-        } catch (Throwable e) { e.printStackTrace(); }
+        PowerMockito.verifyNew(NotificationChannel.class, never()).withArguments(anyString(), anyString(), anyInt());
+        verify(notificationManager, never()).createNotificationChannel(channel);
     }
 
     @Test
-    public void manager_registerCategories_inOreoAndHigher_ifNameIsNull_doesNotCreatesNorRegisterChannel() {
+    public void manager_registerCategories_inOreoAndHigher_ifNameIsNull_doesNotCreatesNorRegisterChannel() throws Exception {
         setupOreo();
 
         LocalNotificationCategory category = getCategories()[0];
         category.name = null;
         getSubject().registerCategories(new LocalNotificationCategory[]{category});
 
-        try {
-            PowerMockito.verifyNew(NotificationChannel.class, never()).withArguments(anyString(), anyString(), anyInt());
-            verify(notificationManager, never()).createNotificationChannel(channel);
-        } catch (Throwable e) { e.printStackTrace(); }
+        PowerMockito.verifyNew(NotificationChannel.class, never()).withArguments(anyString(), anyString(), anyInt());
+        verify(notificationManager, never()).createNotificationChannel(channel);
     }
 
     @Test

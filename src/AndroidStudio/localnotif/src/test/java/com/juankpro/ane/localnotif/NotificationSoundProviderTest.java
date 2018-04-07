@@ -17,6 +17,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 import static org.junit.Assert.*;
@@ -97,33 +98,25 @@ public class NotificationSoundProviderTest {
     }
 
     @Test
-    public void provider_openAssetFile_returnsNullIfNotMp3OrWav() {
+    public void provider_openAssetFile_returnsNullIfNotMp3OrWav() throws FileNotFoundException {
         when(uri.getLastPathSegment()).thenReturn("sound.mp3");
 
-        try {
-            assertSame(fileDescriptor, getSubject().openAssetFile(uri, ""));
-        } catch (FileNotFoundException e) { e.printStackTrace(); }
+        assertSame(fileDescriptor, getSubject().openAssetFile(uri, ""));
 
         when(uri.getLastPathSegment()).thenReturn("sound.wav");
 
-        try {
-            assertSame(fileDescriptor, getSubject().openAssetFile(uri, ""));
-        } catch (FileNotFoundException e) { e.printStackTrace(); }
+        assertSame(fileDescriptor, getSubject().openAssetFile(uri, ""));
 
         when(uri.getLastPathSegment()).thenReturn("sound.any");
 
-        try {
-            assertNull(getSubject().openAssetFile(uri, ""));
-        } catch (FileNotFoundException e) { e.printStackTrace(); }
+        assertNull(getSubject().openAssetFile(uri, ""));
     }
 
     @Test
-    public void provider_openAssetFile_decompressesUriLastSegment() {
+    public void provider_openAssetFile_decompressesUriLastSegment() throws FileNotFoundException {
         when(uri.getLastPathSegment()).thenReturn("sound.mp3");
 
-        try {
-            getSubject().openAssetFile(uri, "");
-            verify(decompressor).decompress("sound.mp3");
-        } catch (FileNotFoundException e) { e.printStackTrace(); }
+        getSubject().openAssetFile(uri, "");
+        verify(decompressor).decompress("sound.mp3");
     }
 }

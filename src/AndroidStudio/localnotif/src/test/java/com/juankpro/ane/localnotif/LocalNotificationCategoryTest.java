@@ -126,25 +126,21 @@ public class LocalNotificationCategoryTest {
     }
 
     @Test
-    public void action_serialize_serializesCategory() {
+    public void action_serialize_serializesCategory() throws JSONException {
         when(arraySerializer.serialize(actions)).thenReturn(jsonArray);
 
         assertSame(jsonObject, getSubject("MyId", "My Name", actions).serialize());
-        try {
-            verify(jsonObject).putOpt("identifier", "MyId");
-            verify(jsonObject).putOpt("name", "My Name");
-            verify(jsonObject).putOpt("actions", jsonArray);
-        } catch (JSONException e) { e.printStackTrace(); }
+        verify(jsonObject).putOpt("identifier", "MyId");
+        verify(jsonObject).putOpt("name", "My Name");
+        verify(jsonObject).putOpt("actions", jsonArray);
     }
 
     @Test
-    public void action_serialize_stopsSerializingIfAnExceptionIsThrown() {
-        try {
-            when(jsonObject.putOpt("identifier", "MyId")).thenThrow(JSONException.class);
+    public void action_serialize_stopsSerializingIfAnExceptionIsThrown() throws JSONException {
+        when(jsonObject.putOpt("identifier", "MyId")).thenThrow(JSONException.class);
 
-            assertSame(jsonObject, getSubject("MyId", actions).serialize());
-            verify(jsonObject).putOpt("identifier", "MyId");
-            verify(jsonObject, never()).putOpt(eq("actions"), any(LocalNotificationAction[].class));
-        } catch (JSONException e) { e.printStackTrace(); }
+        assertSame(jsonObject, getSubject("MyId", actions).serialize());
+        verify(jsonObject).putOpt("identifier", "MyId");
+        verify(jsonObject, never()).putOpt(eq("actions"), any(LocalNotificationAction[].class));
     }
 }
