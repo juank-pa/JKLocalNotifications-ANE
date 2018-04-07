@@ -32,8 +32,8 @@ matrix:
             - tools
             - platform-tools
             - tools
-            - android-24
-            - build-tools-26.0.2
+            - android-26
+            - build-tools-27.0.3
         licenses:
           - 'android-sdk-license-.+'
 
