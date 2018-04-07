@@ -58,6 +58,12 @@
       return null;
     }
 
+    CONFIG::test public static function _getDefaultCategory():NotificationCategory {
+      CONFIG::android {
+        return _defaultCategory;
+      }
+      return null;
+    }
 
     CONFIG::device private var _disposed:Boolean;
     CONFIG::android private var _registeredCategories:Boolean;
@@ -278,14 +284,11 @@
      */
     public function subscribe(options:LocalNotifierSubscribeOptions):void {
       CONFIG::device {
+        _extensionContext.call("registerSettings", options);
         CONFIG::android {
-            _extensionContext.call("registerSettings", options);
 	    if (options.categories != null && options.categories.length > 0) {
             	_registeredCategories = true;
             }
-        }
-        CONFIG::iphone {
-          _extensionContext.call("registerSettings", options);
         }
       }
     }

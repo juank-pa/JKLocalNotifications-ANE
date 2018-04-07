@@ -97,7 +97,7 @@ public class NotificationSoundProviderTest {
     }
 
     @Test
-    public void provider_openAssetFile_returnsNullIfNotMp3OrWav() throws FileNotFoundException {
+    public void provider_openAssetFile_returnsDescriptorForMp3OrWav() throws FileNotFoundException {
         when(uri.getLastPathSegment()).thenReturn("sound.mp3");
 
         assertSame(fileDescriptor, getSubject().openAssetFile(uri, ""));
@@ -105,10 +105,12 @@ public class NotificationSoundProviderTest {
         when(uri.getLastPathSegment()).thenReturn("sound.wav");
 
         assertSame(fileDescriptor, getSubject().openAssetFile(uri, ""));
+    }
 
+    @Test(expected=FileNotFoundException.class)
+    public void provider_openAssetFile_throwsExceptionIfNotMp3OrWav() throws FileNotFoundException {
         when(uri.getLastPathSegment()).thenReturn("sound.any");
-
-        assertNull(getSubject().openAssetFile(uri, ""));
+        getSubject().openAssetFile(uri, "");
     }
 
     @Test
