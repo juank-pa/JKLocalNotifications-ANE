@@ -14,6 +14,14 @@ public class FREArray extends FREObject {
         return new FREArray(value);
     }
 
+    public static FREArray newArray(String classname, int numElements, boolean fixed) {
+        return new FREArray(new FREObject[0]);
+    }
+
+    public static FREArray newArray(int numElements) {
+        return new FREArray(new FREObject[numElements]);
+    }
+
     public long getLength() {
         return ((FREObject[])value).length;
     }
