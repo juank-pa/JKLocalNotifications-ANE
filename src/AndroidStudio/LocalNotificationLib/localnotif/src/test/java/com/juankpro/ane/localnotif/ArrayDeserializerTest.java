@@ -72,9 +72,9 @@ public class ArrayDeserializerTest {
         try {
             when(jsonArray.length()).thenReturn(2);
             when(jsonArray.getJSONObject(0)).thenThrow(JSONException.class);
-            result = deserialize(null);
         } catch (Throwable e) { e.printStackTrace(); }
 
+        result = deserialize(null);
         assert (result != null);
         assertEquals(0, result.length);
     }

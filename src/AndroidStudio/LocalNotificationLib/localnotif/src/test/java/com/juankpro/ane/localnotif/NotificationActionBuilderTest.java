@@ -6,7 +6,6 @@ import android.app.RemoteInput;
 import android.os.Build;
 
 import com.juankpro.ane.localnotif.category.LocalNotificationAction;
-import com.juankpro.ane.localnotif.factory.NotificationFactory;
 import com.juankpro.ane.localnotif.factory.PendingIntentFactory;
 import com.juankpro.ane.localnotif.factory.NotificationActionBuilder;
 
@@ -20,8 +19,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

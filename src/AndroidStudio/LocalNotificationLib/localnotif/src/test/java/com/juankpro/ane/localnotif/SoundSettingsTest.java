@@ -27,6 +27,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
         Uri.class,
+        Bundle.class
 })
 public class SoundSettingsTest {
     @Mock

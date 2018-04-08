@@ -18,6 +18,7 @@ package com.juankpro.ane.localnotif {
      * <p>Supported OS: Android, iOS</p>
      */
     public var notificationStyles:Vector.<String> = new Vector.<String>();
+    
     /**
      * A list of categories to register. A category defines the action buttons to show
      * for Notifications related to the category.

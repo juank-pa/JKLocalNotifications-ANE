@@ -236,10 +236,9 @@ public class LocalNotificationTest {
             when(jsonArray.length()).thenReturn(2);
             when(jsonArray.getInt(0)).thenReturn(101);
             when(jsonArray.getInt(1)).thenThrow(mock(JSONException.class));
-
-            getSubject().deserialize(jsonObject);
         } catch (Throwable e) { e.printStackTrace(); }
 
+        getSubject().deserialize(jsonObject);
         assertArrayEquals(new byte[]{101, 0}, getSubject().actionData);
         getSubject().actionData = null;
 
@@ -253,89 +252,73 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void notification_serialize_serializesNotification() {
-        try {
-            assertSame(jsonObject, getSubject("MyCode").serialize());
-            verify(jsonObject).putOpt("code", "MyCode");
-            verify(jsonObject).putOpt("tickerText", "Ticker2");
-            verify(jsonObject).putOpt("title", "Title2");
-            verify(jsonObject).putOpt("body", "Body2");
-            verify(jsonObject).putOpt("iconResourceId", 32);
-            verify(jsonObject).putOpt("numberAnnotation", 12);
-            verify(jsonObject).putOpt("alertPolicy", "policy2");
-            verify(jsonObject).putOpt("soundName", "sound2.mp3");
-            verify(jsonObject).putOpt("fireDate", (long)50000);
-            verify(jsonObject).putOpt("repeatInterval", 231);
-            verify(jsonObject).putOpt("activityClassName", "ClassName2");
-            verify(jsonObject).putOpt("priority", 1);
-            verify(jsonObject).putOpt("category", "Category2");
-        } catch (JSONException e) { e.printStackTrace(); }
+    public void action_serialize_serializesNotification() throws JSONException {
+        assertSame(jsonObject, getSubject("MyCode").serialize());
+        verify(jsonObject).putOpt("code", "MyCode");
+        verify(jsonObject).putOpt("tickerText", "Ticker2");
+        verify(jsonObject).putOpt("title", "Title2");
+        verify(jsonObject).putOpt("body", "Body2");
+        verify(jsonObject).putOpt("iconResourceId", 32);
+        verify(jsonObject).putOpt("numberAnnotation", 12);
+        verify(jsonObject).putOpt("alertPolicy", "policy2");
+        verify(jsonObject).putOpt("soundName", "sound2.mp3");
+        verify(jsonObject).putOpt("fireDate", (long)50000);
+        verify(jsonObject).putOpt("repeatInterval", 231);
+        verify(jsonObject).putOpt("activityClassName", "ClassName2");
+        verify(jsonObject).putOpt("priority", 1);
+        verify(jsonObject).putOpt("category", "Category2");
     }
 
     @Test
-    public void notification_serialize_serializesPlaySound() {
-        try {
-            getSubject().playSound = true;
-            assertSame(jsonObject, getSubject().serialize());
-            verify(jsonObject).putOpt("playSound", true);
-        } catch (JSONException e) { e.printStackTrace(); }
+    public void action_serialize_serializesPlaySound() throws JSONException {
+        getSubject().playSound = true;
+        assertSame(jsonObject, getSubject().serialize());
+        verify(jsonObject).putOpt("playSound", true);
     }
 
     @Test
-    public void notification_serialize_serializesVibrate() {
-        try {
-            getSubject().vibrate = true;
-            assertSame(jsonObject, getSubject().serialize());
-            verify(jsonObject).putOpt("vibrate", true);
-        } catch (JSONException e) { e.printStackTrace(); }
+    public void action_serialize_serializesVibrate() throws JSONException {
+        getSubject().vibrate = true;
+        assertSame(jsonObject, getSubject().serialize());
+        verify(jsonObject).putOpt("vibrate", true);
     }
 
     @Test
-    public void notification_serialize_serializesCancelOnSelect() {
-        try {
-            getSubject().cancelOnSelect = true;
-            assertSame(jsonObject, getSubject().serialize());
-            verify(jsonObject).putOpt("cancelOnSelect", true);
-        } catch (JSONException e) { e.printStackTrace(); }
+    public void action_serialize_serializesCancelOnSelect() throws JSONException {
+        getSubject().cancelOnSelect = true;
+        assertSame(jsonObject, getSubject().serialize());
+        verify(jsonObject).putOpt("cancelOnSelect", true);
     }
 
     @Test
-    public void notification_serialize_serializesOngoing() {
-        try {
-            getSubject().ongoing = true;
-            assertSame(jsonObject, getSubject().serialize());
-            verify(jsonObject).putOpt("ongoing", true);
-        } catch (JSONException e) { e.printStackTrace(); }
+    public void action_serialize_serializesOngoing() throws JSONException {
+        getSubject().ongoing = true;
+        assertSame(jsonObject, getSubject().serialize());
+        verify(jsonObject).putOpt("ongoing", true);
     }
 
     @Test
-    public void notification_serialize_serializesHasAction() {
-        try {
-            getSubject().hasAction = true;
-            assertSame(jsonObject, getSubject().serialize());
-            verify(jsonObject).putOpt("hasAction", true);
-        } catch (JSONException e) { e.printStackTrace(); }
+    public void action_serialize_serializesHasAction() throws JSONException {
+        getSubject().hasAction = true;
+        assertSame(jsonObject, getSubject().serialize());
+        verify(jsonObject).putOpt("hasAction", true);
     }
 
     @Test
-    public void notification_serialize_serializesShowInForeground() {
-        try {
-            getSubject().showInForeground = true;
-            assertSame(jsonObject, getSubject().serialize());
-            verify(jsonObject).putOpt("showInForeground", true);
-        } catch (JSONException e) { e.printStackTrace(); }
+    public void action_serialize_serializesShowInForeground() throws JSONException {
+        getSubject().showInForeground = true;
+        assertSame(jsonObject, getSubject().serialize());
+        verify(jsonObject).putOpt("showInForeground", true);
     }
 
     @Test
-    public void notification_serialize_serializesByteData() {
-        try {
-            getSubject().actionData = new byte[]{102, 127};
+    public void action_serialize_serializesByteData() throws JSONException {
+        getSubject().actionData = new byte[]{102, 127};
 
-            assertSame(jsonObject, getSubject().serialize());
+        assertSame(jsonObject, getSubject().serialize());
 
-            verify(jsonObject).accumulate("actionData", 102);
-            verify(jsonObject).accumulate("actionData", 127);
-        } catch (JSONException e) { e.printStackTrace(); }
+        verify(jsonObject).accumulate("actionData", 102);
+        verify(jsonObject).accumulate("actionData", 127);
     }
 
     @Test
@@ -346,7 +329,7 @@ public class LocalNotificationTest {
             verify(jsonObject).putOpt("isExact", true);
         } catch (JSONException e) { e.printStackTrace(); }
     }
-
+    
     @Test
     public void notification_serialize_serializesAllowWhileIdle() {
         try {
@@ -357,16 +340,16 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void notification_serialize_stopsSerializingDataIfAnExceptionIsThrown() {
+    public void notification_serialize_stopsSerializingDataIfAnExceptionIsThrown() throws JSONException {
         try {
             getSubject().actionData = new byte[]{102, 127};
             when(jsonObject.accumulate("actionData", 102)).thenThrow(mock(JSONException.class));
+        } catch (Throwable e) { e.printStackTrace(); }
 
-            assertSame(jsonObject, getSubject().serialize());
+        assertSame(jsonObject, getSubject().serialize());
 
-            verify(jsonObject).accumulate("actionData", 102);
-            verify(jsonObject, never()).accumulate("actionData", 127);
-        } catch (JSONException e) { e.printStackTrace(); }
+        verify(jsonObject).accumulate("actionData", 102);
+        verify(jsonObject, never()).accumulate("actionData", 127);
     }
 
     @Test

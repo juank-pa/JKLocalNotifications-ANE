@@ -74,8 +74,9 @@ public class LocalNotificationEventDispatcherTest {
     }
 
     @Test
-    public void dispatcher_dispatchInForeground_doesNotDispatchesIfAppIsInBackground() {
+    public void dispatcher_dispatchInForeground_doesNotDispatchIfAppIsInBackground() {
         ApplicationStatus.reset();
+        ApplicationStatus.activate();
         getSubject().dispatchWhenInForeground();
         verify(context, never()).dispatchNotificationSelectedEvent();
     }
@@ -91,6 +92,47 @@ public class LocalNotificationEventDispatcherTest {
     public void dispatcher_dispatchInForeground_dispatchesIfAppIsInForeground() {
         ApplicationStatus.setInForeground(true);
         getSubject().dispatchWhenInForeground();
+        verify(context).dispatchNotificationSelectedEvent();
+    }
+    @Test
+    public void dispatcher_dispatchWhenActive_setsCacheIfAppIsNotActive() {
+        getSubject().dispatchWhenActive();
+        assertCache();
+    }
+
+    @Test
+    public void dispatcher_dispatchWhenActive_doesNotDispatchIfAppIsNotActive() {
+        getSubject().dispatchWhenActive();
+        verify(context, never()).dispatchNotificationSelectedEvent();
+    }
+
+    @Test
+    public void dispatcher_dispatchWhenActive_setsCacheIfAppIsInBackground() {
+        ApplicationStatus.setInForeground(true);
+        ApplicationStatus.setInForeground(false);
+        getSubject().dispatchWhenActive();
+        assertCache();
+    }
+
+    @Test
+    public void dispatcher_dispatchWhenActive_dispatchesIfAppIsInBackground() {
+        ApplicationStatus.reset();
+        ApplicationStatus.activate();
+        getSubject().dispatchWhenActive();
+        verify(context).dispatchNotificationSelectedEvent();
+    }
+
+    @Test
+    public void dispatcher_dispatchWhenActive_setsCacheIfAppIsInForeground() {
+        ApplicationStatus.setInForeground(true);
+        getSubject().dispatchWhenActive();
+        assertCache();
+    }
+
+    @Test
+    public void dispatcher_dispatchWhenActive_dispatchesIfAppIsInForeground() {
+        ApplicationStatus.setInForeground(true);
+        getSubject().dispatchWhenActive();
         verify(context).dispatchNotificationSelectedEvent();
     }
 }

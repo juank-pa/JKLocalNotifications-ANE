@@ -24,9 +24,11 @@ import java.util.Date;
 
 import com.adobe.fre.FREByteArray;
 import com.adobe.fre.FREContext;
+import com.adobe.fre.FRENoSuchNameException;
 import com.adobe.fre.FREObject;
 import com.juankpro.ane.localnotif.decoder.ArrayDecoder;
 import com.juankpro.ane.localnotif.decoder.IDecoder;
+import com.juankpro.ane.localnotif.util.Logger;
 
 @SuppressWarnings("SameParameterValue")
 public class ExtensionUtils {
@@ -42,7 +44,9 @@ public class ExtensionUtils {
         try {
             FREObject propertyObject = freObject.getProperty(propertyName);
             if (propertyObject != null) return propertyObject.getAsString();
-        } catch (Throwable e) { e.printStackTrace(); }
+        }
+        catch (FRENoSuchNameException e) { Logger.log("Property not found: " + propertyName); }
+        catch (Throwable e) { e.printStackTrace(); }
 
         return defaultValue;
     }
@@ -59,7 +63,9 @@ public class ExtensionUtils {
         try {
             FREObject propertyObject = freObject.getProperty(propertyName);
             if (propertyObject != null) return propertyObject.getAsBool();
-        } catch (Throwable e) { e.printStackTrace(); }
+        }
+        catch (FRENoSuchNameException e) { Logger.log("Property not found: " + propertyName); }
+        catch (Throwable e) { e.printStackTrace(); }
 
         return defaultValue;
     }
@@ -76,7 +82,9 @@ public class ExtensionUtils {
         try {
             FREObject propertyObject = freObject.getProperty(propertyName);
             if (propertyObject != null) return propertyObject.getAsInt();
-        } catch (Throwable e) { e.printStackTrace(); }
+        }
+        catch (FRENoSuchNameException e) { Logger.log("Property not found: " + propertyName); }
+        catch (Throwable e) { e.printStackTrace(); }
 
         return defaultValue;
     }
@@ -94,7 +102,9 @@ public class ExtensionUtils {
         try {
             FREObject propertyObject = freObject.getProperty(propertyName);
             if (propertyObject != null) return propertyObject.getAsDouble();
-        } catch (Throwable e) { e.printStackTrace(); }
+        }
+        catch (FRENoSuchNameException e) { Logger.log("Property not found: " + propertyName); }
+        catch (Throwable e) { e.printStackTrace(); }
 
         return defaultValue;
     }
@@ -114,7 +124,9 @@ public class ExtensionUtils {
                 double timestamp = getDoubleProperty(propertyObject, "time", 0.0);
                 if (timestamp > 0) return new Date((long) timestamp);
             }
-        } catch (Throwable e) { e.printStackTrace(); }
+        }
+        catch (FRENoSuchNameException e) { Logger.log("Property not found: " + propertyName); }
+        catch (Throwable e) { e.printStackTrace(); }
 
         return defaultValue == null? new Date() : defaultValue;
     }
@@ -134,6 +146,7 @@ public class ExtensionUtils {
                 return value;
             }
         }
+        catch (FRENoSuchNameException e) { Logger.log("Property not found: " + propertyName); }
         catch (Throwable e) {
             e.printStackTrace();
             try { if (byteArray != null) byteArray.release(); }
@@ -162,6 +175,7 @@ public class ExtensionUtils {
             ArrayDecoder<D> arrayDecoder = new ArrayDecoder<>(freContext, decoder, aClass);
             return arrayDecoder.decodeObject(propertyObject);
         }
+        catch (FRENoSuchNameException e) { Logger.log("Property not found: " + propertyName); }
         catch (Throwable e) {
             e.printStackTrace();
         }

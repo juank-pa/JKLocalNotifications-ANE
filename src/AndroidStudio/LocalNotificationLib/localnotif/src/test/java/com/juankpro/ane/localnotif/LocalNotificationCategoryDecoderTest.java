@@ -62,6 +62,36 @@ public class LocalNotificationCategoryDecoderTest {
     }
 
     @Test
+    public void decoder_decode_decodesName() {
+        when(ExtensionUtils.getStringProperty(freObject, "name", null)).thenReturn("Category Name");
+        assertEquals("Category Name", getSubject().decodeObject(freObject).name);
+    }
+
+    @Test
+    public void decoder_decode_decodesDescription() {
+        when(ExtensionUtils.getStringProperty(freObject, "description", null)).thenReturn("Category Description");
+        assertEquals("Category Description", getSubject().decodeObject(freObject).description);
+    }
+
+    @Test
+    public void decoder_decode_decodesSoundName() {
+        when(ExtensionUtils.getStringProperty(freObject, "soundName", null)).thenReturn("sound.mp3");
+        assertEquals("sound.mp3", getSubject().decodeObject(freObject).soundName);
+    }
+
+    @Test
+    public void decoder_decode_decodesImportance() {
+        when(ExtensionUtils.getIntProperty(freObject, "importance", 0)).thenReturn(5);
+        assertEquals(5, getSubject().decodeObject(freObject).importance);
+    }
+
+    @Test
+    public void decoder_decode_decodesShouldVibrate() {
+        when(ExtensionUtils.getBooleanProperty(freObject, "shouldVibrate", false)).thenReturn(true);
+        assertTrue(getSubject().decodeObject(freObject).shouldVibrate);
+    }
+
+    @Test
     public void decoder_decode_decodesActions() {
         LocalNotificationAction action = new LocalNotificationAction();
         LocalNotificationAction[] actions = new LocalNotificationAction[]{action};

@@ -207,7 +207,7 @@ public class ExtensionUtilsTest {
     }
 
     @Test
-    public void utils_getBytesProperty_returnsBytesFromFreObject() {
+    public void utils_getBytesProperty_returnsBytesFromFreObject() throws FREInvalidObjectException, FREWrongThreadException {
         FREByteArray freByteArray = mock(FREByteArray.class);
         final ByteBuffer byteBuffer = PowerMockito.mock(ByteBuffer.class);
         final byte value[] = new byte[2];
@@ -246,13 +246,9 @@ public class ExtensionUtilsTest {
 
         InOrder inOrder = Mockito.inOrder(freByteArray, freByteArray, freByteArray);
 
-        try {
-            inOrder.verify(freByteArray).acquire();
-            inOrder.verify(freByteArray).getBytes();
-            inOrder.verify(freByteArray).release();
-        }
-        catch(FREInvalidObjectException e1) { e1.printStackTrace(); }
-        catch( FREWrongThreadException e2) { e2.printStackTrace(); }
+        inOrder.verify(freByteArray).acquire();
+        inOrder.verify(freByteArray).getBytes();
+        inOrder.verify(freByteArray).release();
     }
 
     @Test
@@ -326,7 +322,7 @@ public class ExtensionUtilsTest {
     }
 
     @Test
-    public void utils_getFREObject_returnsFreObjectFromBytes() {
+    public void utils_getFREObject_returnsFreObjectFromBytes() throws FRETypeMismatchException, FREInvalidObjectException, FREASErrorException, FRENoSuchNameException, FREWrongThreadException {
         FREObject byteArrayObject = mock(FREObject.class);
         FREObject freObject10 = mock(FREObject.class);
         FREObject freObject45 = mock(FREObject.class);
@@ -343,15 +339,8 @@ public class ExtensionUtilsTest {
 
         assertSame(byteArrayObject, ExtensionUtils.getFreObject(data));
 
-        try {
-            verify(byteArrayObject).callMethod("writeByte", new FREObject[]{freObject10});
-            verify(byteArrayObject).callMethod("writeByte", new FREObject[]{freObject45});
-        }
-        catch (FRETypeMismatchException e){ e.printStackTrace(); }
-        catch (FREInvalidObjectException e){ e.printStackTrace(); }
-        catch (FREASErrorException e){ e.printStackTrace(); }
-        catch (FRENoSuchNameException e){ e.printStackTrace(); }
-        catch (FREWrongThreadException e){ e.printStackTrace(); }
+        verify(byteArrayObject).callMethod("writeByte", new FREObject[]{freObject10});
+        verify(byteArrayObject).callMethod("writeByte", new FREObject[]{freObject45});
     }
 
     @Test

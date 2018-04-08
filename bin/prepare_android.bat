@@ -21,7 +21,7 @@ xcopy /E /Q %PREPARE_SCRIPT_PATH%res %TEMP_PATH%\android\res
 echo ****** Compiling AS3 library *******
 
 call %ACOMPC% ^
-    -swf-version %AIR_VERSION% ^
+    -swf-version %SWF_VERSION% ^
     -define+=CONFIG::device,true ^
     -define+=CONFIG::iphone,false ^
     -define+=CONFIG::android,true ^

@@ -16,6 +16,10 @@ public class NotificationSoundProvider extends ContentProvider {
     public static String AUTHORITY = "com.juankpro.ane.localnotif.notification_sound_provider";
     public static String CONTENT_URI = "content://" + AUTHORITY;
 
+    public static Uri getSoundUri(String soundName) {
+        return Uri.parse(CONTENT_URI + "/" + soundName);
+    }
+
     public NotificationSoundProvider() {
     }
 
@@ -63,7 +67,7 @@ public class NotificationSoundProvider extends ContentProvider {
     public AssetFileDescriptor openAssetFile(Uri uri, String mode) throws FileNotFoundException {
         String lastPathSegment = uri.getLastPathSegment();
         if (!lastPathSegment.endsWith(".wav") && !lastPathSegment.endsWith(".mp3")) {
-            return null;
+            throw new FileNotFoundException();
         }
         return new AssetDecompressor(getContext()).decompress(uri.getLastPathSegment());
     }

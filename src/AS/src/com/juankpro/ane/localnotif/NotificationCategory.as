@@ -18,6 +18,52 @@ package com.juankpro.ane.localnotif {
         public var identifier:String;
 
         /**
+         * The name of the category. On Android 7.0 (API level 26) and higher this
+         * name will be shown as the notifications channel name in the app notifications
+         * settings.
+         * <p>Supported OS: Android</p>
+         */
+        public var name:String;
+
+        /**
+         * The category description. On Android 7.0 (API level 26) and higher this
+         * description will be shown to the user in the app notifications settings.
+         * <p>Supported OS: Android</p>
+         */
+        public var description:String;
+
+        /**
+         * The sound to use for notifications sent through this category. This property
+         * has effect on Android 7.0 (API level 26) and higher only. To support lower
+         * versions set the sound properties at the <code>Notification</code> level as well.
+         * <p>Supported OS: Android</p>
+         * @see com.juankpro.ane.localnotif.Notification#playSound
+         * @see com.juankpro.ane.localnotif.Notification#soundName
+         */
+        public var soundName:String;
+
+        /**
+         * The importance to use for notifications sent through this category. The importance
+         * determines the amount of notifications visibility. Use the <code>NotificationImportance</code>
+         * constants to set this property.
+         * <p>This property has effect on Android 7.0 (API level 26) and higher only. To support lower
+         * versions set the priority properties at the <code>Notification</code> level as well.</p>
+         * <p>Supported OS: Android</p>
+         * @see com.juankpro.ane.localnotif.NotificationImportance
+         * @see com.juankpro.ane.localnotif.Notification#priority
+         */
+        public var importance:int;
+
+        /**
+         * Whether notifications sent through this category should vibrate. This property
+         * has effect on Android 7.0 (API level 26) and higher only. To support lower
+         * versions set the sound properties at the <code>Notification</code> level as well.
+         * <p>Supported OS: Android</p>
+         * @see com.juankpro.ane.localnotif.Notification#vibrate
+         */
+        public var shouldVibrate:Boolean = true;
+
+        /**
          * The action list for the category. These actions define the properties of the action
          * buttons to be shown for the notification. A maximum of four buttons will be visible
          * on the device screen depending on the operating system and device resolution.

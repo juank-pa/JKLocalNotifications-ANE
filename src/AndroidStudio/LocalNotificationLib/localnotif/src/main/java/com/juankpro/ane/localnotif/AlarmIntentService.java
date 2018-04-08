@@ -30,7 +30,6 @@ public class AlarmIntentService extends BroadcastReceiver {
 
         if (tryEventDispatch(bundle)) return;
         dispatcher.dispatch();
-        Logger.log("AlarmIntentService::onReceive Intent: " + intent.toString());
     }
 
     private void handleRepeatingNotification(Context context, Bundle bundle) {

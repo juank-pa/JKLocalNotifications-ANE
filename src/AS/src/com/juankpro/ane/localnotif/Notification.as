@@ -113,9 +113,13 @@
     /**
      * Specifies if a sound will be played when the notification arrives.
      * The volume that it's played at is defined by the OS user settings.
+     * <p>Android 7.0 (API level 26) no longer supports setting this property on the
+     * Notification. It must be set in the channel which is represented by
+     * <code>NotificationCategory</code>. Setup both to support all Android versions.</p>
      * <p>Supported OS: Android, iOS</p>
      * @default true
      * @see #soundName
+     * @see com.juankpro.ane.localnotif.NotificationCategory#soundName
      */
     public var playSound:Boolean = true;
 
@@ -125,9 +129,13 @@
      * then the operating system default sound is used.
      * <p>Android and iOS support different audio formats so, to make the notification
      * sound compatible with both you need to use the wav format at 8, 16 or 44KHz.</p>
+     * <p>Android 7.0 (API level 26) no longer supports setting this property on the
+     * Notification. It must be set in the channel which is represented by
+     * <code>NotificationCategory</code>. Setup both to support all Android versions.</p>
      * <p>Supported OS: Android, iOS</p>
      * @default null
      * @see #playSound
+     * @see com.juankpro.ane.localnotif.NotificationCategory#soundName
      */
     public var soundName:String = null;
 
@@ -150,8 +158,12 @@
 
     /**
      * Specifies if the device should vibrate when a notification arrives.
+     * <p>Android 7.0 (API level 26) no longer supports setting this property on the
+     * Notification. It must be set in the channel which is represented by
+     * <code>NotificationCategory</code>. Setup both to support all Android versions.</p>
      * <p>Supported OS: Android</p>
      * @default true
+     * @see com.juankpro.ane.localnotif.NotificationCategory#shouldVibrate
      */
     public var vibrate:Boolean = true;
 
@@ -219,9 +231,13 @@
      * even show a heads-up notification.
      * <p>For a detail on priority levels see <code>NotificationPriority</code>.</p>
      * <p>Heads-up notifications are only available since Android 5.0 (API level 21).</p>
+     * <p>Android 7.0 (API level 26) no longer supports setting this property on the
+     * Notification. It must be set in the channel which is represented by
+     * <code>NotificationCategory</code>. Setup both to support all Android versions.</p>
      * <p>Supported OS: Android</p>
      * @default NotificationPriority.DEFAULT
      * @see com.juankpro.ane.localnotif.NotificationPriority
+     * @see com.juankpro.ane.localnotif.NotificationCategory#importance
      */
     public var priority:int = NotificationPriority.DEFAULT;
 
@@ -240,10 +256,20 @@
      * Defines the id of the category to associate with this notification. This category
      * defines the action buttons the notification will show to the user.
      * <p>Categories must be registered using <code>NotificationManager.subscribe</code></p>
+     * <p>On Android this property will have a default value of <code>"_DefaultCategory"</code>
+     * to support Android 7.0 (API level 26) channels.
+     * See <code>NotificationManager.setupDefaultCategory</code>.</p>
      * <p>Supported OS: Android, iOS</p>
      * @see com.juankpro.ane.localnotif.NotificationManager#subscribe
+     * @see com.juankpro.ane.localnotif.NotificationManager#setupDefaultCategory
      * @see com.juankpro.ane.localnotif.NotificationCategory
      */
     public var category:String;
+
+    public function Notification():void {
+        CONFIG::android {
+            category = "_DefaultCategory";
+        }
+    }
   }
 }

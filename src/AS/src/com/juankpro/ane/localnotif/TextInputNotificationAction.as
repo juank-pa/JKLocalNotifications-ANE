@@ -11,19 +11,19 @@ package com.juankpro.ane.localnotif {
    * @see com.juankpro.ane.localnotif.NotificationManager#subscribe()
    */
   public class TextInputNotificationAction extends NotificationAction {
-      /**
-       * This is the label used for the button next to the text input that the user
-       * taps to accept the entered text. Android devices show a system provided button
-       * instead and thus it ignores the button title.
-       * <p>Supported OS: iOS</p>
-      */
-      public var textInputButtonTitle:String;
+    /**
+     * This is the label used for the button next to the text input that the user
+     * taps to accept the entered text. Android devices show a system provided button
+     * instead and thus it ignores the button title.
+     * <p>Supported OS: iOS</p>
+     */
+    public var textInputButtonTitle:String;
 
-      /**
-       * This is the placeholder text shown inside the text input box when no text
-       * has yet been entered by the user.
-       * <p>Supported OS: Android, iOS</p>
-       */
-      public var textInputPlaceholder:String;
+    /**
+     * This is the placeholder text shown inside the text input box when no text
+     * has yet been entered by the user.
+     * <p>Supported OS: Android, iOS</p>
+     */
+    public var textInputPlaceholder:String;
   }
 }

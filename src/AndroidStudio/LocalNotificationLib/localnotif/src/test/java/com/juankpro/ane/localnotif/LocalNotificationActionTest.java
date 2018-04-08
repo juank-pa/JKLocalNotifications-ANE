@@ -106,42 +106,34 @@ public class LocalNotificationActionTest {
     }
 
     @Test
-    public void action_serialize_serializesTextInputPlaceHolder() {
-        try {
-            getSubject("MyId", "MyTitle").textInputPlaceholder = "Placeholder";
+    public void action_serialize_serializesTextInputPlaceHolder() throws JSONException {
+        getSubject("MyId", "MyTitle").textInputPlaceholder = "Placeholder";
 
-            assertSame(jsonObject, getSubject().serialize());
-            verify(jsonObject).putOpt("identifier", "MyId");
-            verify(jsonObject).putOpt("title", "MyTitle");
-            verify(jsonObject).putOpt("textInputPlaceholder", "Placeholder");
-        } catch (JSONException e) { e.printStackTrace(); }
+        assertSame(jsonObject, getSubject().serialize());
+        verify(jsonObject).putOpt("identifier", "MyId");
+        verify(jsonObject).putOpt("title", "MyTitle");
+        verify(jsonObject).putOpt("textInputPlaceholder", "Placeholder");
     }
 
     @Test
-    public void action_serialize_serializesIsBackground() {
-        try {
-            assertSame(jsonObject, getSubject("MyId", "MyTitle", true).serialize());
-            verify(jsonObject).putOpt("isBackground", true);
-        } catch (JSONException e) { e.printStackTrace(); }
+    public void action_serialize_serializesIsBackground() throws JSONException {
+        assertSame(jsonObject, getSubject("MyId", "MyTitle", true).serialize());
+        verify(jsonObject).putOpt("isBackground", true);
     }
 
     @Test
-    public void action_serialize_serializesIsNotBackground() {
-        try {
-            assertSame(jsonObject, getSubject("MyId", "MyTitle", false).serialize());
-            verify(jsonObject).putOpt("isBackground", false);
-        } catch (JSONException e) { e.printStackTrace(); }
+    public void action_serialize_serializesIsNotBackground() throws JSONException {
+        assertSame(jsonObject, getSubject("MyId", "MyTitle", false).serialize());
+        verify(jsonObject).putOpt("isBackground", false);
     }
 
     @Test
-    public void action_serialize_stopsSerializingIfAnExceptionIsThrown() {
-        try {
-            when(jsonObject.putOpt("identifier", "MyId")).thenThrow(JSONException.class);
+    public void action_serialize_stopsSerializingIfAnExceptionIsThrown() throws JSONException {
+        when(jsonObject.putOpt("identifier", "MyId")).thenThrow(JSONException.class);
 
-            assertSame(jsonObject, getSubject("MyId", "MyTitle").serialize());
-            verify(jsonObject).putOpt("identifier", "MyId");
-            verify(jsonObject, never()).putOpt(eq("title"), anyString());
-        } catch (JSONException e) { e.printStackTrace(); }
+        assertSame(jsonObject, getSubject("MyId", "MyTitle").serialize());
+        verify(jsonObject).putOpt("identifier", "MyId");
+        verify(jsonObject, never()).putOpt(eq("title"), anyString());
     }
 
     @Test

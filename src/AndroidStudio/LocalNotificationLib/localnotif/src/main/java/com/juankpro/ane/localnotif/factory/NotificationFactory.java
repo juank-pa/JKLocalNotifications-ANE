@@ -2,7 +2,6 @@ package com.juankpro.ane.localnotif.factory;
 
 import android.app.Notification;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -21,12 +20,26 @@ public class NotificationFactory {
     private Bundle bundle;
     private Notification.Builder builder;
     private SoundSettings soundSettings;
+    private LocalNotificationCategory category;
 
     public NotificationFactory(Context context, Bundle bundle) {
         this.context = context;
         this.bundle = bundle;
-        builder = new Notification.Builder(context);
         soundSettings = new SoundSettings(bundle);
+        category = getCategory();
+
+        if (shouldNotTargetChannel(category)) {
+            builder = new Notification.Builder(context);
+        }
+        else {
+            builder = new Notification.Builder(context, category.identifier);
+        }
+    }
+
+    private boolean shouldNotTargetChannel(LocalNotificationCategory category) {
+        return category == null || category.name == null ||
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.O ||
+                context.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.O;
     }
 
     public Notification create(PendingIntentFactory intentFactory) {
@@ -60,7 +73,6 @@ public class NotificationFactory {
     }
 
     private void buildActions(PendingIntentFactory intentFactory) {
-        LocalNotificationCategory category = getCategory();
         if (category == null) return;
 
         NotificationActionBuilder actionBuilder = new NotificationActionBuilder(intentFactory, builder);
@@ -85,7 +97,6 @@ public class NotificationFactory {
     }
 
     private int getDefaults() {
-        SoundSettings soundSettings = new SoundSettings(bundle);
         return soundSettings.getSoundDefault() |
                 getVibrateDefault() |
                 Notification.DEFAULT_LIGHTS;

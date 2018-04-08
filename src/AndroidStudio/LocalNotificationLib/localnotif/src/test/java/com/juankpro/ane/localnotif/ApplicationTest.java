@@ -37,7 +37,7 @@ public class ApplicationTest {
         MockitoAnnotations.initMocks(this);
         try {
             whenNew(LifecycleCallbacks.class).withNoArguments().thenReturn(callbacks);
-        } catch (Throwable e) { }
+        } catch (Throwable e) { e.printStackTrace(); }
         PowerMockito.suppress(methodsDeclaredIn(android.app.Application.class));
     }
 

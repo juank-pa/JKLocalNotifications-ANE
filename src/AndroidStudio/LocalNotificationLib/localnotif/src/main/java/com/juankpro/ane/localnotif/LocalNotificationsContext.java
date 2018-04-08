@@ -10,6 +10,7 @@ import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategoryManager;
+import com.juankpro.ane.localnotif.decoder.LocalNotificationCategoryDecoder;
 import com.juankpro.ane.localnotif.decoder.LocalNotificationDecoder;
 import com.juankpro.ane.localnotif.decoder.LocalNotificationSettingsDecoder;
 import com.juankpro.ane.localnotif.fre.ExtensionUtils;
@@ -44,6 +45,10 @@ public class LocalNotificationsContext extends FREContext {
         return notificationManager;
     }
 
+    private boolean isLegacyBehavior() {
+        return !getActivity().getApplication().getClass().getName().contains("com.juankpro.ane.localnotif");
+    }
+
     private PersistenceManager persistenceManager;
 
     private PersistenceManager getPersistenceManager() {
@@ -60,10 +65,6 @@ public class LocalNotificationsContext extends FREContext {
             categoryManager = new LocalNotificationCategoryManager(getApplicationContext());
         }
         return categoryManager;
-    }
-
-    private boolean isLegacyBehavior() {
-        return !getActivity().getApplication().getClass().getName().contains("com.juankpro.ane.localnotif");
     }
 
     @Override
@@ -151,6 +152,14 @@ public class LocalNotificationsContext extends FREContext {
             }
         });
 
+        functionMap.put("registerDefaultCategory", new FunctionHelper() {
+            @Override
+            public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
+                registerDefaultCategory(context, passedArgs[0]);
+                return null;
+            }
+        });
+
         functionMap.put("registerSettings", new FunctionHelper() {
             @Override
             public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Exception {
@@ -174,6 +183,12 @@ public class LocalNotificationsContext extends FREContext {
         if (isLegacyBehavior()) {
             ApplicationStatus.setInForeground(status);
         }
+    }
+
+    private void registerDefaultCategory(final FREContext context, FREObject object) {
+        LocalNotificationCategoryDecoder decoder = new LocalNotificationCategoryDecoder(context);
+        LocalNotificationCategory[] categories = new LocalNotificationCategory[]{ decoder.decodeObject(object) };
+        getCategoryManager().registerCategories(categories);
     }
 
     private void registerSettings(final FREContext context, FREObject object) {
