@@ -11,6 +11,7 @@ DEBUG=true
 echo "Compiling iOS version"
 "$AMXML" -swf-version 37 \
   -debug=$DEBUG \
+  -define+=CONFIG::test,true \
   -define+=CONFIG::device,true \
   -define+=CONFIG::iphone,true \
   -define+=CONFIG::android,false \
@@ -26,6 +27,7 @@ echo "\nRunning tests for iOS"
 echo "Compiling Android version"
 "$AMXML" -swf-version 37 \
   -debug=$DEBUG \
+  -define+=CONFIG::test,true \
   -define+=CONFIG::device,true \
   -define+=CONFIG::iphone,false \
   -define+=CONFIG::android,true \
@@ -41,9 +43,10 @@ echo "\nRunning tests for Android"
 echo "Compiling Default version"
 "$AMXML" -swf-version 37 \
   -debug=$DEBUG \
+  -define+=CONFIG::test,true \
   -define+=CONFIG::device,false \
-  -define+=CONFIG::iphone,true \
-  -define+=CONFIG::android,true \
+  -define+=CONFIG::iphone,false \
+  -define+=CONFIG::android,false \
   -library-path=./tests/lib/mock4as.swc \
   -source-path+=./tests/src/ \
   -source-path+=./src/ \

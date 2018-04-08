@@ -16,6 +16,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.when;
@@ -50,6 +51,36 @@ public class LocalNotificationCategoryDecoderTest {
     public void decoder_decode_decodesIdentifier() {
         when(ExtensionUtils.getStringProperty(freObject, "identifier", "")).thenReturn("MyId");
         assertEquals("MyId", getSubject().decodeObject(freObject).identifier);
+    }
+
+    @Test
+    public void decoder_decode_decodesName() {
+        when(ExtensionUtils.getStringProperty(freObject, "name", null)).thenReturn("Category Name");
+        assertEquals("Category Name", getSubject().decodeObject(freObject).name);
+    }
+
+    @Test
+    public void decoder_decode_decodesDescription() {
+        when(ExtensionUtils.getStringProperty(freObject, "description", null)).thenReturn("Category Description");
+        assertEquals("Category Description", getSubject().decodeObject(freObject).description);
+    }
+
+    @Test
+    public void decoder_decode_decodesSoundName() {
+        when(ExtensionUtils.getStringProperty(freObject, "soundName", null)).thenReturn("sound.mp3");
+        assertEquals("sound.mp3", getSubject().decodeObject(freObject).soundName);
+    }
+
+    @Test
+    public void decoder_decode_decodesImportance() {
+        when(ExtensionUtils.getIntProperty(freObject, "importance", 0)).thenReturn(5);
+        assertEquals(5, getSubject().decodeObject(freObject).importance);
+    }
+
+    @Test
+    public void decoder_decode_decodesShouldVibrate() {
+        when(ExtensionUtils.getBooleanProperty(freObject, "shouldVibrate", false)).thenReturn(true);
+        assertTrue(getSubject().decodeObject(freObject).shouldVibrate);
     }
 
     @Test

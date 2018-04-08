@@ -31,9 +31,7 @@ public class SoundSettings {
     public Uri getSoundUri() {
         String soundName = getSoundName();
         if (soundName == null) return null;
-
-        String soundPath = String.format("content://com.juankpro.ane.localnotif.notification_sound_provider/%s", soundName);
-        return Uri.parse(soundPath);
+        return NotificationSoundProvider.getSoundUri(soundName);
     }
 
     public int getSoundDefault() {

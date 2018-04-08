@@ -7,10 +7,10 @@ import com.adobe.fre.FREContext;
 import com.adobe.fre.FREObject;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategory;
 import com.juankpro.ane.localnotif.category.LocalNotificationCategoryManager;
+import com.juankpro.ane.localnotif.decoder.LocalNotificationCategoryDecoder;
 import com.juankpro.ane.localnotif.decoder.LocalNotificationDecoder;
 import com.juankpro.ane.localnotif.decoder.LocalNotificationSettingsDecoder;
 import com.juankpro.ane.localnotif.fre.ExtensionUtils;
-import com.juankpro.ane.localnotif.util.ApplicationStatus;
 import com.juankpro.ane.localnotif.util.PersistenceManager;
 
 import org.junit.Before;
@@ -22,9 +22,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -69,10 +67,6 @@ public class LocalNotificationsContextTest {
     private LocalNotificationDecoder decoder;
     @Mock
     private Activity activity;
-    @Mock
-    private android.app.Application legacyApplication;
-    @Mock
-    private Application application;
     private FREObject[] freArgs;
     private LocalNotificationsContext subject;
 
@@ -90,7 +84,6 @@ public class LocalNotificationsContextTest {
         doReturn(activity).when(getSubject()).getActivity();
         doReturn(context).when(activity).getApplicationContext();
         when(subject.getActivity()).thenReturn(activity);
-        when(activity.getApplication()).thenReturn(application);
         try {
             PowerMockito.whenNew(LocalNotificationManager.class).withArguments(context).thenReturn(manager);
             PowerMockito.whenNew(PersistenceManager.class).withArguments(context).thenReturn(persistenceManager);
@@ -241,36 +234,6 @@ public class LocalNotificationsContextTest {
     }
 
     @Test
-    public void context_functions_activate_legacy() {
-        when(activity.getApplication()).thenReturn(legacyApplication);
-        ApplicationStatus.setInForeground(false);
-        callFunction("activate");
-        assertTrue(ApplicationStatus.getInForeground());
-    }
-
-    @Test
-    public void context_functions_deactivate_legacy() {
-        when(activity.getApplication()).thenReturn(legacyApplication);
-        ApplicationStatus.setInForeground(true);
-        callFunction("deactivate");
-        assertFalse(ApplicationStatus.getInForeground());
-    }
-
-    @Test
-    public void context_functions_activate() {
-        ApplicationStatus.setInForeground(false);
-        callFunction("activate");
-        assertFalse(ApplicationStatus.getInForeground());
-    }
-
-    @Test
-    public void context_functions_deactivate() {
-        ApplicationStatus.setInForeground(true);
-        callFunction("deactivate");
-        assertTrue(ApplicationStatus.getInForeground());
-    }
-
-    @Test
     public void context_functions_registerSettings() {
         LocalNotificationSettingsDecoder decoder = mock(LocalNotificationSettingsDecoder.class);
 
@@ -290,5 +253,26 @@ public class LocalNotificationsContextTest {
 
         verify(categoryManager).registerCategories(settings.categories);
         verify(getSubject()).dispatchStatusEventAsync("settingsSubscribed", "status");
+    }
+
+    @Test
+    public void context_functions_registerDefaultCategory() {
+        LocalNotificationCategoryDecoder decoder = mock(LocalNotificationCategoryDecoder.class);
+
+        try {
+            PowerMockito.whenNew(LocalNotificationCategoryDecoder.class)
+                    .withArguments(freContext)
+                    .thenReturn(decoder);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        LocalNotificationCategory category = new LocalNotificationCategory();
+        LocalNotificationCategory[] categories = new LocalNotificationCategory[]{ category };
+        when(decoder.decodeObject(arg1)).thenReturn(category);
+
+        callFunction("registerDefaultCategory");
+
+        verify(categoryManager).registerCategories(categories);
     }
 }

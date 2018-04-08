@@ -1,7 +1,6 @@
 package com.juankpro.ane.localnotif;
 
 import android.app.Activity;
-import android.app.NotificationManager;
 import android.os.Build;
 
 import com.adobe.fre.FREContext;
@@ -18,7 +17,6 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import java.util.Date;
 
@@ -174,16 +172,8 @@ LocalNotificationDecoderTest {
     }
 
     @Test
-    public void decoder_decode_decodesLocalNotificationPriority_zeroIfSdkLessThanNougat() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.N - 1);
+    public void decoder_decode_decodesLocalNotificationPriority_defaultsToZero() {
         when(ExtensionUtils.getIntProperty(freArg2, "priority", 0)).thenReturn(12);
-        assertEquals(12, getSubject().decodeObject(freArg2).priority);
-    }
-
-    @Test
-    public void decoder_decode_decodesLocalNotificationPriority_defaultIfSdkGreaterOrEqualThanNougat() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.N);
-        when(ExtensionUtils.getIntProperty(freArg2, "priority", NotificationManager.IMPORTANCE_DEFAULT)).thenReturn(12);
         assertEquals(12, getSubject().decodeObject(freArg2).priority);
     }
 

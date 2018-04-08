@@ -47,7 +47,26 @@
     CONFIG::device private static const STATUS:String = "status";
     CONFIG::device private static const NOTIFICATION_SELECTED:String = "notificationSelected";
 
+    CONFIG::android private static var _defaultCategory:NotificationCategory = getDefaultCategory();
+
+    private static function getDefaultCategory():NotificationCategory {
+      CONFIG::device {
+        CONFIG::android {
+          return new NotificationCategory("_DefaultCategory", "Notifications", NotificationImportance.DEFAULT);
+        }
+      }
+      return null;
+    }
+
+    CONFIG::test public static function _getDefaultCategory():NotificationCategory {
+      CONFIG::android {
+        return _defaultCategory;
+      }
+      return null;
+    }
+
     CONFIG::device private var _disposed:Boolean;
+    CONFIG::android private var _registeredCategories:Boolean;
 
     /**
      * Determines whether notifications are available for this platform or not.
@@ -73,21 +92,35 @@
           NotificationStyle.ALERT]);
 
     /**
-     * Previous versions returned true on iOS devices only. Currently, because Android devices 
-     * may also need to register custom actions, this property returns true for all mobile devices.
-     * Legacy code using this property will still work properly because Android devices will always dispatch
-     * the <code>Event.SETTINGS_SUBSCRIBED</code> event successfully while subscribing, but for practical
-     * cases, you should not use it anymore and depend only on <code>isSupported</code>.
-     * <p>Supported OS: Android, iOS</p>
-     * @see #subscribe()
-     * @see #isSupported
+     * Android 7.0 (API level 26) and higher can only send notification through notification channels. 
+     * Notification categories translate to Android notification channels.
+     * <p>If you haven't previously created any category because you didn't need any custom actions,
+     * then a default category/channel will be created for your notifications. This default category
+     * with id <code>"_DefaultCategory"</code> is called Notifications and has default importance, 
+     * sound and vibration.</p>
+     * <p>Use this method if you want to customize your default channel. It must be called before any
+     * call to <code>notifyUser</code>. If you have already created your own custom categories then this 
+     * method will have no effect.</p>
+     * <p>Supported OS: Android</p>
+     * @param identifier The default category identifier.
+     * @param name The default category name.
+     * @param importance The default category importance.
+     * @param description The default category description.
+     * @param soundName The default category sound.
+     * @param shouldVibrate The default category vibration status.
+     * @see com.juankpro.ane.localnotif.NotificationCategory
      */
-    [Deprecated("isSupported")]
-    public static function get needsSubscription():Boolean {
+    public static function setupDefaultCategory(identifier:String, name:String, importance:int = NotificationImportance.DEFAULT, description:String = null, soundName:String = null, shouldVibrate:Boolean = true):void {
         CONFIG::device {
-          return true;
+          CONFIG::android {
+            _defaultCategory.identifier = identifier;
+            _defaultCategory.name = name;
+            _defaultCategory.description = description;
+            _defaultCategory.importance = importance;
+            _defaultCategory.soundName = soundName;
+            _defaultCategory.shouldVibrate = shouldVibrate;
+          }
         }
-        return false;
     }
 
     /**
@@ -102,21 +135,9 @@
           var builder:* = contextBuilder || ExtensionContext;
           _extensionContext = builder.createExtensionContext("com.juankpro.ane.LocalNotification",
                                                              _contextType);
-          CONFIG::android {
-            NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, activateHandler, false, 0, true);
-            NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, deactivateHandler, false, 0, true);
-          }
         }
         _refCount++;
       }
-    }
-
-    CONFIG::device private function activateHandler(e:Event):void {
-      _extensionContext.call("activate");
-    }
-
-    CONFIG::device private function deactivateHandler(e:Event):void {
-      _extensionContext.call("deactivate");
     }
 
     /**
@@ -163,26 +184,42 @@
     }
 
     /**
-     * Fires the notification with the specified behavior.
+     * Fires the notification with the specified behavior. On Android 7.0 (API level 26) and higher,
+     * if no categories have been registered then this method will register a default one. To further
+     * customize this default category use <code>setupDefaultCategory</code> before calling this method.
      * <p>Supported OS: Android, iOS</p>
      * @param code An identifier for this notification that is unique to the application.
      * The code can later be used to cancel the notification using the cancel method.
      * @param notification A <code>Notification</code> object describing how to notify the user. Must not be null.
      * @see com.juankpro.ane.localnotif.Notification
+     * @see #setupDefaultCategory 
      */
     public function notifyUser(code:String, notification:Notification):void {
       CONFIG::device {
         if(_disposed) return;
 
-        var originalData:* = notification.actionData;
-        if (notification.actionData != null) {
-          var data:ByteArray = new ByteArray();
-          data.writeObject(notification.actionData);
-          notification.actionData = data;
+        CONFIG::android {
+          if(!_registeredCategories) {
+            _extensionContext.call("registerDefaultCategory", _defaultCategory);
+	    _registeredCategories = true;
+          }
         }
-        _extensionContext.call("notify", code, notification);
-        notification.actionData = originalData;
+
+        withSerializeNotification(notification, function(n:Notification):void {
+          _extensionContext.call("notify", code, n);
+        });
       }
+    }
+
+    private function withSerializeNotification(notification:Notification, handler:Function):void {
+      var originalData:* = notification.actionData;
+      if (null != notification.actionData) {
+        var data:ByteArray = new ByteArray();
+        data.writeObject(notification.actionData);
+        notification.actionData = data;
+      }
+      handler(notification);
+      notification.actionData = originalData;
     }
 
     /**
@@ -248,6 +285,11 @@
     public function subscribe(options:LocalNotifierSubscribeOptions):void {
       CONFIG::device {
         _extensionContext.call("registerSettings", options);
+        CONFIG::android {
+	    if (options.categories != null && options.categories.length > 0) {
+            	_registeredCategories = true;
+            }
+        }
       }
     }
 

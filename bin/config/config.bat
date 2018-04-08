@@ -13,7 +13,7 @@ set AMXML=%SDK_PATH%\bin\amxmlc
 
 :: AS3 lib folder
 set LIB_FOLDER=%CONFIG_SCRIPT_PATH%..\..\src\AS
-set AIR_VERSION=37
+set SWF_VERSION=37
 
 :: ANDROID
 :: path to android sdk

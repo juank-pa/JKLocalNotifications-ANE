@@ -18,6 +18,12 @@ public class LocalNotificationCategoryDecoder extends FREDecoder<LocalNotificati
         LocalNotificationCategory localNotificationCategory = new LocalNotificationCategory();
         localNotificationCategory.identifier = decodeString("identifier", localNotificationCategory.identifier);
         localNotificationCategory.actions = decodeArray("actions", getActionDecoder(), LocalNotificationAction.class);
+
+        localNotificationCategory.name = decodeString("name", localNotificationCategory.name);
+        localNotificationCategory.description = decodeString("description", localNotificationCategory.description);
+        localNotificationCategory.soundName = decodeString("soundName", localNotificationCategory.soundName);
+        localNotificationCategory.shouldVibrate = decodeBoolean("shouldVibrate", localNotificationCategory.shouldVibrate);
+        localNotificationCategory.importance = decodeInt("importance", localNotificationCategory.importance);
         return localNotificationCategory;
     }
 

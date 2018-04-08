@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.juankpro.ane.localnotif.util.Logger;
-
 /**
  * Created by Juank on 10/22/17.
  */
@@ -27,7 +25,6 @@ public class AlarmIntentService extends BroadcastReceiver {
 
         if (tryEventDispatch(bundle)) return;
         dispatcher.dispatch();
-        Logger.log("AlarmIntentService::onReceive Intent: " + intent.toString());
     }
 
     private boolean tryEventDispatch(Bundle bundle) {

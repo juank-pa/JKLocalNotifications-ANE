@@ -59,6 +59,9 @@ public class FREObject {
     }
 
     public static FREObject newObject(String className, FREObject[] constructorArgs) {
+        if (className.equals("flash.utils.ByteArray")) {
+            return new FREByteArray();
+        }
         return new FREObject(className, constructorArgs);
     }
 
@@ -78,6 +81,10 @@ public class FREObject {
         return (String)value;
     }
 
+    public Map<String, FREObject> getAsMap() {
+        return (Map<String, FREObject>)value;
+    }
+
     public FREObject(String className, FREObject[] constructorArgs) {
 
     }
@@ -92,6 +99,9 @@ public class FREObject {
     }
 
     public FREObject callMethod(String methodName, FREObject[] methodArgs) {
-        return ((Map<String, FREObject>)value).get(methodName);
+        if (methodName.equals("writeByte")) {
+            ((FREByteArray)this).writeByte((byte)methodArgs[0].getAsInt());
+        }
+        return null;
     }
 }

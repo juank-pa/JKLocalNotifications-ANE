@@ -28,7 +28,7 @@ echo "****** Compiling AS3 library *******"
 
 # compile Android SWC version
 "$ACOMPC" \
-    -swf-version $AIR_VERSION \
+    -swf-version $SWF_VERSION \
     -define+=CONFIG::device,true \
     -define+=CONFIG::iphone,false \
     -define+=CONFIG::android,true \

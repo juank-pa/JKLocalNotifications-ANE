@@ -27,7 +27,7 @@ package com.juankpro.ane.localnotif {
      * <code>NotificationIconType</code> class constants.
      * <p>You can also send any other file name (without the extension). For custom icons to work
      * you will need to recompile the ANE adding the custom icons to the res folder.</p>
-     * <p>This icon is not only supported in Android but also required.</p>
+     * <p>This icon is not only supported on Android but also mandatory.</p>
      * <p>Supported OS: Android</p>
      * @default NotificationIconType.ALERT
      * @see com.juankpro.ane.localnotif.NotificationIconType
@@ -42,5 +42,18 @@ package com.juankpro.ane.localnotif {
      * @default false
      */
     public var isBackground:Boolean = false;
+
+    /**
+     * Constructs a new NotificationAction.
+     * @param identifier The identifier for the custom action.
+     * @param title The title for the custom action. Ued as the button label.
+     * @param icon The custom action icon. This parameter is mandatory for Android.
+     * <p>Supported OS: Android, iOS</p>
+     */
+    public function NotificationAction(identifier:String, title:String, icon:String = null): void {
+        this.identifier = identifier;
+        this.icon = icon;
+        this.title = title;
+    }
   }
 }

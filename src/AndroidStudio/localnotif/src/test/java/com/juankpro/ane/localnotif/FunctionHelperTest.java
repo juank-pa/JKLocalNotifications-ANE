@@ -16,8 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import static junit.framework.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
@@ -36,18 +35,24 @@ public class FunctionHelperTest {
     private FREContext freContext;
     private FREObject[] freArgs;
     private FunctionHelper subject;
+    private boolean called;
 
     private FunctionHelper getSubject(final String error) {
         if (subject == null) {
-            subject = spy(new FunctionHelper() {
+            called = true;
+            subject = new FunctionHelper() {
                 @Override
                 public FREObject invoke(FREContext context, FREObject[] passedArgs) throws Throwable {
                     if(error != null) {
-                        throw new Exception(error);
+                        Exception exception = mock(Exception.class);
+                        when(exception.toString()).thenReturn("java.lang.Exception: My Error");
+
+                        throw exception;
                     }
-                    return freObject;
+                    return context == FunctionHelperTest.this.freContext &&
+                            passedArgs == freArgs? freObject : null;
                 }
-            });
+            };
         }
         return subject;
     }
@@ -64,24 +69,19 @@ public class FunctionHelperTest {
     }
 
     @Test
-    public void helper_call_callsInvoke() {
-        try {
-            assertSame(freObject, getSubject().call(freContext, freArgs));
-            verify(getSubject()).invoke(freContext, freArgs);
-        } catch (Throwable e) { e.printStackTrace(); }
+    public void helper_call_callsInvoke() throws Throwable {
+        assertSame(freObject, getSubject().call(freContext, freArgs));
     }
 
     @Test
-    public void helper_call_forwardsErrorToANEIfErrorThrown() {
+    public void helper_call_forwardsErrorToANEIfErrorThrown() throws FREWrongThreadException {
         try {
             when(FREObject.newObject(anyString())).thenReturn(freResultObject);
         } catch (Throwable e) { e.printStackTrace(); }
 
         assertSame(freResultObject, getSubject("My Error").call(freContext, freArgs));
 
-        try {
-            verifyStatic(FREObject.class);
-            FREObject.newObject("Exception! java.lang.Exception: My Error");
-        } catch (FREWrongThreadException e) { e.printStackTrace(); }
+        verifyStatic(FREObject.class);
+        FREObject.newObject("Exception! java.lang.Exception: My Error");
     }
 }

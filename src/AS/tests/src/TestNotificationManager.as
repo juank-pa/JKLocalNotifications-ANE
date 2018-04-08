@@ -4,6 +4,7 @@ package {
   import flash.notifications.NotificationStyle;
   import com.juankpro.ane.localnotif.NotificationManager;
   import com.juankpro.ane.localnotif.Notification;
+  import com.juankpro.ane.localnotif.NotificationCategory;
   import com.juankpro.ane.localnotif.NotificationEvent;
   import com.juankpro.ane.localnotif.LocalNotifierSubscribeOptions;
   import flash.utils.ByteArray;
@@ -48,16 +49,31 @@ package {
       return;
     }
 
-    /*
-    TODO: re-enable when you discover how to remove deprecation warnings.
-    public function testNeedsSubscription():void {
-      CONFIG::device {
-        assertTrue("Is supported on device", NotificationManager.needsSubscription);
-        return;
-      }
-      assertFalse("Is supported on device", NotificationManager.needsSubscription);
+    CONFIG::android public function testSetupDefaultCategory():void {
+      var defaultCategory:NotificationCategory = NotificationManager._getDefaultCategory();
+      assertEquals(defaultCategory.identifier, "_DefaultCategory");
+      assertEquals(defaultCategory.name, "Notifications");
+      assertNull(defaultCategory.description);
+      assertNull(defaultCategory.soundName);
+      assertTrue(defaultCategory.shouldVibrate);
+      assertEquals(defaultCategory.importance, 3);
+
+      NotificationManager.setupDefaultCategory(
+        "NewId",
+        "New Name",
+        5,
+        "My Description",
+        "sound.mp3",
+        false
+      )
+
+      assertEquals(defaultCategory.identifier, "NewId");
+      assertEquals(defaultCategory.name, "New Name");
+      assertEquals(defaultCategory.description, "My Description");
+      assertEquals(defaultCategory.soundName, "sound.mp3");
+      assertFalse(defaultCategory.shouldVibrate);
+      assertEquals(defaultCategory.importance, 5);
     }
-    */
 
     public function testInstantiation():void {
       CONFIG::device {
@@ -91,7 +107,11 @@ package {
 
     public function testNotifyUser():void {
       var notification:Notification = new Notification();
+      var category:NotificationCategory = new NotificationCategory("id", "name");
       mockContext.expects("call").withArgs("notify", "MyCode", notification).noReturn();
+      CONFIG::android {
+        mockContext.expects("call").withArgs("registerDefaultCategory", NotificationManager._getDefaultCategory()).noReturn();
+      }
       manager.notifyUser("MyCode", notification);
       CONFIG::device {
         assertTrue(mockContext.errorMessage(), mockContext.success());
@@ -105,6 +125,16 @@ package {
       var obj:Array = ["test", "data"];
       notification.actionData = obj;
       mockContext.expects("call").withArgs("notify", "MyCode", notification).noReturn();
+
+      var options:LocalNotifierSubscribeOptions = new LocalNotifierSubscribeOptions();
+      mockContext.expects("call").withArgs("registerSettings", options).noReturn();
+
+      CONFIG::android {
+        // Even after subscribing but with no categories
+        mockContext.expects("call").withArgs("registerDefaultCategory", NotificationManager._getDefaultCategory()).noReturn();
+      }
+
+      manager.subscribe(options);
       manager.notifyUser("MyCode", notification);
 
       CONFIG::device {
@@ -113,6 +143,42 @@ package {
         return;
       }
       assertSame(obj, notification.actionData);
+      assertFalse("Should not call context", mockContext.success());
+    }
+
+    public function testNotifyUserDoesNotSubscribeIfCategoriesWhereAlreadyAdded():void {
+      var notification:Notification = new Notification();
+      var category:NotificationCategory = new NotificationCategory("id", "name");
+      mockContext.expects("call").withArgs("notify", "MyCode", notification).noReturn();
+
+      var options:LocalNotifierSubscribeOptions = new LocalNotifierSubscribeOptions(
+        Vector.<NotificationCategory>([new NotificationCategory("id", "name")])
+      );
+      mockContext.expects("call").withArgs("registerSettings", options).noReturn();
+      // Not expecting a call to "registerDefaultCategory"
+
+      manager.subscribe(options);
+      manager.notifyUser("MyCode", notification);
+      CONFIG::device {
+        assertTrue(mockContext.errorMessage(), mockContext.success());
+        return;
+      }
+      assertFalse("Should not call context", mockContext.success());
+    }
+
+    public function testNotifyUserShouldRegisterCategoriesOnlyOnce():void {
+      var notification:Notification = new Notification();
+      var category:NotificationCategory = new NotificationCategory("id", "name");
+      mockContext.expects("call").times(2).withArgs("notify", "MyCode", notification).noReturn();
+      CONFIG::android {
+        mockContext.expects("call").withArgs("registerDefaultCategory", NotificationManager._getDefaultCategory()).noReturn();
+      }
+      manager.notifyUser("MyCode", notification);
+      manager.notifyUser("MyCode", notification);
+      CONFIG::device {
+        assertTrue(mockContext.errorMessage(), mockContext.success());
+        return;
+      }
       assertFalse("Should not call context", mockContext.success());
     }
 

@@ -18,7 +18,7 @@ rmdir /S /Q %RES_PATH%
 echo ***** ANDROID EMULATOR APP ******
 echo ***** compiling SWF file *****
 
-call %AMXML% -swf-version %AIR_VERSION% ^
+call %AMXML% -swf-version %SWF_VERSION% ^
   -define+=CONFIG::device,true ^
   -define+=CONFIG::iphone,false ^
   -define+=CONFIG::android,true ^

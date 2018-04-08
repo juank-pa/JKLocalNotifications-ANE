@@ -23,13 +23,15 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.powermock.api.support.membermodification.MemberMatcher.methodsDeclaredIn;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({NotificationSoundProvider.class})
+@PrepareForTest({NotificationSoundProvider.class, Uri.class})
 public class NotificationSoundProviderTest {
     @Mock
     private Uri uri;
@@ -67,6 +69,17 @@ public class NotificationSoundProviderTest {
         when(decompressor.decompress(anyString())).thenReturn(fileDescriptor);
 
         PowerMockito.suppress(methodsDeclaredIn(ContentProvider.class));
+
+        mockStatic(Uri.class);
+        when(Uri.parse(anyString())).thenReturn(uri);
+    }
+
+    @Test
+    public void provider_getSoundUri_buildSoundUri() {
+        Uri testUri = NotificationSoundProvider.getSoundUri("test.wav");
+        verifyStatic(Uri.class);
+        Uri.parse("content://expected.authority/test.wav");
+        assertSame(uri, testUri);
     }
 
     @Test
@@ -84,33 +97,27 @@ public class NotificationSoundProviderTest {
     }
 
     @Test
-    public void provider_openAssetFile_returnsNullIfNotMp3OrWav() {
+    public void provider_openAssetFile_returnsDescriptorForMp3OrWav() throws FileNotFoundException {
         when(uri.getLastPathSegment()).thenReturn("sound.mp3");
 
-        try {
-            assertSame(fileDescriptor, getSubject().openAssetFile(uri, ""));
-        } catch (FileNotFoundException e) { e.printStackTrace(); }
+        assertSame(fileDescriptor, getSubject().openAssetFile(uri, ""));
 
         when(uri.getLastPathSegment()).thenReturn("sound.wav");
 
-        try {
-            assertSame(fileDescriptor, getSubject().openAssetFile(uri, ""));
-        } catch (FileNotFoundException e) { e.printStackTrace(); }
+        assertSame(fileDescriptor, getSubject().openAssetFile(uri, ""));
+    }
 
+    @Test(expected=FileNotFoundException.class)
+    public void provider_openAssetFile_throwsExceptionIfNotMp3OrWav() throws FileNotFoundException {
         when(uri.getLastPathSegment()).thenReturn("sound.any");
-
-        try {
-            assertNull(getSubject().openAssetFile(uri, ""));
-        } catch (FileNotFoundException e) { e.printStackTrace(); }
+        getSubject().openAssetFile(uri, "");
     }
 
     @Test
-    public void provider_openAssetFile_decompressesUriLastSegment() {
+    public void provider_openAssetFile_decompressesUriLastSegment() throws FileNotFoundException {
         when(uri.getLastPathSegment()).thenReturn("sound.mp3");
 
-        try {
-            getSubject().openAssetFile(uri, "");
-            verify(decompressor).decompress("sound.mp3");
-        } catch (FileNotFoundException e) { e.printStackTrace(); }
+        getSubject().openAssetFile(uri, "");
+        verify(decompressor).decompress("sound.mp3");
     }
 }
