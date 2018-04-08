@@ -1,5 +1,5 @@
-### Unreleased
-* [Breaking change] Fix custom sounds to prevent them triggering when notifications are disabled
+### Version 1.3.0
+* Fix custom sounds to prevent them triggering when notifications are disabled
   or silenced by the user. For this to work the application XML must be updated by removing the
   `PlayAudio` service and adding the `NotificationSoundProvider` content provider instead.
   See README file.
