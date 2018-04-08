@@ -1,8 +1,4 @@
 ### Unreleased
-* Fix custom sounds to prevent them triggering when notifications are disabled
-  or silenced by the user. For this to work the application XML must be updated by removing the
-  `PlayAudio` service and adding the `NotificationSoundProvider` content provider instead.
-  See README file.
 * Add support for Android 8.0 (API level 26, Oreo) channels. The `NotificationChannel` now
   represents Android channels and allow creating and managing channels on Android. On Android
   Oreo the sound, importance and vibration are no longer determined by the Notification but
@@ -10,6 +6,12 @@
   (`Notification` and `NotificationCategory`) to support new and old versions of the Android API.
   If you haven't setup any categories or do not need them, the ANE will create a default one
   before sending any notifications.
+
+### Version 1.3.0
+* Fix custom sounds to prevent them triggering when notifications are disabled
+  or silenced by the user. For this to work the application XML must be updated by removing the
+  `PlayAudio` service and adding the `NotificationSoundProvider` content provider instead.
+  See README file.
 
 ### Version 1.2.1
 * Fix bug that prevented notifications from triggering when using the default sound for
