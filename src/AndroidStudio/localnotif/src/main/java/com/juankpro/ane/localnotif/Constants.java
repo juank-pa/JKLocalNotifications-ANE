@@ -39,4 +39,5 @@ public class Constants {
     public static final String CATEGORY = ANE_NAME + "NOTIF_CATEGORY";
 
     public static final String NOTIFICATION_DISMISS_ACTION = "_JKNotificationDismissAction_";
+    public static final String REPEAT_INTERVAL = "NOTIF_REPEAT_INTERVAL";
 }

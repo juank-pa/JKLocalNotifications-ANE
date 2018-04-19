@@ -33,6 +33,7 @@ public class LocalNotificationDecoder extends FREDecoder<LocalNotification> {
         // IMPORTANT: These property names must match the names in the Notification ActionScript class exactly.
         localNotification.fireDate = decodeDate("fireDate", localNotification.fireDate);
         localNotification.repeatInterval = decodeInt("repeatInterval", localNotification.repeatInterval);
+        localNotification.isExact = decodeBoolean("isExact", localNotification.isExact);
 
         // Text.
         localNotification.tickerText = decodeString("tickerText", localNotification.tickerText);

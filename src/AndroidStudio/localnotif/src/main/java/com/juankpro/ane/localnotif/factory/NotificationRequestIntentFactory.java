@@ -40,6 +40,10 @@ public class NotificationRequestIntentFactory {
         intent.putExtra(Constants.SHOW_IN_FOREGROUND, localNotification.showInForeground);
         intent.putExtra(Constants.CATEGORY, localNotification.category);
 
+        if (localNotification.isExact && localNotification.repeatInterval != 0) {
+            intent.putExtra(Constants.REPEAT_INTERVAL, localNotification.repeatInterval);
+        }
+
         if (localNotification.hasAction) {
             intent.putExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY, localNotification.activityClassName);
         }

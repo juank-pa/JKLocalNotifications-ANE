@@ -25,6 +25,8 @@ public class LocalNotification implements ISerializable, IDeserializable {
     public String title = "";
     public String body = "";
 
+    public Boolean isExact = false;
+
     // Sound.
     public boolean playSound = false;
 
@@ -111,6 +113,7 @@ public class LocalNotification implements ISerializable, IDeserializable {
             jsonObject.putOpt("priority", priority);
             jsonObject.putOpt("showInForeground", showInForeground);
             jsonObject.putOpt("category", category);
+            jsonObject.putOpt("isExact", isExact);
 
             for (byte anActionData : actionData) {
                 jsonObject.accumulate("actionData", (int)anActionData);
@@ -142,6 +145,7 @@ public class LocalNotification implements ISerializable, IDeserializable {
             priority = jsonObject.optInt("priority", priority);
             showInForeground = jsonObject.optBoolean("showInForeground", showInForeground);
             category = jsonObject.optString("category", category);
+            isExact = jsonObject.optBoolean("isExact", isExact);
 
             long dateTime = jsonObject.optLong("fireDate", fireDate.getTime());
 

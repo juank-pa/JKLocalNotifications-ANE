@@ -18,6 +18,8 @@ public class AlarmIntentService extends BroadcastReceiver {
         assert bundle != null;
         boolean showInForeground = bundle.getBoolean(Constants.SHOW_IN_FOREGROUND);
 
+        handleRepeatingNotification(context, intent);
+
         NotificationDispatcher dispatcher = new NotificationDispatcher(context, bundle);
 
         if (showInForeground) {
@@ -28,6 +30,21 @@ public class AlarmIntentService extends BroadcastReceiver {
         if (tryEventDispatch(bundle)) return;
         dispatcher.dispatch();
         Logger.log("AlarmIntentService::onReceive Intent: " + intent.toString());
+    }
+
+    private void handleRepeatingNotification(Context context, Intent intent) {
+        if (isRepeatingNotification(intent)) {
+            LocalNotification localNotification = new LocalNotification();
+            new LocalNotificationManager(context).notify(localNotification);
+        }
+    }
+
+    private boolean isRepeatingNotification(Intent intent) {
+        return getRepeatInterval(intent) == 0;
+    }
+
+    private int getRepeatInterval(Intent intent) {
+        return intent.getIntExtra(Constants.REPEAT_INTERVAL, 0);
     }
 
     private boolean tryEventDispatch(Bundle bundle) {

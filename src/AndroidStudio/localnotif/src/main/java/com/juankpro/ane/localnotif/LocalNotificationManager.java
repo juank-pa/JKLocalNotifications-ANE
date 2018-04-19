@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import com.juankpro.ane.localnotif.factory.NotificationRequestIntentFactory;
 import com.juankpro.ane.localnotif.util.Logger;
@@ -34,10 +35,35 @@ class LocalNotificationManager {
                 PendingIntent.FLAG_CANCEL_CURRENT);
         long repeatInterval = localNotification.getRepeatIntervalMilliseconds();
 
+        if (repeatInterval != 0) {
+            setRepeatingAlarm(notificationTime, repeatInterval, pendingIntent, localNotification.isExact);
+        }
+        else {
+            setAlarm(notificationTime, pendingIntent, localNotification.isExact);
+        }
+    }
+
+    private void setRepeatingAlarm(long notificationTime, long repeatInterval, PendingIntent pendingIntent, boolean isExact) {
         AlarmManager am = getAlarmManager();
 
-        if (repeatInterval != 0) {
-            am.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime, repeatInterval, pendingIntent);
+        if (isExact) {
+            setAlarm(notificationTime, pendingIntent, true);
+        }
+        else {
+            am.setInexactRepeating(AlarmManager.RTC_WAKEUP, notificationTime, repeatInterval, pendingIntent);
+        }
+    }
+
+    private void setAlarm(long notificationTime, PendingIntent pendingIntent, boolean isExact) {
+        AlarmManager am = getAlarmManager();
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            am.set(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
+            return;
+        }
+
+        if (isExact) {
+            am.setExact(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
         }
         else {
             am.set(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
