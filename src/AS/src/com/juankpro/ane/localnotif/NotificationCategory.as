@@ -31,5 +31,18 @@ package com.juankpro.ane.localnotif {
          * @see com.juankpro.ane.localnotif.NotificationAction
          */
         public var actions:Vector.<NotificationAction>;
+
+        /**
+         * Determines whether dismissing notifications related to this category will trigger a
+         * <code>NotificationEvent</code>. You can recognize the dismiss action event by its
+         * <code>NotificationEvent.notificationAction</code> property that will have the
+         * <code>Notification.NOTIFICATION_DISMISS_ACTION</code> value assigned to it.
+         * The dismiss action is always triggered in the background.
+         * <p>Only iOS 10 and higher support this feature. All versions of Android support this.</p>
+         * <p>Supported OS: Android, iOS (10+)</p>
+         * @see com.juankpro.ane.localnotif.NotificationEvent#notificationAction
+         * @see com.juankpro.ane.localnotif.Notification#NOTIFICATION_DISMISS_ACTION
+         */
+        public var useCustomDismissAction:Boolean;
   }
 }

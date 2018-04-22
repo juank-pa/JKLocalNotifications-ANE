@@ -25,13 +25,18 @@
 
     /**
      * The action selected by the user to trigger the notification.
-     * <p>This is the <code>NotificationAction</code> identifier corresponding to the
-     * selected notification action button.</p>
+     * This is the <code>NotificationAction</code> identifier corresponding to the
+     * selected notification action button.
      * <p>If the user has pressed the notification body instead of any action button this
      * value will be null.</p>
+     * <p>To listen to dismiss actions the notification must be sent to a category that
+     * has the <code>NotificationCategory.useCustomDismissAction</code> property set
+     * to true. Dismiss actions set this property to <code>Notification.NOTIFICATION_DISMISS_ACTION</code>.</p>
      * <p>Supported OS: Android, iOS</p>
      * @default null
      * @see com.juankpro.ane.localnotif.NotificationAction#identifier
+     * @see com.juankpro.ane.localnotif.NotificationAction#category
+     * @see com.juankpro.ane.localnotif.NotificationCategory#useCustomDismissAction
      */
     public var notificationAction:String = null;
 
