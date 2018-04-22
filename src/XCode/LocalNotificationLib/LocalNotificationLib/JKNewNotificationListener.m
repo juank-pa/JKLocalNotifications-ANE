@@ -11,6 +11,8 @@
 #import "JKNotificationFactory.h"
 #import "Constants.h"
 
+static NSString *const JKNotificationDismissActionIdentifier = @"_JKNotificationDismissAction_";
+
 @interface JKNewNotificationListener ()<UNUserNotificationCenterDelegate>
 
 @end
@@ -73,9 +75,10 @@
 }
 
 - (NSString *)actionIdentifierFromResponse:(UNNotificationResponse *)response {
-    if([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier] ||
-       [response.actionIdentifier isEqualToString:UNNotificationDismissActionIdentifier]) {
-        return nil;
+    if([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) return nil;
+
+    if([response.actionIdentifier isEqualToString:UNNotificationDismissActionIdentifier]) {
+        return JKNotificationDismissActionIdentifier;
     }
     return response.actionIdentifier;
 }

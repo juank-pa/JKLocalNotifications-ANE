@@ -19,6 +19,7 @@
 
     JKLocalNotificationActionDecoder *actionDecoder = [JKLocalNotificationActionDecoder new];
     category.actions = [self decodeArrayProperty:@"actions" withDecoder:actionDecoder];
+    category.useCustomDismissAction = [self decodeBoolProperty:@"useCustomDismissAction" withDefault:NO];
 
     return category;
 }

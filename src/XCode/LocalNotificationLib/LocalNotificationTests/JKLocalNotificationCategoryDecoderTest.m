@@ -18,7 +18,15 @@
 @interface JKLocalNotificationCategoryDecoderTest : XCTestCase
 @property (nonatomic, strong) id utilsMock;
 @property (nonatomic, strong) JKLocalNotificationCategoryDecoder *subject;
+@property (nonatomic, strong) id categoryMock;
+@property (nonatomic, strong) id actionDecoderMock;
+@property (nonatomic, strong) NSArray *actions;
 @end
+
+typedef NS_ENUM(NSInteger, NotificationCategoryDecoderFlag){
+    NotificationCategoryDecoderFlagNone,
+    NotificationCategoryDecoderFlagUseCustomDismissAction
+};
 
 @implementation JKLocalNotificationCategoryDecoderTest
 {
@@ -29,42 +37,56 @@
     [super setUp];
     self.utilsMock = OCMClassMock([ExtensionUtils class]);
     self.subject = [JKLocalNotificationCategoryDecoder new];
+
+    self.categoryMock = OCMClassMock([JKLocalNotificationCategory class]);
+    OCMStub([self.categoryMock new]).andReturn(self.categoryMock);
+
+    self.actionDecoderMock = OCMClassMock([JKLocalNotificationActionDecoder class]);
+    OCMStub([self.actionDecoderMock new]).andReturn(self.actionDecoderMock);
 }
 
 - (void)tearDown {
     [self.utilsMock stopMocking];
+    [self.categoryMock stopMocking];
+    [self.actionDecoderMock stopMocking];
     [super tearDown];
 }
 
-- (void)testDecodeObject {
-    id categoryMock = OCMClassMock([JKLocalNotificationCategory class]);
-    OCMStub([categoryMock new]).andReturn(categoryMock);
+- (void)setupCategoryDecoder:(NotificationCategoryDecoderFlag)flag {
+    int identifierContext, actionsContext, useCustomDismissActionContext;
 
-    id actionDecoder = OCMClassMock([JKLocalNotificationActionDecoder class]);
-    OCMStub([actionDecoder new]).andReturn(actionDecoder);
-
-    NSArray *actions = [NSArray array];
-
-    int identifierContext, actionsContext;
+    self.actions = [NSArray array];
 
     // Property access
     OCMStub([self.utilsMock getProperty:@"identifier" fromObject:&categoryContext]).andReturn((void *)&identifierContext);
     OCMStub([self.utilsMock getProperty:@"actions" fromObject:&categoryContext]).andReturn((void *)&actionsContext);
-
+    OCMStub([self.utilsMock getProperty:@"useCustomDismissAction" fromObject:&categoryContext]).andReturn((void *)&useCustomDismissActionContext);
 
     // Value fetch
     OCMStub([self.utilsMock getStringFromFREObject:&identifierContext]).andReturn(@"MyId");
-    OCMStub([self.utilsMock getArrayFromFREObject:&actionsContext withDecoder:actionDecoder]).andReturn(actions);
+    OCMStub([self.utilsMock getArrayFromFREObject:&actionsContext withDecoder:self.actionDecoderMock]).andReturn(self.actions);
+    OCMStub([self.utilsMock getBoolFromFREObject:&useCustomDismissActionContext]).andReturn(flag == NotificationCategoryDecoderFlagUseCustomDismissAction);
+}
 
-    OCMExpect([categoryMock setIdentifier:@"MyId"]);
-    OCMExpect([categoryMock setActions:actions]);
+- (void)testDecodeObject {
+    [self setupCategoryDecoder:(NotificationCategoryDecoderFlagNone)];
 
-    XCTAssertEqual([self.subject decodeObject:(void *)&categoryContext], categoryMock);
+    OCMExpect([self.categoryMock setIdentifier:@"MyId"]);
+    OCMExpect([self.categoryMock setActions:self.actions]);
 
-    OCMVerifyAll(categoryMock);
-    
-    [categoryMock stopMocking];
-    [actionDecoder stopMocking];
+    XCTAssertEqual([self.subject decodeObject:(void *)&categoryContext], self.categoryMock);
+
+    OCMVerifyAll(self.categoryMock);
+}
+
+- (void)testDecodeObjectUseCustomDismissAction {
+    [self setupCategoryDecoder:(NotificationCategoryDecoderFlagUseCustomDismissAction)];
+
+    OCMExpect([self.categoryMock setUseCustomDismissAction:YES]);
+
+    XCTAssertEqual([self.subject decodeObject:(void *)&categoryContext], self.categoryMock);
+
+    OCMVerifyAll(self.categoryMock);
 }
 
 @end
