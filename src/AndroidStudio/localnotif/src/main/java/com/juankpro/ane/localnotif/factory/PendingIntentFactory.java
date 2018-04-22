@@ -10,4 +10,5 @@ public interface PendingIntentFactory {
     PendingIntent createPendingIntent();
     PendingIntent createActionPendingIntent(String actionId, boolean backgroundMode);
     PendingIntent createTextInputActionPendingIntent(String actionId, boolean backgroundMode);
+    PendingIntent createDeletePendingIntent();
 }

@@ -25,6 +25,10 @@ public class NotificationPendingIntentFactory implements PendingIntentFactory {
         return createActionPendingIntent(null, false);
     }
 
+    public PendingIntent createDeletePendingIntent() {
+        return createActionPendingIntent(Constants.NOTIFICATION_DISMISS_ACTION, true);
+    }
+
     public PendingIntent createActionPendingIntent(String actionId, boolean backgroundMode) {
         return PendingIntent.getService(
                 context,

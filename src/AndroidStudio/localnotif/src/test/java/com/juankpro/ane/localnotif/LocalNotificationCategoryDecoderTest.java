@@ -16,7 +16,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.when;
 
@@ -50,6 +52,13 @@ public class LocalNotificationCategoryDecoderTest {
     public void decoder_decode_decodesIdentifier() {
         when(ExtensionUtils.getStringProperty(freObject, "identifier", "")).thenReturn("MyId");
         assertEquals("MyId", getSubject().decodeObject(freObject).identifier);
+    }
+
+    @Test
+    public void decoder_decode_decodesUseCustomDismissAction() {
+        assertFalse(getSubject().decodeObject(freObject).useCustomDismissAction);
+        when(ExtensionUtils.getBooleanProperty(freObject, "useCustomDismissAction", false)).thenReturn(true);
+        assertTrue(getSubject().decodeObject(freObject).useCustomDismissAction);
     }
 
     @Test

@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = findViewById(R.id.resultsTextView);
+        textView = (TextView)findViewById(R.id.resultsTextView);
         textView.setMovementMethod(new ScrollingMovementMethod());
 
         context = new Extension().createContext("warningIcon");
@@ -115,6 +115,7 @@ public class MainActivity extends Activity {
             Map<String, FREObject> category1 = new HashMap<>();
             category1.put("identifier", getFREObject("CategoryX"));
             category1.put("name", getFREObject("Test1"));
+            category1.put("useCustomDismissAction", getFREObject(true));
             category1.put("actions", createActions());
 
             return getFREArray(FREObject.newObject(category1));
