@@ -61,11 +61,15 @@ public class NotificationFactory {
 
     private void buildActions(PendingIntentFactory intentFactory) {
         LocalNotificationCategory category = getCategory();
-        if (category != null) {
-            NotificationActionBuilder actionBuilder = new NotificationActionBuilder(intentFactory, builder);
-            for (LocalNotificationAction action : category.actions) {
-                actionBuilder.build(action);
-            }
+        if (category == null) return;
+
+        NotificationActionBuilder actionBuilder = new NotificationActionBuilder(intentFactory, builder);
+        for (LocalNotificationAction action : category.actions) {
+            actionBuilder.build(action);
+        }
+
+        if (category.useCustomDismissAction) {
+            actionBuilder.buildDismissAction();
         }
     }
 

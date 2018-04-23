@@ -18,8 +18,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -85,6 +87,17 @@ public class LocalNotificationCategoryTest {
         getSubject().deserialize(jsonObject);
         assertEquals("MyId", getSubject().identifier);
         assertSame(actions, getSubject().actions);
+    }
+
+    @Test
+    public void action_deserialize_deserializesUseCustomDismissAction() {
+        try {
+            when(jsonObject.optBoolean("useCustomDismissAction")).thenReturn(true);
+        } catch (Throwable e) { e.printStackTrace(); }
+
+        assertFalse(getSubject().useCustomDismissAction);
+        getSubject().deserialize(jsonObject);
+        assertTrue(getSubject().useCustomDismissAction);
     }
 
     @Test

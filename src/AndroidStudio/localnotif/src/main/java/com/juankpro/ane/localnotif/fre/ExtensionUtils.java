@@ -18,6 +18,7 @@
 
 package com.juankpro.ane.localnotif.fre;
 
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.Date;
 
@@ -155,17 +156,16 @@ public class ExtensionUtils {
         return null;
     }
 
-    public static <D> D[] getArrayProperty(FREContext freContext, FREObject freObject, String propertyName, IDecoder<D> decoder, Class<D>aClass) {
-        D[] array = null;
+    public static <D> D[] getArrayProperty(FREContext freContext, FREObject freObject, String propertyName, IDecoder<D> decoder, Class<D> aClass) {
         try {
             FREObject propertyObject = freObject.getProperty(propertyName);
             ArrayDecoder<D> arrayDecoder = new ArrayDecoder<>(freContext, decoder, aClass);
-            array = arrayDecoder.decodeObject(propertyObject);
+            return arrayDecoder.decodeObject(propertyObject);
         }
         catch (Throwable e) {
             e.printStackTrace();
         }
-        return array;
+        return (D[])Array.newInstance(aClass, 0);
     }
 
 }

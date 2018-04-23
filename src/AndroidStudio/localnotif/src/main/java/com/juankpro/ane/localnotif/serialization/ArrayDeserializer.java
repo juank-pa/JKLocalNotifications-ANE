@@ -17,11 +17,9 @@ public class ArrayDeserializer<T extends IDeserializable> {
     }
 
     @SuppressWarnings("unchecked")
-    public T[] deserialize(JSONArray objects) throws Exception {
-        T[] items;
-
+    public T[] deserialize(JSONArray objects) {
         try {
-            items = (T[]) Array.newInstance(aClass, objects.length());
+            T[] items = (T[]) Array.newInstance(aClass, objects.length());
 
             for (int i = 0; i < objects.length(); i++) {
                 JSONObject actionObject = objects.getJSONObject(i);
@@ -29,11 +27,10 @@ public class ArrayDeserializer<T extends IDeserializable> {
                 instance.deserialize(actionObject);
                 items[i] = instance;
             }
-        }
-        catch (Throwable e) {
-            items = null;
-        }
 
-        return items == null? (T[]) Array.newInstance(aClass, 0) : items;
+            return items;
+        }
+        catch (Throwable e) { }
+        return (T[])Array.newInstance(aClass, 0);
     }
 }

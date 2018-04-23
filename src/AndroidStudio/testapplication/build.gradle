@@ -3,8 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 24
 
-
-
     defaultConfig {
         applicationId "com.juankpro.ane.testapplication"
         minSdkVersion 16

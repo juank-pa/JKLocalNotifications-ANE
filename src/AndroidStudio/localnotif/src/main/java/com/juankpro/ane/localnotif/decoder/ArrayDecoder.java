@@ -24,18 +24,17 @@ public class ArrayDecoder<A> extends FREDecoder<A[]> {
     @Override
     protected A[] decode() {
         FREArray freArray = (FREArray)getObject();
-        A[] array;
         try {
             int length = (int)freArray.getLength();
-            array = (A[])Array.newInstance(aClass, length);
+            A[] array = (A[])Array.newInstance(aClass, length);
 
             for (int i = 0; i < length; i++) {
                 array[i] = decoder.decodeObject(freArray.getObjectAt(i));
             }
+            return array;
         } catch (Throwable e) {
-            array = null;
             Logger.log("FREDecoder::decodeArray Could not decode array " + e);
         }
-        return (array == null? (A[])Array.newInstance(aClass, 0) : array);
+        return (A[])Array.newInstance(aClass, 0);
     }
 }

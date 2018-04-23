@@ -17,6 +17,7 @@ public class LocalNotificationCategoryDecoder extends FREDecoder<LocalNotificati
     protected LocalNotificationCategory decode() {
         LocalNotificationCategory localNotificationCategory = new LocalNotificationCategory();
         localNotificationCategory.identifier = decodeString("identifier", localNotificationCategory.identifier);
+        localNotificationCategory.useCustomDismissAction = decodeBoolean("useCustomDismissAction", localNotificationCategory.useCustomDismissAction);
         localNotificationCategory.actions = decodeArray("actions", getActionDecoder(), LocalNotificationAction.class);
         return localNotificationCategory;
     }

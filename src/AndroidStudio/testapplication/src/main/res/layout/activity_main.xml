@@ -46,6 +46,8 @@
         android:layout_width="382dp"
         android:layout_height="293dp"
         android:layout_marginTop="8dp"
+        android:scrollbars = "vertical"
+        android:gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

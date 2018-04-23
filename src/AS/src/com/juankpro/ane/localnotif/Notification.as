@@ -7,6 +7,20 @@
    */
   public class Notification extends Object {
     /**
+     * This constant is used as the <code>NotificationEvent.notificationAction</code>
+     * for notifications that have been dismissed by the user instead of tapped.
+     * To listen to dismiss actions the notification must be sent to a category that
+     * has the <code>NotificationCategory.useCustomDismissAction</code> property set
+     * to true.
+     * <p>Only iOS 10 and higher support this feature. All versions of Android support this.</p>
+     * <p>Supported OS: Android, iOS (10+)</p>
+     * @see #category
+     * @see com.juankpro.ane.localnotif.NotificationEvent#notificationAction
+     * @see com.juankpro.ane.localnotif.NotificationCategory#useCustomDismissAction
+     */
+    public static const NOTIFICATION_DISMISS_ACTION:String = "_JKNotificationDismissAction_";
+
+    /**
      * The data associated with the notification. It can be retrieved from a
      * <code>NotificationEvent</code> object.
      * <p>Supported OS: Android, iOS</p>

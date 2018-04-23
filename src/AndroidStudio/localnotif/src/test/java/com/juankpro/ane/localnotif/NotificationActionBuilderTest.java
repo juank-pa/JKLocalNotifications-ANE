@@ -85,7 +85,7 @@ public class NotificationActionBuilderTest {
     }
 
     @Test
-    public void factory_create_buildsNativeActionUsingActionBuilderClass() {
+    public void factory_build_buildsNativeActionUsingActionBuilderClass() {
         Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT_WATCH);
         LocalNotificationAction action = getAction(10, "Title");
         when(intentFactory.createActionPendingIntent("ActionId", true)).thenReturn(pendingIntent);
@@ -96,7 +96,7 @@ public class NotificationActionBuilderTest {
     }
 
     @Test
-    public void factory_create_buildsNativeActionUsingBuildActionMethod() {
+    public void factory_build_buildsNativeActionUsingBuildActionMethod() {
         Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT_WATCH - 1);
         LocalNotificationAction action = getAction(10, "Title");
         when(intentFactory.createActionPendingIntent("ActionId", true)).thenReturn(pendingIntent);
@@ -107,7 +107,7 @@ public class NotificationActionBuilderTest {
     }
 
     @Test
-    public void factory_create_createsNativeTextInputAction() {
+    public void factory_build_createsNativeTextInputAction() {
         try {
             PowerMockito.whenNew(RemoteInput.Builder.class)
                     .withArguments(Constants.USER_RESPONSE_KEY)
@@ -128,7 +128,7 @@ public class NotificationActionBuilderTest {
     }
 
     @Test
-    public void factory_create_addsRemoteInputToAction() {
+    public void factory_build_addsRemoteInputToAction() {
         Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT_WATCH);
 
         try {
@@ -149,5 +149,12 @@ public class NotificationActionBuilderTest {
         verify(builder).addRemoteInput(remoteInput);
         verify(remoteInputBuilder).setLabel("Placeholder");
         verify(notificationBuilder).addAction(nativeAction);
+    }
+
+    @Test
+    public void factory_buildDismissAction_buildsNativeActionUsingBuildActionMethod() {
+        when(intentFactory.createDeletePendingIntent()).thenReturn(pendingIntent);
+        getSubject().buildDismissAction();
+        verify(notificationBuilder).setDeleteIntent(pendingIntent);
     }
 }
