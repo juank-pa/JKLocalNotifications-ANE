@@ -34,11 +34,6 @@ package com.juankpro.ane.localnotif {
 		 */
 		public static const MINUTE_CALENDAR_UNIT:uint = 1 << 6;
 		/**
-		 * Represents a second repeat interval
-		 * <p>Supported OS: iOS, Android</p>
-		 */
-		public static const SECOND_CALENDAR_UNIT:uint = 1 << 7;
-		/**
 		 * Represents a week repeat interval
 		 * <p>Supported OS: iOS, Android</p>
 		 */

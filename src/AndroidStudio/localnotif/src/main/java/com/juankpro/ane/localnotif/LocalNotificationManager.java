@@ -9,7 +9,10 @@ import android.os.Build;
 
 import com.juankpro.ane.localnotif.factory.NotificationRequestIntentFactory;
 import com.juankpro.ane.localnotif.util.Logger;
+import com.juankpro.ane.localnotif.util.NextNotificationCalculator;
 import com.juankpro.ane.localnotif.util.PersistenceManager;
+
+import java.util.Date;
 
 /**
  * Created by Juank on 10/21/17.
@@ -27,7 +30,9 @@ class LocalNotificationManager {
     }
 
     void notify(LocalNotification localNotification) {
-        long notificationTime = localNotification.fireDate.getTime();
+        NextNotificationCalculator calculator = new NextNotificationCalculator(localNotification);
+        long notificationTime = calculator.getTime(new Date());
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
                 localNotification.code.hashCode(),
@@ -57,17 +62,12 @@ class LocalNotificationManager {
     private void setAlarm(long notificationTime, PendingIntent pendingIntent, boolean isExact) {
         AlarmManager am = getAlarmManager();
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT || !isExact) {
             am.set(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
             return;
         }
 
-        if (isExact) {
-            am.setExact(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
-        }
-        else {
-            am.set(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
-        }
+        am.setExact(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
     }
 
     void cancel(String notificationCode) {

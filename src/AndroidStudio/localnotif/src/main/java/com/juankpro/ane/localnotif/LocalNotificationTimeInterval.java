@@ -39,7 +39,7 @@ public class LocalNotificationTimeInterval {
      * Represents a quarter year in milliseconds
      * Not exact
      */
-    private final static long QUARTER_CALENDAR_UNIT_MS = YEAR_CALENDAR_UNIT_MS / 4;
+    private final static long QUARTER_CALENDAR_UNIT_MS = DAY_CALENDAR_UNIT_MS * 91;
 
 
     /**
@@ -67,6 +67,10 @@ public class LocalNotificationTimeInterval {
      */
     public final static int SECOND_CALENDAR_UNIT = 1 << 7;
     /**
+     * Represents a second repeat interval
+     */
+    public final static int MILLISECOND_CALENDAR_UNIT = 1 << 8;
+    /**
      * Represents a week repeat interval
      */
     public final static int WEEK_CALENDAR_UNIT = 1 << 13;
@@ -89,6 +93,8 @@ public class LocalNotificationTimeInterval {
                 return MINUTE_CALENDAR_UNIT_MS;
             case SECOND_CALENDAR_UNIT:
                 return SECOND_CALENDAR_UNIT_MS;
+            case MILLISECOND_CALENDAR_UNIT:
+                return 1;
             case WEEK_CALENDAR_UNIT:
                 return WEEK_CALENDAR_UNIT_MS;
             case QUARTER_CALENDAR_UNIT:
@@ -100,11 +106,15 @@ public class LocalNotificationTimeInterval {
 
     private int intervalId;
 
-    LocalNotificationTimeInterval(int intervalId) {
+    public LocalNotificationTimeInterval(int intervalId) {
         this.intervalId = intervalId;
     }
 
-    long toMilliseconds() {
+    public long toMilliseconds() {
         return mapIntervalToMilliseconds(this.intervalId);
+    }
+
+    public long toMilliseconds(int units) {
+        return mapIntervalToMilliseconds(this.intervalId) * units;
     }
 }

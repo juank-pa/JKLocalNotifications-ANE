@@ -186,6 +186,14 @@ public class LocalNotificationTest {
     }
 
     @Test
+    public void action_deserialize_deserializesIsExactFromJsonObject() {
+        when(jsonObject.optBoolean("isExact", false)).thenReturn(true);
+        assertEquals(false, getSubject().isExact);
+        getSubject().deserialize(jsonObject);
+        assertEquals(true, getSubject().isExact);
+    }
+
+    @Test
     public void action_deserialize_doesNothingIfJsonObjectIsNull() {
         getSubject().deserialize(null);
         verify(jsonObject, never()).optString(eq("code"), anyString());
@@ -318,6 +326,15 @@ public class LocalNotificationTest {
     }
 
     @Test
+    public void action_serialize_serializesIsExact() {
+        try {
+            getSubject().isExact = true;
+            assertSame(jsonObject, getSubject().serialize());
+            verify(jsonObject).putOpt("isExact", true);
+        } catch (JSONException e) { e.printStackTrace(); }
+    }
+
+    @Test
     public void action_serialize_stopsSerializingDataIfAnExceptionIsThrown() {
         try {
             getSubject().actionData = new byte[]{102, 127};
@@ -343,41 +360,4 @@ public class LocalNotificationTest {
         getSubject().repeatInterval = 10;
         assertEquals(getSubject().getRepeatIntervalMilliseconds(), 20000L);
     }
-
-    @Test
-    public void action_reschedule_leavesFireDateIntact_ifRepeatIntervalIsZeroAndFiresInThePast() {
-        Date baseDate = new Date(new Date().getTime() - 65000);
-        getSubject().fireDate = baseDate;
-        getSubject().repeatInterval = 0;
-        assertSame(baseDate, getSubject().fireDate);
-    }
-
-    @Test
-    public void action_reschedule_leavesFireDateIntact_ifRepeatIntervalIsZeroAndFiresInTheFuture() {
-        Date baseDate = new Date(new Date().getTime() + 65000);
-        getSubject().fireDate = baseDate;
-        getSubject().repeatInterval = 0;
-        assertSame(baseDate, getSubject().fireDate);
-    }
-
-    @Test
-    public void action_reschedule_reschedules_ifRepeatIntervalIsNotZeroAndFiresInThePast() {
-        Date baseDate = new Date(new Date().getTime() - 65000);
-        getSubject().fireDate = baseDate;
-        getSubject().repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
-        getSubject().reschedule();
-        assertEquals(
-                baseDate.getTime() + 120000,
-                getSubject().fireDate.getTime()
-        );
-    }
-
-    @Test
-    public void action_reschedule_leavesFireDateIntact_ifRepeatIntervalIsNotZeroAndFiresInTheFuture() {
-        Date baseDate = new Date(new Date().getTime() + 65000);
-        getSubject().fireDate = baseDate;
-        getSubject().repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
-        assertSame(baseDate, getSubject().fireDate);
-    }
-
 }

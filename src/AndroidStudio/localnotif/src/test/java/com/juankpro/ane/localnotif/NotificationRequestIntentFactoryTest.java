@@ -63,7 +63,7 @@ public class NotificationRequestIntentFactoryTest {
     }
 
     @Test
-    public void manager_notify_setsUpIntent() {
+    public void factory_createIntent_setsUpIntent() {
         getSubject().createIntent(getNotification());
 
         verify(intent).setAction("MyCode");
@@ -81,7 +81,7 @@ public class NotificationRequestIntentFactoryTest {
     }
 
     @Test
-    public void manager_notify_setsUpPlaySound() {
+    public void factory_createIntent_setsUpPlaySound() {
         LocalNotification notification = getNotification();
         notification.playSound = true;
         getSubject().createIntent(notification);
@@ -89,7 +89,7 @@ public class NotificationRequestIntentFactoryTest {
     }
 
     @Test
-    public void manager_notify_setsUpVibrate() {
+    public void factory_createIntent_setsUpVibrate() {
         LocalNotification notification = getNotification();
         notification.vibrate = true;
         getSubject().createIntent(notification);
@@ -97,7 +97,7 @@ public class NotificationRequestIntentFactoryTest {
     }
 
     @Test
-    public void manager_notify_setsUpCancelOngoing() {
+    public void factory_createIntent_setsUpCancelOngoing() {
         LocalNotification notification = getNotification();
         notification.ongoing = true;
         getSubject().createIntent(notification);
@@ -105,7 +105,7 @@ public class NotificationRequestIntentFactoryTest {
     }
 
     @Test
-    public void manager_notify_setsUpCancelOnSelect() {
+    public void factory_createIntent_setsUpCancelOnSelect() {
         LocalNotification notification = getNotification();
         notification.cancelOnSelect = true;
         getSubject().createIntent(notification);
@@ -113,7 +113,7 @@ public class NotificationRequestIntentFactoryTest {
     }
 
     @Test
-    public void manager_notify_setsUpShowInForeground() {
+    public void factory_createIntent_setsUpShowInForeground() {
         LocalNotification notification = getNotification();
         notification.showInForeground = true;
         getSubject().createIntent(notification);
@@ -121,7 +121,7 @@ public class NotificationRequestIntentFactoryTest {
     }
 
     @Test
-    public void manager_notify_setsActivityClassIfItHasAction() {
+    public void factory_createIntent_setsActivityClassIfItHasAction() {
         LocalNotification notification = getNotification();
         notification.hasAction = true;
         getSubject().createIntent(notification);
@@ -130,11 +130,39 @@ public class NotificationRequestIntentFactoryTest {
     }
 
     @Test
-    public void manager_notify_doesNotSetActivityClassIfHasNoAction() {
+    public void factory_createIntent_doesNotSetActivityClassIfHasNoAction() {
         LocalNotification notification = getNotification();
         notification.hasAction = false;
         getSubject().createIntent(notification);
         verify(intent).putExtra(Constants.HAS_ACTION, false);
         verify(intent, never()).putExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY, "ClassName");
+    }
+
+    @Test
+    public void factory_createIntent_addsRepeatIntervalWhenIsExactAndIntervalDefined() {
+        LocalNotification notification = getNotification();
+        notification.isExact = true;
+        notification.repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
+        getSubject().createIntent(notification);
+        verify(intent).putExtra(Constants.REPEAT_INTERVAL, LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT);
+    }
+
+    @Test
+    public void factory_createIntent_doesNotAddRepeatIntervalWhenNonExactOrIntervalNotDefined() {
+        LocalNotification notification = getNotification();
+
+        notification.isExact = false;
+        notification.repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
+        getSubject().createIntent(notification);
+
+        notification.isExact = true;
+        notification.repeatInterval = 0;
+        getSubject().createIntent(notification);
+
+        notification.isExact = false;
+        notification.repeatInterval = 0;
+        getSubject().createIntent(notification);
+
+        verify(intent, never()).putExtra(Constants.REPEAT_INTERVAL, LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT);
     }
 }

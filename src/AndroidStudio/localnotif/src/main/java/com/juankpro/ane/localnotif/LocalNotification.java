@@ -1,6 +1,5 @@
 package com.juankpro.ane.localnotif;
 
-
 import java.util.Date;
 
 import org.json.JSONArray;
@@ -25,7 +24,7 @@ public class LocalNotification implements ISerializable, IDeserializable {
     public String title = "";
     public String body = "";
 
-    public Boolean isExact = false;
+    public boolean isExact = false;
 
     // Sound.
     public boolean playSound = false;
@@ -62,21 +61,6 @@ public class LocalNotification implements ISerializable, IDeserializable {
     public long getRepeatIntervalMilliseconds() {
         return new LocalNotificationTimeInterval(repeatInterval)
                 .toMilliseconds();
-    }
-
-    private Date getNextDate() {
-        long interval = getRepeatIntervalMilliseconds();
-        Date now = new Date();
-        if (interval == 0 || fireDate.getTime() >= now.getTime()) return fireDate;
-
-        long elapsedTime = now.getTime() - fireDate.getTime();
-        long triggerCount = (long)Math.ceil(elapsedTime / (double)interval);
-        return new Date(fireDate.getTime() + interval * triggerCount);
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public void reschedule() {
-        fireDate = getNextDate();
     }
 
     public LocalNotification() {
