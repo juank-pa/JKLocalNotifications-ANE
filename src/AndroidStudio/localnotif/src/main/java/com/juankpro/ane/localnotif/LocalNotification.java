@@ -1,6 +1,5 @@
 package com.juankpro.ane.localnotif;
 
-
 import java.util.Date;
 
 import org.json.JSONArray;
@@ -24,6 +23,8 @@ public class LocalNotification implements ISerializable, IDeserializable {
     public String tickerText = "";
     public String title = "";
     public String body = "";
+
+    public boolean isExact = false;
 
     // Sound.
     public boolean playSound = false;
@@ -62,21 +63,6 @@ public class LocalNotification implements ISerializable, IDeserializable {
                 .toMilliseconds();
     }
 
-    private Date getNextDate() {
-        long interval = getRepeatIntervalMilliseconds();
-        Date now = new Date();
-        if (interval == 0 || fireDate.getTime() >= now.getTime()) return fireDate;
-
-        long elapsedTime = now.getTime() - fireDate.getTime();
-        long triggerCount = (long)Math.ceil(elapsedTime / (double)interval);
-        return new Date(fireDate.getTime() + interval * triggerCount);
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public void reschedule() {
-        fireDate = getNextDate();
-    }
-
     public LocalNotification() {
         this(null);
     }
@@ -111,6 +97,7 @@ public class LocalNotification implements ISerializable, IDeserializable {
             jsonObject.putOpt("priority", priority);
             jsonObject.putOpt("showInForeground", showInForeground);
             jsonObject.putOpt("category", category);
+            jsonObject.putOpt("isExact", isExact);
 
             for (byte anActionData : actionData) {
                 jsonObject.accumulate("actionData", (int)anActionData);
@@ -142,6 +129,7 @@ public class LocalNotification implements ISerializable, IDeserializable {
             priority = jsonObject.optInt("priority", priority);
             showInForeground = jsonObject.optBoolean("showInForeground", showInForeground);
             category = jsonObject.optString("category", category);
+            isExact = jsonObject.optBoolean("isExact", isExact);
 
             long dateTime = jsonObject.optLong("fireDate", fireDate.getTime());
 

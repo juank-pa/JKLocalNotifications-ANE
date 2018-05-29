@@ -72,7 +72,7 @@ public class LocalNotificationTimeIntervalTest {
     @Test
     public void notificationTimeInterval_quarterInterval_toMilliseconds() {
         assertEquals(
-                ((long)1000 * 60 * 60 * 24 * 365) / 4,
+                (long)1000 * 60 * 60 * 24 * 91,
                 getSubject(LocalNotificationTimeInterval.QUARTER_CALENDAR_UNIT).toMilliseconds()
         );
     }
@@ -81,4 +81,14 @@ public class LocalNotificationTimeIntervalTest {
     public void notificationTimeInterval_unkownIntervalInterval_returnsZeroMilliseconds() {
         assertEquals(0, getSubject(1 << 20).toMilliseconds());
     }
+
+    @Test
+    public void notificationTimeInterval_toMillisecondsWithParameter_multipliesIntervalByParameter() {
+        assertEquals(
+                4000,
+                getSubject(LocalNotificationTimeInterval.SECOND_CALENDAR_UNIT).toMilliseconds(4)
+        );
+    }
+
+
 }

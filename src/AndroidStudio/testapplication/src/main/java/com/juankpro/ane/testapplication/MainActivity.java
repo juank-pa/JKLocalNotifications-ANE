@@ -13,6 +13,7 @@ import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 import com.juankpro.ane.localnotif.Extension;
+import com.juankpro.ane.localnotif.LocalNotificationTimeInterval;
 
 import java.nio.charset.Charset;
 import java.util.Date;
@@ -90,7 +91,8 @@ public class MainActivity extends Activity {
             notification.put("iconType", getFREObject("icon"));
             notification.put("numberAnnotation", getFREObject(2));
             notification.put("cancelOnSelect", getFREObject(true));
-            //notification.put("notification.repeatInterval", getFREObject(LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT));
+            notification.put("isExact", getFREObject(true));
+            //notification.put("repeatInterval", getFREObject(LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT));
             notification.put("showInForeground", getFREObject(true));
             notification.put("actionData", getFREByteArray("Hello World!".getBytes()));
             notification.put("category", getFREObject(cat));

@@ -5,10 +5,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import com.juankpro.ane.localnotif.factory.NotificationRequestIntentFactory;
 import com.juankpro.ane.localnotif.util.Logger;
+import com.juankpro.ane.localnotif.util.NextNotificationCalculator;
 import com.juankpro.ane.localnotif.util.PersistenceManager;
+
+import java.util.Date;
 
 /**
  * Created by Juank on 10/21/17.
@@ -26,7 +30,9 @@ class LocalNotificationManager {
     }
 
     void notify(LocalNotification localNotification) {
-        long notificationTime = localNotification.fireDate.getTime();
+        NextNotificationCalculator calculator = new NextNotificationCalculator(localNotification);
+        long notificationTime = calculator.getTime(new Date());
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
                 localNotification.code.hashCode(),
@@ -34,14 +40,34 @@ class LocalNotificationManager {
                 PendingIntent.FLAG_CANCEL_CURRENT);
         long repeatInterval = localNotification.getRepeatIntervalMilliseconds();
 
-        AlarmManager am = getAlarmManager();
-
         if (repeatInterval != 0) {
-            am.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime, repeatInterval, pendingIntent);
+            setRepeatingAlarm(notificationTime, repeatInterval, pendingIntent, localNotification.isExact);
         }
         else {
-            am.set(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
+            setAlarm(notificationTime, pendingIntent, localNotification.isExact);
         }
+    }
+
+    private void setRepeatingAlarm(long notificationTime, long repeatInterval, PendingIntent pendingIntent, boolean isExact) {
+        AlarmManager am = getAlarmManager();
+
+        if (isExact) {
+            setAlarm(notificationTime, pendingIntent, true);
+        }
+        else {
+            am.setInexactRepeating(AlarmManager.RTC_WAKEUP, notificationTime, repeatInterval, pendingIntent);
+        }
+    }
+
+    private void setAlarm(long notificationTime, PendingIntent pendingIntent, boolean isExact) {
+        AlarmManager am = getAlarmManager();
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT || !isExact) {
+            am.set(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
+            return;
+        }
+
+        am.setExact(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
     }
 
     void cancel(String notificationCode) {

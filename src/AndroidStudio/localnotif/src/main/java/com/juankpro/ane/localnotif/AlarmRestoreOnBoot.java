@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.juankpro.ane.localnotif.util.Logger;
+import com.juankpro.ane.localnotif.util.NextNotificationCalculator;
 import com.juankpro.ane.localnotif.util.PersistenceManager;
 
 public class AlarmRestoreOnBoot extends BroadcastReceiver {
@@ -29,9 +30,9 @@ public class AlarmRestoreOnBoot extends BroadcastReceiver {
                 LocalNotification notification = persistenceManager.readNotification(notificationId);
                 if (notification == null) continue;
 
-                notification.reschedule();
+                long nextTime = new NextNotificationCalculator(notification).getTime(now);
 
-                if (notification.fireDate.getTime() >= now.getTime()) {
+                if (nextTime >= now.getTime()) {
                     manager.notify(notification);
                 }
                 else {

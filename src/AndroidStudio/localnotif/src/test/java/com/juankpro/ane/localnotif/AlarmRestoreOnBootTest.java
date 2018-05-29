@@ -8,9 +8,7 @@ import com.juankpro.ane.localnotif.util.PersistenceManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -112,24 +110,14 @@ public class AlarmRestoreOnBootTest {
     @Test
     public void provider_onReceive_notifiesEventsInTheFuture() {
         initNotifications();
-
         getSubject().onReceive(context, intent);
-
-        InOrder inOrder = Mockito.inOrder(notification1, notificationManager);
-
-        inOrder.verify(notification1).reschedule();
-        inOrder.verify(notificationManager).notify(notification1);
+        verify(notificationManager).notify(notification1);
     }
 
     @Test
     public void provider_onReceive_removesEventsInThePast() {
         initNotifications();
-
         getSubject().onReceive(context, intent);
-
-        InOrder inOrder = Mockito.inOrder(notification2, persistenceManager);
-
-        inOrder.verify(notification2).reschedule();
-        inOrder.verify(persistenceManager).removeNotification("NOTIF2");
+        verify(persistenceManager).removeNotification("NOTIF2");
     }
 }

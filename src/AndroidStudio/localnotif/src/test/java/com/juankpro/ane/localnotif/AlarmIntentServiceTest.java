@@ -1,8 +1,11 @@
 package com.juankpro.ane.localnotif;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.juankpro.ane.localnotif.util.PersistenceManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +16,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,6 +39,10 @@ public class AlarmIntentServiceTest {
     private LocalNotificationEventDispatcher eventDispatcher;
     @Mock
     private NotificationDispatcher notificationDispatcher;
+    @Mock
+    private LocalNotificationManager notificationManager;
+    @Mock
+    private PersistenceManager persistenceManager;
     private byte[] data = new byte[]{};
     private AlarmIntentService subject;
 
@@ -99,5 +107,39 @@ public class AlarmIntentServiceTest {
 
         verify(notificationDispatcher).dispatch();
         verify(eventDispatcher, never()).dispatchWhenInForeground();
+    }
+
+    @Test
+    public void intentService_onReceiveWhenNotification_doesNotTriggersNewNotification_whenIntervalNotSent() {
+        mockNotificationDispatch();
+
+        try {
+            PowerMockito.whenNew(LocalNotificationManager.class).withArguments(context)
+                    .thenReturn(notificationManager);
+        } catch(Throwable e) { e.printStackTrace(); }
+
+        getSubject().onReceive(context, intent);
+
+        verify(notificationManager, never()).notify(any(LocalNotification.class));
+    }
+
+    @Test
+    public void intentService_onReceiveWhenNotification_triggersNewNotification_whenIntervalSent() {
+        when(bundle.getInt(Constants.REPEAT_INTERVAL, 0)).thenReturn(1);
+        mockNotificationDispatch();
+
+        try {
+            PowerMockito.whenNew(LocalNotificationManager.class).withArguments(context)
+                    .thenReturn(notificationManager);
+            PowerMockito.whenNew(PersistenceManager.class).withArguments(context)
+                    .thenReturn(persistenceManager);
+        } catch(Throwable e) { e.printStackTrace(); }
+
+        LocalNotification notification = new LocalNotification();
+        when(persistenceManager.readNotification("KeyCode")).thenReturn(notification);
+
+        getSubject().onReceive(context, intent);
+
+        verify(notificationManager).notify(notification);
     }
 }
