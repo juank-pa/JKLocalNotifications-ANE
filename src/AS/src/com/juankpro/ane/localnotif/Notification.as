@@ -166,8 +166,7 @@
      * Determines whether the notification triggers at the exact time or not.
      * If <code>isExact</code> is false then the notification will be batched with other alarms
      * to minimize battery use, otherwise the notification will trigger at the exact time.
-     * <p>Single time notifications will always be exact prior to Android 4.4 (API level 19).</p>
-     * <p>Repeating notifications will always be inexact since Android 4.4 (API level 19).</p>
+     * <p>Notifications will always be exact prior to Android 4.4 (API level 19).</p>
      * <p>Supported OS: Android</p>
      * @default false
      */

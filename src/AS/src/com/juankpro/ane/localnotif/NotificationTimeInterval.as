@@ -7,14 +7,12 @@ package com.juankpro.ane.localnotif {
 	 */
 	public class NotificationTimeInterval {
 		/**
-		 * Represents a year repeat interval.
-		 * On Android will just trigger every 365 days. The date might not be exact.
+		 * Represents a year repeat interval
 		 * <p>Supported OS: iOS, Android</p>
 		 */
 		public static const YEAR_CALENDAR_UNIT:uint = 1 << 2;
 		/**
 		 * Represents a month repeat interval
-		 * On Android will just trigger every 30 days. The date might not be exact.
 		 * <p>Supported OS: iOS, Android</p>
 		 */
 		public static const MONTH_CALENDAR_UNIT:uint = 1 << 3;
@@ -39,13 +37,8 @@ package com.juankpro.ane.localnotif {
 		 */
 		public static const WEEK_CALENDAR_UNIT:uint = 1 << 13;
 		/**
-		 * Represents a weekday ordinal repeat interval e.g. repeat every second Monday every month
-		 * <p>Supported OS: iOS</p>
-		 */
-		public static const WEEKDAY_ORDINAL_CALENDAR_UNIT:uint = 1 << 10;
-		/**
-		 * Represents a quarter year repeat interval
-		 * Will just trigger every 365/4 days. The date might not be exact.
+		 * Represents a quarter year repeat interval.
+		 * Will just trigger every 91 days.
 		 * <p>Supported OS: Android</p>
 		 */
 		public static const QUARTER_CALENDAR_UNIT:uint = 1 << 11;
