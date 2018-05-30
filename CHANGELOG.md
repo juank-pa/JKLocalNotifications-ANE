@@ -1,4 +1,13 @@
-### Version 1.3.0
+### Unreleased
+* Dismissing a notification also triggers a notification event with an specific action id.
+* Allow exact notifications in Android. Since Android 4.4 (API level 19) batches repeating and
+  non-repeating notifications to save battery power making them inexact by default. If being exact
+  is a requirement of you app you can now specify this condition.
+* Improved monthly and yearly repeat intervals to perform accurately. Monthly interval will always
+  trigger the same day each month, while yearly intervals will always trigger the same month and
+  day each year.
+
+Version 1.3.0
 * Fix custom sounds to prevent them triggering when notifications are disabled
   or silenced by the user. For this to work the application XML must be updated by removing the
   `PlayAudio` service and adding the `NotificationSoundProvider` content provider instead.
@@ -9,14 +18,6 @@
   the notification i.e. `Notification.soundName` was not set.
 
 ### Version 1.2.0
-* Background actions are now fully supported in Android.
-  You need to add `android:name="com.juankpro.ane.localnotif.Application"` to the Android
-  manifest `application` tag in your application XML file.
-* Removed support and compat dependencies from the Android version, which greatly reduces the ANE
-  footprint size (from 1.5MB to 654KB) and eases ANE integration with other ANEs.
-* Added a native Android application to allow visual tests similar to what the iOS version has.
-
-### Version 1.1.0
 * You can now use a custom sound for notifications in Android.
 * Use the new `Notification.launchImage` property to replace the launch image used when the
   application is launched when a specific notification triggers.
@@ -26,52 +27,19 @@
 * Notifications can also show in the foreground. When notifications display in the foreground
   no event is dispatched.
 * You add custom action buttons to notifications to perform different tasks when tapped.
-* Actions can open the application in the background. Android devices support this only partially.
+* Actions can open the application in the background. You need to add `android:name="com.juankpro.ane.localnotif.Application"`
+  to the Android manifest application tag in your application XML file.
 * Add support for text input actions to allow the user fill in data in the notification.
+* Removed support-v4 and compat library dependencies from the Android version, which greatly
+  reduces the ANE footprint size (from 1.69MB to 639KB) and eases ANE integration with other ANEs.
+* Added a native AndroidStudio application to allow visual tests similar to what the iOS version
+  has for XCode.
 
 ### Version 1.0.7
-* Fixed a bug that prevented a notification from triggering if the app was not currently
-  running and the event listener was registered after registering some other event listeners.
-* Fixed a bug preventing Android to reschedule repeating notifications that started in the
-  past after a system reboot.
-
-### Version 1.0.6
-* Fixed a bug that made notification events to trigger only once During the application
-  lifetime.
-
-### Version 1.0.5
-* Android notifications support large notification body texts using expanded layout.
-
-### Version 1.0.4
-* Added batch scripts to allow compiling the ANEs and running the sample application on
-  Android devices on Windows.
-* Refactored build scripts to prevent repetition.
-* Added support for Android x86 devices.
-* Fixed broken distribution ANE.
-
-### Version 1.0.3
-* Added the ability to use custom icons for Android notifications through a
-  [hack](https://github.com/juank-pa/JKLocalNotifications-ANE#adding-android-custom-icons-hack).
-
-### Version 1.0.2
-* Improved and new build scripts for the Android ANE and sample application.
-* The Android project was so outdated the was actually not working at all. The Android project
-  has been ported from Eclipse to Android Studio and has been completely revamped to make it work
-  and to use better coding practices.
-* Added a test suite for the basic Android classes. Other components tests are still pending.
-
-### Version 1.0.1
-* Removed the `ERA_CALENDAR_UNIT` and `WEEKDAY_CALENDAR_UNIT` constants from `NotificationTimeInterval`
-  because these intervals were never implemented in either iOS or Android. These
-  constants were creating invalid notifications that were never triggering.
-* Added a CHANGELOG
-
-**iOS library**
-* Added support to notifications through `UNUserNotificationCenter` for iOS 10 and later.
-* Migrated the ANE to ARC to improve memory management and simplify code.
-
-### Version 1.0
-* Add notification information for Android and iOS.
-* Trigger notifications at a specific date in the future.
-* Re-schedule notifications at regular intervals.
-* The ANE was reborn after a long sleep.
+* Add support `UNUserNotificationCenter` to allow future improvements. Behavior and interface were
+  kept unchanged.
+* Add the ability to use custom notification icons on Android as soon as they as bundled in the ANE
+  file. For this to work you have to re-compile the any this time adding the icons as resources.
+  Simply set the `Notification.iconType` to the icon file name without extension.
+* Add the ability to send large text bodies to Android notifications that will show in expanded mode.
+* This fixed critical bugs introduced since 1.0.1.
