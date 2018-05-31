@@ -180,6 +180,12 @@ LocalNotificationDecoderTest {
     }
 
     @Test
+    public void decoder_decode_decodesLocalNotificationAllowWhileIdle() {
+        when(ExtensionUtils.getBooleanProperty(freArg2, "allowWhileIdle", false)).thenReturn(true);
+        assertTrue(getSubject().decodeObject(freArg2).allowWhileIdle);
+    }
+
+    @Test
     public void decoder_decode_decodesLocalNotificationPriority_zeroIfSdkLessThanNougat() {
         Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.N - 1);
         when(ExtensionUtils.getIntProperty(freArg2, "priority", 0)).thenReturn(12);

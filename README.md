@@ -124,7 +124,6 @@ the ANE to work:
             android:authorities="<package_name>.notification_sound_provider"
             android:enabled="true"
             android:exported="true"/>
-
         </application>
       </manifest>
       ]]>

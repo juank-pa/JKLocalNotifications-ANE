@@ -6,6 +6,7 @@
 * Improved monthly and yearly repeat intervals to perform accurately. Monthly interval will always
   trigger the same day each month, while yearly intervals will always trigger the same month and
   day each year.
+* Allow setting alarms that will trigger even when Android 6.0 (API level 23) enters doze mode.
 
 Version 1.3.0
 * Fix custom sounds to prevent them triggering when notifications are disabled

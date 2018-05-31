@@ -14,8 +14,12 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Created by juank on 12/18/2017.
@@ -139,12 +143,21 @@ public class NotificationRequestIntentFactoryTest {
     }
 
     @Test
-    public void factory_createIntent_addsRepeatIntervalWhenIsExactAndIntervalDefined() {
-        LocalNotification notification = getNotification();
-        notification.isExact = true;
+    public void factory_createIntent_addsRepeatInterval_whenNotificationRepeatsRecurrently() {
+        LocalNotification notification = spy(getNotification());
+        when(notification.repeatsRecurrently()).thenReturn(true);
         notification.repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
         getSubject().createIntent(notification);
         verify(intent).putExtra(Constants.REPEAT_INTERVAL, LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT);
+    }
+
+    @Test
+    public void factory_createIntent_doesNotAddRepeatInterval_whenNotificationDoesNotRepeatRecurrently() {
+        LocalNotification notification = spy(getNotification());
+        when(notification.repeatsRecurrently()).thenReturn(false);
+        notification.repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
+        getSubject().createIntent(notification);
+        verify(intent, never()).putExtra(eq(Constants.REPEAT_INTERVAL), anyInt());
     }
 
     @Test

@@ -5,9 +5,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 
 import com.juankpro.ane.localnotif.factory.NotificationRequestIntentFactory;
+import com.juankpro.ane.localnotif.factory.NotificationStrategyFactory;
+import com.juankpro.ane.localnotif.notifier.INotificationStrategy;
 import com.juankpro.ane.localnotif.util.Logger;
 import com.juankpro.ane.localnotif.util.NextNotificationCalculator;
 import com.juankpro.ane.localnotif.util.PersistenceManager;
@@ -22,52 +23,32 @@ class LocalNotificationManager {
     private Context context;
     private NotificationManager notificationManager;
     private NotificationRequestIntentFactory intentFactory;
+    private INotificationStrategy notifier;
 
     LocalNotificationManager(Context context) {
         this.context = context;
         intentFactory = new NotificationRequestIntentFactory(context);
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notifier = new NotificationStrategyFactory(context).create();
     }
 
-    void notify(LocalNotification localNotification) {
-        NextNotificationCalculator calculator = new NextNotificationCalculator(localNotification);
+    void notify(LocalNotification notification) {
+        NextNotificationCalculator calculator = new NextNotificationCalculator(notification);
         long notificationTime = calculator.getTime(new Date());
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
-                localNotification.code.hashCode(),
-                intentFactory.createIntent(localNotification),
+                notification.code.hashCode(),
+                intentFactory.createIntent(notification),
                 PendingIntent.FLAG_CANCEL_CURRENT);
-        long repeatInterval = localNotification.getRepeatIntervalMilliseconds();
+        long repeatInterval = notification.getRepeatIntervalMilliseconds();
 
         if (repeatInterval != 0) {
-            setRepeatingAlarm(notificationTime, repeatInterval, pendingIntent, localNotification.isExact);
+            notifier.notifyRepeating(notificationTime, repeatInterval, pendingIntent, notification);
         }
         else {
-            setAlarm(notificationTime, pendingIntent, localNotification.isExact);
+            notifier.notify(notificationTime, pendingIntent, notification);
         }
-    }
-
-    private void setRepeatingAlarm(long notificationTime, long repeatInterval, PendingIntent pendingIntent, boolean isExact) {
-        AlarmManager am = getAlarmManager();
-
-        if (isExact) {
-            setAlarm(notificationTime, pendingIntent, true);
-        }
-        else {
-            am.setInexactRepeating(AlarmManager.RTC_WAKEUP, notificationTime, repeatInterval, pendingIntent);
-        }
-    }
-
-    private void setAlarm(long notificationTime, PendingIntent pendingIntent, boolean isExact) {
-        AlarmManager am = getAlarmManager();
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT || !isExact) {
-            am.set(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
-            return;
-        }
-
-        am.setExact(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
     }
 
     void cancel(String notificationCode) {

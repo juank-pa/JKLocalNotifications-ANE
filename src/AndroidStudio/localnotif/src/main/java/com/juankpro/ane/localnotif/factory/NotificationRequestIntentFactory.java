@@ -40,7 +40,7 @@ public class NotificationRequestIntentFactory {
         intent.putExtra(Constants.SHOW_IN_FOREGROUND, localNotification.showInForeground);
         intent.putExtra(Constants.CATEGORY, localNotification.category);
 
-        if (localNotification.isExact && localNotification.repeatInterval != 0) {
+        if (localNotification.repeatsRecurrently()) {
             intent.putExtra(Constants.REPEAT_INTERVAL, localNotification.repeatInterval);
         }
 
@@ -50,5 +50,4 @@ public class NotificationRequestIntentFactory {
 
         return intent;
     }
-
 }
