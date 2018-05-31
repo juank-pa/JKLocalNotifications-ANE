@@ -91,7 +91,8 @@ public class MainActivity extends Activity {
             notification.put("iconType", getFREObject("icon"));
             notification.put("numberAnnotation", getFREObject(2));
             notification.put("cancelOnSelect", getFREObject(true));
-            notification.put("isExact", getFREObject(true));
+            //notification.put("isExact", getFREObject(true));
+            //notification.put("allowWhileIdle", getFREObject(true));
             //notification.put("repeatInterval", getFREObject(LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT));
             notification.put("showInForeground", getFREObject(true));
             notification.put("actionData", getFREByteArray("Hello World!".getBytes()));

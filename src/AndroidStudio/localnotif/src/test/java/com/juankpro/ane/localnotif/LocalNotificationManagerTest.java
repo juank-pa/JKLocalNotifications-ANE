@@ -8,8 +8,12 @@ import android.content.Intent;
 import android.os.Build;
 
 import com.juankpro.ane.localnotif.factory.NotificationRequestIntentFactory;
+import com.juankpro.ane.localnotif.factory.NotificationStrategyFactory;
+import com.juankpro.ane.localnotif.notifier.INotificationStrategy;
 import com.juankpro.ane.localnotif.util.NextNotificationCalculator;
 import com.juankpro.ane.localnotif.util.PersistenceManager;
+
+import net.sf.cglib.core.Local;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +29,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -54,6 +59,12 @@ public class LocalNotificationManagerTest {
     private AlarmManager alarmManager;
     @Mock
     private NotificationRequestIntentFactory intentFactory;
+    @Mock
+    private NotificationStrategyFactory notifierFactory;
+    @Mock
+    private INotificationStrategy notifier;
+    @Mock
+    private NextNotificationCalculator calculator;
     private LocalNotification notification = new LocalNotification("ClassName");
     private LocalNotificationManager subject;
 
@@ -75,8 +86,12 @@ public class LocalNotificationManagerTest {
             PowerMockito.whenNew(NotificationRequestIntentFactory.class)
                     .withArguments(context)
                     .thenReturn(intentFactory);
+            PowerMockito.whenNew(NotificationStrategyFactory.class)
+                    .withArguments(context)
+                    .thenReturn(notifierFactory);
         } catch (Throwable e) { e.printStackTrace(); }
 
+        when(notifierFactory.create()).thenReturn(notifier);
         when(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager);
         when(context.getSystemService(Context.ALARM_SERVICE)).thenReturn(alarmManager);
         when(intentFactory.createIntent(notification)).thenReturn(intent);
@@ -99,131 +114,49 @@ public class LocalNotificationManagerTest {
         return notification;
     }
 
-    @Test
-    public void manager_notify_notifiesWithoutRepeatingIfIntervalIsZero_whenExact_sinceKitKat() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT);
-        when(PendingIntent.getBroadcast(context, "MyCode".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
-                .thenReturn(pendingIntent);
-
+    private void setupIntervalCalculator() {
         LocalNotification notification = getNotification();
-        notification.isExact = true;
-        getSubject().notify(notification);
-
-        verify(alarmManager).setExact(AlarmManager.RTC_WAKEUP, notification.fireDate.getTime(), pendingIntent);
+        try {
+            PowerMockito.whenNew(NextNotificationCalculator.class)
+                    .withArguments(notification)
+                    .thenReturn(calculator);
+        } catch (Throwable e) { e.printStackTrace(); }
     }
 
     @Test
-    public void manager_notify_notifiesWithoutRepeatingIfIntervalIsZero_whenNonExact_sinceKitKat() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT);
+    public void manager_notify_notifiesOnce_whenIntervalIsZero() {
+        setupIntervalCalculator();
+
         when(PendingIntent.getBroadcast(context, "MyCode".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
                 .thenReturn(pendingIntent);
 
-        LocalNotification notification = getNotification();
-        notification.isExact = false;
+        when(calculator.getTime(any(Date.class))).thenReturn(100L);
+
+        notification.repeatInterval = 0;
         getSubject().notify(notification);
 
-        verify(alarmManager).set(AlarmManager.RTC_WAKEUP, notification.fireDate.getTime(), pendingIntent);
+        verify(notifier).notify(100L, pendingIntent, notification);
     }
 
     @Test
-    public void manager_notify_notifiesWithoutRepeatingIfIntervalIsZero_whenExact_beforeKitKat() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT - 1);
+    public void manager_notify_notifiesRepeating_whenIntervalIsNonZero() {
+        setupIntervalCalculator();
+
         when(PendingIntent.getBroadcast(context, "MyCode".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
                 .thenReturn(pendingIntent);
 
-        LocalNotification notification = getNotification();
-        notification.isExact = true;
-        getSubject().notify(notification);
+        when(calculator.getTime(any(Date.class))).thenReturn(100L);
 
-        verify(alarmManager).set(AlarmManager.RTC_WAKEUP, notification.fireDate.getTime(), pendingIntent);
-    }
-
-    @Test
-    public void manager_notify_notifiesWithoutRepeatingIfIntervalIsZero_whenNonExact_beforeKitKat() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT - 1);
-        when(PendingIntent.getBroadcast(context, "MyCode".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
-                .thenReturn(pendingIntent);
-
-        LocalNotification notification = getNotification();
-        notification.isExact = false;
-        getSubject().notify(notification);
-
-        verify(alarmManager).set(AlarmManager.RTC_WAKEUP, notification.fireDate.getTime(), pendingIntent);
-    }
-
-    @Test
-    public void manager_notify_notifiesRepeatingIfIntervalIsGreaterThanZero_whenExact_sinceKitKat() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT);
-        when(PendingIntent.getBroadcast(context, "MyCode".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
-                .thenReturn(pendingIntent);
-
-        LocalNotification notification = getNotification();
-        notification.isExact = true;
         notification.repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
         getSubject().notify(notification);
 
-        verify(alarmManager).setExact(AlarmManager.RTC_WAKEUP, notification.fireDate.getTime(), pendingIntent);
-    }
-
-    @Test
-    public void manager_notify_notifiesRepeatingIfIntervalIsGreaterThanZero_whenExact_beforeKitKat() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT - 1);
-        when(PendingIntent.getBroadcast(context, "MyCode".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
-                .thenReturn(pendingIntent);
-
-        LocalNotification notification = getNotification();
-        notification.isExact = true;
-        notification.repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
-        getSubject().notify(notification);
-
-        verify(alarmManager).set(AlarmManager.RTC_WAKEUP, notification.fireDate.getTime(), pendingIntent);
-    }
-
-    @Test
-    public void manager_notify_notifiesRepeatingIfIntervalIsGreaterThanZero_whenNonExact_sinceKitKat() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT);
-        when(PendingIntent.getBroadcast(context, "MyCode".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
-                .thenReturn(pendingIntent);
-
-        LocalNotification notification = getNotification();
-        notification.isExact = false;
-        notification.repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
-        getSubject().notify(notification);
-
-        verify(alarmManager).setInexactRepeating(
-                AlarmManager.RTC_WAKEUP,
-                notification.fireDate.getTime(),
-                notification.getRepeatIntervalMilliseconds(),
-                pendingIntent
-        );
-    }
-
-    @Test
-    public void manager_notify_notifiesRepeatingIfIntervalIsGreaterThanZero_whenNonExact_beforeKitKat() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT - 1);
-        when(PendingIntent.getBroadcast(context, "MyCode".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
-                .thenReturn(pendingIntent);
-
-        LocalNotification notification = getNotification();
-        notification.isExact = false;
-        notification.repeatInterval = LocalNotificationTimeInterval.MINUTE_CALENDAR_UNIT;
-        getSubject().notify(notification);
-
-        verify(alarmManager).setInexactRepeating(
-                AlarmManager.RTC_WAKEUP,
-                notification.fireDate.getTime(),
-                notification.getRepeatIntervalMilliseconds(),
-                pendingIntent
-        );
+        verify(notifier).notifyRepeating(100L, notification.getRepeatIntervalMilliseconds(), pendingIntent, notification);
     }
 
     @Test
     public void manager_notify_calculatesNextTriggerTimeBasedOnCurrentDate() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT);
         when(PendingIntent.getBroadcast(context, "MyCode".hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT))
                 .thenReturn(pendingIntent);
-
-        NextNotificationCalculator calculator = mock(NextNotificationCalculator.class);
 
         Date date = mock(Date.class);
 
@@ -240,7 +173,6 @@ public class LocalNotificationManagerTest {
 
         LocalNotification notification = getNotification();
         getSubject().notify(notification);
-
 
         verify(calculator).getTime(date);
     }

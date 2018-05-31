@@ -166,11 +166,29 @@
      * Determines whether the notification triggers at the exact time or not.
      * If <code>isExact</code> is false then the notification will be batched with other alarms
      * to minimize battery use, otherwise the notification will trigger at the exact time.
-     * <p>Notifications will always be exact prior to Android 4.4 (API level 19).</p>
+     * <p>Notifications will always be exact prior to Android 4.4 (API level 19). Exact
+     * notifications might still be affected by the Android 6.0 doze mode.</p>
      * <p>Supported OS: Android</p>
      * @default false
+     * @see #allowWhileIdle
      */
     public var isExact:Boolean = false;
+
+    /**
+     * Allows triggering the notification even when the device is in idle (a.k.a doze) mode.
+     * <p>Since Android 6.0 (API level 23), whenever a device is left idle for certain amount of time
+     * then it will enter in doze mode. In this mode, background processes are allowed to be executed
+     * only at specific operating system controlled intervals.</p>
+     * <p>If it is critical for your application to deliver notifications even after the device
+     * enters doze mode (e.g. a medical application), set this property to true. Use only when
+     * absolutely necessary.</p>
+     * <p>This property doesn't affect devices with Android systems prior to 6.0 and notifications
+     * will always trigger even while idle.</p>
+     * <p>Supported OS: Android</p>
+     * @default false
+     * @see #isExact
+     */
+    public var allowWhileIdle:Boolean = false;
 
     /**
      * The calendar interval at which to reschedule the notification.

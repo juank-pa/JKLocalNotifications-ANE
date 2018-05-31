@@ -1,5 +1,7 @@
 package com.juankpro.ane.localnotif;
 
+import android.os.Build;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,12 +13,15 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -33,7 +38,7 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({LocalNotification.class})
+@PrepareForTest({LocalNotification.class, Build.VERSION.class})
 public class LocalNotificationTest {
     @Mock
     private JSONObject jsonObject;
@@ -77,7 +82,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_deserialize_deserializesFromJsonObject() {
+    public void notification_deserialize_deserializesFromJsonObject() {
         when(jsonObject.optString("code", "")).thenReturn("MyCode");
         when(jsonObject.optString("tickerText", "")).thenReturn("Ticker");
         when(jsonObject.optString("title", "")).thenReturn("Title");
@@ -124,7 +129,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_deserialize_deserializesPlaySoundFromJsonObject() {
+    public void notification_deserialize_deserializesPlaySoundFromJsonObject() {
         when(jsonObject.optBoolean("playSound", false)).thenReturn(true);
         assertEquals(false, getSubject().playSound);
         getSubject().deserialize(jsonObject);
@@ -132,7 +137,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_deserialize_deserializesVibrateFromJsonObject() {
+    public void notification_deserialize_deserializesVibrateFromJsonObject() {
         when(jsonObject.optBoolean("vibrate", false)).thenReturn(true);
         assertEquals(false, getSubject().vibrate);
         getSubject().deserialize(jsonObject);
@@ -140,7 +145,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_deserialize_deserializesCancelOnSelectFromJsonObject() {
+    public void notification_deserialize_deserializesCancelOnSelectFromJsonObject() {
         when(jsonObject.optBoolean("cancelOnSelect", false)).thenReturn(true);
         assertEquals(false, getSubject().cancelOnSelect);
         getSubject().deserialize(jsonObject);
@@ -148,7 +153,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_deserialize_deserializesOngoingFromJsonObject() {
+    public void notification_deserialize_deserializesOngoingFromJsonObject() {
         when(jsonObject.optBoolean("ongoing", false)).thenReturn(true);
         assertEquals(false, getSubject().ongoing);
         getSubject().deserialize(jsonObject);
@@ -156,7 +161,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_deserialize_deserializesHasActionFromJsonObject() {
+    public void notification_deserialize_deserializesHasActionFromJsonObject() {
         when(jsonObject.optBoolean("hasAction", false)).thenReturn(true);
         assertEquals(false, getSubject().hasAction);
         getSubject().deserialize(jsonObject);
@@ -164,7 +169,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_deserialize_deserializesShowInForegroundFromJsonObject() {
+    public void notification_deserialize_deserializesShowInForegroundFromJsonObject() {
         when(jsonObject.optBoolean("showInForeground", false)).thenReturn(true);
         assertEquals(false, getSubject().showInForeground);
         getSubject().deserialize(jsonObject);
@@ -172,7 +177,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_deserialize_deserializesByteDataFromJsonObject() {
+    public void notification_deserialize_deserializesByteDataFromJsonObject() {
         try {
             when(jsonObject.getJSONArray("actionData")).thenReturn(jsonArray);
             when(jsonArray.length()).thenReturn(2);
@@ -186,7 +191,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_deserialize_deserializesIsExactFromJsonObject() {
+    public void notification_deserialize_deserializesIsExactFromJsonObject() {
         when(jsonObject.optBoolean("isExact", false)).thenReturn(true);
         assertEquals(false, getSubject().isExact);
         getSubject().deserialize(jsonObject);
@@ -194,7 +199,15 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_deserialize_doesNothingIfJsonObjectIsNull() {
+    public void notification_deserialize_deserializesAllowWhileIdleFromJsonObject() {
+        when(jsonObject.optBoolean("allowWhileIdle", false)).thenReturn(true);
+        assertEquals(false, getSubject().allowWhileIdle);
+        getSubject().deserialize(jsonObject);
+        assertEquals(true, getSubject().allowWhileIdle);
+    }
+
+    @Test
+    public void notification_deserialize_doesNothingIfJsonObjectIsNull() {
         getSubject().deserialize(null);
         verify(jsonObject, never()).optString(eq("code"), anyString());
         verify(jsonObject, never()).optString(eq("tickerText"), anyString());
@@ -217,7 +230,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_deserialize_stopsDeserializingByteArrayIfAnExceptionIsThrown() {
+    public void notification_deserialize_stopsDeserializingByteArrayIfAnExceptionIsThrown() {
         try {
             when(jsonObject.getJSONArray("actionData")).thenReturn(jsonArray);
             when(jsonArray.length()).thenReturn(2);
@@ -240,7 +253,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_serialize_serializesNotification() {
+    public void notification_serialize_serializesNotification() {
         try {
             assertSame(jsonObject, getSubject("MyCode").serialize());
             verify(jsonObject).putOpt("code", "MyCode");
@@ -260,7 +273,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_serialize_serializesPlaySound() {
+    public void notification_serialize_serializesPlaySound() {
         try {
             getSubject().playSound = true;
             assertSame(jsonObject, getSubject().serialize());
@@ -269,7 +282,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_serialize_serializesVibrate() {
+    public void notification_serialize_serializesVibrate() {
         try {
             getSubject().vibrate = true;
             assertSame(jsonObject, getSubject().serialize());
@@ -278,7 +291,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_serialize_serializesCancelOnSelect() {
+    public void notification_serialize_serializesCancelOnSelect() {
         try {
             getSubject().cancelOnSelect = true;
             assertSame(jsonObject, getSubject().serialize());
@@ -287,7 +300,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_serialize_serializesOngoing() {
+    public void notification_serialize_serializesOngoing() {
         try {
             getSubject().ongoing = true;
             assertSame(jsonObject, getSubject().serialize());
@@ -296,7 +309,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_serialize_serializesHasAction() {
+    public void notification_serialize_serializesHasAction() {
         try {
             getSubject().hasAction = true;
             assertSame(jsonObject, getSubject().serialize());
@@ -305,7 +318,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_serialize_serializesShowInForeground() {
+    public void notification_serialize_serializesShowInForeground() {
         try {
             getSubject().showInForeground = true;
             assertSame(jsonObject, getSubject().serialize());
@@ -314,7 +327,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_serialize_serializesByteData() {
+    public void notification_serialize_serializesByteData() {
         try {
             getSubject().actionData = new byte[]{102, 127};
 
@@ -326,7 +339,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_serialize_serializesIsExact() {
+    public void notification_serialize_serializesIsExact() {
         try {
             getSubject().isExact = true;
             assertSame(jsonObject, getSubject().serialize());
@@ -335,7 +348,16 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_serialize_stopsSerializingDataIfAnExceptionIsThrown() {
+    public void notification_serialize_serializesAllowWhileIdle() {
+        try {
+            getSubject().allowWhileIdle = true;
+            assertSame(jsonObject, getSubject().serialize());
+            verify(jsonObject).putOpt("allowWhileIdle", true);
+        } catch (JSONException e) { e.printStackTrace(); }
+    }
+
+    @Test
+    public void notification_serialize_stopsSerializingDataIfAnExceptionIsThrown() {
         try {
             getSubject().actionData = new byte[]{102, 127};
             when(jsonObject.accumulate("actionData", 102)).thenThrow(mock(JSONException.class));
@@ -348,7 +370,7 @@ public class LocalNotificationTest {
     }
 
     @Test
-    public void action_getRepeatIntervalMilliseconds_returnsTimeInMilliseconds() {
+    public void notification_getRepeatIntervalMilliseconds_returnsTimeInMilliseconds() {
         LocalNotificationTimeInterval intervalMock = mock(LocalNotificationTimeInterval.class);
         try {
             PowerMockito.whenNew(LocalNotificationTimeInterval.class)
@@ -359,5 +381,37 @@ public class LocalNotificationTest {
 
         getSubject().repeatInterval = 10;
         assertEquals(getSubject().getRepeatIntervalMilliseconds(), 20000L);
+    }
+
+    @Test
+    public void notification_repeatsRecurrently_returnsTrueIfHasRepeatInterval_afterKitKat() {
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT);
+        getSubject().repeatInterval = 10;
+        getSubject().isExact = false;
+        assertTrue(getSubject().repeatsRecurrently());
+    }
+
+    @Test
+    public void notification_repeatsRecurrently_returnsTrueIfHasRepeatIntervalAndIsExact() {
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT - 1);
+        getSubject().repeatInterval = 10;
+        getSubject().isExact = true;
+        assertTrue(getSubject().repeatsRecurrently());
+    }
+
+    @Test
+    public void notification_repeatsRecurrently_returnsFalseIfDoesNotHaveRepeatInterval() {
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT);
+        getSubject().repeatInterval = 0;
+        getSubject().isExact = true;
+        assertFalse(getSubject().repeatsRecurrently());
+    }
+
+    @Test
+    public void notification_repeatsRecurrently_returnsFalseIfNonExact_beforeKitKat() {
+        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT - 1);
+        getSubject().repeatInterval = 10;
+        getSubject().isExact = false;
+        assertFalse(getSubject().repeatsRecurrently());
     }
 }
