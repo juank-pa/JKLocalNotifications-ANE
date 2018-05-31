@@ -88,7 +88,7 @@ public class MarshmallowNotifierTest {
     }
 
     @Test
-    public void manager_notifyRepeating_setsRepeatingAlarm_whenNotificationDoesNotRepeatRecurrently() {
+    public void notifier_notifyRepeating_setsRepeatingAlarm_whenNotificationDoesNotRepeatRecurrently() {
         MarshmallowNotifier subject = getSubject();
 
         LocalNotification notification = mock(LocalNotification.class);
@@ -99,7 +99,7 @@ public class MarshmallowNotifierTest {
     }
 
     @Test
-    public void manager_notifyRepeating_setsAlarm_whenNotificationRepeatsRecurrently() {
+    public void notifier_notifyRepeating_setsAlarm_whenNotificationRepeatsRecurrently() {
         MarshmallowNotifier subject = spy(getSubject());
 
         LocalNotification notification = mock(LocalNotification.class);

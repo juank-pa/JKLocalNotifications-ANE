@@ -88,7 +88,7 @@ public class KitKatNotifierTest {
     }
 
     @Test
-    public void manager_notifyRepeating_setsRepeatingAlarm_whenNotificationDoesNotRepeatRecurrently() {
+    public void notifier_notifyRepeating_setsRepeatingAlarm_whenNotificationDoesNotRepeatRecurrently() {
         KitKatNotifier subject = getSubject();
 
         LocalNotification notification = mock(LocalNotification.class);
@@ -99,7 +99,7 @@ public class KitKatNotifierTest {
     }
 
     @Test
-    public void manager_notifyRepeating_setsAlarm_whenNotificationRepeatsRecurrently() {
+    public void notifier_notifyRepeating_setsAlarm_whenNotificationRepeatsRecurrently() {
         KitKatNotifier subject = spy(getSubject());
 
         LocalNotification notification = mock(LocalNotification.class);

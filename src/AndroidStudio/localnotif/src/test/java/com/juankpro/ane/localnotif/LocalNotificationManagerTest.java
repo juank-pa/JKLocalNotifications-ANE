@@ -13,8 +13,6 @@ import com.juankpro.ane.localnotif.notifier.INotificationStrategy;
 import com.juankpro.ane.localnotif.util.NextNotificationCalculator;
 import com.juankpro.ane.localnotif.util.PersistenceManager;
 
-import net.sf.cglib.core.Local;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +21,6 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import java.util.Date;
 import java.util.HashSet;

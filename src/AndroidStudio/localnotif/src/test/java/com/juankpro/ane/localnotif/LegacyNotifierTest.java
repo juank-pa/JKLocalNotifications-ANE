@@ -3,11 +3,8 @@ package com.juankpro.ane.localnotif;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.os.Build;
 
 import com.juankpro.ane.localnotif.notifier.LegacyNotifier;
-
-import net.sf.cglib.core.Local;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import java.util.Date;
 
@@ -96,7 +92,7 @@ public class LegacyNotifierTest {
     }
 
     @Test
-    public void manager_notifyRepeating_setsRepeatingAlarm_whenNotificationDoesNotRepeatRecurrently() {
+    public void notifier_notifyRepeating_setsRepeatingAlarm_whenNotificationDoesNotRepeatRecurrently() {
         LegacyNotifier subject = getSubject();
 
         LocalNotification notification = mock(LocalNotification.class);
@@ -107,7 +103,7 @@ public class LegacyNotifierTest {
     }
 
     @Test
-    public void manager_notifyRepeating_setsAlarm_whenNotificationRepeatsRecurrently() {
+    public void notifier_notifyRepeating_setsAlarm_whenNotificationRepeatsRecurrently() {
         LegacyNotifier subject = spy(getSubject());
 
         LocalNotification notification = mock(LocalNotification.class);
