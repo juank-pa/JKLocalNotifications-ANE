@@ -1,4 +1,4 @@
-### Unreleased
+### Version 1.4.0
 * Dismissing a notification also triggers a notification event with an specific action id.
 * Allow exact notifications in Android. Since Android 4.4 (API level 19) batches repeating and
   non-repeating notifications to save battery power making them inexact by default. If being exact
@@ -8,7 +8,7 @@
   day each year.
 * Allow setting alarms that will trigger even when Android 6.0 (API level 23) enters doze mode.
 
-Version 1.3.0
+### Version 1.3.0
 * Fix custom sounds to prevent them triggering when notifications are disabled
   or silenced by the user. For this to work the application XML must be updated by removing the
   `PlayAudio` service and adding the `NotificationSoundProvider` content provider instead.

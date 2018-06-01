@@ -1,7 +1,7 @@
 package com.juankpro.ane.localnotif {
 	/**
 	 * A class of constants representing the different repeat intervals available to use with the
-   * repeatInterval property of the Notification class.
+	 * repeatInterval property of the Notification class.
 	 * <p>Supported OS: iOS, Android</p>
 	 * @see com.juankpro.ane.localnotif.Notification#repeatInterval
 	 */
@@ -27,8 +27,12 @@ package com.juankpro.ane.localnotif {
 		 */
 		public static const HOUR_CALENDAR_UNIT:uint = 1 << 5;
 		/**
-		 * Represents a minute repeat interval
+		 * Represents a minute repeat interval. On Android 6.0 (API level 23) this interval might
+	 	 * not trigger very frequently while in doze mode, even when setting the notification
+	 	 * <code>allowWhileIdle</code> property to true. Doze mode will restrict these alarms
+	 	 * to trigger only once every 10 to 15 minutes.
 		 * <p>Supported OS: iOS, Android</p>
+	 	 * @see com.juankpro.ane.localnotif.Notification#allowWhileIdle
 		 */
 		public static const MINUTE_CALENDAR_UNIT:uint = 1 << 6;
 		/**
