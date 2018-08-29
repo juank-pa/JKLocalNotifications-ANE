@@ -1,6 +1,5 @@
 package com.juankpro.ane.localnotif;
 
-
 import java.util.Date;
 
 import org.json.JSONArray;
@@ -24,6 +23,9 @@ public class LocalNotification implements ISerializable, IDeserializable {
     public String tickerText = "";
     public String title = "";
     public String body = "";
+
+    public boolean isExact = false;
+    public boolean allowWhileIdle = false;
 
     // Sound.
     public boolean playSound = false;
@@ -62,19 +64,8 @@ public class LocalNotification implements ISerializable, IDeserializable {
                 .toMilliseconds();
     }
 
-    private Date getNextDate() {
-        long interval = getRepeatIntervalMilliseconds();
-        Date now = new Date();
-        if (interval == 0 || fireDate.getTime() >= now.getTime()) return fireDate;
-
-        long elapsedTime = now.getTime() - fireDate.getTime();
-        long triggerCount = (long)Math.ceil(elapsedTime / (double)interval);
-        return new Date(fireDate.getTime() + interval * triggerCount);
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public void reschedule() {
-        fireDate = getNextDate();
+    public boolean repeatsRecurrently() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT || isExact) && repeatInterval != 0;
     }
 
     public LocalNotification() {
@@ -111,6 +102,8 @@ public class LocalNotification implements ISerializable, IDeserializable {
             jsonObject.putOpt("priority", priority);
             jsonObject.putOpt("showInForeground", showInForeground);
             jsonObject.putOpt("category", category);
+            jsonObject.putOpt("isExact", isExact);
+            jsonObject.putOpt("allowWhileIdle", allowWhileIdle);
 
             for (byte anActionData : actionData) {
                 jsonObject.accumulate("actionData", (int)anActionData);
@@ -125,7 +118,7 @@ public class LocalNotification implements ISerializable, IDeserializable {
 
     public void deserialize(JSONObject jsonObject) {
         if (jsonObject != null) {
-            this.code = jsonObject.optString("code", code);
+            code = jsonObject.optString("code", code);
             tickerText = jsonObject.optString("tickerText", tickerText);
             title = jsonObject.optString("title", title);
             body = jsonObject.optString("body", body);
@@ -142,6 +135,8 @@ public class LocalNotification implements ISerializable, IDeserializable {
             priority = jsonObject.optInt("priority", priority);
             showInForeground = jsonObject.optBoolean("showInForeground", showInForeground);
             category = jsonObject.optString("category", category);
+            isExact = jsonObject.optBoolean("isExact", isExact);
+            allowWhileIdle = jsonObject.optBoolean("allowWhileIdle", allowWhileIdle);
 
             long dateTime = jsonObject.optLong("fireDate", fireDate.getTime());
 

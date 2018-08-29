@@ -62,6 +62,7 @@
       var category:NotificationCategory = new NotificationCategory();
       category.identifier = identifier;
       category.actions = actions;
+      category.useCustomDismissAction = true;
       return category;
     }
 

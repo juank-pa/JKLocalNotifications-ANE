@@ -15,11 +15,13 @@ import org.json.JSONObject;
 public class LocalNotificationCategory implements ISerializable, IDeserializable {
     public String identifier = "";
     public LocalNotificationAction[] actions;
+    public boolean useCustomDismissAction;
 
     public JSONObject serialize() {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.putOpt("identifier", identifier);
+            jsonObject.putOpt("useCustomDismissAction", useCustomDismissAction);
             jsonObject.putOpt("actions", new ArraySerializer().serialize(actions));
         } catch (Exception e) {
             Logger.log("LocalNotification::serialize Exception");
@@ -30,8 +32,9 @@ public class LocalNotificationCategory implements ISerializable, IDeserializable
     public void deserialize(JSONObject jsonObject) {
         if (jsonObject != null) {
             try {
-                this.identifier = jsonObject.optString("identifier", "");
-                this.actions = new ArrayDeserializer<>(LocalNotificationAction.class)
+                identifier = jsonObject.optString("identifier", "");
+                useCustomDismissAction = jsonObject.optBoolean("useCustomDismissAction");
+                actions = new ArrayDeserializer<>(LocalNotificationAction.class)
                         .deserialize(jsonObject.getJSONArray("actions"));
             } catch (Exception e) {
                 Logger.log("LocalNotification::deserialize Exception");

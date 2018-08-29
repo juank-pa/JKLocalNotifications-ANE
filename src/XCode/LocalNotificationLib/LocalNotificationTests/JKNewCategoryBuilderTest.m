@@ -45,7 +45,22 @@
     OCMStub([self.actionBuilderMock buildFromActions:category.actions]).andReturn(actions);
 
     id categoryMock = OCMClassMock([UNNotificationCategory class]);
-    OCMStub([categoryMock categoryWithIdentifier:@"catId" actions:actions intentIdentifiers:[NSArray array] options:UNNotificationCategoryOptionNone]).andReturn(categoryMock);
+    OCMExpect([categoryMock categoryWithIdentifier:@"catId" actions:actions intentIdentifiers:[NSArray array] options:UNNotificationCategoryOptionNone]).andReturn(categoryMock);
+
+    XCTAssertEqual([self.subject buildFromCategory:category], categoryMock);
+
+    OCMVerifyAll(categoryMock);
+    [categoryMock stopMocking];
+}
+
+- (void)testBuildFromCategoryForCategoryUsingCustomDismissAction {
+    JKLocalNotificationCategory *category = [self categoryWithIdentifier:@"catId" actions:@[]];
+    category.useCustomDismissAction = YES;
+
+    OCMStub([self.actionBuilderMock buildFromActions:category.actions]).andReturn([NSArray array]);
+
+    id categoryMock = OCMClassMock([UNNotificationCategory class]);
+    OCMExpect([categoryMock categoryWithIdentifier:@"catId" actions:[NSArray array] intentIdentifiers:[NSArray array] options:UNNotificationCategoryOptionCustomDismissAction]).andReturn(categoryMock);
 
     XCTAssertEqual([self.subject buildFromCategory:category], categoryMock);
 

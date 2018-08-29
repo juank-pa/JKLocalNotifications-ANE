@@ -206,6 +206,8 @@
     FREObjectType freObjectType = FRE_TYPE_NULL;
     FREGetObjectType(freObject, &freObjectType);
 
+    if (freObjectType == FRE_TYPE_NULL) return [NSArray array];
+
     assert(freObjectType == FRE_TYPE_ARRAY || freObjectType == FRE_TYPE_VECTOR);
 
     if (freObjectType == FRE_TYPE_ARRAY || freObjectType == FRE_TYPE_VECTOR) {

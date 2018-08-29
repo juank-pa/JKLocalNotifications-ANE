@@ -213,29 +213,45 @@ public class NotificationFactoryTest {
         verify(builder).setContentIntent(pendingIntent);
     }
 
-    @Test
-    public void factory_create_withActionButtons() {
-        Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", Build.VERSION_CODES.KITKAT_WATCH);
-
-        LocalNotificationAction action = new LocalNotificationAction();
-        action.icon = 200;
-        action.title = "Remove";
-        action.identifier = "removeAction";
-
+    private void prepareCategory() {
         try {
             PowerMockito.whenNew(NotificationActionBuilder.class)
                     .withArguments(intentFactory, builder)
                     .thenReturn(actionBuilder);
         }
         catch (Throwable e) { e.printStackTrace(); }
-
-        category.actions = new LocalNotificationAction[]{action};
+        category.actions = new LocalNotificationAction[0];
 
         when(bundle.getString(Constants.CATEGORY)).thenReturn("MyCategory");
         when(categoryManager.readCategory("MyCategory")).thenReturn(category);
+    }
+
+    @Test
+    public void factory_create_withActionButtons() {
+        prepareCategory();
+
+        LocalNotificationAction action = new LocalNotificationAction();
+        action.icon = 200;
+        action.title = "Remove";
+        action.identifier = "removeAction";
+
+        category.actions = new LocalNotificationAction[]{action};
 
         getSubject().create(intentFactory);
 
         verify(actionBuilder).build(action);
+    }
+
+    @Test
+    public void factory_create_withDismissAction() {
+        prepareCategory();
+
+        getSubject().create(intentFactory);
+        verify(actionBuilder, never()).buildDismissAction();
+
+        category.useCustomDismissAction = true;
+
+        getSubject().create(intentFactory);
+        verify(actionBuilder).buildDismissAction();
     }
 }

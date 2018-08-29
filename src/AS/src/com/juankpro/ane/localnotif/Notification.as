@@ -7,6 +7,20 @@
    */
   public class Notification extends Object {
     /**
+     * This constant is used as the <code>NotificationEvent.notificationAction</code>
+     * for notifications that have been dismissed by the user instead of tapped.
+     * To listen to dismiss actions the notification must be sent to a category that
+     * has the <code>NotificationCategory.useCustomDismissAction</code> property set
+     * to true.
+     * <p>Only iOS 10 and higher support this feature. All versions of Android support this.</p>
+     * <p>Supported OS: Android, iOS (10+)</p>
+     * @see #category
+     * @see com.juankpro.ane.localnotif.NotificationEvent#notificationAction
+     * @see com.juankpro.ane.localnotif.NotificationCategory#useCustomDismissAction
+     */
+    public static const NOTIFICATION_DISMISS_ACTION:String = "_JKNotificationDismissAction_";
+
+    /**
      * The data associated with the notification. It can be retrieved from a
      * <code>NotificationEvent</code> object.
      * <p>Supported OS: Android, iOS</p>
@@ -147,6 +161,34 @@
      * @default null
      */
     public var fireDate:Date;
+
+    /**
+     * Determines whether the notification triggers at the exact time or not.
+     * If <code>isExact</code> is false then the notification will be batched with other alarms
+     * to minimize battery use, otherwise the notification will trigger at the exact time.
+     * <p>Notifications will always be exact prior to Android 4.4 (API level 19). Exact
+     * notifications might still be affected by the Android 6.0 doze mode.</p>
+     * <p>Supported OS: Android</p>
+     * @default false
+     * @see #allowWhileIdle
+     */
+    public var isExact:Boolean = false;
+
+    /**
+     * Allows triggering the notification even when the device is in idle (a.k.a doze) mode.
+     * <p>Since Android 6.0 (API level 23), whenever a device is left idle for certain amount of time
+     * then it will enter in doze mode. In this mode, background processes are allowed to be executed
+     * only at specific operating system controlled intervals.</p>
+     * <p>If it is critical for your application to deliver notifications even after the device
+     * enters doze mode (e.g. a medical application), set this property to true. Use only when
+     * absolutely necessary.</p>
+     * <p>This property doesn't affect devices with Android systems prior to 6.0 and notifications
+     * will always trigger even while idle.</p>
+     * <p>Supported OS: Android</p>
+     * @default false
+     * @see #isExact
+     */
+    public var allowWhileIdle:Boolean = false;
 
     /**
      * The calendar interval at which to reschedule the notification.

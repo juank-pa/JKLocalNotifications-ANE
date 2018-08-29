@@ -7,8 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.juankpro.ane.localnotif.factory.NotificationRequestIntentFactory;
+import com.juankpro.ane.localnotif.factory.NotificationStrategyFactory;
+import com.juankpro.ane.localnotif.notifier.INotificationStrategy;
 import com.juankpro.ane.localnotif.util.Logger;
+import com.juankpro.ane.localnotif.util.NextNotificationCalculator;
 import com.juankpro.ane.localnotif.util.PersistenceManager;
+
+import java.util.Date;
 
 /**
  * Created by Juank on 10/21/17.
@@ -18,29 +23,31 @@ class LocalNotificationManager {
     private Context context;
     private NotificationManager notificationManager;
     private NotificationRequestIntentFactory intentFactory;
+    private INotificationStrategy notifier;
 
     LocalNotificationManager(Context context) {
         this.context = context;
         intentFactory = new NotificationRequestIntentFactory(context);
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notifier = new NotificationStrategyFactory(context).create();
     }
 
-    void notify(LocalNotification localNotification) {
-        long notificationTime = localNotification.fireDate.getTime();
+    void notify(LocalNotification notification) {
+        NextNotificationCalculator calculator = new NextNotificationCalculator(notification);
+        long notificationTime = calculator.getTime(new Date());
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
-                localNotification.code.hashCode(),
-                intentFactory.createIntent(localNotification),
+                notification.code.hashCode(),
+                intentFactory.createIntent(notification),
                 PendingIntent.FLAG_CANCEL_CURRENT);
-        long repeatInterval = localNotification.getRepeatIntervalMilliseconds();
-
-        AlarmManager am = getAlarmManager();
+        long repeatInterval = notification.getRepeatIntervalMilliseconds();
 
         if (repeatInterval != 0) {
-            am.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime, repeatInterval, pendingIntent);
+            notifier.notifyRepeating(notificationTime, repeatInterval, pendingIntent, notification);
         }
         else {
-            am.set(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
+            notifier.notify(notificationTime, pendingIntent, notification);
         }
     }
 

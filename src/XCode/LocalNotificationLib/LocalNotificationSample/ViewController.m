@@ -95,6 +95,7 @@
     JKLocalNotificationCategory *category = [JKLocalNotificationCategory new];
     category.identifier = @"CategoryX";
     category.actions = @[action1, action2, action3, action4];
+    category.useCustomDismissAction = YES;
 
     settings.categories = @[category];
 

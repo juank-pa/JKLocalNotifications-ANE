@@ -46,4 +46,8 @@ public class NotificationActionBuilder {
         }
         return intentFactory.createActionPendingIntent(action.identifier, action.isBackground);
     }
+
+    public void buildDismissAction() {
+        notificationBuilder.setDeleteIntent(intentFactory.createDeletePendingIntent());
+    }
 }

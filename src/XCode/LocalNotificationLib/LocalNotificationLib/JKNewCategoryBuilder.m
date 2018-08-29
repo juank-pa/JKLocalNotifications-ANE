@@ -23,7 +23,13 @@
     return [UNNotificationCategory categoryWithIdentifier:category.identifier
                                                   actions:[JKNewActionBuilder buildFromActions:category.actions]
                                         intentIdentifiers:[NSArray array]
-                                                  options:UNNotificationCategoryOptionNone];
+                                                  options:[self categoryOptionsForCategory:category]];
+}
+
+- (UNNotificationCategoryOptions)categoryOptionsForCategory:(JKLocalNotificationCategory *)category {
+    UNNotificationCategoryOptions categoryOptions = UNNotificationCategoryOptionNone;
+    if (category.useCustomDismissAction) categoryOptions |= UNNotificationCategoryOptionCustomDismissAction;
+    return categoryOptions;
 }
 
 @end

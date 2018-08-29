@@ -1,5 +1,6 @@
 package com.juankpro.ane.localnotif;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -64,14 +65,14 @@ public class NotificationPendingIntentFactoryTest {
     }
 
     @Test
-    public void factory_createPendingIntent_createsPendingIntent() {
+    public void factory_createActionPendingIntent_createsPendingIntent() {
         NotificationPendingIntentFactory factory = spy(getSubject());
         doReturn(pendingIntent).when(factory).createActionPendingIntent(null, false);
         assertSame(pendingIntent, factory.createPendingIntent());
     }
 
     @Test
-    public void factory_createPendingIntent_createsPendingIntentForTextInputAction() {
+    public void factory_createTextInputActionPendingIntent_createsPendingIntentForTextInputAction() {
         when(PendingIntent.getBroadcast(context, "MyCodeActionId".hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT))
                 .thenReturn(pendingIntent);
         when(intent.setClass(context, TextInputActionIntentService.class)).thenReturn(intent);
@@ -87,7 +88,7 @@ public class NotificationPendingIntentFactoryTest {
     }
 
     @Test
-    public void factory_createPendingIntent_createsPendingIntentForBackgroundAction() {
+    public void factory_createActionPendingIntent_createsPendingIntentForBackgroundAction() {
         when(PendingIntent.getService(context, "MyCodeActionId".hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT))
                 .thenReturn(pendingIntent);
         when(intent.setClassName(context, Constants.NOTIFICATION_INTENT_SERVICE)).thenReturn(intent);
@@ -99,6 +100,22 @@ public class NotificationPendingIntentFactoryTest {
         verify(intent).putExtra(Constants.NOTIFICATION_CODE_KEY, "MyCode");
         verify(intent).putExtra(Constants.ACTION_DATA_KEY, bytes);
         verify(intent).putExtra(Constants.ACTION_ID_KEY, "ActionId");
+        verify(intent).putExtra(Constants.BACKGROUND_MODE_KEY, true);
+    }
+
+    @Test
+    public void factory_createPendingIntent_createsPendingIntentForBackgroundAction() {
+        when(PendingIntent.getService(context, ("MyCode" + Constants.NOTIFICATION_DISMISS_ACTION).hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT))
+                .thenReturn(pendingIntent);
+        when(intent.setClassName(context, Constants.NOTIFICATION_INTENT_SERVICE)).thenReturn(intent);
+
+        assertSame(pendingIntent, getSubject().createDeletePendingIntent());
+
+        verify(intent).setClassName(context, Constants.NOTIFICATION_INTENT_SERVICE);
+        verify(intent).putExtra(Constants.MAIN_ACTIVITY_CLASS_NAME_KEY, "ActivityClassName");
+        verify(intent).putExtra(Constants.NOTIFICATION_CODE_KEY, "MyCode");
+        verify(intent).putExtra(Constants.ACTION_DATA_KEY, bytes);
+        verify(intent).putExtra(Constants.ACTION_ID_KEY, Constants.NOTIFICATION_DISMISS_ACTION);
         verify(intent).putExtra(Constants.BACKGROUND_MODE_KEY, true);
     }
 }

@@ -12,4 +12,5 @@
 @interface JKLocalNotificationCategory : NSObject
 @property (nonatomic, copy) NSString *identifier;
 @property (nonatomic, copy) NSArray<JKLocalNotificationAction *> *actions;
+@property (nonatomic) BOOL useCustomDismissAction;
 @end

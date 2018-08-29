@@ -32,6 +32,7 @@ import java.util.Date;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -300,14 +301,20 @@ public class ExtensionUtilsTest {
     }
 
     @Test
-    public void utils_getArrayProperty_returnsNullOnException() {
+    public void utils_getArrayProperty_returnsEmptyArrayOnException() {
         IDecoder decoder = mock(IDecoder.class);
+        ArrayDecoder arrayDecoder = mock(ArrayDecoder.class);
+
         try {
             when(freObject.getProperty("propName")).thenThrow(FREInvalidObjectException.class);
         } catch (Throwable e) { e.printStackTrace(); }
 
+        LocalNotificationAction[] actions = new LocalNotificationAction[1];
+        when(arrayDecoder.decodeObject(frePropertyObject)).thenReturn(actions);
+
         //noinspection unchecked
-        assertNull(
+        assertArrayEquals(
+                new LocalNotificationAction[0],
                 ExtensionUtils.getArrayProperty(
                         freContext,
                         freObject,
