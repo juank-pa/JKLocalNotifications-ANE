@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidStudio.iml" filepath="$PROJECT_DIR$/AndroidStudio.iml" />
-      <module fileurl="file://$PROJECT_DIR$/localnotif/app.iml" filepath="$PROJECT_DIR$/localnotif/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LocalNotificationLib.iml" filepath="$PROJECT_DIR$/LocalNotificationLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/localnotif/localnotif.iml" filepath="$PROJECT_DIR$/localnotif/localnotif.iml" />
       <module fileurl="file://$PROJECT_DIR$/testapplication/testapplication.iml" filepath="$PROJECT_DIR$/testapplication/testapplication.iml" />
     </modules>

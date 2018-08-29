@@ -4,7 +4,7 @@ set -ev
 
 if [ "$LANG" = "Android" ]
 then
-  cd $TRAVIS_BUILD_DIR/src/AndroidStudio
+  cd $TRAVIS_BUILD_DIR/src/AndroidStudio/LocalNotificationLib
   ./gradlew test
 else
   cd $TRAVIS_BUILD_DIR/src/XCode/LocalNotificationLib

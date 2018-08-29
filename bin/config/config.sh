@@ -18,7 +18,7 @@ AIR_VERSION=37
 # path to android sdk
 AIR_ANDROID_SDK_HOME="$HOME/android-sdk-macosx"
 # native Eclipse project folder
-NATIVE_ANDROID_FOLDER=$CONFIG_SCRIPT_PATH/../../src/AndroidStudio
+NATIVE_ANDROID_FOLDER=$CONFIG_SCRIPT_PATH/../../src/AndroidStudio/LocalNotificationLib
 JAR_NAME=localnotification.jar
 
 # IOS
