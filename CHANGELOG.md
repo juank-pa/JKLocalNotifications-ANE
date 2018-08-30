@@ -1,5 +1,11 @@
 ### Unreleased
-* Add support for Android Oreo (API level 25) notification channels.
+* Add support for Android 8.0 (API level 26, Oreo) channels. The `NotificationCategory` now
+  represents Android channels and allow creating and managing channels on Android. On Android
+  Oreo the sound, importance and vibration are no longer determined by the Notification but
+  on the channel. The same happens in our ANE, so please setup these properties in both places
+  (`Notification` and `NotificationCategory`) to support new and old versions of the Android API.
+  If you haven't setup any categories or do not need them, the ANE will create a default one
+  before sending any notifications.
 
 ### Version 1.4.0
 * Dismissing a notification also triggers a notification event with an specific action id.
@@ -10,13 +16,6 @@
   trigger the same day each month, while yearly intervals will always trigger the same month and
   day each year.
 * Allow setting alarms that will trigger even when Android 6.0 (API level 23) enters doze mode.
-* Add support for Android 8.0 (API level 26, Oreo) channels. The `NotificationChannel` now
-  represents Android channels and allow creating and managing channels on Android. On Android
-  Oreo the sound, importance and vibration are no longer determined by the Notification but
-  on the channel. The same happens in our ANE, so please setup these properties in both places
-  (`Notification` and `NotificationCategory`) to support new and old versions of the Android API.
-  If you haven't setup any categories or do not need them, the ANE will create a default one
-  before sending any notifications.
 
 ### Version 1.3.0
 * Fix custom sounds to prevent them triggering when notifications are disabled
