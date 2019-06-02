@@ -1,3 +1,6 @@
+### Version 1.4.1
+* Fix a bug preventing custom sounds from playing on Android.
+
 ### Version 1.4.0
 * Dismissing a notification also triggers a notification event with an specific action id.
 * Allow exact notifications in Android. Since Android 4.4 (API level 19) batches repeating and
