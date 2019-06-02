@@ -51,10 +51,11 @@ public class SoundSettingsTest {
     public void settings_getSoundUri_returnsUriIfBundlePlaysSoundAndHasSoundName() {
         when(bundle.getString(Constants.SOUND_NAME)).thenReturn("sound.mp3");
         when(bundle.getBoolean(Constants.PLAY_SOUND)).thenReturn(true);
+        NotificationSoundProvider.CONTENT_URI = "content://custom.content";
         assertNotNull(getSubject().getSoundUri());
 
         verifyStatic(Uri.class);
-        Uri.parse("content://com.juankpro.ane.localnotif.notification_sound_provider/sound.mp3");
+        Uri.parse("content://custom.content/sound.mp3");
     }
 
     @Test
