@@ -52,7 +52,7 @@ package com.juankpro.ane.localnotif {
          * @see com.juankpro.ane.localnotif.NotificationImportance
          * @see com.juankpro.ane.localnotif.Notification#priority
          */
-        public var importance:int;
+        public var importance:int = NotificationImportance.DEFAULT;
 
         /**
          * Whether notifications sent through this category should vibrate. This property
@@ -90,5 +90,11 @@ package com.juankpro.ane.localnotif {
          * @see com.juankpro.ane.localnotif.Notification#NOTIFICATION_DISMISS_ACTION
          */
         public var useCustomDismissAction:Boolean;
-  }
+
+        public function NotificationCategory(identifier:String = null, name:String = null, importance:int = NotificationImportance.DEFAULT):void {
+            this.identifier = identifier;
+            this.name = name;
+            this.importance = importance;
+        }
+    }
 }
