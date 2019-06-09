@@ -146,6 +146,7 @@ package {
     }
 
     public function testNotifyUserDoesNotSubscribeIfCategoriesWhereAlreadyAdded():void {
+      var notification:Notification = new Notification();
       mockContext.expects("call").withArgs("notify", "MyCode", notification).noReturn();
 
       var options:LocalNotifierSubscribeOptions = new LocalNotifierSubscribeOptions(
