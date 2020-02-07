@@ -4,7 +4,7 @@ package com.juankpro.ane.localnotif {
      * on Android devices. Use these constants for the <code>importance</code> property of
      * the <code>NotificationCategory</code> class for Android 7.0 (API level 24) and above.
      * <p>Lower Android API levels will use the <code>Notification.priority</code> property
-     * set using one of the <code>NotificationPriority</code> class constants.
+     * set using one of the <code>NotificationPriority</code> class constants.</p>
 	 * <p>Supported OS: Android</p>
      * @see com.juankpro.ane.localnotif.NotificationCategory#importance
 	 */

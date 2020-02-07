@@ -8,6 +8,7 @@ ASDOC_PATH="$SDK_PATH/bin/asdoc"
 rm -rf ./doc
 
 "$ASDOC_PATH" \
+    -define+=CONFIG::test,false \
 	-define+=CONFIG::device,false \
 	-define+=CONFIG::iphone,false \
 	-define+=CONFIG::android,false \
