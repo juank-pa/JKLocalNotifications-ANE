@@ -7,6 +7,7 @@
   If you haven't setup any categories or do not need them, the ANE will create a default one
   before sending any notifications.
 * Breaking changes:
+
 ** NotificationCategory needs to define a name on Android. Not doing so will not break AS code
    but it will crash at runtime. If you were not creating notification categories before no
    change is needed.
