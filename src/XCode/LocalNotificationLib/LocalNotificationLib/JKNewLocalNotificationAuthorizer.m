@@ -35,7 +35,7 @@
     [self registerCategories:settings];
     UNAuthorizationOptions options = settings.authorizationOptions;
     [self.factory.notificationCenter requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        if (granted) _settings = settings;
+        if (granted) self->_settings = settings;
         [self.delegate notificationAuthorizer:self didAuthorizeWithSettings:self.settings];
     }];
 }
