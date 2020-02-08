@@ -1,4 +1,6 @@
 ### Unreleased
+
+### Version 1.5.0
 * Add support for Android 8.0 (API level 26, Oreo) channels. The `NotificationCategory` now
   represents Android channels and allow creating and managing channels on Android. On Android
   Oreo the sound, importance and vibration are no longer determined by the Notification but
