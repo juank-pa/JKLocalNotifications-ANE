@@ -41,6 +41,9 @@ echo "****** Creating ANE package *******"
   -platform Android-ARM \
   -platformoptions $CONFIG_PATH/options_android.xml \
   -C $TEMP_PATH/android/ . \
+  -platform Android-ARM64 \
+  -platformoptions $CONFIG_PATH/options_android.xml \
+  -C $TEMP_PATH/android/ . \
   -platform Android-x86 \
   -platformoptions $CONFIG_PATH/options_android.xml \
   -C $TEMP_PATH/android/ . \
