@@ -22,6 +22,7 @@ echo ****** Compiling AS3 library *******
 
 call %ACOMPC% ^
     -swf-version %SWF_VERSION% ^
+    -define+=CONFIG::test,false ^
     -define+=CONFIG::device,true ^
     -define+=CONFIG::iphone,false ^
     -define+=CONFIG::android,true ^

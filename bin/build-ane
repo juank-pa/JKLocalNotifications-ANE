@@ -16,6 +16,7 @@ echo "****** Compiling AS3 library *******"
 
 "$ACOMPC" \
     -swf-version $SWF_VERSION \
+    -define+=CONFIG::test,false \
     -define+=CONFIG::device,false \
     -define+=CONFIG::iphone,false \
     -define+=CONFIG::android,false \
