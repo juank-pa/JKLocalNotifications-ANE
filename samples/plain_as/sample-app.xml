@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<application xmlns="http://ns.adobe.com/air/application/26.0">
+<application xmlns="http://ns.adobe.com/air/application/32.0">
   <id>com.juankpro.Sample</id>
   <versionNumber>1.0</versionNumber>
   <filename>sample</filename>
@@ -22,7 +22,7 @@
   <android>
     <manifestAdditions><![CDATA[
       <manifest android:installLocation="auto">
-        <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="26" />
+        <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="28" />
         <uses-permission android:name="android.permission.VIBRATE"/>
         <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
         <application android:name="com.juankpro.ane.localnotif.Application">
