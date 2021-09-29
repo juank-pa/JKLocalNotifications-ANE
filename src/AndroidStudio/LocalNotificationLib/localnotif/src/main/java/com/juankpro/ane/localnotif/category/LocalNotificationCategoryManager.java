@@ -42,7 +42,7 @@ public class LocalNotificationCategoryManager {
 
     private NotificationChannel buildChannel(LocalNotificationCategory category) {
         if (shouldNotRegister(category)) return null;
-        Logger.log("Registering category: " + category.identifier + "," + category.name + "," + String.valueOf(category.importance));
+        Logger.log("Registering category: " + category.identifier + "," + category.name + "," + category.importance);
         NotificationChannel channel = new NotificationChannel(
                 category.identifier, category.name, category.importance
         );
