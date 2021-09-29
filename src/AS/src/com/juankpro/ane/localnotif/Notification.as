@@ -97,6 +97,8 @@
      * On Android, this will display the specified number on the notification icon that appears
      * in the status bar. On iOS, this will display as a number on the application icon's badge.
      * A value of zero or below will result in no badge displayed.
+     * The Android behavior will summarize the numberAnnotation of every notification not yet
+     * dismissed instead of setting the number as an absolute value.
      * <p>Supported OS: Android, iOS</p>
      * @default 0
      */
