@@ -1,6 +1,6 @@
 # JKLocalNotifications ANE
 
-[![Build Status](https://travis-ci.org/juank-pa/JKLocalNotifications-ANE.svg?branch=master)](https://travis-ci.org/juank-pa/JKLocalNotifications-ANE)
+[![Build Status](https://app.travis-ci.com/juank-pa/JKLocalNotifications-ANE.svg?branch=master)](https://app.travis-ci.com/github/juank-pa/JKLocalNotifications-ANE)
 
 This is a Native Extension based on the one exposed by
 [Daniel Koestler](https://www.adobe.com/devnet/author_bios/daniel_koestler.html). 
