@@ -11,7 +11,7 @@ echo "***** packaging SWF file into IPA *****"
 
 # other targets: ipa-test, ipa-debug, ipa-debug-interpreter, ipa-app-store, ipa-app-store, ipa-ad-hoc
 "$ADT" -package \
-  -target ipa-test-interpreter \
+  -target ipa-test \
   -storetype pkcs12 -keystore $CERT_FILE \
   -storepass $CERT_PASS \
   -provisioning-profile $PROVISIONING_PROFILE\
