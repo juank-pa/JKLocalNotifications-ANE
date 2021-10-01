@@ -21,10 +21,6 @@ matrix:
         os: osx
         osx_image: xcode9
         env: XCODE_DESTINATION="platform=iOS Simulator,OS=8.4,name=iPhone 4s"
-      - language: objective-c
-        os: osx
-        osx_image: xcode9
-        env: XCODE_DESTINATION="platform=iOS Simulator,OS=8.1,name=iPhone 4s"
       - language: android
         env: LANG=Android
         android:
