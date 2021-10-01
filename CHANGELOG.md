@@ -8,6 +8,7 @@
   (`Notification` and `NotificationCategory`) to support new and old versions of the Android API.
   If you haven't setup any categories or do not need them, the ANE will create a default one
   before sending any notifications.
+* Added AMR64 (armv8) and Universal applications support for iOS.
 * Breaking changes:
   * NotificationCategory needs to define a name on Android. Not doing so will not break AS code
     but it will crash at runtime. If you were not creating notification categories before no
