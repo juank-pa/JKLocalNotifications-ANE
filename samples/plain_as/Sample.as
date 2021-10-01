@@ -219,7 +219,7 @@ package {
           break;
         case codeButton:
           notificationManager.cancel(NOTIFICATION_CODE + "X");
-          printMessage("Cancelled notification with code " + NOTIFICATION_CODE);
+          printMessage("Cancelled notification with code " + NOTIFICATION_CODE + "X");
           break;
         case badgeButton:
           notificationManager.applicationBadgeNumber = 0;
