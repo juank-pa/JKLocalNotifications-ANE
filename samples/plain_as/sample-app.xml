@@ -46,7 +46,7 @@
   </android>
   <iPhone>
     <requestedDisplayResolution>high</requestedDisplayResolution>
-    <InfoAdditions><![CDATA[<key>UIDeviceFamily</key><array><string>1</string></array>]]></InfoAdditions>
+    <InfoAdditions><![CDATA[<key>UIDeviceFamily</key><array><string>1</string><string>2</string></array>]]></InfoAdditions>
   </iPhone>
   <extensions>
     <extensionID>com.juankpro.ane.LocalNotification</extensionID>

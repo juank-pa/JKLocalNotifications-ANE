@@ -3,7 +3,7 @@
 set -e
 source ../../bin/config/config.sh
 
-DEVICE_ID=4
+DEVICE_ID=1
 
 source prepare_ios
 

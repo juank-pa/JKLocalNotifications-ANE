@@ -9,13 +9,6 @@
                 <finalizer>com.juankpro.ane.localnotif.Extension</finalizer>
             </applicationDeployment>
         </platform>
-        <platform name="Android-ARM64">
-            <applicationDeployment>
-                <nativeLibrary>localnotification.jar</nativeLibrary>
-                <initializer>com.juankpro.ane.localnotif.Extension</initializer>
-                <finalizer>com.juankpro.ane.localnotif.Extension</finalizer>
-            </applicationDeployment>
-        </platform>
         <platform name="Android-x86">
             <applicationDeployment>
                 <nativeLibrary>localnotification.jar</nativeLibrary>
